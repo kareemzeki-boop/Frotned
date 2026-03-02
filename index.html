@@ -2261,6 +2261,2580 @@ document.addEventListener('DOMContentLoaded', () => {
 // FULL AUTH + PAYMENT SYSTEM
 // ═══════════════════════════════════════════════════════════
 
+const API_BASE = 'https://backend-cladwise-production.up.railway.app/api';
+let cwSession = null; // { user, profile, uiConfig }
+
+// ─── TOKEN HELPERS ────────────────────────────────────────
+function cwGetToken()       { return localStorage.getItem('cw_token'); }
+function cwSetToken(t)      { localStorage.setItem('cw_token', t); localStorage.setItem('cw_api_tok', t); }
+function cwClearToken()     { localStorage.removeItem('cw_token'); localStorage.removeItem('cw_api_tok'); }
+function cwIsLoggedIn()     { return !!cwGetToken(); }
+
+// ─── CORE FETCH ───────────────────────────────────────────
+async function cwFetch(method, path, body) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (cwGetToken()) headers['Authorization'] = 'Bearer ' + cwGetToken();
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API_BASE + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
+}
+
+// ─── AUTH MODAL ───────────────────────────────────────────
+let authMode = 'login';
+
+function openAuthModal(mode = 'login') {
+  switchAuthTab(mode);
+  document.getElementById('auth-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('auth-email')?.focus(), 100);
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('auth-err').classList.remove('show');
+}
+
+function authOverlayClick(e) {
+  if (e.target === document.getElementById('auth-overlay')) closeAuthModal();
+}
+
+function switchAuthTab(mode) {
+  authMode = mode;
+  const isLogin = mode === 'login';
+  document.getElementById('tab-login').classList.toggle('active', isLogin);
+  document.getElementById('tab-register').classList.toggle('active', !isLogin);
+  document.getElementById('auth-login-fields').style.display = '';
+  document.getElementById('auth-register-fields').style.display = isLogin ? 'none' : '';
+  document.getElementById('auth-title').textContent = isLogin ? 'Welcome Back' : 'Create Account';
+  document.getElementById('auth-sub').textContent = isLogin ? 'Login to your CladWise account' : 'Join thousands of UAE architects & suppliers';
+  document.getElementById('auth-submit-btn').textContent = isLogin ? 'Login' : 'Create Account';
+  document.getElementById('auth-switch-text').innerHTML = isLogin
+    ? "Don't have an account? <span onclick=\"switchAuthTab('register')\">Create one free</span>"
+    : "Already have an account? <span onclick=\"switchAuthTab('login')\">Login</span>";
+  document.getElementById('auth-err').classList.remove('show');
+}
+
+function authRoleChange() {
+  const role = document.getElementById('auth-role').value;
+  document.getElementById('auth-arch-extra').style.display = role === 'ARCHITECT' ? '' : 'none';
+  document.getElementById('auth-supp-extra').style.display = role === 'SUPPLIER' ? '' : 'none';
+}
+
+function authShowErr(msg) {
+  const el = document.getElementById('auth-err');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function authSubmit() {
+  const btn = document.getElementById('auth-submit-btn');
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+
+  if (!email || !password) { authShowErr('Please fill in email and password.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Please wait…';
+  document.getElementById('auth-err').classList.remove('show');
+
+  try {
+    if (authMode === 'login') {
+      const data = await cwFetch('POST', '/auth/login', { email, password });
+      cwSetToken(data.token);
+      await cwLoadSession();
+      closeAuthModal();
+      showToast('Welcome back! You are logged in ✓');
+    } else {
+      const role = document.getElementById('auth-role').value;
+      let profile;
+      if (role === 'ARCHITECT') {
+        const company = document.getElementById('auth-company').value.trim();
+        const license = document.getElementById('auth-license').value.trim();
+        if (!company || !license) { authShowErr('Company name and license number are required.'); return; }
+        profile = { companyName: company, licenseNumber: license };
+      } else {
+        const shop = document.getElementById('auth-shop').value.trim();
+        const category = document.getElementById('auth-category').value.trim();
+        const taxId = document.getElementById('auth-taxid').value.trim();
+        if (!shop || !category || !taxId) { authShowErr('All supplier fields are required.'); return; }
+        profile = { shopName: shop, category, taxId };
+      }
+      await cwFetch('POST', '/auth/register', { email, password, role, profile });
+      // Auto login after register
+      const data = await cwFetch('POST', '/auth/login', { email, password });
+      cwSetToken(data.token);
+      await cwLoadSession();
+      closeAuthModal();
+      showToast('Account created! Welcome to CladWise UAE ✓');
+    }
+  } catch (err) {
+    authShowErr(err.message || 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = authMode === 'login' ? 'Login' : 'Create Account';
+  }
+}
+
+// ─── SESSION + NAV UPDATE ─────────────────────────────────
+async function cwLoadSession() {
+  try {
+    cwSession = await cwFetch('GET', '/users/me');
+    cwUpdateNav();
+    cwUpdateSupplierSection();
+  } catch {
+    cwClearToken();
+    cwSession = null;
+    cwUpdateNav();
+  }
+}
+
+function cwUpdateNav() {
+  const loggedIn = cwSession !== null;
+  document.getElementById('nav-logged-out').style.display = loggedIn ? 'none' : '';
+  document.getElementById('nav-logged-in').style.display = loggedIn ? 'flex' : 'none';
+  if (loggedIn) {
+    const user = cwSession.user;
+    document.getElementById('nav-email').textContent = user.email;
+    document.getElementById('nav-role').textContent = user.role;
+    document.getElementById('nav-avatar').textContent = user.email[0].toUpperCase();
+    const isPremium = user.subscriptionStatus === 'ACTIVE';
+    document.getElementById('nav-premium').style.display = isPremium ? '' : 'none';
+  }
+  // Also sync the API tester token display
+  if (typeof refreshTok === 'function') refreshTok();
+}
+
+function authLogout() {
+  cwClearToken();
+  cwSession = null;
+  cwUpdateNav();
+  cwUpdateSupplierSection();
+  showToast('You have been logged out.');
+}
+
+// ─── STRIPE CHECKOUT ──────────────────────────────────────
+async function startCheckout() {
+  if (!cwIsLoggedIn()) {
+    closeSubModal();
+    setTimeout(() => openAuthModal('login'), 200);
+    showToast('Please login first to subscribe.');
+    return;
+  }
+
+  const priceId = document.getElementById('price-id')?.value || '';
+  if (!priceId || priceId === 'price_placeholder') {
+    showToast('Add your Stripe Price ID to backend/.env first');
+    return;
+  }
+
+  showToast('Redirecting to secure checkout…');
+  closeSubModal();
+
+  try {
+    const data = await cwFetch('POST', '/payments/create-session', { priceId });
+    if (data.url) window.location.href = data.url;
+  } catch (err) {
+    showToast('Checkout failed: ' + (err.message || 'Please try again'));
+  }
+}
+
+// ─── HANDLE STRIPE RETURN ─────────────────────────────────
+function cwHandleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    showToast('Payment successful! Your account has been upgraded to Professional ✓');
+    cwLoadSession();
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+  if (params.get('payment') === 'cancelled') {
+    showToast('Payment cancelled — you can upgrade anytime.');
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+
+// ─── SUPPLIER SECTION UPDATE ──────────────────────────────
+function cwUpdateSupplierSection() {
+  const isPremium = cwSession?.user?.subscriptionStatus === 'ACTIVE';
+  const gate = document.querySelector('.sup-gate-wrap');
+  if (!gate) return;
+
+  if (isPremium) {
+    // Hide the gate, show real supplier grid
+    gate.style.display = 'none';
+    const grid = document.getElementById('sup-grid-real');
+    if (grid) { grid.style.display = 'grid'; return; }
+
+    // Build real supplier grid
+    const section = gate.parentElement;
+    const realGrid = document.createElement('div');
+    realGrid.id = 'sup-grid-real';
+    realGrid.className = 'sup-grid';
+    realGrid.style.marginTop = '32px';
+    realGrid.innerHTML = SUPPLIERS.map(s => `
+      <div class="sup-card-unlocked">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <div class="sup-logo" style="background:${s.color};font-size:22px;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${s.emoji}</div>
+          <div>
+            <div class="sup-name">${s.name} ${s.verified ? '<span style="color:var(--accent);font-size:11px">✓ Verified</span>' : ''}</div>
+            <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:5px"></i>${s.location}</div>
+          </div>
+        </div>
+        <div class="sup-mats" style="margin-bottom:14px">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
+        <div class="sup-phone-real"><i class="fa-solid fa-phone" style="margin-right:6px;opacity:0.6"></i>${s.phone}</div>
+      </div>`).join('');
+    section.appendChild(realGrid);
+  } else {
+    if (gate) gate.style.display = '';
+    const grid = document.getElementById('sup-grid-real');
+    if (grid) grid.style.display = 'none';
+  }
+}
+
+// ─── WIRE UPGRADE BUTTONS ─────────────────────────────────
+function openSubModal(tab = 'access') {
+  if (!cwIsLoggedIn()) {
+    openAuthModal('login');
+    showToast('Login or create an account first to subscribe.');
+    return;
+  }
+  activeSubTab = tab;
+  switchSubTab(tab);
+  document.getElementById('sub-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openProjectModal() {
+  if (!cwIsLoggedIn()) {
+    openAuthModal('login');
+    return;
+  }
+  openSubModal('access');
+}
+
+// ─── INIT ON PAGE LOAD ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  cwHandleStripeReturn();
+  if (cwIsLoggedIn()) cwLoadSession();
+});
+let apiToken = localStorage.getItem('cw_api_tok') || null;
+(function initTester(){ refreshTok(); })();
+
+function refreshTok(){
+  const el=document.getElementById('tok-display');
+  if(!el) return;
+  if(apiToken){el.textContent=apiToken.slice(0,28)+'…'+apiToken.slice(-8);el.className='tok-val set'}
+  else{el.textContent='no token — log in first';el.className='tok-val'}
+}
+function apiClearToken(){apiToken=null;localStorage.removeItem('cw_api_tok');refreshTok();showToast('Token cleared');setSrv('off')}
+
+function setSrv(s){
+  const d=document.getElementById('sdot'),t=document.getElementById('stxt');if(!d)return;
+  if(s==='on'){d.className='sdot on';t.textContent='online'}
+  else if(s==='err'){d.className='sdot err';t.textContent='error'}
+  else{d.className='sdot';t.textContent='offline'}
+}
+
+async function apiPing(){
+  const base=document.getElementById('api-base-url').value.replace(/\/$/,'');
+  try{const r=await fetch(base+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'p@p.com',password:'p'})});setSrv(r.status<500?'on':'err');showToast(r.status<500?'Server is online ✓':'Server error')}
+  catch{setSrv('err');showToast('Cannot reach server — is it running?')}
+}
+
+function apiSetRole(r){
+  document.getElementById('reg-role').value=r;
+  document.getElementById('trb-arch').className='trb'+(r==='ARCHITECT'?' arch':'');
+  document.getElementById('trb-supp').className='trb'+(r==='SUPPLIER'?' supp':'');
+  document.getElementById('arch-fields').className='frow subf'+(r==='ARCHITECT'?'':' hidden');
+  document.getElementById('supp-fields').className='frow subf'+(r==='SUPPLIER'?'':' hidden');
+}
+
+function epTog(id){document.getElementById('epc-'+id).classList.toggle('open')}
+
+async function apiReq(method,path,body,btnId,codeId,resId,msId){
+  const base=document.getElementById('api-base-url').value.replace(/\/$/,'');
+  const t0=Date.now(),btn=document.getElementById(btnId);
+  if(btn){btn.disabled=true;btn.classList.add('loading')}
+  const headers={'Content-Type':'application/json'};
+  if(apiToken) headers['Authorization']='Bearer '+apiToken;
+  let res,data;
+  try{
+    const o={method,headers};if(body&&method!=='GET')o.body=JSON.stringify(body);
+    res=await fetch(base+path,o);data=await res.json();
+  }catch(e){
+    data={error:e.message||'Network error — is the server running?'};
+    setSrv('err');
+    if(btn){btn.disabled=false;btn.classList.remove('loading')}
+    apiPaint(codeId,resId,msId,0,data,Date.now()-t0);apiLog(method,path,0);return;
+  }
+  const ms=Date.now()-t0;apiPaint(codeId,resId,msId,res.status,data,ms);apiLog(method,path,res.status);setSrv(res.status<500?'on':'err');
+  if(btn){btn.disabled=false;btn.classList.remove('loading')}
+  return{status:res.status,data};
+}
+
+function apiPaint(codeId,resId,msId,status,data,ms){
+  const c=document.getElementById(codeId);
+  if(c){c.textContent=status||'ERR';c.className='res-code '+(status>=200&&status<300?'r2':status>=400?'r4':status?'r5':'rD')}
+  const m=document.getElementById(msId);if(m)m.textContent=ms?ms+'ms':'';
+  const r=document.getElementById(resId);if(r){r.classList.remove('empty');r.innerHTML=apiHL(JSON.stringify(data,null,2))}
+}
+
+function apiHL(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,m=>{
+      if(/^"/.test(m)&&/:$/.test(m)){const k=m.replace(/[":]/g,'').trim();return`<span class="${['token','isPremium','subscriptionStatus','role','id','uiConfig'].includes(k)?'ja':'jk'}">${m}</span>`}
+      if(/^"/.test(m))return`<span class="js">${m}</span>`;
+      if(/true|false/.test(m))return`<span class="jb">${m}</span>`;
+      if(/null/.test(m))return`<span class="jnull">${m}</span>`;
+      return`<span class="jn">${m}</span>`;
+    });
+}
+
+function apiLog(method,path,status){
+  document.getElementById('api-log-empty')?.remove();
+  const rows=document.getElementById('api-log-rows'),el=document.createElement('div');el.className='log-row';
+  const now=new Date(),ts=[now.getHours(),now.getMinutes(),now.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  const mc={GET:'var(--blue,#60a5fa)',POST:'var(--accent)',PATCH:'var(--amber)'};
+  const sc=status>=200&&status<300?'var(--accent)':status>=400?'#f87171':'var(--amber)';
+  el.innerHTML=`<span class="log-t">${ts}</span><span class="log-m" style="color:${mc[method]||'var(--muted)'}">${method}</span><span class="log-p">${path}</span><span class="log-s" style="color:${sc}">${status||'ERR'}</span>`;
+  rows.insertBefore(el,rows.firstChild);
+}
+function apiClearLog(){document.getElementById('api-log-rows').innerHTML='<div class="log-empty" id="api-log-empty">No requests sent yet</div>'}
+function apiCopy(id){navigator.clipboard.writeText(document.getElementById(id)?.textContent||'').then(()=>showToast('Copied to clipboard!'))}
+
+async function apiRegister(){
+  const role=document.getElementById('reg-role').value;
+  const profile=role==='ARCHITECT'?{companyName:document.getElementById('reg-company').value,licenseNumber:document.getElementById('reg-license').value,portfolio:document.getElementById('reg-portfolio').value||undefined}:{shopName:document.getElementById('reg-shop').value,category:document.getElementById('reg-cat').value,taxId:document.getElementById('reg-taxid').value};
+  const r=await apiReq('POST','/auth/register',{email:document.getElementById('reg-email').value,password:document.getElementById('reg-pass').value,role,profile},'btn-register','register-code','register-res','register-ms');
+  if(r?.status===201)showToast('Account created! Now log in.');
+}
+
+async function apiLogin(){
+  const r=await apiReq('POST','/auth/login',{email:document.getElementById('login-email').value,password:document.getElementById('login-pass').value},'btn-login','login-code','login-res','login-ms');
+  if(r?.status===200&&r.data?.token){apiToken=r.data.token;localStorage.setItem('cw_api_tok',apiToken);refreshTok();showToast('Token saved — you\'re logged in!')}
+}
+
+async function apiGetMe(){await apiReq('GET','/users/me',null,'btn-me','me-code','me-res','me-ms')}
+
+async function apiUpdateProfile(){
+  let body;try{body=JSON.parse(document.getElementById('profile-body').value)}catch{showToast('Invalid JSON in body');return}
+  await apiReq('PATCH','/users/profile',body,'btn-profile','profile-code','profile-res','profile-ms');
+}
+
+async function apiGetProjects(){await apiReq('GET','/projects',null,'btn-getprojects','getprojects-code','getprojects-res','getprojects-ms')}
+
+async function apiCreateProject(){
+  await apiReq('POST','/projects',{title:document.getElementById('proj-title').value,description:document.getElementById('proj-desc').value,budget:Number(document.getElementById('proj-budget').value)||undefined},'btn-createproject','createproject-code','createproject-res','createproject-ms');
+}
+
+async function apiGetProducts(){await apiReq('GET','/products',null,'btn-getproducts','getproducts-code','getproducts-res','getproducts-ms')}
+
+async function apiCreateProduct(){
+  await apiReq('POST','/products',{name:document.getElementById('prod-name').value,category:document.getElementById('prod-cat').value,price:Number(document.getElementById('prod-price').value),description:document.getElementById('prod-desc').value},'btn-createproduct','createproduct-code','createproduct-res','createproduct-ms');
+}
+
+async function apiPayStatus(){await apiReq('GET','/payments/status',null,'btn-paystatus','paystatus-code','paystatus-res','paystatus-ms')}
+
+async function apiCheckout(){
+  const p=document.getElementById('price-id').value;
+  if(!p){showToast('Enter a Stripe Price ID first');return}
+  const r=await apiReq('POST','/payments/create-session',{priceId:p},'btn-checkout','checkout-code','checkout-res','checkout-ms');
+  if(r?.status===200&&r.data?.url)showToast('Checkout URL ready — copy from response below');
+}
+</script>
+</body>
+</html>
+@keyframes fadeRight{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+
+/* SECTION COMMONS */
+section{padding:100px 0}
+.section-inner{max-width:1280px;margin:0 auto;padding:0 32px}
+.section-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;display:block}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:2px;line-height:1;margin-bottom:16px}
+.section-desc{color:var(--muted);font-size:16px;max-width:560px;line-height:1.7}
+
+/* EXPLORE */
+#explore{background:var(--bg2)}
+.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
+.mat-card{background:var(--card);border-radius:20px;overflow:hidden;cursor:pointer;transition:all 0.3s;border:1px solid var(--border)}
+.mat-card:hover{transform:translateY(-8px);border-color:var(--accent);box-shadow:0 20px 60px rgba(0,229,160,0.08)}
+.mat-card-img{height:220px;position:relative;overflow:hidden;background:#111}
+.mat-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.mat-card:hover .mat-card-img img{transform:scale(1.05)}
+.mat-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%)}
+.mat-card-img-score{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.6);border:1px solid rgba(0,229,160,0.4);backdrop-filter:blur(8px);border-radius:8px;padding:6px 12px;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);line-height:1}
+.mat-card-img-label{position:absolute;bottom:12px;left:12px;font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+.mat-card-thumbs{display:flex;gap:4px;padding:8px 8px 0}
+.mat-thumb{flex:1;height:48px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s}
+.mat-thumb:hover{border-color:var(--accent)}
+.mat-thumb.active{border-color:var(--accent)}
+.mat-thumb img{width:100%;height:100%;object-fit:cover}
+.mat-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--bg3)}
+.mat-card-body{padding:20px}
+.mat-card-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:2px}
+.mat-card-tagline{font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;margin-bottom:12px}
+.mat-card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.tag{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:4px;padding:2px 9px;font-size:10px;color:var(--muted)}
+.mat-card-scores{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.score-item{text-align:center}
+.score-bar-wrap{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-bottom:3px}
+.score-bar{height:3px;border-radius:2px;background:var(--accent);transition:width 0.5s ease}
+.score-label{font-size:10px;color:var(--muted);letter-spacing:0.5px}
+
+/* MODAL GALLERY TAB */
+.gallery-hero{position:relative;border-radius:16px;overflow:hidden;height:320px;margin-bottom:20px;background:var(--bg3);cursor:zoom-in}
+.gallery-hero img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease}
+.gallery-hero:hover img{transform:scale(1.02)}
+.gallery-hero-caption{position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);display:flex;justify-content:space-between;align-items:flex-end}
+.gallery-caption-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px}
+.gallery-caption-desc{font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px}
+.gallery-caption-tag{font-family:'DM Mono',monospace;font-size:10px;background:rgba(0,229,160,0.2);border:1px solid rgba(0,229,160,0.4);padding:4px 10px;border-radius:4px;color:var(--accent);white-space:nowrap}
+.variant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.variant-card{border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s;background:var(--bg3)}
+.variant-card:hover,.variant-card.active{border-color:var(--accent)}
+.variant-card-img{height:100px;overflow:hidden;position:relative}
+.variant-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
+.variant-card:hover .variant-card-img img{transform:scale(1.08)}
+.variant-card-label{padding:8px 10px}
+.variant-card-name{font-size:11px;font-weight:700;margin-bottom:1px}
+.variant-card-sub{font-size:10px;color:var(--muted);line-height:1.3}
+.gallery-nav{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.gal-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all 0.2s}
+.gal-dot.active{background:var(--accent);border-color:var(--accent)}
+
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.96);align-items:center;justify-content:center;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox-img-wrap{position:relative;max-width:90vw;max-height:80vh;border-radius:12px;overflow:hidden}
+.lightbox-img-wrap img{max-width:90vw;max-height:80vh;object-fit:contain;border-radius:12px;display:block}
+.lightbox-close{position:absolute;top:24px;right:24px;width:44px;height:44px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:18px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.lightbox-close:hover{background:rgba(255,255,255,0.2)}
+.lightbox-caption{margin-top:16px;text-align:center;font-size:13px;color:rgba(255,255,255,0.6);font-family:'DM Mono',monospace}
+.lightbox-nav-btns{display:flex;gap:16px;margin-top:16px}
+.lb-btn{padding:10px 24px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.lb-btn:hover{background:rgba(255,255,255,0.15)}
+
+/* COMPARISON */
+#compare{background:var(--bg)}
+.compare-controls{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0 24px}
+.mat-toggle{display:flex;align-items:center;gap:10px;padding:10px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.2s;font-size:13px;font-weight:600;user-select:none}
+.mat-toggle.active{border-color:var(--accent);background:rgba(0,229,160,0.08);color:var(--accent)}
+.mat-toggle .dot{width:10px;height:10px;border-radius:50%}
+.compare-table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+thead tr{background:var(--bg3)}
+th{padding:16px 20px;text-align:left;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:2px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border)}
+td{padding:14px 20px;border-bottom:1px solid var(--border);font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.td-label{color:var(--muted);font-weight:500;font-size:12px}
+.star-row{color:var(--amber);font-size:12px;letter-spacing:1px}
+.compliance-badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace}
+.badge-yes{background:rgba(0,229,160,0.15);color:var(--accent)}
+.badge-no{background:rgba(239,68,68,0.15);color:#f87171}
+.badge-partial{background:rgba(245,158,11,0.15);color:var(--amber)}
+
+/* WIZARD */
+#wizard{background:var(--bg2)}
+.wizard-wrap{max-width:720px;margin:52px auto 0}
+.wizard-card{background:var(--card);border-radius:24px;border:1px solid var(--border);overflow:hidden}
+.wizard-progress{height:4px;background:var(--bg3)}
+.wizard-progress-bar{height:4px;background:var(--accent);transition:width 0.4s ease}
+.wizard-body{padding:48px}
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.wizard-q{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;margin-bottom:8px}
+.wizard-hint{color:var(--muted);font-size:13px;margin-bottom:32px}
+.wizard-options{display:grid;gap:12px}
+.wiz-opt{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--bg2);border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.2s;font-size:14px;font-weight:500}
+.wiz-opt:hover{border-color:var(--accent);background:rgba(0,229,160,0.04)}
+.wiz-opt.selected{border-color:var(--accent);background:rgba(0,229,160,0.08);color:var(--accent)}
+.wiz-opt .wiz-icon{width:40px;height:40px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px}
+.step-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+.btn-wiz{padding:12px 28px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;border:none;letter-spacing:0.5px}
+.btn-wiz-next{background:var(--accent);color:#000}
+.btn-wiz-next:hover{background:#00ffb3}
+.btn-wiz-back{background:var(--bg3);color:var(--muted)}
+.btn-wiz-back:hover{color:var(--text)}
+
+/* RESULTS */
+.result-header{text-align:center;margin-bottom:36px}
+.result-header h3{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;margin-bottom:8px}
+.result-header p{color:var(--muted);font-size:14px}
+.results-grid{display:grid;gap:16px}
+.result-row{display:flex;align-items:center;gap:20px;padding:20px 24px;background:var(--bg2);border-radius:12px;border:1px solid var(--border);transition:all 0.3s}
+.result-row.top-pick{border-color:var(--accent);background:rgba(0,229,160,0.04)}
+.result-rank{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--muted);width:40px;text-align:center;flex-shrink:0}
+.result-rank.rank-1{color:var(--accent)}
+.result-info{flex:1}
+.result-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+.result-reason{font-size:12px;color:var(--muted);margin-top:2px}
+.result-score-bar{flex:1;max-width:200px}
+.score-pct{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--accent);text-align:right;width:60px;flex-shrink:0}
+
+/* SUPPLIERS PREMIUM */
+#suppliers{background:var(--bg)}
+.sup-section-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
+.sup-list-cta{display:flex;align-items:center;gap:10px;padding:12px 22px;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.06));border:1px solid rgba(245,158,11,0.35);border-radius:10px;cursor:pointer;transition:all 0.25s}
+.sup-list-cta:hover{border-color:var(--amber);background:rgba(245,158,11,0.18);transform:translateY(-1px)}
+.sup-list-cta-icon{font-size:18px}
+.sup-list-cta-text{text-align:left}
+.sup-list-cta-label{font-size:12px;font-weight:700;color:var(--amber);letter-spacing:0.5px}
+.sup-list-cta-sub{font-size:11px;color:var(--muted)}
+
+/* TEASER GRID + GATE */
+.sup-gate-wrap{position:relative;margin-top:36px}
+.sup-teaser-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.sup-card-teaser{background:var(--card);border-radius:16px;padding:28px;border:1px solid var(--border)}
+.sup-logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.sup-name{font-weight:700;font-size:16px;margin-bottom:4px}
+.sup-location{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:12px}
+.sup-mats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.sup-mat{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.sup-phone-blur{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);filter:blur(5px);user-select:none}
+.sup-card-locked{position:relative;overflow:hidden}
+.sup-card-locked::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,0.7) 100%)}
+
+/* GATE OVERLAY */
+.sup-gate{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(to bottom,rgba(10,10,10,0.1) 0%,rgba(10,10,10,0.75) 28%,rgba(10,10,10,0.97) 55%)}
+.gate-card{background:var(--bg2);border:1px solid rgba(0,229,160,0.2);border-radius:24px;padding:52px 48px;max-width:560px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.6)}
+.gate-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);border-radius:20px;padding:6px 16px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:2px;color:var(--accent);margin-bottom:24px}
+.gate-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;line-height:1;margin-bottom:12px}
+.gate-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:32px;max-width:380px;margin-left:auto;margin-right:auto}
+.gate-stats{display:flex;justify-content:center;gap:32px;margin-bottom:32px}
+.gate-stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);display:block;line-height:1}
+.gate-stat-label{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px}
+.gate-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+.btn-gate-primary{background:var(--accent);color:#000;border:none;padding:14px 36px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;width:100%}
+.btn-gate-primary:hover{background:#00ffb3;transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,229,160,0.25)}
+.btn-gate-outline{background:transparent;color:var(--muted);border:1px solid var(--border);padding:12px 36px;border-radius:8px;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;width:100%}
+.btn-gate-outline:hover{border-color:var(--amber);color:var(--amber)}
+.gate-note{font-size:11px;color:var(--muted);margin-top:12px}
+
+/* SUBSCRIPTION MODAL */
+.sub-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px}
+.sub-modal-overlay.open{display:flex}
+.sub-modal{background:var(--bg2);border-radius:28px;border:1px solid var(--border);width:100%;max-width:960px;overflow:hidden;animation:modalIn 0.35s cubic-bezier(0.16,1,0.3,1)}
+.sub-modal-header{padding:40px 48px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.sub-modal-close{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:none;color:var(--muted);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.sub-modal-close:hover{background:var(--border);color:var(--text)}
+.sub-tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin:28px 48px 0;padding:0}
+.sub-tab{padding:12px 24px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;background:none;border-left:none;border-right:none;border-top:none;font-family:'DM Sans',sans-serif;letter-spacing:0.3px}
+.sub-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.sub-tab:hover{color:var(--text)}
+.sub-modal-body{padding:36px 48px 48px}
+.sub-panel{display:none}
+.sub-panel.active{display:block}
+/* PLAN CARDS */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan-card{background:var(--bg3);border-radius:18px;padding:28px;border:1px solid var(--border);position:relative;transition:all 0.3s}
+.plan-card.featured{border-color:var(--accent);background:rgba(0,229,160,0.04)}
+.plan-card:hover{transform:translateY(-4px)}
+.plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:10px;font-weight:700;padding:4px 14px;border-radius:10px;font-family:'DM Mono',monospace;letter-spacing:1px;white-space:nowrap}
+.plan-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:4px}
+.plan-price{margin:16px 0}
+.plan-price-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent);line-height:1}
+.plan-price-curr{font-size:16px;color:var(--muted);vertical-align:top;margin-top:8px;display:inline-block}
+.plan-price-period{font-size:12px;color:var(--muted);display:block;margin-top:2px;font-family:'DM Mono',monospace}
+.plan-desc{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.plan-features{list-style:none;margin-bottom:24px}
+.plan-features li{font-size:12px;padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.plan-features li:last-child{border-bottom:none}
+.plan-features li .fi{color:var(--accent);flex-shrink:0;margin-top:2px}
+.plan-features li .fi-no{color:#f87171;flex-shrink:0;margin-top:2px}
+.plan-features li.muted-feat{color:var(--muted)}
+.btn-plan{width:100%;padding:12px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;border:none;letter-spacing:0.3px}
+.btn-plan-primary{background:var(--accent);color:#000}
+.btn-plan-primary:hover{background:#00ffb3}
+.btn-plan-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-plan-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-plan-amber{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--amber)}
+.btn-plan-amber:hover{background:rgba(245,158,11,0.25)}
+/* LIST CTA PANEL */
+.list-hero{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(245,158,11,0.03));border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:32px;margin-bottom:28px;display:flex;align-items:center;gap:28px}
+.list-hero-icon{font-size:48px;flex-shrink:0}
+.list-hero-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--amber);margin-bottom:4px}
+.list-hero-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.listing-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.listing-plan{background:var(--bg3);border-radius:14px;padding:24px;border:1px solid var(--border);position:relative}
+.listing-plan.featured{border-color:var(--amber);background:rgba(245,158,11,0.04)}
+.listing-plan-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:8px}
+.listing-plan-price{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--amber);line-height:1;margin-bottom:4px}
+.listing-plan-period{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:16px}
+.listing-perks{list-style:none;margin-bottom:20px}
+.listing-perks li{font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;line-height:1.4}
+.listing-perks li:last-child{border-bottom:none}
+.listing-perks li .fi{color:var(--amber);flex-shrink:0;margin-top:1px}
+.reach-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-top:24px}
+.reach-box{background:var(--bg2);padding:20px;text-align:center}
+.reach-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--amber);display:block;line-height:1}
+.reach-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-top:3px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border-radius:24px;border:1px solid var(--border);width:100%;max-width:820px;overflow:hidden;animation:modalIn 0.3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:36px 40px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-title-wrap{}
+.modal-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:2px}
+.modal-close{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:none;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.modal-close:hover{background:var(--border);color:var(--text)}
+.modal-tabs{display:flex;gap:0;padding:24px 40px 0;border-bottom:1px solid var(--border)}
+.modal-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;background:none;border-left:none;border-right:none;border-top:none;font-family:'DM Sans',sans-serif}
+.modal-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.modal-tab:hover{color:var(--text)}
+.modal-body{padding:36px 40px}
+.modal-panel{display:none}
+.modal-panel.active{display:block}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.spec-item{background:var(--bg3);border-radius:12px;padding:20px}
+.spec-item-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-family:'DM Mono',monospace}
+.spec-item-val{font-size:20px;font-weight:600}
+.spec-item-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.compliance-list{display:grid;gap:12px}
+.comp-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--bg3);border-radius:10px}
+.comp-label{font-size:13px;font-weight:500}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pros-box,.cons-box{background:var(--bg3);border-radius:12px;padding:24px}
+.pros-box h4{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:16px}
+.cons-box h4{color:#f87171;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:16px}
+.pc-item{display:flex;gap:10px;font-size:13px;margin-bottom:10px;line-height:1.5}
+.pc-item::before{content:'→';flex-shrink:0;font-family:'DM Mono',monospace}
+.pros-box .pc-item::before{color:var(--accent)}
+.cons-box .pc-item::before{color:#f87171}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32px;text-align:center}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--accent);margin-bottom:8px}
+.footer-sub{font-size:12px;color:var(--muted)}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--bg3);border:1px solid var(--accent);border-radius:12px;padding:16px 24px;font-size:13px;z-index:300;transform:translateX(120%);transition:transform 0.3s ease}
+.toast.show{transform:translateX(0)}
+
+/* ── API TESTER ─────────────────────────────────────────────────────────── */
+#api-tester{background:var(--bg)}
+.tester-strip{background:linear-gradient(135deg,rgba(0,229,160,0.05),transparent);border:1px solid rgba(0,229,160,0.15);border-radius:20px;padding:40px 48px;margin-bottom:48px;display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.tstr-left h3{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;line-height:1;margin-bottom:8px}
+.tstr-left p{color:var(--muted);font-size:13px;line-height:1.6;max-width:420px;margin-bottom:16px}
+.srv-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;background:var(--bg2);border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all 0.3s}
+.sdot.on{background:var(--accent);box-shadow:0 0 8px var(--accent);animation:sdotblink 2s infinite}
+.sdot.err{background:#f87171;box-shadow:0 0 8px #f87171}
+@keyframes sdotblink{0%,100%{opacity:1}50%{opacity:0.35}}
+.tstr-right{display:flex;flex-direction:column;gap:8px;min-width:300px;flex:1;max-width:440px}
+.cfg-row{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.cfg-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);flex-shrink:0}
+.cfg-inp{flex:1;background:transparent;border:none;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none}
+.cfg-inp::placeholder{color:var(--muted)}
+.cfg-ping{background:var(--accent);color:#000;border:none;padding:7px 14px;border-radius:6px;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.cfg-ping:hover{background:#00ffb3}
+.tok-lbl{color:var(--amber)}
+.tok-val{flex:1;font-family:'DM Mono',monospace;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.tok-val.set{color:var(--accent)}
+.tok-clr{background:none;border:none;color:#f87171;font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;opacity:0.6;flex-shrink:0;transition:opacity 0.2s}
+.tok-clr:hover{opacity:1}
+.api-group{margin-bottom:32px}
+.api-grp-hd{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.api-grp-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:4px 12px;border-radius:20px;flex-shrink:0}
+.lbl-auth{background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2)}
+.lbl-user{background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.2)}
+.lbl-proj{background:rgba(181,122,255,0.1);color:#b57aff;border:1px solid rgba(181,122,255,0.2)}
+.lbl-prod{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.lbl-pay{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.2)}
+.api-grp-line{flex:1;height:1px;background:var(--border)}
+.api-grp-note{font-size:12px;color:var(--muted)}
+.ep-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color 0.2s}
+.ep-card:hover{border-color:rgba(255,255,255,0.12)}
+.ep-card.open{border-color:rgba(0,229,160,0.2)}
+.ep-hd{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+.mth{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;padding:4px 10px;border-radius:5px;flex-shrink:0;min-width:48px;text-align:center}
+.mGET  {background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.2)}
+.mPOST {background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2)}
+.mPATCH{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.ep-path{font-family:'DM Mono',monospace;font-size:13px;flex:1}
+.ep-desc{font-size:12px;color:var(--muted)}
+.ep-lock{font-size:11px;color:var(--muted);opacity:0.4}
+.ep-chev{color:var(--muted);font-size:11px;transition:transform 0.2s;flex-shrink:0}
+.ep-card.open .ep-chev{transform:rotate(180deg)}
+.ep-body{display:none;border-top:1px solid var(--border);padding:20px 18px;flex-direction:column;gap:14px}
+.ep-card.open .ep-body{display:flex}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ffield{display:flex;flex-direction:column;gap:5px}
+.ffield.full{grid-column:1/-1}
+.ffield label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.ffield input,.ffield textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.ffield input:focus,.ffield textarea:focus{border-color:rgba(0,229,160,0.4)}
+.ffield textarea{resize:vertical;min-height:70px}
+.ffield input::placeholder,.ffield textarea::placeholder{color:var(--muted)}
+.role-row{display:flex;gap:8px}
+.trb{flex:1;padding:9px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.2s}
+.trb.arch{border-color:#60a5fa;background:rgba(96,165,250,0.1);color:#60a5fa}
+.trb.supp{border-color:var(--amber);background:rgba(245,158,11,0.1);color:var(--amber)}
+.subf{display:contents}.subf.hidden{display:none}
+.api-send{background:var(--accent);color:#000;padding:10px 24px;border-radius:7px;font-weight:700;font-size:13px;border:none;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px;align-self:flex-start;letter-spacing:0.3px}
+.api-send:hover{background:#00ffb3;transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,229,160,0.2)}
+.api-send:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.api-spin{display:none;animation:aspin 0.7s linear infinite}
+.api-send.loading .api-spin{display:inline}
+@keyframes aspin{to{transform:rotate(360deg)}}
+.res-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.res-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.res-left{display:flex;align-items:center;gap:8px}
+.res-code{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:3px 9px;border-radius:4px}
+.rD{background:var(--bg3);color:var(--muted);border:1px solid var(--border)}
+.r2{background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2)}
+.r4{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.2)}
+.r5{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.res-ms{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.res-cp{background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;cursor:pointer;transition:all 0.2s}
+.res-cp:hover{border-color:var(--accent);color:var(--accent)}
+.res-body{padding:14px;font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.7;overflow-x:auto;max-height:280px;overflow-y:auto;color:var(--muted);white-space:pre}
+.res-body.empty{color:rgba(120,120,120,0.4);font-style:italic}
+.jk{color:#79c0ff}.js{color:#a5d6ff}.jn{color:var(--amber)}.jb{color:#c084fc}.jnull{color:#f87171}.ja{color:var(--accent);font-weight:700}
+.api-log{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:40px}
+.api-log-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+.api-log-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
+.api-log-clr{background:none;border:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;transition:color 0.2s}
+.api-log-clr:hover{color:#f87171}
+.api-log-rows{max-height:220px;overflow-y:auto}
+.log-row{display:flex;align-items:center;gap:12px;padding:9px 20px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;animation:fadeUp 0.18s ease}
+.log-row:last-child{border-bottom:none}
+.log-t{color:var(--muted);font-size:10px;flex-shrink:0;width:66px}
+.log-m{flex-shrink:0;font-weight:500;width:42px}
+.log-p{color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-s{flex-shrink:0;font-size:10px;font-weight:700}
+.log-empty{padding:24px;text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+
+/* ── AUTH MODAL ──────────────────────────────────────────────────────────── */
+.auth-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:300;backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px}
+.auth-overlay.open{display:flex}
+.auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:24px;width:100%;max-width:460px;overflow:hidden;animation:modalIn 0.3s cubic-bezier(0.16,1,0.3,1)}
+.auth-hd{padding:36px 40px 0;display:flex;justify-content:space-between;align-items:center}
+.auth-hd-left h2{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;line-height:1}
+.auth-hd-left p{font-size:12px;color:var(--muted);margin-top:4px}
+.auth-close{width:34px;height:34px;background:var(--bg3);border:none;color:var(--muted);border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.auth-close:hover{color:var(--text);background:var(--border)}
+.auth-tabs{display:flex;margin:20px 40px 0;background:var(--bg3);border-radius:10px;padding:4px;gap:4px}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;transition:all 0.2s}
+.auth-tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.auth-body{padding:28px 40px 36px;display:flex;flex-direction:column;gap:14px}
+.auth-field{display:flex;flex-direction:column;gap:6px}
+.auth-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.auth-field input,.auth-field select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.auth-field input:focus,.auth-field select:focus{border-color:rgba(0,229,160,0.5)}
+.auth-field input::placeholder{color:var(--muted)}
+.auth-field select{cursor:pointer}
+.auth-field select option{background:var(--bg2)}
+.auth-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.auth-submit{background:var(--accent);color:#000;border:none;padding:14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px}
+.auth-submit:hover{background:#00ffb3;transform:translateY(-1px)}
+.auth-submit:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.auth-err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#f87171;display:none}
+.auth-err.show{display:block}
+.auth-switch{text-align:center;font-size:12px;color:var(--muted)}
+.auth-switch span{color:var(--accent);cursor:pointer;font-weight:600}
+.auth-switch span:hover{text-decoration:underline}
+.auth-divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── NAV AUTH STATE ──────────────────────────────────────────────────────── */
+.nav-user{display:flex;align-items:center;gap:10px}
+.nav-avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;cursor:pointer;flex-shrink:0}
+.nav-user-info{display:flex;flex-direction:column;line-height:1.2}
+.nav-user-email{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-user-role{font-size:10px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:1px}
+.nav-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.2s}
+.nav-logout:hover{border-color:#f87171;color:#f87171}
+.nav-premium-badge{background:linear-gradient(135deg,var(--amber),#f97316);color:#000;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;letter-spacing:1px}
+
+/* ── PREMIUM SUPPLIER CARDS ─────────────────────────────────────────────── */
+.sup-card-unlocked{background:var(--card);border:1px solid rgba(0,229,160,0.2);border-radius:16px;padding:24px;transition:all 0.2s}
+.sup-card-unlocked:hover{border-color:rgba(0,229,160,0.4);transform:translateY(-2px)}
+.sup-phone-real{font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);font-weight:600}
+.sup-email-real{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  h1{font-size:56px}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .materials-grid{grid-template-columns:1fr 1fr}
+  .sup-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .materials-grid{grid-template-columns:1fr}
+  .sup-grid{grid-template-columns:1fr}
+  .spec-grid{grid-template-columns:1fr}
+  .pros-cons{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#home" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <div><span class="logo-text">CladWise</span><span class="logo-sub">UAE</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#explore">Materials</a>
+      <a href="#compare">Compare</a>
+      <a href="#wizard">Advisor</a>
+      <a href="#suppliers">Suppliers</a>
+    </div>
+    <!-- LOGGED OUT STATE -->
+    <div id="nav-logged-out">
+      <button class="nav-cta" onclick="openAuthModal('login')">Login / Sign Up</button>
+    </div>
+    <!-- LOGGED IN STATE -->
+    <div id="nav-logged-in" style="display:none" class="nav-user">
+      <div>
+        <div class="nav-user-email" id="nav-email"></div>
+        <div class="nav-user-role" id="nav-role"></div>
+      </div>
+      <div class="nav-avatar" id="nav-avatar" onclick="openAuthModal('login')">?</div>
+      <span class="nav-premium-badge" id="nav-premium" style="display:none">PRO</span>
+      <button class="nav-logout" onclick="authLogout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <span class="hero-eyebrow">UAE Facade Intelligence Platform</span>
+      <h1>Facade<br>Cladding<br><span>Engineered</span><br>for UAE</h1>
+      <p class="hero-desc">GFRC · GFRP · Aluminum · Natural Stone · ACM. Compare materials against UAE fire codes, extreme heat performance, Estidama compliance, and project budgets — in seconds.</p>
+      <div class="hero-btns">
+        <a href="#wizard" class="btn-primary">Run Advisor Wizard</a>
+        <a href="#explore" class="btn-outline">Explore Materials</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="material-preview">
+        <div class="mat-prev mp-gfrc" onclick="openModal('GFRC')" style="background-image:url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=400&h=200&fit=crop&q=70');background-size:cover;background-position:center">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(30,58,47,0.75),rgba(15,32,24,0.85));border-radius:16px"></div>
+          <div style="position:relative"><div class="mat-prev-name">GFRC</div><div class="mat-prev-tag">Glass Fibre Reinforced Concrete</div></div>
+          <div class="mat-prev-score" style="position:relative">9.2</div>
+        </div>
+        <div class="mat-prev mp-gfrp" onclick="openModal('GFRP')" style="background-image:url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=200&fit=crop&q=70');background-size:cover;background-position:center">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,43,60,0.75),rgba(13,26,38,0.85));border-radius:16px"></div>
+          <div style="position:relative"><div class="mat-prev-name">GFRP</div><div class="mat-prev-tag">Glass Fibre Reinforced Polymer</div></div>
+          <div class="mat-prev-score" style="position:relative">8.7</div>
+        </div>
+        <div class="mat-prev mp-alum" onclick="openModal('Aluminum')" style="background-image:url('https://images.unsplash.com/photo-1509741399-3e9ab8f33fd5?w=400&h=200&fit=crop&q=70');background-size:cover;background-position:center">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(42,42,42,0.75),rgba(26,26,26,0.85));border-radius:16px"></div>
+          <div style="position:relative"><div class="mat-prev-name">ALU</div><div class="mat-prev-tag">Aluminum Composite Panel</div></div>
+          <div class="mat-prev-score" style="position:relative">8.1</div>
+        </div>
+        <div class="mat-prev mp-stone" onclick="openModal('Stone')" style="background-image:url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=200&fit=crop&q=70');background-size:cover;background-position:center">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(45,36,22,0.75),rgba(26,21,12,0.85));border-radius:16px"></div>
+          <div style="position:relative"><div class="mat-prev-name">STONE</div><div class="mat-prev-tag">Natural / Engineered Stone</div></div>
+          <div class="mat-prev-score" style="position:relative">7.6</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:16px 20px;background:var(--card);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;color:var(--muted)">Scores based on: Heat · Fire · Weight · Cost · Speed</span>
+        <span style="font-size:12px;color:var(--accent);font-family:'DM Mono',monospace">UAE CLIMATE 2025</span>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0">
+    <div style="max-width:1280px;margin:0 auto;padding:0 32px 32px;display:flex;gap:1px">
+      <div class="stat-box" style="flex:1;border-radius:12px 0 0 12px;border:1px solid var(--border)"><span class="stat-num">5</span><span class="stat-label">Materials</span></div>
+      <div class="stat-box" style="flex:1;border:1px solid var(--border);border-left:none"><span class="stat-num">40+</span><span class="stat-label">Spec Points</span></div>
+      <div class="stat-box" style="flex:1;border-radius:0 12px 12px 0;border:1px solid var(--border);border-left:none"><span class="stat-num">18+</span><span class="stat-label">UAE Suppliers</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore">
+  <div class="section-inner">
+    <span class="section-label">Material Library</span>
+    <h2 class="section-title">Material Explorer</h2>
+    <p class="section-desc">Click any card for full technical specs, UAE compliance status, and aesthetic options.</p>
+    <div class="materials-grid" id="materials-grid"></div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="compare">
+  <div class="section-inner">
+    <span class="section-label">Side-by-Side Analysis</span>
+    <h2 class="section-title">Live Comparison</h2>
+    <p class="section-desc">Select materials to compare across key performance dimensions for UAE projects.</p>
+    <div class="compare-controls" id="compare-controls"></div>
+    <div class="compare-table-wrap">
+      <table id="compare-table">
+        <thead><tr id="compare-thead"></tr></thead>
+        <tbody id="compare-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- WIZARD -->
+<section id="wizard">
+  <div class="section-inner" style="text-align:center">
+    <span class="section-label">AI-Powered Advisor</span>
+    <h2 class="section-title">Smart Recommendation</h2>
+    <p class="section-desc" style="margin:0 auto">5 project questions → ranked material recommendations with weighted scoring for your specific UAE project context.</p>
+  </div>
+  <div class="wizard-wrap">
+    <div class="wizard-card">
+      <div class="wizard-progress"><div class="wizard-progress-bar" id="wiz-bar" style="width:20%"></div></div>
+      <div class="wizard-body" id="wizard-body">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPLIERS (PREMIUM GATED) -->
+<section id="suppliers">
+  <div class="section-inner">
+    <div class="sup-section-head">
+      <div>
+        <span class="section-label">Verified Directory</span>
+        <h2 class="section-title">UAE Suppliers</h2>
+        <p class="section-desc">Pre-vetted manufacturers and distributors across all 7 Emirates.</p>
+      </div>
+      <button class="sup-list-cta" onclick="openSubModal('list')">
+        <span class="sup-list-cta-icon">🏭</span>
+        <div class="sup-list-cta-text">
+          <div class="sup-list-cta-label">List Your Company</div>
+          <div class="sup-list-cta-sub">Reach 4,000+ specifiers &amp; architects</div>
+        </div>
+        <i class="fa-solid fa-arrow-right" style="color:var(--amber);font-size:12px"></i>
+      </button>
+    </div>
+
+    <!-- GATE WRAP: teaser cards + overlay -->
+    <div class="sup-gate-wrap">
+      <!-- Teaser: 3 blurred/partial cards -->
+      <div class="sup-teaser-grid" id="sup-teaser"></div>
+
+      <!-- Gate overlay -->
+      <div class="sup-gate">
+        <div class="gate-card">
+          <div class="gate-badge"><i class="fa-solid fa-lock" style="font-size:10px"></i> Members Only</div>
+          <div class="gate-title">Supplier Directory</div>
+          <p class="gate-desc">Access full contact details, certifications, and direct quote requests for 18+ verified UAE facade manufacturers.</p>
+          <div class="gate-stats">
+            <div><span class="gate-stat-num">18+</span><span class="gate-stat-label">Suppliers</span></div>
+            <div><span class="gate-stat-num">7</span><span class="gate-stat-label">Emirates</span></div>
+            <div><span class="gate-stat-num">5</span><span class="gate-stat-label">Materials</span></div>
+          </div>
+          <div class="gate-btns">
+            <button class="btn-gate-primary" onclick="openSubModal('access')">
+              <i class="fa-solid fa-unlock" style="margin-right:8px"></i>Unlock Full Directory
+            </button>
+            <button class="btn-gate-outline" onclick="openSubModal('list')">
+              <i class="fa-solid fa-building" style="margin-right:8px"></i>I'm a Supplier — List My Company
+            </button>
+          </div>
+          <p class="gate-note">✓ Cancel anytime &nbsp;·&nbsp; ✓ Instant access &nbsp;·&nbsp; ✓ AED pricing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-overlay" onclick="authOverlayClick(event)">
+  <div class="auth-box">
+    <div class="auth-hd">
+      <div class="auth-hd-left">
+        <h2 id="auth-title">Welcome Back</h2>
+        <p id="auth-sub">Login to your CladWise account</p>
+      </div>
+      <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+    <div class="auth-body">
+      <div class="auth-err" id="auth-err"></div>
+
+      <!-- LOGIN FIELDS -->
+      <div id="auth-login-fields">
+        <div class="auth-field" style="margin-bottom:14px">
+          <label>Email Address</label>
+          <input type="email" id="auth-email" placeholder="you@company.com"/>
+        </div>
+        <div class="auth-field" style="margin-bottom:6px">
+          <label>Password</label>
+          <input type="password" id="auth-password" placeholder="Your password" onkeydown="if(event.key==='Enter')authSubmit()"/>
+        </div>
+      </div>
+
+      <!-- REGISTER EXTRA FIELDS -->
+      <div id="auth-register-fields" style="display:none">
+        <div class="auth-field" style="margin-bottom:14px">
+          <label>I am a</label>
+          <select id="auth-role" onchange="authRoleChange()">
+            <option value="ARCHITECT">🏗 Architect / Specifier / Developer</option>
+            <option value="SUPPLIER">🏭 Supplier / Manufacturer</option>
+          </select>
+        </div>
+        <div id="auth-arch-extra">
+          <div class="auth-row" style="margin-bottom:14px">
+            <div class="auth-field">
+              <label>Company Name</label>
+              <input type="text" id="auth-company" placeholder="Design Studio LLC"/>
+            </div>
+            <div class="auth-field">
+              <label>License No.</label>
+              <input type="text" id="auth-license" placeholder="LIC-2025-001"/>
+            </div>
+          </div>
+        </div>
+        <div id="auth-supp-extra" style="display:none">
+          <div class="auth-row" style="margin-bottom:14px">
+            <div class="auth-field">
+              <label>Shop / Brand Name</label>
+              <input type="text" id="auth-shop" placeholder="Gulf Facades LLC"/>
+            </div>
+            <div class="auth-field">
+              <label>Category</label>
+              <input type="text" id="auth-category" placeholder="Facade Cladding"/>
+            </div>
+          </div>
+          <div class="auth-field" style="margin-bottom:14px">
+            <label>Tax ID / TRN</label>
+            <input type="text" id="auth-taxid" placeholder="TAX-UAE-2025-001"/>
+          </div>
+        </div>
+      </div>
+
+      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Login</button>
+      <div class="auth-switch" id="auth-switch-text">
+        Don't have an account? <span onclick="switchAuthTab('register')">Create one free</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBSCRIPTION MODAL -->
+<div class="sub-modal-overlay" id="sub-modal-overlay" onclick="checkCloseSubModal(event)">
+  <div class="sub-modal" id="sub-modal">
+    <div class="sub-modal-header">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
+      </div>
+      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="sub-tab-bar">
+      <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fa-solid fa-search" style="margin-right:6px"></i>For Specifiers &amp; Architects</button>
+      <button class="sub-tab" onclick="switchSubTab('list')"><i class="fa-solid fa-building" style="margin-right:6px"></i>For Suppliers</button>
+    </div>
+    <div class="sub-modal-body">
+
+      <!-- SPECIFIER ACCESS PANEL -->
+      <div class="sub-panel active" id="sub-panel-access">
+        <div style="text-align:center;margin-bottom:28px">
+          <p style="color:var(--muted);font-size:13px">Access the full verified UAE supplier directory, direct contacts &amp; quote requests.</p>
+        </div>
+        <div class="plans-grid">
+          <!-- FREE -->
+          <div class="plan-card">
+            <div class="plan-name">Explorer</div>
+            <div class="plan-price">
+              <span class="plan-price-curr">AED</span><span class="plan-price-num">0</span>
+              <span class="plan-price-period">Free forever</span>
+            </div>
+            <p class="plan-desc">Get started with material data and the advisor wizard. No credit card needed.</p>
+            <ul class="plan-features">
+              <li><span class="fi">✓</span> Material Explorer (5 materials)</li>
+              <li><span class="fi">✓</span> Live Comparison Table</li>
+              <li><span class="fi">✓</span> Advisor Wizard</li>
+              <li class="muted-feat"><span class="fi-no">✗</span> Supplier Directory</li>
+              <li class="muted-feat"><span class="fi-no">✗</span> Direct contact details</li>
+              <li class="muted-feat"><span class="fi-no">✗</span> Quote requests</li>
+            </ul>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('You are on the free plan — upgrade to access suppliers!');closeSubModal()">Current Plan</button>
+          </div>
+          <!-- PRO -->
+          <div class="plan-card featured">
+            <div class="plan-badge">MOST POPULAR</div>
+            <div class="plan-name">Professional</div>
+            <div class="plan-price">
+              <span class="plan-price-curr">AED</span><span class="plan-price-num">149</span>
+              <span class="plan-price-period">per month · billed monthly</span>
+            </div>
+            <p class="plan-desc">Full directory access for architects, specifiers and procurement teams.</p>
+            <ul class="plan-features">
+              <li><span class="fi">✓</span> Everything in Explorer</li>
+              <li><span class="fi">✓</span> Full Supplier Directory (18+ companies)</li>
+              <li><span class="fi">✓</span> Direct phone &amp; email contacts</li>
+              <li><span class="fi">✓</span> Unlimited quote requests</li>
+              <li><span class="fi">✓</span> Material filter by emirate</li>
+              <li><span class="fi">✓</span> Export to PDF / Excel</li>
+            </ul>
+            <button class="btn-plan btn-plan-primary" onclick="startCheckout()">Get Professional Access</button>
+          </div>
+          <!-- ENTERPRISE -->
+          <div class="plan-card">
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-price">
+              <span class="plan-price-curr">AED</span><span class="plan-price-num">499</span>
+              <span class="plan-price-period">per month · up to 10 seats</span>
+            </div>
+            <p class="plan-desc">For developer firms, MEP consultants and large design offices needing team access.</p>
+            <ul class="plan-features">
+              <li><span class="fi">✓</span> Everything in Professional</li>
+              <li><span class="fi">✓</span> 10 user seats</li>
+              <li><span class="fi">✓</span> Priority supplier introductions</li>
+              <li><span class="fi">✓</span> Project file management</li>
+              <li><span class="fi">✓</span> Custom compliance reports</li>
+              <li><span class="fi">✓</span> Dedicated account manager</li>
+            </ul>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('Our team will contact you within 24 hours.');closeSubModal()">Contact Sales</button>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">All prices excl. VAT. Annual billing available at 20% discount. Invoiced in AED.</p>
+      </div>
+
+      <!-- SUPPLIER LIST PANEL -->
+      <div class="sub-panel" id="sub-panel-list">
+        <div class="list-hero">
+          <div class="list-hero-icon">🏭</div>
+          <div>
+            <div class="list-hero-title">Reach Specifiers Across the UAE</div>
+            <div class="list-hero-desc">CladWise UAE is the go-to platform for architects, developers and procurement teams comparing facade materials. Get your company in front of the right decision-makers.</div>
+          </div>
+        </div>
+        <div class="listing-plans">
+          <!-- BASIC -->
+          <div class="listing-plan">
+            <div class="listing-plan-name">Standard</div>
+            <div class="listing-plan-price">AED 599</div>
+            <div class="listing-plan-period">per year · 1 listing</div>
+            <ul class="listing-perks">
+              <li><span class="fi">★</span> Company name &amp; location</li>
+              <li><span class="fi">★</span> Materials supplied (up to 3)</li>
+              <li><span class="fi">★</span> Phone &amp; email listed</li>
+              <li><span class="fi">★</span> Searchable in directory</li>
+              <li style="color:var(--muted)"><span style="color:#555">—</span> Verified badge</li>
+              <li style="color:var(--muted)"><span style="color:#555">—</span> Priority placement</li>
+              <li style="color:var(--muted)"><span style="color:#555">—</span> Analytics dashboard</li>
+            </ul>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('Standard listing request submitted!');closeSubModal()">Get Listed</button>
+          </div>
+          <!-- VERIFIED -->
+          <div class="listing-plan featured">
+            <div class="plan-badge" style="background:var(--amber);color:#000">BEST VALUE</div>
+            <div class="listing-plan-name">Verified Pro</div>
+            <div class="listing-plan-price" style="color:var(--amber)">AED 1,799</div>
+            <div class="listing-plan-period">per year · includes verification audit</div>
+            <ul class="listing-perks">
+              <li><span class="fi">★</span> Everything in Standard</li>
+              <li><span class="fi">★</span> ✓ Verified badge on listing</li>
+              <li><span class="fi">★</span> Priority placement in results</li>
+              <li><span class="fi">★</span> Up to 5 materials listed</li>
+              <li><span class="fi">★</span> Compliance docs uploaded</li>
+              <li><span class="fi">★</span> Quote requests routed to you</li>
+              <li><span class="fi">★</span> Monthly enquiry analytics</li>
+            </ul>
+            <button class="btn-plan btn-plan-amber" onclick="showToast('Verified Pro request submitted — our team will contact you!');closeSubModal()">Apply for Verified Pro</button>
+          </div>
+          <!-- FEATURED -->
+          <div class="listing-plan">
+            <div class="listing-plan-name">Featured</div>
+            <div class="listing-plan-price">AED 3,999</div>
+            <div class="listing-plan-period">per year · top placement guaranteed</div>
+            <ul class="listing-perks">
+              <li><span class="fi">★</span> Everything in Verified Pro</li>
+              <li><span class="fi">★</span> Top-of-page featured placement</li>
+              <li><span class="fi">★</span> Highlighted card design</li>
+              <li><span class="fi">★</span> Banner on material pages</li>
+              <li><span class="fi">★</span> Unlimited materials listed</li>
+              <li><span class="fi">★</span> Quarterly profile refresh</li>
+              <li><span class="fi">★</span> Dedicated account manager</li>
+            </ul>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('Featured listing enquiry sent — expect a call within 24hrs.');closeSubModal()">Enquire Now</button>
+          </div>
+        </div>
+        <div class="reach-strip">
+          <div class="reach-box"><span class="reach-num">4K+</span><span class="reach-label">Monthly Specifiers</span></div>
+          <div class="reach-box"><span class="reach-num">7</span><span class="reach-label">Emirates Covered</span></div>
+          <div class="reach-box"><span class="reach-num">350+</span><span class="reach-label">Quote Requests/mo</span></div>
+          <div class="reach-box"><span class="reach-num">92%</span><span class="reach-label">Verified Leads</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+  <div class="footer-inner">
+    <div class="footer-brand">CladWise UAE</div>
+    <p class="footer-sub">Facade material intelligence for architects, specifiers & developers across the UAE. Data updated Q1 2025.</p>
+    <p class="footer-sub" style="margin-top:8px">Dubai · Ajman · Abu Dhabi · Sharjah · RAK</p>
+  </div>
+</footer>
+
+<!-- ═══════════════ API TESTER SECTION ═══════════════ -->
+<section id="api-tester" style="display:none;padding:100px 0;background:var(--bg)">
+  <div class="section-inner">
+    <span class="section-label">Developer Tools</span>
+    <h2 class="section-title">API Tester</h2>
+    <p class="section-desc">Send live requests to your CladWise backend. Login once — JWT saves automatically and attaches to every call.</p>
+
+    <!-- CONFIG STRIP -->
+    <div class="tester-strip">
+      <div class="tstr-left">
+        <h3>Backend <span style="color:var(--accent)">Console</span></h3>
+        <p>Point this at your running Node server. If your brother is testing remotely, paste your ngrok URL here.</p>
+        <div class="srv-pill" style="margin-top:12px">
+          <div class="sdot" id="sdot"></div>
+          <span id="stxt">offline</span>
+        </div>
+      </div>
+      <div class="tstr-right">
+        <div class="cfg-row">
+          <span class="cfg-lbl">URL</span>
+          <input class="cfg-inp" id="api-base-url" value="http://localhost:5000/api" placeholder="http://localhost:5000/api"/>
+          <button class="cfg-ping" onclick="apiPing()">⚡ Ping</button>
+        </div>
+        <div class="cfg-row">
+          <span class="cfg-lbl tok-lbl">JWT</span>
+          <span class="tok-val" id="tok-display">no token — log in first</span>
+          <button class="tok-clr" onclick="apiClearToken()">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTH -->
+    <div class="api-group">
+      <div class="api-grp-hd">
+        <span class="api-grp-lbl lbl-auth">Authentication</span>
+        <div class="api-grp-line"></div>
+        <span class="api-grp-note">Step 1 — register then login</span>
+      </div>
+
+      <div class="ep-card" id="epc-register">
+        <div class="ep-hd" onclick="epTog('register')">
+          <span class="mth mPOST">POST</span><span class="ep-path">/auth/register</span><span class="ep-desc">Create a new account</span>
+          <i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="frow">
+            <div class="ffield"><label>Email</label><input type="email" id="reg-email" value="architect@test.com"/></div>
+            <div class="ffield"><label>Password</label><input type="text" id="reg-pass" value="Test1234!"/></div>
+          </div>
+          <div class="ffield">
+            <label>Role</label>
+            <div class="role-row">
+              <button class="trb arch" id="trb-arch" onclick="apiSetRole('ARCHITECT')">🏗 ARCHITECT</button>
+              <button class="trb" id="trb-supp" onclick="apiSetRole('SUPPLIER')">🏭 SUPPLIER</button>
+            </div>
+          </div>
+          <input type="hidden" id="reg-role" value="ARCHITECT"/>
+          <div class="frow subf" id="arch-fields">
+            <div class="ffield"><label>Company Name</label><input type="text" id="reg-company" value="Design Studio LLC"/></div>
+            <div class="ffield"><label>License Number</label><input type="text" id="reg-license" value="LIC-2025-001"/></div>
+            <div class="ffield full"><label>Portfolio URL (optional)</label><input type="text" id="reg-portfolio" placeholder="https://myportfolio.com"/></div>
+          </div>
+          <div class="frow subf hidden" id="supp-fields">
+            <div class="ffield"><label>Shop Name</label><input type="text" id="reg-shop" value="Gulf Facades LLC"/></div>
+            <div class="ffield"><label>Category</label><input type="text" id="reg-cat" value="Facade Cladding"/></div>
+            <div class="ffield full"><label>Tax ID</label><input type="text" id="reg-taxid" value="TAX-UAE-2025-001"/></div>
+          </div>
+          <button class="api-send" id="btn-register" onclick="apiRegister()"><span class="api-spin">↻</span> Send Request</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="register-code">—</span><span class="res-ms" id="register-ms"></span></div><button class="res-cp" onclick="apiCopy('register-res')">copy</button></div>
+            <div class="res-body empty" id="register-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ep-card open" id="epc-login">
+        <div class="ep-hd" onclick="epTog('login')">
+          <span class="mth mPOST">POST</span><span class="ep-path">/auth/login</span><span class="ep-desc">Login &amp; save JWT token</span>
+          <i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="frow">
+            <div class="ffield"><label>Email</label><input type="email" id="login-email" value="architect@test.com"/></div>
+            <div class="ffield"><label>Password</label><input type="text" id="login-pass" value="Test1234!"/></div>
+          </div>
+          <button class="api-send" id="btn-login" onclick="apiLogin()"><span class="api-spin">↻</span> Login &amp; Save Token</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="login-code">—</span><span class="res-ms" id="login-ms"></span></div><button class="res-cp" onclick="apiCopy('login-res')">copy</button></div>
+            <div class="res-body empty" id="login-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USER -->
+    <div class="api-group">
+      <div class="api-grp-hd">
+        <span class="api-grp-lbl lbl-user">User &amp; Profile</span>
+        <div class="api-grp-line"></div>
+        <span class="api-grp-note">🔒 JWT required</span>
+      </div>
+      <div class="ep-card" id="epc-me">
+        <div class="ep-hd" onclick="epTog('me')">
+          <span class="mth mGET">GET</span><span class="ep-path">/users/me</span><span class="ep-desc">Current user + uiConfig</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Returns <span style="color:var(--accent)">uiConfig.permissions</span> — the object the frontend reads to show/hide buttons per role.</p>
+          <button class="api-send" id="btn-me" onclick="apiGetMe()"><span class="api-spin">↻</span> Send Request</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="me-code">—</span><span class="res-ms" id="me-ms"></span></div><button class="res-cp" onclick="apiCopy('me-res')">copy</button></div>
+            <div class="res-body empty" id="me-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+      <div class="ep-card" id="epc-profile">
+        <div class="ep-hd" onclick="epTog('profile')">
+          <span class="mth mPATCH">PATCH</span><span class="ep-path">/users/profile</span><span class="ep-desc">Update profile fields</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="ffield"><label>JSON Body</label><textarea id="profile-body">{"companyName": "Updated Studio", "portfolio": "https://newportfolio.com"}</textarea></div>
+          <button class="api-send" id="btn-profile" onclick="apiUpdateProfile()"><span class="api-spin">↻</span> Send Request</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="profile-code">—</span><span class="res-ms" id="profile-ms"></span></div><button class="res-cp" onclick="apiCopy('profile-res')">copy</button></div>
+            <div class="res-body empty" id="profile-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="api-group">
+      <div class="api-grp-hd">
+        <span class="api-grp-lbl lbl-proj">Projects</span>
+        <div class="api-grp-line"></div>
+        <span class="api-grp-note">🏗 ARCHITECT only — SUPPLIERs get 403</span>
+      </div>
+      <div class="ep-card" id="epc-getprojects">
+        <div class="ep-hd" onclick="epTog('getprojects')">
+          <span class="mth mGET">GET</span><span class="ep-path">/projects</span><span class="ep-desc">List my projects</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <button class="api-send" id="btn-getprojects" onclick="apiGetProjects()"><span class="api-spin">↻</span> Send Request</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="getprojects-code">—</span><span class="res-ms" id="getprojects-ms"></span></div><button class="res-cp" onclick="apiCopy('getprojects-res')">copy</button></div>
+            <div class="res-body empty" id="getprojects-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+      <div class="ep-card" id="epc-createproject">
+        <div class="ep-hd" onclick="epTog('createproject')">
+          <span class="mth mPOST">POST</span><span class="ep-path">/projects</span><span class="ep-desc">Create a new project</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="frow">
+            <div class="ffield"><label>Title</label><input type="text" id="proj-title" value="Dubai Villa Facade"/></div>
+            <div class="ffield"><label>Budget (AED)</label><input type="number" id="proj-budget" value="150000"/></div>
+          </div>
+          <div class="ffield"><label>Description</label><input type="text" id="proj-desc" value="GFRC cladding for 3-storey villa in Jumeirah"/></div>
+          <button class="api-send" id="btn-createproject" onclick="apiCreateProject()"><span class="api-spin">↻</span> Create Project</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="createproject-code">—</span><span class="res-ms" id="createproject-ms"></span></div><button class="res-cp" onclick="apiCopy('createproject-res')">copy</button></div>
+            <div class="res-body empty" id="createproject-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="api-group">
+      <div class="api-grp-hd">
+        <span class="api-grp-lbl lbl-prod">Products</span>
+        <div class="api-grp-line"></div>
+        <span class="api-grp-note">🏭 SUPPLIER only — ARCHITECTs get 403</span>
+      </div>
+      <div class="ep-card" id="epc-getproducts">
+        <div class="ep-hd" onclick="epTog('getproducts')">
+          <span class="mth mGET">GET</span><span class="ep-path">/products</span><span class="ep-desc">List my products</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <button class="api-send" id="btn-getproducts" onclick="apiGetProducts()"><span class="api-spin">↻</span> Send Request</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="getproducts-code">—</span><span class="res-ms" id="getproducts-ms"></span></div><button class="res-cp" onclick="apiCopy('getproducts-res')">copy</button></div>
+            <div class="res-body empty" id="getproducts-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+      <div class="ep-card" id="epc-createproduct">
+        <div class="ep-hd" onclick="epTog('createproduct')">
+          <span class="mth mPOST">POST</span><span class="ep-path">/products</span><span class="ep-desc">Create a new product</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="frow">
+            <div class="ffield"><label>Name</label><input type="text" id="prod-name" value="GFRC Panel Type A"/></div>
+            <div class="ffield"><label>Category</label><input type="text" id="prod-cat" value="Facade Cladding"/></div>
+          </div>
+          <div class="frow">
+            <div class="ffield"><label>Price (AED / m²)</label><input type="number" id="prod-price" value="650"/></div>
+            <div class="ffield"><label>Description</label><input type="text" id="prod-desc" value="Per m², fixings included"/></div>
+          </div>
+          <button class="api-send" id="btn-createproduct" onclick="apiCreateProduct()"><span class="api-spin">↻</span> Create Product</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="createproduct-code">—</span><span class="res-ms" id="createproduct-ms"></span></div><button class="res-cp" onclick="apiCopy('createproduct-res')">copy</button></div>
+            <div class="res-body empty" id="createproduct-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="api-group">
+      <div class="api-grp-hd">
+        <span class="api-grp-lbl lbl-pay">Payments &amp; Stripe</span>
+        <div class="api-grp-line"></div>
+        <span class="api-grp-note">Test card: 4242 4242 4242 4242</span>
+      </div>
+      <div class="ep-card" id="epc-paystatus">
+        <div class="ep-hd" onclick="epTog('paystatus')">
+          <span class="mth mGET">GET</span><span class="ep-path">/payments/status</span><span class="ep-desc">Check subscription</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Returns <span style="color:var(--accent)">isPremium: true/false</span> and subscriptionStatus.</p>
+          <button class="api-send" id="btn-paystatus" onclick="apiPayStatus()"><span class="api-spin">↻</span> Check Status</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="paystatus-code">—</span><span class="res-ms" id="paystatus-ms"></span></div><button class="res-cp" onclick="apiCopy('paystatus-res')">copy</button></div>
+            <div class="res-body empty" id="paystatus-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+      <div class="ep-card" id="epc-checkout">
+        <div class="ep-hd" onclick="epTog('checkout')">
+          <span class="mth mPOST">POST</span><span class="ep-path">/payments/create-session</span><span class="ep-desc">Get Stripe checkout URL</span>
+          <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
+        </div>
+        <div class="ep-body">
+          <div class="ffield"><label>Stripe Price ID</label><input type="text" id="price-id" placeholder="price_xxxxxxxxxxxxxxxx"/></div>
+          <button class="api-send" id="btn-checkout" onclick="apiCheckout()"><span class="api-spin">↻</span> Get Checkout URL</button>
+          <div class="res-wrap">
+            <div class="res-bar"><div class="res-left"><span class="res-code rD" id="checkout-code">—</span><span class="res-ms" id="checkout-ms"></span></div><button class="res-cp" onclick="apiCopy('checkout-res')">copy</button></div>
+            <div class="res-body empty" id="checkout-res">// response will appear here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="api-log">
+      <div class="api-log-hd"><span class="api-log-title">Request Log</span><button class="api-log-clr" onclick="apiClearLog()">clear all</button></div>
+      <div class="api-log-rows" id="api-log-rows">
+        <div class="log-empty" id="api-log-empty">No requests sent yet</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="checkCloseModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-eyebrow" id="modal-eyebrow"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-tabs" id="modal-tabs"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+  <div class="lightbox-img-wrap">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+  <div class="lightbox-nav-btns">
+    <button class="lb-btn" onclick="lightboxNav(-1)">← Prev</button>
+    <button class="lb-btn" onclick="lightboxNav(1)">Next →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const MATERIALS = {
+  GFRC: {
+    name: 'GFRC',
+    full: 'Glass Fibre Reinforced Concrete',
+    emoji: '🏗️',
+    color: '#1e3a2f',
+    tagline: 'Custom Shapes • Fireproof • UAE Favourite',
+    tags: ['Precast', 'Non-combustible', 'Custom moulds', 'Lightweight'],
+    scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 },
+    overall: 9.2,
+    specs: {
+      'Weight': { val: '75–110 kg/m²', sub: 'vs 180+ for solid concrete' },
+      'Thickness': { val: '10–25 mm', sub: 'Typical panel range' },
+      'Fire Rating': { val: 'Class A1', sub: 'Non-combustible (BS EN 13501-1)' },
+      'Compressive Strength': { val: '40–80 MPa', sub: 'Depending on mix design' },
+      'Thermal Conductivity': { val: '1.0 W/m·K', sub: 'Good with backing insulation' },
+      'Service Life': { val: '50+ years', sub: 'UAE climate tested' },
+      'Surface Finishes': { val: '12+ options', sub: 'Smooth, textured, stone-look' },
+      'Lead Time': { val: '8–14 weeks', sub: 'Custom mould fabrication' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'yes',
+      'Estidama Pearl Rating': 'yes',
+      'Dubai Civil Defence': 'yes',
+      'Abu Dhabi GSAS': 'yes',
+      'BS 8414 Façade Test': 'yes',
+      'ISO 9001 Certified Supply': 'partial',
+    },
+    pros: ['Fully non-combustible – passes all UAE fire codes','Complex 3D forms & custom surface textures','Excellent thermal mass for hot climate','Long service life with minimal maintenance','Can mimic stone, concrete, terracotta finishes'],
+    cons: ['Higher upfront tooling cost for custom moulds','Longer lead time vs. aluminum panels','Requires skilled installation crew','Heavier than GFRP alternatives'],
+    priceRange: 'AED 450–900/m²',
+  },
+  GFRP: {
+    name: 'GFRP',
+    full: 'Glass Fibre Reinforced Polymer',
+    emoji: '⚡',
+    color: '#1a2b3c',
+    tagline: 'Ultra-Light • Complex Geometry • Modern',
+    tags: ['Lightweight', 'Complex forms', 'FRP', 'Impact resistant'],
+    scores: { heat: 80, fire: 72, weight: 96, cost: 65, speed: 80 },
+    overall: 8.7,
+    specs: {
+      'Weight': { val: '10–25 kg/m²', sub: 'Lightest facade option' },
+      'Thickness': { val: '4–15 mm', sub: 'Single skin or sandwich' },
+      'Fire Rating': { val: 'Class B–C', sub: 'Fire retardant grade available' },
+      'Tensile Strength': { val: '150–350 MPa', sub: 'Directional (fibre aligned)' },
+      'Thermal Conductivity': { val: '0.3–0.5 W/m·K', sub: 'Better insulator than concrete' },
+      'Service Life': { val: '25–40 years', sub: 'UV stabilised grade required in UAE' },
+      'Surface Finishes': { val: '8+ options', sub: 'Gel coat, paint, UV coating' },
+      'Lead Time': { val: '6–10 weeks', sub: 'Mould fabrication required' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'partial',
+      'Estidama Pearl Rating': 'partial',
+      'Dubai Civil Defence': 'partial',
+      'Abu Dhabi GSAS': 'partial',
+      'BS 8414 Façade Test': 'no',
+      'ISO 9001 Certified Supply': 'yes',
+    },
+    pros: ['Extremely lightweight – ideal for retrofits & tall towers','Can achieve complex parametric / sculptural forms','Good impact resistance','Lower structural load on building frame','Easier to transport and install at height'],
+    cons: ['Not fully non-combustible – fire classification varies','Requires UV-stable resin systems for UAE climate','Less proven long-term than GFRC in UAE market','Some fire authorities require special approval'],
+    priceRange: 'AED 380–750/m²',
+  },
+  Aluminum: {
+    name: 'Aluminum',
+    full: 'Aluminum Composite / Solid Panels (ACM / ACP)',
+    emoji: '🔩',
+    color: '#252525',
+    tagline: 'Fast • Cost-Effective • Modern Aesthetic',
+    tags: ['ACM', 'ACP', 'PVDF coating', 'Recyclable'],
+    scores: { heat: 76, fire: 85, weight: 90, cost: 88, speed: 96 },
+    overall: 8.1,
+    specs: {
+      'Weight': { val: '5–12 kg/m²', sub: 'Solid Al or composite' },
+      'Thickness': { val: '3–6 mm composite / 2–4 mm solid', sub: '' },
+      'Fire Rating': { val: 'A2–B (FR core)', sub: 'Fire-resistant mineral core required UAE' },
+      'Panel Width': { val: 'Up to 1500 mm', sub: 'Standard mill widths' },
+      'Thermal Conductivity': { val: '0.04 W/m·K (composite)', sub: 'With PE or FR core' },
+      'Service Life': { val: '20–35 years', sub: 'PVDF coating life in UAE sun' },
+      'Surface Finishes': { val: 'Unlimited', sub: 'PVDF, anodised, mirror, wood-print' },
+      'Lead Time': { val: '3–6 weeks', sub: 'Fastest of all options' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'partial',
+      'Estidama Pearl Rating': 'yes',
+      'Dubai Civil Defence': 'partial',
+      'Abu Dhabi GSAS': 'yes',
+      'BS 8414 Façade Test': 'partial',
+      'ISO 9001 Certified Supply': 'yes',
+    },
+    pros: ['Fastest installation – speeds up programme significantly','Lowest cost per m² for standard facades','Wide range of PVDF colours and finishes','Highly recyclable material','Excellent flatness and precision'],
+    cons: ['PE-core ACM NOT permitted on high-rise per UAE fire code','Requires FR mineral-core for compliance on towers > G+4','Less thermal mass than GFRC or stone','Denting and puncture risk in high-traffic areas','PVDF recoating may be needed after 20 years in UAE sun'],
+    priceRange: 'AED 280–550/m²',
+  },
+  Stone: {
+    name: 'Stone',
+    full: 'Natural & Engineered Stone Cladding',
+    emoji: '🗿',
+    color: '#2a1f0f',
+    tagline: 'Premium • Timeless • Thermal Mass',
+    tags: ['Natural', 'Engineered', 'Sandstone', 'Limestone', 'Travertine'],
+    scores: { heat: 96, fire: 100, weight: 40, cost: 50, speed: 45 },
+    overall: 7.6,
+    specs: {
+      'Weight': { val: '70–200 kg/m²', sub: 'Depends on stone type & thickness' },
+      'Thickness': { val: '20–50 mm', sub: 'Typical veneer/cladding range' },
+      'Fire Rating': { val: 'Class A1', sub: 'Fully non-combustible' },
+      'Porosity': { val: 'Low–High', sub: 'Granite low, limestone high – treat for UAE humidity' },
+      'Thermal Conductivity': { val: '1.5–3.5 W/m·K', sub: 'High mass = passive cooling benefit' },
+      'Service Life': { val: '100+ years', sub: 'With correct sealing and fixing' },
+      'Surface Finishes': { val: '6+ options', sub: 'Honed, polished, bush-hammered, flamed' },
+      'Lead Time': { val: '12–20 weeks', sub: 'Import lead time from Italy/Turkey/India' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'yes',
+      'Estidama Pearl Rating': 'yes',
+      'Dubai Civil Defence': 'yes',
+      'Abu Dhabi GSAS': 'yes',
+      'BS 8414 Façade Test': 'yes',
+      'ISO 9001 Certified Supply': 'partial',
+    },
+    pros: ['Truly timeless and premium aesthetic','Fully non-combustible – no fire compliance concerns','Excellent thermal mass for passive cooling','Extremely long lifespan – multigenerational','High resale / prestige value for luxury projects'],
+    cons: ['Heaviest material – significant structural load','Highest cost especially for imported stone','Longest programme – 12–20 week import lead time','Requires specialist fixings and waterproofing','Some stones absorb moisture – critical in UAE coastal zones'],
+    priceRange: 'AED 650–1,800/m²',
+  },
+  ACM: {
+    name: 'ACM-FR',
+    full: 'Fire-Rated Aluminum Composite (Mineral Core)',
+    emoji: '🛡️',
+    color: '#1a1a2e',
+    tagline: 'Code-Compliant • Fast • Fire-Rated',
+    tags: ['Mineral core', 'A2 rated', 'High-rise safe', 'PVDF'],
+    scores: { heat: 78, fire: 95, weight: 88, cost: 80, speed: 90 },
+    overall: 8.5,
+    specs: {
+      'Weight': { val: '7–14 kg/m²', sub: 'Heavier than PE-core but still light' },
+      'Thickness': { val: '4–6 mm', sub: 'Mineral core composite' },
+      'Fire Rating': { val: 'Class A2 (EN 13501-1)', sub: 'Accepted by Dubai Civil Defence for all heights' },
+      'Thermal Conductivity': { val: '0.06 W/m·K', sub: 'Mineral core insulation benefit' },
+      'Panel Size': { val: 'Up to 1500×5000 mm', sub: 'Large format available' },
+      'Service Life': { val: '25–40 years', sub: 'PVDF coating life in UAE' },
+      'Surface Finishes': { val: 'Unlimited', sub: 'PVDF, Anodised, Digital print' },
+      'Lead Time': { val: '4–8 weeks', sub: 'Faster than GFRC/Stone' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'yes',
+      'Estidama Pearl Rating': 'yes',
+      'Dubai Civil Defence': 'yes',
+      'Abu Dhabi GSAS': 'yes',
+      'BS 8414 Façade Test': 'yes',
+      'ISO 9001 Certified Supply': 'yes',
+    },
+    pros: ['Fully compliant on all UAE high-rise buildings','Fast installation vs GFRC/Stone','All finishes and colours available via PVDF','Lower cost than GFRC for standard rectilinear facades','Strong and proven supply chain in UAE'],
+    cons: ['Less design flexibility than GFRC (flat panels only)','Still has aluminium thermal bridge if not detailed correctly','Environmental debate on composite recyclability','Premium cost vs. standard ACM'],
+    priceRange: 'AED 320–620/m²',
+  },
+};
+
+// ─── IMAGE DATA ──────────────────────────────────────────────────────────────
+// All images sourced from Unsplash (unsplash.com). Free for use under Unsplash License.
+const IMG = (id, w=800, h=500) => `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&q=80`;
+const MATERIAL_IMAGES = {
+  GFRC: {
+    hero: IMG('1510798831971-661eb04b3739'),
+    heroCredit: 'Brutalist concrete facade, Europe',
+    variants: [
+      {
+        name: 'Smooth Finish',
+        desc: 'Polished flat concrete surface — sharp, minimal aesthetic',
+        tag: 'Most popular in UAE',
+        images: [
+          { src: IMG('1580587771525-78b9dba3b914'), caption: 'Smooth GFRC facade panel — commercial tower, Dubai' },
+          { src: IMG('1504307651254-35680f356dfd'), caption: 'Off-form smooth finish, clean horizontal joints' },
+          { src: IMG('1565117165093-e52aacd43e94'), caption: 'White smooth GFRC — luxury residential compound' },
+        ]
+      },
+      {
+        name: 'Textured / Board-Mark',
+        desc: 'Exposed form-liner or sand-blasted surface for depth and shadow',
+        tag: 'High visual interest',
+        images: [
+          { src: IMG('1510798831971-661eb04b3739'), caption: 'Board-mark textured GFRC, landmark hotel facade' },
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Deep ribbed texture, dramatic shadow play' },
+          { src: IMG('1486325212027-8081e485255e'), caption: 'Angular textured panels, cultural centre' },
+        ]
+      },
+      {
+        name: 'Stone-Look',
+        desc: 'Cast GFRC mimicking limestone, travertine or granite at a fraction of the weight',
+        tag: 'Cost of GFRC • Look of stone',
+        images: [
+          { src: IMG('1518780664697-55e3ad937233'), caption: 'GFRC limestone-look panels — hotel podium, Abu Dhabi' },
+          { src: IMG('1487958449943-2429e8be8625'), caption: 'Travertine-pattern GFRC, villa compound, Ajman' },
+          { src: IMG('1603232644140-bb47da511b92'), caption: 'Sandstone-look GFRC, heritage-inspired mid-rise' },
+        ]
+      },
+      {
+        name: 'Custom 3D / Parametric',
+        desc: 'Complex sculptural panels cast from CNC-routed moulds — no two panels identical',
+        tag: 'Landmark projects only',
+        images: [
+          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Parametric GFRC screen, Expo-era pavilion' },
+          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Undulating 3D GFRC shell, cultural museum' },
+          { src: IMG('1488972685288-c3fd157d7c7a'), caption: 'Geometric screen facade, mashrabiya-inspired GFRC' },
+        ]
+      },
+    ]
+  },
+  GFRP: {
+    hero: IMG('1480714378408-67cf0d13bc1b'),
+    heroCredit: 'Curved GFRP facade, contemporary tower',
+    variants: [
+      {
+        name: 'Flat Panel Systems',
+        desc: 'Lightweight flat sheets — fastest install, ideal for retrofits',
+        tag: 'Fastest programme',
+        images: [
+          { src: IMG('1525438160292-a4a860951216'), caption: 'Flat GFRP panels, commercial office tower' },
+          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'Large-format GFRP cladding, industrial campus' },
+          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'White GFRP panels, clean facade rhythm' },
+        ]
+      },
+      {
+        name: 'Curved / Cylindrical',
+        desc: 'Single-curve panels wrapping corners or circular towers — lightweight advantage shines',
+        tag: 'Impossible in aluminum',
+        images: [
+          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Curved GFRP wrapping cylindrical tower' },
+          { src: IMG('1489514354504-1653aa90e34e'), caption: 'Barrel-vault GFRP canopy, retail district' },
+          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Double-curve GFRP soffit, airport terminal' },
+        ]
+      },
+      {
+        name: 'Sculptural / Organic',
+        desc: 'Double-curved, free-form geometry achievable only through composite layup',
+        tag: 'Maximum design freedom',
+        images: [
+          { src: IMG('1486325212027-8081e485255e'), caption: 'Sculptural GFRP shell, theatre building' },
+          { src: IMG('1488972685288-c3fd157d7c7a'), caption: 'Organic wave form, cultural pavilion' },
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Free-form GFRP facade, landmark hospitality' },
+        ]
+      },
+      {
+        name: 'Perforated Screen',
+        desc: 'Laser-cut or moulded perforations for solar shading — replaces traditional mashrabiya',
+        tag: 'Solar shading + aesthetics',
+        images: [
+          { src: IMG('1567449303183-ae0d6ed1498f'), caption: 'GFRP perforated screen reducing solar gain, Dubai' },
+          { src: IMG('1504307651254-35680f356dfd'), caption: 'Geometric GFRP solar screen, residential tower' },
+          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Mashrabiya-pattern GFRP, heritage quarter' },
+        ]
+      },
+    ]
+  },
+  Aluminum: {
+    hero: IMG('1509741399-3e9ab8f33fd5'),
+    heroCredit: 'Aluminum composite facade, commercial district',
+    variants: [
+      {
+        name: 'PVDF Solid Colour',
+        desc: 'RAL / NCS colour-matched PVDF coated panels — most common UAE spec',
+        tag: 'Unlimited colours',
+        images: [
+          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'White PVDF aluminum, corporate HQ Abu Dhabi' },
+          { src: IMG('1525438160292-a4a860951216'), caption: 'Champagne PVDF aluminum, luxury residential tower' },
+          { src: IMG('1587174486073-ae5a5cff23aa'), caption: 'Bold red PVDF accent panels, retail podium Dubai' },
+        ]
+      },
+      {
+        name: 'Anodised Aluminium',
+        desc: 'Electrochemical anodising gives deep metallic tones with superior UV longevity',
+        tag: 'Best UAE UV resistance',
+        images: [
+          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Anodised silver aluminum, government building' },
+          { src: IMG('1582407947304-fd86f28320c7'), caption: 'Bronze anodised panels, premium mixed-use' },
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Dark charcoal anodised, contemporary villa' },
+        ]
+      },
+      {
+        name: 'Mirror / Reflective',
+        desc: 'Polished or metallic finish reflecting sky and surroundings — iconic in Gulf skylines',
+        tag: 'Iconic skyline material',
+        images: [
+          { src: IMG('1486325212027-8081e485255e'), caption: 'Mirror aluminum, high-rise tower core' },
+          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Reflective facade, financial district Dubai' },
+          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Brushed metallic panels, luxury hotel exterior' },
+        ]
+      },
+      {
+        name: 'Wood-Effect Print',
+        desc: 'Digital sublimation printing on aluminium — warmth of timber, none of the maintenance',
+        tag: 'No timber maintenance',
+        images: [
+          { src: IMG('1504307651254-35680f356dfd'), caption: 'Wood-effect aluminum, F&B podium, JBR' },
+          { src: IMG('1510798831971-661eb04b3739'), caption: 'Dark oak-print aluminum, villa compound' },
+          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Teak-look panels, waterfront development' },
+        ]
+      },
+    ]
+  },
+  Stone: {
+    hero: IMG('1487958449943-2429e8be8625'),
+    heroCredit: 'Natural stone cladding, luxury facade',
+    variants: [
+      {
+        name: 'Limestone',
+        desc: 'Warm beige tones — the dominant stone of UAE and Gulf region heritage buildings',
+        tag: 'UAE heritage material',
+        images: [
+          { src: IMG('1518780664697-55e3ad937233'), caption: 'Honed limestone facade, hotel podium Abu Dhabi' },
+          { src: IMG('1487958449943-2429e8be8625'), caption: 'Polished limestone cladding, luxury residential' },
+          { src: IMG('1603232644140-bb47da511b92'), caption: 'Bush-hammered limestone, cultural institution' },
+        ]
+      },
+      {
+        name: 'Travertine',
+        desc: 'Distinctive porous texture, warm ivory tones — popular for premium hotel facades',
+        tag: 'Premium hotel favourite',
+        images: [
+          { src: IMG('1504307651254-35680f356dfd'), caption: 'Filled & honed travertine, 5-star hotel exterior' },
+          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Unfilled travertine, authentic raw texture' },
+          { src: IMG('1510798831971-661eb04b3739'), caption: 'Travertine pool facade, luxury resort' },
+        ]
+      },
+      {
+        name: 'Sandstone',
+        desc: 'Ochre and terracotta tones — locally resonant, excellent thermal performance',
+        tag: 'Best thermal mass',
+        images: [
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Local UAE sandstone, heritage-district building' },
+          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Ashlar sandstone coursing, government building' },
+          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Random-bond sandstone, boutique hotel RAK' },
+        ]
+      },
+      {
+        name: 'Granite',
+        desc: 'Hardest and densest natural stone — near-zero porosity, ideal for coastal UAE environments',
+        tag: 'Coastal: best choice',
+        images: [
+          { src: IMG('1525438160292-a4a860951216'), caption: 'Polished black granite, financial tower base' },
+          { src: IMG('1486325212027-8081e485255e'), caption: 'Flamed grey granite, podium facade' },
+          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Bush-hammered red granite, civic building' },
+        ]
+      },
+    ]
+  },
+  ACM: {
+    hero: IMG('1464822759023-fed622ff2c3b'),
+    heroCredit: 'ACM-FR clad commercial tower, Gulf region',
+    variants: [
+      {
+        name: 'Standard White / Off-White',
+        desc: 'Classic reflective white PVDF — keeps surface temperatures lower in UAE sun',
+        tag: 'Coolest surface temp',
+        images: [
+          { src: IMG('1525438160292-a4a860951216'), caption: 'Pure white ACM-FR, office campus Dubai' },
+          { src: IMG('1504307651254-35680f356dfd'), caption: 'Cream off-white cladding, hospital facade' },
+          { src: IMG('1565117165093-e52aacd43e94'), caption: 'White ACM-FR with shadow reveals, residential tower' },
+        ]
+      },
+      {
+        name: 'Metallic Silver / Champagne',
+        desc: 'Pearlescent PVDF finishes that shift tone with sunlight — premium corporate look',
+        tag: 'Premium corporate',
+        images: [
+          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Metallic silver ACM-FR, HQ tower DIFC' },
+          { src: IMG('1582407947304-fd86f28320c7'), caption: 'Champagne metallic panels, mixed-use podium' },
+          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'Brushed silver ACM, tech campus Ajman' },
+        ]
+      },
+      {
+        name: 'Bold Colour PVDF',
+        desc: 'Full-saturation colour with PVDF 25-year Gulf-climate fade guarantee',
+        tag: '25yr fade guarantee',
+        images: [
+          { src: IMG('1587174486073-ae5a5cff23aa'), caption: 'Deep blue ACM-FR, residential landmark Sharjah' },
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Forest green panels, eco-certified building' },
+          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Terracotta PVDF ACM-FR, resort development RAK' },
+        ]
+      },
+      {
+        name: 'Large-Format Reveals',
+        desc: 'Oversized panels with deep shadow reveals — achieves monolithic stone-like quality',
+        tag: 'Architectural precision',
+        images: [
+          { src: IMG('1486325212027-8081e485255e'), caption: 'Large-format panel grid, government tower' },
+          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Reveal-jointed ACM-FR, luxury apartment facade' },
+          { src: IMG('1510798831971-661eb04b3739'), caption: 'Dark ACM-FR deep reveals, urban commercial block' },
+        ]
+      },
+    ]
+  },
+};
+
+const COMPARE_ROWS = [
+  { key: 'full', label: 'Full Name' },
+  { key: 'priceRange', label: 'Price Range (AED/m²)' },
+  { key: 'weight', label: 'Weight', format: m => m.specs?.['Weight']?.val || '—' },
+  { key: 'fire', label: 'Fire Rating', format: m => m.specs?.['Fire Rating']?.val || '—' },
+  { key: 'serviceLife', label: 'Service Life', format: m => m.specs?.['Service Life']?.val || '—' },
+  { key: 'leadTime', label: 'Lead Time', format: m => m.specs?.['Lead Time']?.val || '—' },
+  { key: 'heatScore', label: 'Heat Performance', format: m => stars(m.scores.heat) },
+  { key: 'fireScore', label: 'Fire Performance', format: m => stars(m.scores.fire) },
+  { key: 'weightScore', label: 'Lightweight Score', format: m => stars(m.scores.weight) },
+  { key: 'costScore', label: 'Cost Efficiency', format: m => stars(m.scores.cost) },
+  { key: 'speedScore', label: 'Install Speed', format: m => stars(m.scores.speed) },
+  { key: 'overall', label: 'Overall Score', format: m => `<strong style="color:var(--accent);font-family:'DM Mono',monospace;font-size:16px">${m.overall}/10</strong>` },
+  { key: 'dubaiCD', label: 'Dubai Civil Defence', format: m => badge(m.compliance?.['Dubai Civil Defence']) },
+  { key: 'uaeFire', label: 'UAE Fire Code 2017', format: m => badge(m.compliance?.['UAE Fire Code 2017']) },
+  { key: 'estidama', label: 'Estidama Pearl', format: m => badge(m.compliance?.['Estidama Pearl Rating']) },
+];
+
+const SUPPLIERS = [
+  { name: 'Duratec Façades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', emoji: '🏭', color: '#0f3020', verified: true },
+  { name: 'Arabian GFRC Industries', location: 'ICAD, Abu Dhabi', mats: ['GFRC'], phone: '+971 2 550 9800', emoji: '🏗️', color: '#1a2f1a', verified: true },
+  { name: 'Alubond UAE', location: 'Ajman Industrial', mats: ['Aluminum', 'ACM-FR'], phone: '+971 6 742 2211', emoji: '🔩', color: '#1a1a2a', verified: true },
+  { name: 'Zahrat Al Khaleej Marble', location: 'Sharjah Industrial', mats: ['Stone'], phone: '+971 6 535 1100', emoji: '🗿', color: '#2a1e10', verified: true },
+  { name: 'Alucobond Gulf', location: 'Dubai Investment Park', mats: ['ACM-FR', 'Aluminum'], phone: '+971 4 885 7700', emoji: '🛡️', color: '#12172a', verified: true },
+  { name: 'Al Marjan Composites', location: 'RAK Free Zone', mats: ['GFRP', 'ACM-FR'], phone: '+971 7 228 9900', emoji: '⚡', color: '#1a2030', verified: true },
+  { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', emoji: '🏗️', color: '#1a2a1e', verified: true },
+  { name: 'Marmara Stone Trading', location: 'Mussafah, Abu Dhabi', mats: ['Stone'], phone: '+971 2 553 6688', emoji: '🗿', color: '#2a200e', verified: false },
+  { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', emoji: '🔩', color: '#222222', verified: true },
+];
+
+const WIZARD_STEPS = [
+  {
+    q: 'What is your building type?',
+    hint: 'This affects fire code requirements and structural loading.',
+    opts: [
+      { label: 'High-rise residential (10+ floors)', icon: '🏢', scores: { fire: 2, heat: 1 } },
+      { label: 'Commercial / mixed-use tower', icon: '🏙️', scores: { fire: 2, cost: 1 } },
+      { label: 'Low-rise villa / compound', icon: '🏡', scores: { cost: 2, speed: 1 } },
+      { label: 'Cultural / landmark / hospitality', icon: '🏛️', scores: { design: 3, heat: 1 } },
+    ]
+  },
+  {
+    q: 'What is your priority?',
+    hint: 'Weight multiple goals. We will score materials accordingly.',
+    opts: [
+      { label: 'Fire safety & code compliance above all', icon: '🔥', scores: { fire: 3 } },
+      { label: 'Fastest delivery / programme speed', icon: '⚡', scores: { speed: 3 } },
+      { label: 'Lowest budget / cost-per-m²', icon: '💰', scores: { cost: 3 } },
+      { label: 'Premium design / bespoke aesthetic', icon: '🎨', scores: { design: 3 } },
+    ]
+  },
+  {
+    q: 'What is the UAE emirate / climate zone?',
+    hint: 'Coastal humidity vs inland heat affects material selection.',
+    opts: [
+      { label: 'Dubai (coastal, humid, high wind)', icon: '🌊', scores: { heat: 1, fire: 1 } },
+      { label: 'Abu Dhabi / Mussafah (industrial, hot)', icon: '☀️', scores: { heat: 2 } },
+      { label: 'Ajman / Sharjah (cost-conscious market)', icon: '🏘️', scores: { cost: 2 } },
+      { label: 'RAK / Fujairah (mountainous, humid coast)', icon: '⛰️', scores: { heat: 1, cost: 1 } },
+    ]
+  },
+  {
+    q: 'Does the facade have complex geometry?',
+    hint: 'Curved, 3D, or parametric shapes require specific materials.',
+    opts: [
+      { label: 'Yes — curved / sculptural / parametric', icon: '🌀', scores: { design: 3 } },
+      { label: 'Some curves, mostly flat panels', icon: '🔷', scores: { design: 1, speed: 1 } },
+      { label: 'Entirely flat / rectilinear', icon: '⬜', scores: { cost: 2, speed: 2 } },
+      { label: 'Not decided yet', icon: '❓', scores: {} },
+    ]
+  },
+  {
+    q: 'What is your construction programme?',
+    hint: 'Tighter programmes favour faster-to-install materials.',
+    opts: [
+      { label: 'Urgent — under 6 months for facade', icon: '🚨', scores: { speed: 3, cost: 1 } },
+      { label: 'Normal — 6–12 months', icon: '📅', scores: { speed: 1 } },
+      { label: 'Extended — 12+ months acceptable', icon: '🗓️', scores: { design: 1, heat: 1 } },
+      { label: 'Not confirmed yet', icon: '⏳', scores: {} },
+    ]
+  },
+];
+
+// Weight multipliers per criterion for each material
+const MAT_WEIGHTS = {
+  GFRC:     { fire: 10, heat: 10, design: 9, speed: 6, cost: 6 },
+  GFRP:     { fire: 7, heat: 7, design: 10, speed: 7, cost: 7 },
+  Aluminum: { fire: 7, heat: 6, design: 5, speed: 10, cost: 10 },
+  ACM:      { fire: 9, heat: 7, design: 5, speed: 9, cost: 8 },
+  Stone:    { fire: 10, heat: 10, design: 9, speed: 3, cost: 3 },
+};
+
+// ─── UTILS ──────────────────────────────────────────────────────────────────
+function stars(n) {
+  const full = Math.round(n / 20);
+  return `<span class="star-row">${'★'.repeat(full)}${'☆'.repeat(5-full)}</span> <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">${n}%</span>`;
+}
+function badge(val) {
+  if (val === 'yes') return `<span class="compliance-badge badge-yes">✓ Compliant</span>`;
+  if (val === 'no') return `<span class="compliance-badge badge-no">✗ Not Compliant</span>`;
+  return `<span class="compliance-badge badge-partial">⚠ Conditional</span>`;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── MATERIAL CARDS ─────────────────────────────────────────────────────────
+const cardHeroImg = {}; // track active hero per card
+
+function buildMaterialCards() {
+  const grid = document.getElementById('materials-grid');
+  Object.entries(MATERIALS).forEach(([key, m]) => {
+    const s = m.scores;
+    const imgs = MATERIAL_IMAGES[key];
+    cardHeroImg[key] = 0; // track active variant index
+
+    const card = document.createElement('div');
+    card.className = 'mat-card';
+    card.id = `mat-card-${key}`;
+
+    // Thumbnail strip (first image from each variant)
+    const thumbs = imgs.variants.map((v, vi) => `
+      <div class="mat-thumb ${vi===0?'active':''}" id="thumb-${key}-${vi}"
+           onclick="event.stopPropagation();switchCardHero('${key}',${vi})"
+           title="${v.name}">
+        <img src="${v.images[0].src}&w=120&h=60" alt="${v.name}"
+             onerror="this.parentNode.innerHTML='<div class=\\'mat-thumb-placeholder\\'>${m.emoji}</div>'">
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="mat-card-img" onclick="openModal('${key}')">
+        <img id="card-hero-${key}" src="${imgs.hero}" alt="${m.name} facade cladding"
+             onerror="this.style.display='none'">
+        <div class="mat-card-img-overlay"></div>
+        <div class="mat-card-img-score">${m.overall}</div>
+        <div class="mat-card-img-label">${m.name}</div>
+      </div>
+      <div style="display:flex;gap:4px;padding:8px 8px 0">${thumbs}</div>
+      <div class="mat-card-body" onclick="openModal('${key}')">
+        <div class="mat-card-name">${m.name}</div>
+        <div class="mat-card-tagline">${m.tagline}</div>
+        <div class="mat-card-tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="mat-card-scores">
+          ${[['Heat','heat'],['Fire','fire'],['Weight','weight'],['Cost','cost']].map(([l,k])=>`
+          <div class="score-item">
+            <div class="score-bar-wrap"><div class="score-bar" style="width:${s[k]}%"></div></div>
+            <div class="score-label">${l} ${s[k]}%</div>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">From ${m.priceRange} &nbsp;·&nbsp; ${imgs.variants.length} finish variants</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function switchCardHero(key, vi) {
+  const imgs = MATERIAL_IMAGES[key];
+  if (!imgs) return;
+  const hero = document.getElementById(`card-hero-${key}`);
+  if (hero) {
+    hero.style.opacity = '0';
+    hero.style.transition = 'opacity 0.3s';
+    setTimeout(() => {
+      hero.src = imgs.variants[vi].images[0].src;
+      hero.style.opacity = '1';
+    }, 150);
+  }
+  // Update thumb active state
+  imgs.variants.forEach((_, i) => {
+    const el = document.getElementById(`thumb-${key}-${i}`);
+    if (el) el.classList.toggle('active', i === vi);
+  });
+  cardHeroImg[key] = vi;
+}
+
+// ─── MODAL ──────────────────────────────────────────────────────────────────
+let currentModal = null;
+let currentTab = 0;
+
+function openModal(key) {
+  const m = MATERIALS[key];
+  if (!m) return;
+  currentModal = key;
+  document.getElementById('modal-eyebrow').textContent = m.full;
+  document.getElementById('modal-title').textContent = m.name;
+
+  const tabs = ['Specifications', 'Compliance', 'Pros & Cons', '📷 Examples'];
+  document.getElementById('modal-tabs').innerHTML = tabs.map((t,i) =>
+    `<button class="modal-tab ${i===0?'active':''}" onclick="switchTab(${i})">${t}</button>`
+  ).join('');
+
+  renderModalBody(m, 0);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function checkCloseModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function switchTab(idx) {
+  currentTab = idx;
+  document.querySelectorAll('.modal-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  renderModalBody(MATERIALS[currentModal], idx);
+}
+
+// Gallery state
+let galleryActiveVariant = 0;
+let galleryActiveImg = 0;
+let galleryAllImgs = [];
+
+function renderModalBody(m, tab) {
+  const body = document.getElementById('modal-body');
+  if (tab === 0) {
+    body.innerHTML = `
+      <div class="spec-grid">
+        ${Object.entries(m.specs).map(([k,v]) => `
+          <div class="spec-item">
+            <div class="spec-item-label">${k}</div>
+            <div class="spec-item-val">${v.val}</div>
+            ${v.sub ? `<div class="spec-item-sub">${v.sub}</div>` : ''}
+          </div>`).join('')}
+      </div>
+      <div style="margin-top:20px;background:var(--bg3);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">INDICATIVE PRICE RANGE</div>
+        <div style="font-size:22px;font-weight:700;color:var(--accent)">${m.priceRange}</div></div>
+        <div style="text-align:right"><div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">OVERALL UAE SCORE</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--accent);line-height:1">${m.overall}<span style="font-size:18px;color:var(--muted)">/10</span></div></div>
+      </div>`;
+  } else if (tab === 1) {
+    body.innerHTML = `<div class="compliance-list">
+      ${Object.entries(m.compliance).map(([k,v]) => `
+        <div class="comp-row">
+          <span class="comp-label">${k}</span>
+          ${badge(v)}
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:16px;padding:16px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:12px;color:var(--amber)">
+      ⚠ Always verify current compliance with Dubai Civil Defence and Abu Dhabi City Municipality prior to final specification. Codes updated 2024.
+    </div>`;
+  } else if (tab === 2) {
+    body.innerHTML = `<div class="pros-cons">
+      <div class="pros-box">
+        <h4>✓ ADVANTAGES</h4>
+        ${m.pros.map(p=>`<div class="pc-item">${p}</div>`).join('')}
+      </div>
+      <div class="cons-box">
+        <h4>✗ CONSIDERATIONS</h4>
+        ${m.cons.map(c=>`<div class="pc-item">${c}</div>`).join('')}
+      </div>
+    </div>`;
+  } else if (tab === 3) {
+    renderGalleryTab(m);
+  }
+}
+
+function renderGalleryTab(m) {
+  const body = document.getElementById('modal-body');
+  const key = currentModal;
+  const imgs = MATERIAL_IMAGES[key];
+  if (!imgs) { body.innerHTML = '<p style="color:var(--muted)">No images available.</p>'; return; }
+
+  galleryActiveVariant = 0;
+  galleryActiveImg = 0;
+  // Flatten all images for lightbox navigation
+  galleryAllImgs = imgs.variants.flatMap(v => v.images);
+
+  body.innerHTML = `
+    <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;color:var(--muted)">${imgs.variants.length} finish variants · ${galleryAllImgs.length} reference images</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent)">${imgs.heroCredit}</div>
+    </div>
+
+    <!-- Hero image -->
+    <div class="gallery-hero" id="gal-hero" onclick="openLightboxFromGallery()">
+      <img id="gal-hero-img" src="${imgs.variants[0].images[0].src}" alt="${imgs.variants[0].name}"
+           onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22320%22><rect fill=%22%231a1a1a%22 width=%22800%22 height=%22320%22/><text fill=%22%23555%22 x=%2250%%25%22 y=%2250%%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2218%22>Image loading...</text></svg>'">
+      <div class="gallery-hero-caption">
+        <div>
+          <div class="gallery-caption-name" id="gal-caption-name">${imgs.variants[0].name}</div>
+          <div class="gallery-caption-desc" id="gal-caption-desc">${imgs.variants[0].images[0].caption}</div>
+        </div>
+        <span class="gallery-caption-tag" id="gal-caption-tag">${imgs.variants[0].tag}</span>
+      </div>
+    </div>
+
+    <!-- Variant selector -->
+    <div style="margin-top:20px;margin-bottom:10px;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Select Finish Variant</div>
+    <div class="variant-grid" id="variant-grid">
+      ${imgs.variants.map((v, vi) => `
+        <div class="variant-card ${vi===0?'active':''}" id="vcard-${vi}" onclick="switchGalleryVariant(${vi})">
+          <div class="variant-card-img">
+            <img src="${v.images[0].src}&w=300&h=180" alt="${v.name}"
+                 onerror="this.parentNode.style.background='var(--bg2)';this.style.display='none'">
+          </div>
+          <div class="variant-card-label">
+            <div class="variant-card-name">${v.name}</div>
+            <div class="variant-card-sub">${v.tag}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Variant image strip -->
+    <div style="margin-top:20px;margin-bottom:10px;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Reference Images</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="gal-img-strip">
+      ${imgs.variants[0].images.map((img, ii) => `
+        <div style="border-radius:10px;overflow:hidden;height:110px;cursor:pointer;border:2px solid ${ii===0?'var(--accent)':'transparent'};transition:all 0.2s"
+             id="gal-strip-${ii}" onclick="switchGalleryImg(${ii})">
+          <img src="${img.src}&w=400&h=200" alt="${img.caption}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
+               onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform=''"
+               onerror="this.parentNode.style.background='var(--bg3)';this.style.display='none'">
+        </div>`).join('')}
+    </div>
+    <div style="margin-top:12px;text-align:center;font-size:11px;color:var(--muted)">Click hero image or any photo to view full size</div>
+  `;
+}
+
+function switchGalleryVariant(vi) {
+  const key = currentModal;
+  const imgs = MATERIAL_IMAGES[key];
+  if (!imgs) return;
+  galleryActiveVariant = vi;
+  galleryActiveImg = 0;
+
+  // Update variant cards
+  imgs.variants.forEach((_, i) => {
+    const vc = document.getElementById(`vcard-${i}`);
+    if (vc) vc.classList.toggle('active', i === vi);
+  });
+
+  const v = imgs.variants[vi];
+
+  // Update hero
+  const heroImg = document.getElementById('gal-hero-img');
+  if (heroImg) {
+    heroImg.style.opacity = '0';
+    heroImg.style.transition = 'opacity 0.25s';
+    setTimeout(() => { heroImg.src = v.images[0].src; heroImg.style.opacity = '1'; }, 150);
+  }
+  document.getElementById('gal-caption-name').textContent = v.name;
+  document.getElementById('gal-caption-desc').textContent = v.images[0].caption;
+  document.getElementById('gal-caption-tag').textContent = v.tag;
+
+  // Update strip
+  const strip = document.getElementById('gal-img-strip');
+  if (strip) {
+    strip.innerHTML = v.images.map((img, ii) => `
+      <div style="border-radius:10px;overflow:hidden;height:110px;cursor:pointer;border:2px solid ${ii===0?'var(--accent)':'transparent'};transition:all 0.2s"
+           id="gal-strip-${ii}" onclick="switchGalleryImg(${ii})">
+        <img src="${img.src}&w=400&h=200" alt="${img.caption}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
+             onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform=''"
+             onerror="this.parentNode.style.background='var(--bg3)';this.style.display='none'">
+      </div>`).join('');
+  }
+}
+
+function switchGalleryImg(ii) {
+  const key = currentModal;
+  const imgs = MATERIAL_IMAGES[key];
+  if (!imgs) return;
+  const v = imgs.variants[galleryActiveVariant];
+  galleryActiveImg = ii;
+
+  // Update hero
+  const heroImg = document.getElementById('gal-hero-img');
+  if (heroImg) {
+    heroImg.style.opacity = '0';
+    setTimeout(() => { heroImg.src = v.images[ii].src; heroImg.style.opacity = '1'; }, 150);
+  }
+  const captDesc = document.getElementById('gal-caption-desc');
+  if (captDesc) captDesc.textContent = v.images[ii].caption;
+
+  // Update strip borders
+  v.images.forEach((_, i) => {
+    const el = document.getElementById(`gal-strip-${i}`);
+    if (el) el.style.borderColor = i === ii ? 'var(--accent)' : 'transparent';
+  });
+
+  // Sync lightbox index
+  const flatIdx = imgs.variants.slice(0, galleryActiveVariant).reduce((a, vv) => a + vv.images.length, 0) + ii;
+  lightboxCurrentIdx = flatIdx;
+}
+
+// ─── LIGHTBOX ────────────────────────────────────────────────────────────────
+let lightboxCurrentIdx = 0;
+
+function openLightboxFromGallery() {
+  const key = currentModal;
+  const imgs = MATERIAL_IMAGES[key];
+  if (!imgs) return;
+  galleryAllImgs = imgs.variants.flatMap(v => v.images);
+  lightboxCurrentIdx = imgs.variants.slice(0, galleryActiveVariant).reduce((a, v) => a + v.images.length, 0) + galleryActiveImg;
+  showLightboxAt(lightboxCurrentIdx);
+}
+
+function showLightboxAt(idx) {
+  if (idx < 0 || idx >= galleryAllImgs.length) return;
+  lightboxCurrentIdx = idx;
+  document.getElementById('lightbox-img').src = galleryAllImgs[idx].src.replace('w=800', 'w=1600').replace('h=500', 'h=900');
+  document.getElementById('lightbox-caption').textContent = galleryAllImgs[idx].caption;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function lightboxNav(dir) {
+  const newIdx = lightboxCurrentIdx + dir;
+  if (newIdx >= 0 && newIdx < galleryAllImgs.length) showLightboxAt(newIdx);
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function closeLightboxOnBg(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'Escape') closeLightbox();
+  } else if (document.getElementById('modal-overlay').classList.contains('open')) {
+    if (e.key === 'Escape') closeModal();
+  }
+});
+
+// ─── COMPARISON ─────────────────────────────────────────────────────────────
+let selectedMats = ['GFRC', 'Aluminum', 'ACM'];
+
+function buildCompare() {
+  const controls = document.getElementById('compare-controls');
+  const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
+  controls.innerHTML = Object.keys(MATERIALS).map(key => `
+    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+      <div class="dot" style="background:${colors[key] || '#666'}"></div>
+      ${key}
+    </div>`).join('');
+  renderTable();
+}
+
+function toggleMat(key) {
+  if (selectedMats.includes(key)) {
+    if (selectedMats.length <= 2) return showToast('Select at least 2 materials to compare');
+    selectedMats = selectedMats.filter(m => m !== key);
+  } else {
+    selectedMats.push(key);
+  }
+  buildCompare();
+}
+
+function renderTable() {
+  const mats = selectedMats.map(k => MATERIALS[k]);
+  document.getElementById('compare-thead').innerHTML = `
+    <th class="td-label">Property</th>
+    ${mats.map(m => `<th>${m.name}</th>`).join('')}`;
+  document.getElementById('compare-tbody').innerHTML = COMPARE_ROWS.map(row => `
+    <tr>
+      <td class="td-label">${row.label}</td>
+      ${mats.map(m => {
+        let val;
+        if (row.format) val = row.format(m);
+        else val = m[row.key] || '—';
+        return `<td>${val}</td>`;
+      }).join('')}
+    </tr>`).join('');
+}
+
+// ─── WIZARD ─────────────────────────────────────────────────────────────────
+let wizStep = 0;
+let wizAnswers = [];
+const wizScores = {};
+
+function buildWizard() {
+  renderWizStep();
+}
+
+function renderWizStep() {
+  const body = document.getElementById('wizard-body');
+  if (wizStep >= WIZARD_STEPS.length) {
+    renderWizResults();
+    return;
+  }
+  const step = WIZARD_STEPS[wizStep];
+  const pct = ((wizStep + 1) / (WIZARD_STEPS.length + 1)) * 100;
+  document.getElementById('wiz-bar').style.width = pct + '%';
+  body.innerHTML = `
+    <div class="wizard-step active">
+      <div class="wizard-q">${step.q}</div>
+      <div class="wizard-hint">${step.hint}</div>
+      <div class="wizard-options" id="wiz-opts">
+        ${step.opts.map((o, i) => `
+          <div class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})">
+            <div class="wiz-icon">${o.icon}</div>
+            <span>${o.label}</span>
+          </div>`).join('')}
+      </div>
+      <div class="wizard-nav">
+        ${wizStep > 0 ? `<button class="btn-wiz btn-wiz-back" onclick="wizBack()">← Back</button>` : '<div></div>'}
+        <span class="step-count">Step ${wizStep + 1} of ${WIZARD_STEPS.length}</span>
+        <button class="btn-wiz btn-wiz-next" id="wiz-next" onclick="wizNext()" disabled style="opacity:0.4;cursor:not-allowed">Next →</button>
+      </div>
+    </div>`;
+  // restore selection if exists
+  if (wizAnswers[wizStep] !== undefined) {
+    document.getElementById(`wiz-opt-${wizAnswers[wizStep]}`).classList.add('selected');
+    document.getElementById('wiz-next').disabled = false;
+    document.getElementById('wiz-next').style.opacity = '';
+    document.getElementById('wiz-next').style.cursor = '';
+  }
+}
+
+function selectWizOpt(i) {
+  document.querySelectorAll('.wiz-opt').forEach(el => el.classList.remove('selected'));
+  document.getElementById(`wiz-opt-${i}`).classList.add('selected');
+  wizAnswers[wizStep] = i;
+  const btn = document.getElementById('wiz-next');
+  btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = '';
+}
+
+function wizNext() {
+  if (wizAnswers[wizStep] === undefined) return;
+  wizStep++;
+  renderWizStep();
+}
+
+function wizBack() {
+  if (wizStep > 0) { wizStep--; renderWizStep(); }
+}
+
+function renderWizResults() {
+  document.getElementById('wiz-bar').style.width = '100%';
+  // Compute scores
+  const scores = { GFRC: 0, GFRP: 0, Aluminum: 0, ACM: 0, Stone: 0 };
+  WIZARD_STEPS.forEach((step, si) => {
+    const ans = wizAnswers[si];
+    if (ans === undefined) return;
+    const opt = step.opts[ans];
+    Object.entries(opt.scores || {}).forEach(([crit, pts]) => {
+      Object.entries(MAT_WEIGHTS).forEach(([mat, wts]) => {
+        scores[mat] += pts * (wts[crit] || 0);
+      });
+    });
+  });
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const maxScore = sorted[0][1];
+  document.getElementById('wizard-body').innerHTML = `
+    <div class="result-header">
+      <div style="font-size:32px;margin-bottom:12px">✅</div>
+      <h3>Your Results</h3>
+      <p>Based on your project parameters, here are your ranked materials:</p>
+    </div>
+    <div class="results-grid">
+      ${sorted.map(([mat, score], i) => {
+        const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+        return `
+        <div class="result-row ${i===0?'top-pick':''}">
+          <div class="result-rank ${i===0?'rank-1':''}">${i+1}</div>
+          <div class="result-info">
+            <div class="result-name">${mat} ${i===0?'<span style="font-size:12px;color:var(--accent);font-family:DM Sans,sans-serif">← Best Match</span>':''}</div>
+            <div class="result-reason">${MATERIALS[mat]?.tagline || ''}</div>
+          </div>
+          <div class="result-score-bar">
+            <div style="height:4px;background:var(--bg3);border-radius:2px;margin-bottom:4px"><div style="height:4px;background:var(--accent);border-radius:2px;width:${pct}%;transition:width 0.6s ease"></div></div>
+          </div>
+          <div class="score-pct">${pct}%</div>
+          <button onclick="openModal('${mat}')" style="margin-left:8px;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">View →</button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="text-align:center;margin-top:28px">
+      <button onclick="resetWizard()" class="btn-outline" style="font-size:13px">Retake Wizard</button>
+    </div>`;
+}
+
+function resetWizard() {
+  wizStep = 0; wizAnswers = [];
+  renderWizStep();
+}
+
+// ─── SUPPLIERS (PREMIUM GATE) ────────────────────────────────────────────────
+function buildSuppliers() {
+  // Show 3 teaser cards (blurred/locked)
+  const teaser = document.getElementById('sup-teaser');
+  const teaserData = SUPPLIERS.slice(0, 3);
+  teaser.innerHTML = teaserData.map((s, i) => `
+    <div class="sup-card-teaser sup-card-locked" style="opacity:${1 - i * 0.18}">
+      <div class="sup-logo" style="background:${s.color};font-size:22px">${s.emoji}</div>
+      <div class="sup-name">${s.name} ${s.verified ? '<span style="color:var(--accent);font-size:11px">✓ Verified</span>' : ''}</div>
+      <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:6px"></i>${s.location}</div>
+      <div class="sup-mats">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="sup-phone-blur">+971 ${Math.floor(Math.random()*9+1)} ••• ••••</span>
+        <span style="font-size:12px;color:var(--accent);font-weight:600;opacity:0.5">Unlock →</span>
+      </div>
+    </div>`).join('');
+  // Set gate height dynamically
+  const gateWrap = document.querySelector('.sup-gate-wrap');
+  gateWrap.style.minHeight = '620px';
+}
+
+// ─── SUBSCRIPTION MODAL ──────────────────────────────────────────────────────
+let activeSubTab = 'access';
+
+function openSubModal(tab = 'access') {
+  activeSubTab = tab;
+  switchSubTab(tab);
+  document.getElementById('sub-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSubModal() {
+  document.getElementById('sub-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function checkCloseSubModal(e) {
+  if (e.target === document.getElementById('sub-modal-overlay')) closeSubModal();
+}
+
+function switchSubTab(tab) {
+  activeSubTab = tab;
+  document.querySelectorAll('.sub-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'access') || (i === 1 && tab === 'list'));
+  });
+  document.getElementById('sub-panel-access').classList.toggle('active', tab === 'access');
+  document.getElementById('sub-panel-list').classList.toggle('active', tab === 'list');
+  document.getElementById('sub-modal-title').textContent = tab === 'access' ? 'Unlock Directory' : 'List Your Company';
+  document.getElementById('sub-modal-eyebrow').textContent = tab === 'access' ? 'SPECIFIER ACCESS' : 'SUPPLIER PLANS';
+}
+
+// ─── PROJECT MODAL ──────────────────────────────────────────────────────────
+function openProjectModal() {
+  openSubModal('access');
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildMaterialCards();
+  buildCompare();
+  buildWizard();
+  buildSuppliers();
+});
+
+// ═══════════════════════════════════════════════════════════
+// FULL AUTH + PAYMENT SYSTEM
+// ═══════════════════════════════════════════════════════════
+
 const API_BASE = 'http://localhost:5000/api';
 let cwSession = null; // { user, profile, uiConfig }
 
