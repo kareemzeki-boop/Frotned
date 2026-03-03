@@ -42,6 +42,10 @@ export const API = {
   getMe:          ()     => apiFetch('GET',   '/users/me'),
   updateProfile:  (body) => apiFetch('PATCH', '/users/profile', body),
 
+  // Documents
+  uploadDocument: (body) => apiFetch('POST', '/suppliers/documents', body),
+  getDocuments:   ()     => apiFetch('GET',  '/suppliers/documents'),
+
   // Projects (ARCHITECT only)
   getProjects:    ()     => apiFetch('GET',  '/projects'),
   createProject:  (body) => apiFetch('POST', '/projects', body),
@@ -53,6 +57,15 @@ export const API = {
   // Payments
   getSubscriptionStatus: ()          => apiFetch('GET',  '/payments/status'),
   createCheckoutSession: (priceId)   => apiFetch('POST', '/payments/create-session', { priceId }),
+
+  // Admin
+  getSuppliers:        ()        => apiFetch('GET', '/admin/suppliers'),
+  getPendingSuppliers: ()        => apiFetch('GET', '/admin/suppliers/pending'),
+  getSupplierDetails:  (id)      => apiFetch('GET', `/admin/suppliers/${id}`),
+  verifySupplier:      (id, body) => apiFetch('PATCH', `/admin/suppliers/${id}/verify`, body),
+  renewSupplier:       (id, body) => apiFetch('PATCH', `/admin/suppliers/${id}/renew`, body),
+  getAuditLog:         (id)      => apiFetch('GET', `/admin/suppliers/${id}/audit`),
+  getAllUsers:         ()        => apiFetch('GET', '/admin/users'),
 }
 
 // ─── UI HELPERS ───────────────────────────────────────────────────────────────
@@ -97,4 +110,31 @@ export async function requireAuth(loginPath = '/') {
     Auth.logout()
     return null
   }
+}
+
+// ─── VERIFIED BADGE HELPER ────────────────────────────────────────────────────
+export function getVerificationBadge(status) {
+  const badges = {
+    VERIFIED: { icon: '✓', color: '#10b981', text: 'Verified' },
+    PENDING: { icon: '⏳', color: '#f59e0b', text: 'Pending' },
+    REJECTED: { icon: '✕', color: '#ef4444', text: 'Rejected' },
+    EXPIRED: { icon: '⚠', color: '#6b7280', text: 'Expired' }
+  }
+  return badges[status] || badges.PENDING
+}
+
+// ─── DATE FORMATTING ──────────────────────────────────────────────────────────
+export function formatDateUAE(date) {
+  return new Date(date).toLocaleDateString('en-AE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+export function daysUntilExpiry(expiryDate) {
+  const now = new Date()
+  const expiry = new Date(expiryDate)
+  const diff = expiry - now
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
