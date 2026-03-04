@@ -650,6 +650,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
       </button>
     </div>
 
+    <!-- FREEMIUM SUPPLIERS: Always visible -->
+    <div class="sup-grid" id="sup-grid-free" style="margin-bottom:48px"></div>
+
     <!-- GATE WRAP: teaser cards + overlay -->
     <div class="sup-gate-wrap">
       <!-- Teaser: 3 blurred/partial cards -->
@@ -1632,6 +1635,7 @@ const SUPPLIERS = [
   { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', emoji: '🏗️', color: '#1a2a1e', verified: true },
   { name: 'Marmara Stone Trading', location: 'Mussafah, Abu Dhabi', mats: ['Stone'], phone: '+971 2 553 6688', emoji: '🗿', color: '#2a200e', verified: false },
   { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', emoji: '🔩', color: '#222222', verified: true },
+  { name: 'ABM Group of Companies', location: 'Sajja, Sharjah', mats: ['GFRC', 'GFRP'], phone: '+971 6 531 1385', emoji: '🏗️', color: '#1e3a2f', verified: true, freemium: true },
 ];
 
 const WIZARD_STEPS = [
@@ -2462,13 +2466,29 @@ function cwUpdateSupplierSection() {
   const gate = document.querySelector('.sup-gate-wrap');
   if (!gate) return;
 
+  // Always show freemium suppliers
+  const freemiumSuppliers = SUPPLIERS.filter(s => s.freemium);
+  const freeGrid = document.getElementById('sup-grid-free');
+  if (freeGrid) {
+    freeGrid.innerHTML = freemiumSuppliers.map(s => `
+      <div class="sup-card-unlocked" style="border: 1px solid var(--accent); background: rgba(0, 229, 160, 0.03);">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <div class="sup-logo" style="background:${s.color};font-size:22px;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${s.emoji}</div>
+          <div>
+            <div class="sup-name">${s.name} <span style="color:var(--accent);font-size:11px">✓ Verified</span> <span style="background:var(--accent);color:#000;font-size:9px;padding:2px 5px;border-radius:4px;margin-left:5px;font-weight:bold">FREE ACCESS</span></div>
+            <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:5px"></i>${s.location}</div>
+          </div>
+        </div>
+        <div class="sup-mats" style="margin-bottom:14px">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
+        <div class="sup-phone-real"><i class="fa-solid fa-phone" style="margin-right:6px;opacity:0.6"></i>${s.phone}</div>
+      </div>`).join('');
+  }
+
   if (isPremium) {
-    // Hide the gate, show real supplier grid
     gate.style.display = 'none';
     const grid = document.getElementById('sup-grid-real');
     if (grid) { grid.style.display = 'grid'; return; }
 
-    // Build real supplier grid
     const section = gate.parentElement;
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
