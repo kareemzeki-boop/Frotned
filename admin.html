@@ -239,7 +239,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
         </div>
         <div class="acard" style="max-width:420px;margin-top:20px">
           <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-server"></i> Backend Connection</div></div>
-          <div class="field" style="margin-bottom:14px"><label>API Base URL</label><input type="text" id="api-base-setting" value="http://localhost:5000/api"/></div>
+          <div class="field" style="margin-bottom:14px"><label>API Base URL</label><input type="text" id="api-base-setting" value="https://backend-cladwise-production.up.railway.app/api"/></div>
           <button class="btn-export" onclick="testConn()" style="margin-right:10px">Test Connection</button>
           <span id="conn-status" style="font-size:12px;font-family:'DM Mono',monospace;color:var(--muted)"></span>
         </div>
@@ -253,7 +253,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <script>
 const APWK='cw_admin_pwd', AAUT='cw_admin_auth';
-let ABASE='http://localhost:5000/api';
+let ABASE='https://backend-cladwise-production.up.railway.app/api';
 
 let MAT={
   GFRC:{name:'GFRC',full:'Glass Fibre Reinforced Concrete',emoji:'x1F3D7',tagline:'Custom Shapes - Fireproof - UAE Favourite',scores:{heat:94,fire:98,weight:78,cost:70,speed:72},overall:9.2,specs:{'Weight':{val:'75-110 kg/m',sub:'vs 180+ for solid concrete'},'Thickness':{val:'10-25 mm',sub:'Typical panel range'},'Fire Rating':{val:'Class A1',sub:'Non-combustible (BS EN 13501-1)'},'Compressive Strength':{val:'40-80 MPa',sub:'Depending on mix design'},'Thermal Conductivity':{val:'1.0 W/m K',sub:'Good with backing insulation'},'Service Life':{val:'50+ years',sub:'UAE climate tested'},'Surface Finishes':{val:'12+ options',sub:'Smooth, textured, stone-look'},'Lead Time':{val:'8-14 weeks',sub:'Custom mould fabrication'}},priceRange:'AED 450-900/m',pros:['Fully non-combustible','Complex 3D forms','Excellent thermal mass','Long service life'],cons:['Higher tooling cost','Longer lead time','Requires skilled crew']},
@@ -352,7 +352,7 @@ async function quickAdminLogin(){
 async function testConn(){
   const el=document.getElementById('conn-status');
   try{
-    const r=await fetch(ABASE+'/health');
+    const r=await fetch('https://backend-cladwise-production.up.railway.app/api/health');
     const d=await r.json();
     if(d.status==='ok'){el.textContent='Connected';el.style.color='var(--accent)';}
     else{el.textContent='Error';el.style.color='var(--red)';}

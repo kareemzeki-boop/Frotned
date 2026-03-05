@@ -485,6 +485,25 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
 .sup-card-unlocked{background:var(--card);border:1px solid rgba(0,229,160,0.2);border-radius:16px;padding:24px;transition:all 0.2s}
 .sup-card-unlocked:hover{border-color:rgba(0,229,160,0.4);transform:translateY(-2px)}
 .sup-phone-real{font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);font-weight:600}
+
+/* ── TIER CARDS ──────────────────────────────────────── */
+/* STANDARD */
+.sup-standard{background:#111;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;transition:all 0.2s;position:relative}
+.sup-standard:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-2px)}
+.tier-badge-standard{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#999;padding:3px 10px;border-radius:20px;font-size:9px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+
+/* VERIFIED PRO */
+.sup-verified{background:linear-gradient(135deg,#0d1f14,#111);border:1px solid rgba(0,229,160,0.25);border-radius:14px;padding:22px;transition:all 0.2s;position:relative;overflow:hidden}
+.sup-verified::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,229,160,0.6),transparent)}
+.sup-verified:hover{border-color:rgba(0,229,160,0.4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,229,160,0.08)}
+.tier-badge-verified{display:inline-flex;align-items:center;gap:5px;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.25);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:9px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+
+/* FEATURED */
+.sup-featured{background:linear-gradient(135deg,#130e05,#111);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:22px;transition:all 0.2s;position:relative;overflow:hidden}
+.sup-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,158,11,0.8),transparent)}
+.sup-featured:hover{border-color:rgba(245,158,11,0.5);transform:translateY(-2px);box-shadow:0 8px 32px rgba(245,158,11,0.1)}
+.tier-badge-featured{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--amber);padding:3px 10px;border-radius:20px;font-size:9px;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.sup-featured-star{position:absolute;top:14px;right:14px;color:var(--amber);font-size:14px;opacity:0.7}
 .sup-email-real{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
 
 /* RESPONSIVE */
@@ -501,6 +520,34 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
   .spec-grid{grid-template-columns:1fr}
   .pros-cons{grid-template-columns:1fr}
 }
+
+/* ── STANDARDS & RATES SECTION ──────────────────────────────────────────── */
+.std-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.std-tab{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:1px;transition:all .2s}
+.std-tab.active{background:rgba(0,229,160,0.1);border-color:var(--accent);color:var(--accent)}
+.std-panel{display:none}.std-panel.active{display:block}
+
+/* Rules grid */
+.rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.rule-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .2s}
+.rule-card:hover{border-color:rgba(0,229,160,0.2)}
+.rule-mat-tag{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding:4px 12px;border-radius:20px}
+.rule-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:12px;color:rgba(240,240,240,0.75);line-height:1.5}
+.rule-dot{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+
+/* Rates table */
+.rates-table{width:100%;border-collapse:collapse;font-size:13px}
+.rates-table th{text-align:left;padding:10px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border)}
+.rates-table td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.rates-table tr:hover td{background:rgba(255,255,255,0.02)}
+.rate-mat{font-weight:600;font-size:13px}
+.rate-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)}
+.rate-range{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.complexity-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px}
+.complexity-bar{height:6px;border-radius:3px;margin:8px 0;background:linear-gradient(90deg,var(--accent),rgba(0,229,160,0.2))}
+.uae-standard-badge{display:inline-block;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#818cf8;padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace}
+@media(max-width:900px){.rules-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.rules-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -518,6 +565,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
       <a href="#compare">Compare</a>
       <a href="#wizard">Advisor</a>
       <a href="#suppliers">Suppliers</a>
+      <a href="#standards">Standards</a>
     </div>
     <!-- LOGGED OUT STATE -->
     <div id="nav-logged-out">
@@ -650,9 +698,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
       </button>
     </div>
 
-    <!-- FREEMIUM SUPPLIERS: Always visible -->
-    <div class="sup-grid" id="sup-grid-free" style="margin-bottom:48px"></div>
-
     <!-- GATE WRAP: teaser cards + overlay -->
     <div class="sup-gate-wrap">
       <!-- Teaser: 3 blurred/partial cards -->
@@ -681,6 +726,367 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+
+<!-- STANDARDS & RATES -->
+<section id="standards" style="padding:80px 0;background:var(--bg)">
+  <div class="section-inner">
+    <span class="section-label">Professional Reference</span>
+    <h2 class="section-title" style="margin-bottom:8px">Ground Rules & Market Rates</h2>
+    <p class="section-desc" style="margin-bottom:32px">UAE-specific standards, project suitability rules, and current market pricing for all 5 cladding materials.</p>
+
+    <!-- TABS -->
+    <div class="std-tabs">
+      <button class="std-tab active" onclick="stdTab('rules',this)">📋 Project Rules</button>
+      <button class="std-tab" onclick="stdTab('rates',this)">💰 Market Rates</button>
+      <button class="std-tab" onclick="stdTab('install',this)">🔧 Installation</button>
+      <button class="std-tab" onclick="stdTab('complexity',this)">🎨 Design Complexity</button>
+      <button class="std-tab" onclick="stdTab('codes',this)">🏛️ UAE Codes</button>
+      <button class="std-tab" onclick="stdTab('matstandards',this)">📐 Material Standards</button>
+    </div>
+
+    <!-- PANEL 1: PROJECT RULES -->
+    <div class="std-panel active" id="std-rules">
+      <div class="rules-grid">
+
+        <div class="rule-card">
+          <div class="rule-mat-tag" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent)">🏗️ GFRC</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Glass Fibre Reinforced Concrete</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cultural, mosque & landmark facades</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Hospitality & luxury hotel exteriors</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Heritage & restoration projects</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>High-rise with complex geometry</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Budget under AED 350/m²</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Programme under 4 months</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Fully flat/rectilinear panels only</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
+            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">Compliant with DCD / Civil Defence requirements for all building heights</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-mat-tag" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);color:#818cf8">⚡ GFRP</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Glass Fibre Reinforced Polymer</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Parametric & sculptural facades</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Theme parks, retail & entertainment</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Lightweight rooftop additions</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Coastal buildings (corrosion-free)</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Building over 60m — fire review needed</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Client requires A1 fire classification</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Long-term UV exposure without coating</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
+            <div style="color:var(--amber);font-weight:700;font-size:13px">B1 – Fire Retardant ⚠️</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">Requires Civil Defence approval above 23m. FR grade mandatory.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-mat-tag" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#60a5fa">🔩 Aluminum</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Aluminium Cladding Systems</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Commercial towers & curtain walls</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>High-speed programme projects</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Modular, large-floor-plate buildings</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Any height — proven system</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Highly corrosive coastal zone (anodise req.)</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Project needs organic / warm aesthetic</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
+            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">No restrictions. PVDF coating recommended for UAE climate.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-mat-tag" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--amber)">🗿 Stone</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Natural & Engineered Stone</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Ultra-luxury residential & palace</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Podium levels of high-rise towers</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Government & embassy buildings</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Heritage-sensitive zones (Deira, Al Fahidi)</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Budget under AED 600/m²</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Structural loads are restricted</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>High-rise above 15 floors (weight)</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
+            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">Sealant & fixing system must also be A1 rated.</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-mat-tag" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171">🛡️ ACM-FR</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Aluminium Composite – Fire Rated</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Mid-rise residential (4–20 floors)</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Retail podiums & commercial units</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Refurbishment of existing buildings</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Fast-track & budget-sensitive projects</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Non-FR grade (PE core) — banned in UAE</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Ultra-luxury projects (perceived value)</div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
+            <div style="color:var(--accent);font-weight:700;font-size:13px">B1 FR Core mandatory ✓</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">PE core banned post-Grenfell. Only FR/A2 core permitted by UAE Civil Defence.</div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="background:linear-gradient(135deg,var(--bg2),#0a1a0f);border-color:rgba(0,229,160,0.15)">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:12px">UAE Decision Tree</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7);line-height:1.8">
+            <div style="margin-bottom:8px"><span style="color:var(--accent)">High-rise &gt;60m?</span> → GFRC or Aluminum only</div>
+            <div style="margin-bottom:8px"><span style="color:var(--accent)">Curved geometry?</span> → GFRC or GFRP</div>
+            <div style="margin-bottom:8px"><span style="color:var(--accent)">Budget &lt;AED 350/m²?</span> → ACM-FR or Aluminum</div>
+            <div style="margin-bottom:8px"><span style="color:var(--accent)">Luxury / prestige?</span> → Stone or GFRC</div>
+            <div style="margin-bottom:8px"><span style="color:var(--accent)">Fast track &lt;6 months?</span> → Aluminum or ACM-FR</div>
+            <div><span style="color:var(--accent)">Coastal / humid?</span> → Aluminum (anodised) or GFRC</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PANEL 2: MARKET RATES -->
+    <div class="std-panel" id="std-rates">
+      <div style="background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.1);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--muted)">
+        <i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:8px"></i>
+        Rates based on UAE market data Q1 2025. Prices in AED per m² (supply only). Excludes VAT, fixings, and installation.
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+        <table class="rates-table">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Entry Rate</th>
+              <th>Mid Range</th>
+              <th>Premium</th>
+              <th>Typical UAE Project</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="rate-mat">GFRC</div><div style="font-size:11px;color:var(--muted)">Glass Fibre Reinforced Concrete</div></td>
+              <td><div class="rate-val">AED 350</div><div class="rate-range">basic flat panels</div></td>
+              <td><div class="rate-val">AED 550</div><div class="rate-range">textured / formed</div></td>
+              <td><div class="rate-val">AED 900+</div><div class="rate-range">bespoke sculptural</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Hotels, mosques, cultural</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">GFRP</div><div style="font-size:11px;color:var(--muted)">Glass Fibre Reinforced Polymer</div></td>
+              <td><div class="rate-val">AED 280</div><div class="rate-range">flat GRP sheet</div></td>
+              <td><div class="rate-val">AED 480</div><div class="rate-range">formed panels</div></td>
+              <td><div class="rate-val">AED 750+</div><div class="rate-range">complex 3D moulded</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Retail, theme, lightweight</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">Aluminum</div><div style="font-size:11px;color:var(--muted)">Extruded & sheet cladding</div></td>
+              <td><div class="rate-val">AED 220</div><div class="rate-range">standard extrusion</div></td>
+              <td><div class="rate-val">AED 380</div><div class="rate-range">PVDF coated</div></td>
+              <td><div class="rate-val">AED 600+</div><div class="rate-range">anodised / bespoke</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Commercial towers, offices</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">Natural Stone</div><div style="font-size:11px;color:var(--muted)">Marble, limestone, granite</div></td>
+              <td><div class="rate-val">AED 600</div><div class="rate-range">local limestone</div></td>
+              <td><div class="rate-val">AED 900</div><div class="rate-range">imported marble</div></td>
+              <td><div class="rate-val">AED 1,800+</div><div class="rate-range">rare/bookmatched</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Luxury villas, palaces</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">ACM-FR</div><div style="font-size:11px;color:var(--muted)">Aluminium Composite – FR core</div></td>
+              <td><div class="rate-val">AED 180</div><div class="rate-range">standard FR panel</div></td>
+              <td><div class="rate-val">AED 280</div><div class="rate-range">PVDF finish</div></td>
+              <td><div class="rate-val">AED 420+</div><div class="rate-range">metallic / special finish</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Mid-rise, retail, refurb</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL 3: INSTALLATION RATES -->
+    <div class="std-panel" id="std-install">
+      <div style="background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.1);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--muted)">
+        <i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:8px"></i>
+        UAE installation labour rates Q1 2025. Includes scaffold, fixing, sealant & basic MEP coordination. Excludes substructure.
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
+        <table class="rates-table">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Labour Only</th>
+              <th>Supply & Fix</th>
+              <th>Lead Time</th>
+              <th>Crew Size / 1000m²</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="rate-mat">GFRC</div></td>
+              <td><div class="rate-val">AED 120–180</div><div class="rate-range">per m²</div></td>
+              <td><div class="rate-val">AED 470–1,080</div><div class="rate-range">per m² total</div></td>
+              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">10–16 weeks</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">12–18 skilled fixers</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">GFRP</div></td>
+              <td><div class="rate-val">AED 90–150</div><div class="rate-range">per m²</div></td>
+              <td><div class="rate-val">AED 370–900</div><div class="rate-range">per m² total</div></td>
+              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">8–14 weeks</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">8–12 skilled fixers</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">Aluminum</div></td>
+              <td><div class="rate-val">AED 80–130</div><div class="rate-range">per m²</div></td>
+              <td><div class="rate-val">AED 300–730</div><div class="rate-range">per m² total</div></td>
+              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)">4–8 weeks</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">6–10 fixers</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">Natural Stone</div></td>
+              <td><div class="rate-val">AED 180–280</div><div class="rate-range">per m²</div></td>
+              <td><div class="rate-val">AED 780–2,080</div><div class="rate-range">per m² total</div></td>
+              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:#ef4444">16–24 weeks</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">15–24 skilled stone fixers</td>
+            </tr>
+            <tr>
+              <td><div class="rate-mat">ACM-FR</div></td>
+              <td><div class="rate-val">AED 60–100</div><div class="rate-range">per m²</div></td>
+              <td><div class="rate-val">AED 240–520</div><div class="rate-range">per m² total</div></td>
+              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)">3–6 weeks</div></td>
+              <td style="font-size:12px;color:rgba(240,240,240,0.65)">4–8 fixers</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PANEL 4: DESIGN COMPLEXITY -->
+    <div class="std-panel" id="std-complexity">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <div class="complexity-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:700">Flat / Rectilinear</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Complexity: 1/5</div>
+          </div>
+          <div class="complexity-bar" style="width:20%"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Standard panels, no curves, modular grid.</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> ACM-FR, Aluminum</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Cost premium:</span> 0% — base rate</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Typical lead time:</span> 3–6 weeks</div>
+        </div>
+
+        <div class="complexity-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:700">Simple Curves</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Complexity: 2/5</div>
+          </div>
+          <div class="complexity-bar" style="width:40%"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Single-axis bends, chamfers, angled reveals.</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, ACM-FR, Aluminum</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Cost premium:</span> +15–25%</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Typical lead time:</span> 6–10 weeks</div>
+        </div>
+
+        <div class="complexity-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:700">Double Curvature</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber)">Complexity: 3/5</div>
+          </div>
+          <div class="complexity-bar" style="width:60%;background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0.2))"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Compound curves, domed shapes, wave facades.</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, GFRP</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Cost premium:</span> +35–60%</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Typical lead time:</span> 10–16 weeks</div>
+        </div>
+
+        <div class="complexity-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:700">Parametric / Algorithmic</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber)">Complexity: 4/5</div>
+          </div>
+          <div class="complexity-bar" style="width:80%;background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0.2))"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Unique panel per position, CNC moulds, BIM-driven.</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, GFRP</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Cost premium:</span> +60–120%</div>
+          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Typical lead time:</span> 14–22 weeks</div>
+        </div>
+
+        <div class="complexity-card" style="grid-column:1/-1">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-weight:700">Fully Bespoke Sculptural</div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:#ef4444">Complexity: 5/5</div>
+          </div>
+          <div class="complexity-bar" style="width:100%;background:linear-gradient(90deg,#ef4444,rgba(239,68,68,0.2))"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Landmark / museum / cultural icon. Fully custom tooling, structural integration, specialist contractor.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC only</div>
+            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:#ef4444">Cost premium:</span> +120–300%</div>
+            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:#ef4444">Lead time:</span> 20–40 weeks</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PANEL 5: UAE CODES -->
+    <div class="std-panel" id="std-codes">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="complexity-card">
+          <div style="color:#818cf8;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">DUBAI</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">DCD Fire & Life Safety Code</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Buildings &gt;15m must use non-combustible cladding</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>ACM PE core completely banned</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>GFRP requires Civil Defence NOC above 23m</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>All cladding must have FM/UL/BS EN test reports</div>
+          <span class="uae-standard-badge" style="margin-top:10px">DCD 2018 + Amendments</span>
+        </div>
+        <div class="complexity-card">
+          <div style="color:#818cf8;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">ABU DHABI</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">ADCD Building Fire Code</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Stricter than Dubai — A1/A2 preferred across board</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Cladding system test (not just material) required</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>GFRP allowed only with full system approval</div>
+          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Mandate for third-party inspection on facades</div>
+          <span class="uae-standard-badge" style="margin-top:10px">ADCD 2022 Edition</span>
+        </div>
+        <div class="complexity-card">
+          <div style="color:var(--accent);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">FEDERAL</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">UAE Fire & Life Safety Code</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Applies across all 7 Emirates as baseline</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>References BS EN 13501 fire classification</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cladding material + fixing + insulation = system test</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cavities must have fire barriers at each floor</div>
+          <span class="uae-standard-badge" style="margin-top:10px;background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2);color:var(--accent)">UAE FLS Code 2018</span>
+        </div>
+        <div class="complexity-card">
+          <div style="color:var(--amber);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">SPECIFICATIONS</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Key Standards Referenced</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>BS EN 13501-1 — Fire classification of products</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>BS 8414-1/2 — Large-scale facade fire test</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>ASTM E84 — Surface burning characteristics</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>ISO 13785 — Intermediate scale test</div>
+          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>AAMA 2605 — Aluminum coating durability</div>
+          <span class="uae-standard-badge" style="margin-top:10px;background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:var(--amber)">International Standards</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -737,7 +1143,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
         <div id="auth-supp-extra" style="display:none">
           <div class="auth-row" style="margin-bottom:14px">
             <div class="auth-field">
-              <label>Shop / Brand Name</label>
+              <label>Company / Brand Name</label>
               <input type="text" id="auth-shop" placeholder="Gulf Facades LLC"/>
             </div>
             <div class="auth-field">
@@ -749,6 +1155,33 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
             <label>Tax ID / TRN</label>
             <input type="text" id="auth-taxid" placeholder="TAX-UAE-2025-001"/>
           </div>
+          <div style="background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🏛 UAE Trade Licence</div>
+            <div class="auth-row" style="margin-bottom:10px">
+              <div class="auth-field">
+                <label>Trade Licence Number</label>
+                <input type="text" id="auth-tln" placeholder="DED-2024-123456"/>
+              </div>
+              <div class="auth-field">
+                <label>Issuing Emirate</label>
+                <select id="auth-emirate" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
+                  <option value="">Select Emirate</option>
+                  <option value="Dubai">Dubai (DED)</option>
+                  <option value="Abu Dhabi">Abu Dhabi (ADDED)</option>
+                  <option value="Sharjah">Sharjah (SEDD)</option>
+                  <option value="Ajman">Ajman (AED)</option>
+                  <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                  <option value="Fujairah">Fujairah</option>
+                  <option value="Umm Al Quwain">Umm Al Quwain</option>
+                </select>
+              </div>
+            </div>
+            <div class="auth-field" style="margin-bottom:0">
+              <label>Licence Expiry Date</label>
+              <input type="date" id="auth-expiry" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%;color-scheme:dark"/>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px">Your licence will be verified by our team within 24 hours. You can still browse while pending.</div>
         </div>
       </div>
 
@@ -1626,16 +2059,32 @@ const COMPARE_ROWS = [
 ];
 
 const SUPPLIERS = [
-  { name: 'Duratec Façades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', emoji: '🏭', color: '#0f3020', verified: true },
-  { name: 'Arabian GFRC Industries', location: 'ICAD, Abu Dhabi', mats: ['GFRC'], phone: '+971 2 550 9800', emoji: '🏗️', color: '#1a2f1a', verified: true },
-  { name: 'Alubond UAE', location: 'Ajman Industrial', mats: ['Aluminum', 'ACM-FR'], phone: '+971 6 742 2211', emoji: '🔩', color: '#1a1a2a', verified: true },
-  { name: 'Zahrat Al Khaleej Marble', location: 'Sharjah Industrial', mats: ['Stone'], phone: '+971 6 535 1100', emoji: '🗿', color: '#2a1e10', verified: true },
-  { name: 'Alucobond Gulf', location: 'Dubai Investment Park', mats: ['ACM-FR', 'Aluminum'], phone: '+971 4 885 7700', emoji: '🛡️', color: '#12172a', verified: true },
-  { name: 'Al Marjan Composites', location: 'RAK Free Zone', mats: ['GFRP', 'ACM-FR'], phone: '+971 7 228 9900', emoji: '⚡', color: '#1a2030', verified: true },
-  { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', emoji: '🏗️', color: '#1a2a1e', verified: true },
-  { name: 'Marmara Stone Trading', location: 'Mussafah, Abu Dhabi', mats: ['Stone'], phone: '+971 2 553 6688', emoji: '🗿', color: '#2a200e', verified: false },
-  { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', emoji: '🔩', color: '#222222', verified: true },
-  { name: 'ABM Group of Companies', location: 'Sajja, Sharjah', mats: ['GFRC', 'GFRP'], phone: '+971 6 531 1385', emoji: '🏗️', color: '#1e3a2f', verified: true, freemium: true },
+  {
+    name: 'ABM Group of Companies',
+    fullName: 'Al Bait Al Malaky Industries',
+    location: 'Sajja Industrial Area, Sharjah',
+    mats: ['GFRC', 'GFRP'],
+    phone: '+971 6 531 1385',
+    email: 'info@abm-i.com',
+    website: 'https://abm-i.com',
+    emoji: '🏗️',
+    color: '#0a2015',
+    verified: true,
+    freemium: true,
+    established: '2013',
+    turnover: 'AED 20–25M / year',
+    about: 'Leading UAE manufacturer specialising in GFRC & GFRP facade cladding. Established 2013 in Sharjah with major projects across Dubai, Abu Dhabi and Fujairah.',
+    projects: ['Fujairah Beach Hotel', 'ADNOC Kitchen – Abu Dhabi', 'Khadijah Mosque – Sharjah', 'GRP Roof Cladding – Marsa Al Arab Dubai'],
+  },
+  { name: 'Duratec Facades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', email: 'info@duratec.ae', emoji: '🏭', color: '#0f3020', verified: true, tier: 'featured', tagline: 'Premium GFRC & GFRP facade contractor for landmark projects' },
+  { name: 'Arabian GFRC Industries', location: 'ICAD, Abu Dhabi', mats: ['GFRC'], phone: '+971 2 550 9800', email: 'sales@arabiangfrc.ae', emoji: '🏗️', color: '#1a2f1a', verified: true, tier: 'verified_pro', tagline: 'Specialist GFRC manufacturer serving Abu Dhabi and Al Ain' },
+  { name: 'Alubond UAE', location: 'Ajman Industrial', mats: ['Aluminum', 'ACM-FR'], phone: '+971 6 742 2211', email: 'uae@alubond.com', emoji: '🔩', color: '#1a1a2a', verified: true, tier: 'featured', tagline: 'Market-leading ACM-FR panels — fire-rated and UAE code compliant' },
+  { name: 'Zahrat Al Khaleej Marble', location: 'Sharjah Industrial', mats: ['Stone'], phone: '+971 6 535 1100', email: 'info@zakmarble.ae', emoji: '🗿', color: '#2a1e10', verified: true, tier: 'verified_pro', tagline: 'Natural and engineered stone cladding for luxury facades' },
+  { name: 'Alucobond Gulf', location: 'Dubai Investment Park', mats: ['ACM-FR', 'Aluminum'], phone: '+971 4 885 7700', email: 'gulf@alucobond.ae', emoji: '🛡️', color: '#12172a', verified: true, tier: 'standard', tagline: 'Trusted ACM-FR supplier with in-house fabrication' },
+  { name: 'Al Marjan Composites', location: 'RAK Free Zone', mats: ['GFRP', 'ACM-FR'], phone: '+971 7 228 9900', email: 'info@almarjancomp.ae', emoji: '⚡', color: '#1a2030', verified: true, tier: 'standard', tagline: 'Lightweight GFRP composite panels, fast lead times' },
+  { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', email: 'sales@emiratesprecast.ae', emoji: '🏗️', color: '#1a2a1e', verified: true, tier: 'verified_pro', tagline: 'High-volume GFRC precast production for major developers' },
+  { name: 'Marmara Stone Trading', location: 'Mussafah, Abu Dhabi', mats: ['Stone'], phone: '+971 2 553 6688', email: 'info@marmara.ae', emoji: '🗿', color: '#2a200e', verified: false, tier: 'standard', tagline: 'Imported marble and limestone cladding at competitive prices' },
+  { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', email: 'me@technal.ae', emoji: '🔩', color: '#222222', verified: true, tier: 'standard', tagline: 'Aluminium facade systems and curtain wall solutions' },
 ];
 
 const WIZARD_STEPS = [
@@ -2365,7 +2814,10 @@ async function authSubmit() {
         const category = document.getElementById('auth-category').value.trim();
         const taxId = document.getElementById('auth-taxid').value.trim();
         if (!shop || !category || !taxId) { authShowErr('All supplier fields are required.'); return; }
-        profile = { shopName: shop, category, taxId };
+        const tradeLicenceNumber = document.getElementById('auth-tln').value.trim();
+        const tradeLicenceEmirate = document.getElementById('auth-emirate').value;
+        const tradeLicenceExpiry = document.getElementById('auth-expiry').value;
+        profile = { shopName: shop, category, taxId, tradeLicenceNumber, tradeLicenceEmirate, tradeLicenceExpiry };
       }
       await cwFetch('POST', '/auth/register', { email, password, role, profile });
       // Auto login after register
@@ -2463,49 +2915,136 @@ function cwHandleStripeReturn() {
 // ─── SUPPLIER SECTION UPDATE ──────────────────────────────
 function cwUpdateSupplierSection() {
   const isPremium = cwSession?.user?.subscriptionStatus === 'ACTIVE';
+  const isLoggedIn = cwIsLoggedIn();
   const gate = document.querySelector('.sup-gate-wrap');
-  if (!gate) return;
+  const section = gate ? gate.parentElement : null;
+  if (!section) return;
 
-  // Always show freemium suppliers
-  const freemiumSuppliers = SUPPLIERS.filter(s => s.freemium);
-  const freeGrid = document.getElementById('sup-grid-free');
-  if (freeGrid) {
-    freeGrid.innerHTML = freemiumSuppliers.map(s => `
-      <div class="sup-card-unlocked" style="border: 1px solid var(--accent); background: rgba(0, 229, 160, 0.03);">
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-          <div class="sup-logo" style="background:${s.color};font-size:22px;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${s.emoji}</div>
-          <div>
-            <div class="sup-name">${s.name} <span style="color:var(--accent);font-size:11px">✓ Verified</span> <span style="background:var(--accent);color:#000;font-size:9px;padding:2px 5px;border-radius:4px;margin-left:5px;font-weight:bold">FREE ACCESS</span></div>
-            <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:5px"></i>${s.location}</div>
-          </div>
+  // Always show freemium card to logged-in users
+  let freemiumEl = document.getElementById('sup-freemium');
+  if (isLoggedIn && !freemiumEl) {
+    const abm = SUPPLIERS.find(s => s.freemium);
+    if (abm) {
+      freemiumEl = document.createElement('div');
+      freemiumEl.id = 'sup-freemium';
+      freemiumEl.style.marginBottom = '24px';
+      freemiumEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <span style="font-size:10px;font-family:'DM Mono',monospace;letter-spacing:2px;color:var(--accent);text-transform:uppercase">Featured Supplier</span>
+          <span style="background:rgba(0,229,160,0.15);color:var(--accent);font-size:9px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:20px;letter-spacing:1px">FREE ACCESS</span>
         </div>
-        <div class="sup-mats" style="margin-bottom:14px">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
-        <div class="sup-phone-real"><i class="fa-solid fa-phone" style="margin-right:6px;opacity:0.6"></i>${s.phone}</div>
-      </div>`).join('');
+        <div style="background:linear-gradient(135deg,#0a2015,#111);border:1px solid rgba(0,229,160,0.25);border-radius:16px;padding:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(0,229,160,0.07),transparent);border-radius:50%"></div>
+          <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:18px">
+            <div style="background:#0f3020;border:1px solid rgba(0,229,160,0.2);border-radius:14px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🏗️</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:18px;margin-bottom:2px">${abm.name}</div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px">${abm.fullName}</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="color:var(--accent);font-size:11px;font-weight:600">✓ Verified</span>
+                <span style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${abm.location}</span>
+                <span style="font-size:11px;color:var(--muted)">Est. ${abm.established}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+            ${abm.mats.map(m=>`<span style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);color:var(--accent);padding:4px 12px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace">${m}</span>`).join('')}
+          </div>
+          <p style="font-size:13px;color:rgba(240,240,240,0.75);line-height:1.6;margin-bottom:18px">${abm.about}</p>
+          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:14px;margin-bottom:16px">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">NOTABLE PROJECTS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${abm.projects.map(p=>`<span style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted)">${p}</span>`).join('')}
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+            <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:12px">
+              <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px">TURNOVER</div>
+              <div style="font-weight:600;font-size:13px">${abm.turnover}</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:12px">
+              <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:4px">LOCATION</div>
+              <div style="font-weight:600;font-size:13px">Sharjah, UAE</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="tel:${abm.phone}" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);padding:9px 16px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-phone"></i>${abm.phone}</a>
+            <a href="mailto:${abm.email}" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-envelope"></i>${abm.email}</a>
+            <a href="${abm.website}" target="_blank" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-globe"></i>Visit Website</a>
+          </div>
+        </div>`;
+      section.insertBefore(freemiumEl, section.firstChild);
+    }
+  } else if (!isLoggedIn && freemiumEl) {
+    freemiumEl.remove();
   }
 
   if (isPremium) {
-    gate.style.display = 'none';
+    if (gate) gate.style.display = 'none';
     const grid = document.getElementById('sup-grid-real');
     if (grid) { grid.style.display = 'grid'; return; }
-
-    const section = gate.parentElement;
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
     realGrid.className = 'sup-grid';
     realGrid.style.marginTop = '32px';
-    realGrid.innerHTML = SUPPLIERS.map(s => `
-      <div class="sup-card-unlocked">
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-          <div class="sup-logo" style="background:${s.color};font-size:22px;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${s.emoji}</div>
-          <div>
-            <div class="sup-name">${s.name} ${s.verified ? '<span style="color:var(--accent);font-size:11px">✓ Verified</span>' : ''}</div>
-            <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:5px"></i>${s.location}</div>
+    realGrid.innerHTML = SUPPLIERS.filter(s => !s.freemium).map(s => {
+      if (s.tier === 'featured') return `
+        <div class="sup-featured">
+          <i class="fa-solid fa-star sup-featured-star"></i>
+          <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:14px">
+            <div style="background:${s.color};border:1px solid rgba(245,158,11,0.2);border-radius:12px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${s.emoji}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+                <span class="tier-badge-featured">⭐ Featured</span>
+                ${s.verified ? '<span style="color:var(--accent);font-size:10px;font-family:DM Mono,monospace">✓ Verified</span>' : ''}
+              </div>
+              <div style="font-weight:700;font-size:15px;margin-bottom:2px">${s.name}</div>
+              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
+            </div>
           </div>
-        </div>
-        <div class="sup-mats" style="margin-bottom:14px">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
-        <div class="sup-phone-real"><i class="fa-solid fa-phone" style="margin-right:6px;opacity:0.6"></i>${s.phone}</div>
-      </div>`).join('');
+          <p style="font-size:12px;color:rgba(240,240,240,0.6);margin-bottom:12px;line-height:1.5">${s.tagline||''}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${s.mats.map(m=>`<span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--amber);padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a href="tel:${s.phone}" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-phone" style="margin-right:5px"></i>${s.phone}</a>
+            ${s.email ? `<a href="mailto:${s.email}" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-envelope" style="margin-right:5px"></i>Email</a>` : ''}
+          </div>
+        </div>`;
+      if (s.tier === 'verified_pro') return `
+        <div class="sup-verified">
+          <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:14px">
+            <div style="background:${s.color};border:1px solid rgba(0,229,160,0.15);border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${s.emoji}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+                <span class="tier-badge-verified">✓ Verified Pro</span>
+              </div>
+              <div style="font-weight:700;font-size:15px;margin-bottom:2px">${s.name}</div>
+              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
+            </div>
+          </div>
+          <p style="font-size:12px;color:rgba(240,240,240,0.6);margin-bottom:12px;line-height:1.5">${s.tagline||''}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${s.mats.map(m=>`<span style="background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a href="tel:${s.phone}" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-phone" style="margin-right:5px"></i>${s.phone}</a>
+            ${s.email ? `<a href="mailto:${s.email}" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-envelope" style="margin-right:5px"></i>Email</a>` : ''}
+          </div>
+        </div>`;
+      return `
+        <div class="sup-standard">
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:13px">
+            <div style="background:${s.color};border-radius:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${s.emoji}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+                <span class="tier-badge-standard">Standard</span>
+                ${s.verified ? '<span style="color:#666;font-size:10px;font-family:DM Mono,monospace">✓</span>' : ''}
+              </div>
+              <div style="font-weight:600;font-size:14px;margin-bottom:2px">${s.name}</div>
+              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">${s.mats.map(m=>`<span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#777;padding:3px 9px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:12px;color:#888"><i class="fa-solid fa-phone" style="margin-right:5px;opacity:0.5"></i>${s.phone}</div>
+        </div>`;
+    }).join('');
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
@@ -2541,7 +3080,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cwIsLoggedIn()) cwLoadSession();
 });
 let apiToken = localStorage.getItem('cw_api_tok') || null;
-(function initTester(){ refreshTok(); })();
+try { (function initTester(){ refreshTok(); })(); } catch(e) {}
 
 function refreshTok(){
   const el=document.getElementById('tok-display');
@@ -2663,6 +3202,13 @@ async function apiCheckout(){
   if(!p){showToast('Enter a Stripe Price ID first');return}
   const r=await apiReq('POST','/payments/create-session',{priceId:p},'btn-checkout','checkout-code','checkout-res','checkout-ms');
   if(r?.status===200&&r.data?.url)showToast('Checkout URL ready — copy from response below');
+}
+
+function stdTab(name, btn) {
+  document.querySelectorAll('.std-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.std-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('std-' + name).classList.add('active');
 }
 </script>
 </body>

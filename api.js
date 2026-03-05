@@ -1,7 +1,7 @@
 // ─── CladWise UAE — Frontend API Utility ─────────────────────────────────────
 // Usage: import './api.js' in your HTML, then call API.login(), API.getMe() etc.
 
-const BASE_URL = 'http://localhost:5000/api'
+const BASE_URL = 'https://backend-cladwise-production.up.railway.app/api'
 
 // ─── AUTH HELPERS ─────────────────────────────────────────────────────────────
 export const Auth = {
