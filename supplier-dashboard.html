@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier Dashboard - CladWise UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #1a1a1a;
+  --border: rgba(255,255,255,0.08);
+  --accent: #00e5a0;
+  --accent2: #00b37a;
+  --text: #f0f0f0;
+  --muted: #777;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; }
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #000;
+}
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.nav-btn:hover {
+  color: var(--accent);
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 60px 32px;
+}
+
+/* HEADER */
+.dashboard-header {
+  margin-bottom: 48px;
+}
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+/* STATUS CARD */
+.status-card {
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.status-content h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.badge-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-verified {
+  background: rgba(16, 185, 129, 0.15);
+  color: #86efac;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge-rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-expired {
+  background: rgba(107, 114, 128, 0.15);
+  color: #d1d5db;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.status-description {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.status-actions {
+  display: flex;
+  gap: 12px;
+}
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+.btn-primary:hover {
+  background: #00ffb3;
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.status-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.icon-pending {
+  background: rgba(245, 158, 11, 0.15);
+}
+.icon-verified {
+  background: rgba(16, 185, 129, 0.15);
+}
+.icon-rejected {
+  background: rgba(239, 68, 68, 0.15);
+}
+.icon-expired {
+  background: rgba(107, 114, 128, 0.15);
+}
+
+.status-timeline {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* CARD */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s;
+}
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 229, 160, 0.1);
+}
+
+.card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title i {
+  color: var(--accent);
+}
+
+.card-content {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 12px 0;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* EXPIRY WARNING */
+.expiry-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.expiry-warning i {
+  font-size: 24px;
+  color: var(--warning);
+  flex-shrink: 0;
+}
+.expiry-warning-content h3 {
+  margin-bottom: 4px;
+  color: var(--warning);
+}
+.expiry-warning-content p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* DOCUMENTS */
+.documents-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.document-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.document-info {
+  flex: 1;
+}
+.document-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.document-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.document-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.status-verified {
+  color: var(--success);
+}
+.status-pending {
+  color: var(--warning);
+}
+
+/* VERIFIED BADGE */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #86efac;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .status-card {
+    grid-template-columns: 1fr;
+  }
+  .page-title {
+    font-size: 32px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">🏗️</div>
+      <div>
+        <div class="logo-text">CLADWISE</div>
+        <div style="font-size: 11px; color: var(--accent); font-family: 'DM Mono', monospace; letter-spacing: 2px;">UAE</div>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="location.href='/supplier-profile.html'">Profile</button>
+      <button class="nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="container">
+  <div class="dashboard-header">
+    <h1 class="page-title">Supplier Dashboard</h1>
+    <p style="color: var(--muted); font-size: 16px;">Manage your verification status and track your license expiry</p>
+  </div>
+
+  <!-- EXPIRY WARNING -->
+  <div id="expiryWarning" style="display: none;">
+    <div class="expiry-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div class="expiry-warning-content">
+        <h3>License Expiring Soon</h3>
+        <p id="expiryWarningText"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS CARD -->
+  <div class="status-card" id="statusCard">
+    <div class="status-content">
+      <h2>Verification Status</h2>
+      <div id="statusBadge"></div>
+      <p class="status-description" id="statusDescription"></p>
+      <div class="status-actions" id="statusActions"></div>
+    </div>
+    <div class="status-visual">
+      <div class="status-icon" id="statusIcon"></div>
+      <div class="status-timeline" id="statusTimeline"></div>
+    </div>
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-building"></i> Company
+      </div>
+      <div class="card-value" id="companyName">—</div>
+      <div class="card-content" id="companyCategory">—</div>
+      <div class="card-meta">
+        <strong>Tax ID:</strong> <span id="taxId">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-certificate"></i> Trade License
+      </div>
+      <div class="card-value" id="licenseNumber">—</div>
+      <div class="card-content" id="licenseEmirate">—</div>
+      <div class="card-meta">
+        <strong>Expires:</strong> <span id="licenseExpiry">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-phone"></i> Contact
+      </div>
+      <div class="card-value" style="font-size: 14px;" id="phoneNumber">—</div>
+      <div class="card-content" id="contactPerson">—</div>
+      <div class="card-meta">
+        <strong>Email:</strong> <span id="email">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="documents-section">
+    <div class="section-title">
+      <i class="fas fa-file-upload"></i> Uploaded Documents
+    </div>
+    <div class="document-list" id="documentList">
+      <p style="color: var(--muted); text-align: center; padding: 32px;">Loading documents...</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { API, Auth, requireAuth, formatDateUAE, daysUntilExpiry, getVerificationBadge } from './api.js'
+
+let profile = null
+
+// ─── AUTH CHECK ────────────────────────────────────────────────────────────
+const session = await requireAuth('/')
+if (!session) window.location.href = '/'
+
+// ─── LOAD PROFILE ──────────────────────────────────────────────────────────
+async function loadProfile() {
+  try {
+    const data = await API.getMe()
+    profile = data.profile
+    renderProfile()
+    loadDocuments()
+  } catch (err) {
+    console.error('Failed to load profile:', err)
+  }
+}
+
+function renderProfile() {
+  if (!profile) return
+
+  // Status Badge
+  const badge = getVerificationBadge(profile.verificationStatus)
+  document.getElementById('statusBadge').innerHTML = `
+    <div class="status-badge badge-${profile.verificationStatus.toLowerCase()}">
+      <i class="fas fa-${badge.icon === '✓' ? 'check-circle' : badge.icon === '⏳' ? 'hourglass-half' : badge.icon === '✕' ? 'times-circle' : 'exclamation-circle'}"></i>
+      ${badge.text}
+    </div>
+  `
+
+  // Status Icon
+  const iconClass = {
+    PENDING: 'icon-pending',
+    VERIFIED: 'icon-verified',
+    REJECTED: 'icon-rejected',
+    EXPIRED: 'icon-expired'
+  }[profile.verificationStatus]
+  
+  const iconEmoji = {
+    PENDING: '⏳',
+    VERIFIED: '✓',
+    REJECTED: '✕',
+    EXPIRED: '⚠'
+  }[profile.verificationStatus]
+
+  document.getElementById('statusIcon').className = `status-icon ${iconClass}`
+  document.getElementById('statusIcon').textContent = iconEmoji
+
+  // Status Description
+  const descriptions = {
+    PENDING: 'Your application is under review. Our team will verify your documents and contact you within 2-3 business days.',
+    VERIFIED: 'Your supplier profile has been verified and is now visible to architects and specifiers across the UAE. You can now receive project inquiries.',
+    REJECTED: 'Your application was not approved. Please review the rejection note and resubmit with updated documents.',
+    EXPIRED: 'Your verification has expired. Please renew your trade license and submit it for re-verification.'
+  }
+  document.getElementById('statusDescription').textContent = descriptions[profile.verificationStatus]
+
+  // Status Timeline
+  const createdDate = formatDateUAE(profile.createdAt)
+  const verifiedDate = profile.verifiedAt ? formatDateUAE(profile.verifiedAt) : 'Pending'
+  document.getElementById('statusTimeline').innerHTML = `
+    <div>Applied: ${createdDate}</div>
+    <div>Verified: ${verifiedDate}</div>
+  `
+
+  // Status Actions
+  const actionsHTML = {
+    PENDING: '<button class="btn btn-secondary" onclick="location.href=\'/supplier-profile.html\'">Edit Profile</button>',
+    VERIFIED: profile.tradeLicenceExpiry ? `<button class="btn btn-secondary" onclick="alert(\'License valid until ${formatDateUAE(profile.tradeLicenceExpiry)}\')">View License Details</button>` : '',
+    REJECTED: '<button class="btn btn-primary" onclick="location.href=\'/supplier-register.html\'">Resubmit Application</button>',
+    EXPIRED: '<button class="btn btn-primary" onclick="location.href=\'/supplier-profile.html\'">Renew License</button>'
+  }
+  document.getElementById('statusActions').innerHTML = actionsHTML[profile.verificationStatus]
+
+  // Company Info
+  document.getElementById('companyName').textContent = profile.shopName
+  document.getElementById('companyCategory').textContent = profile.category
+  document.getElementById('taxId').textContent = profile.taxId
+
+  // License Info
+  document.getElementById('licenseNumber').textContent = profile.tradeLicenceNumber || '—'
+  document.getElementById('licenseEmirate').textContent = profile.tradeLicenceEmirate ? `📍 ${getEmirateLabel(profile.tradeLicenceEmirate)}` : '—'
+  document.getElementById('licenseExpiry').textContent = profile.tradeLicenceExpiry ? formatDateUAE(profile.tradeLicenceExpiry) : '—'
+
+  // Contact Info
+  document.getElementById('phoneNumber').textContent = profile.phoneNumber || '—'
+  document.getElementById('contactPerson').textContent = profile.contactPerson || '—'
+  document.getElementById('email').textContent = session.user.email
+
+  // Expiry Warning
+  if (profile.tradeLicenceExpiry && profile.verificationStatus === 'VERIFIED') {
+    const daysLeft = daysUntilExpiry(profile.tradeLicenceExpiry)
+    if (daysLeft <= 30 && daysLeft > 0) {
+      document.getElementById('expiryWarning').style.display = 'block'
+      document.getElementById('expiryWarningText').textContent = `Your trade license will expire in ${daysLeft} days (${formatDateUAE(profile.tradeLicenceExpiry)}). Please renew it to maintain your verified status.`
+    }
+  }
+}
+
+async function loadDocuments() {
+  try {
+    const data = await API.getDocuments()
+    const documents = data.documents || []
+    
+    if (documents.length === 0) {
+      document.getElementById('documentList').innerHTML = '<p style="color: var(--muted); text-align: center; padding: 32px;">No documents uploaded yet</p>'
+      return
+    }
+
+    document.getElementById('documentList').innerHTML = documents.map(doc => `
+      <div class="document-item">
+        <div class="document-info">
+          <div class="document-name">
+            <i class="fas fa-file-pdf"></i> ${doc.documentName}
+          </div>
+          <div class="document-meta">
+            Uploaded: ${formatDateUAE(doc.uploadedAt)}
+            ${doc.expiryDate ? ` • Expires: ${formatDateUAE(doc.expiryDate)}` : ''}
+          </div>
+        </div>
+        <div class="document-status ${doc.isVerified ? 'status-verified' : 'status-pending'}">
+          <i class="fas fa-${doc.isVerified ? 'check-circle' : 'clock'}"></i>
+          ${doc.isVerified ? 'Verified' : 'Pending'}
+        </div>
+      </div>
+    `).join('')
+  } catch (err) {
+    console.error('Failed to load documents:', err)
+  }
+}
+
+function getEmirateLabel(code) {
+  const emirates = {
+    DU: 'Dubai',
+    AZ: 'Abu Dhabi',
+    SJ: 'Sharjah',
+    AJ: 'Ajman',
+    UM: 'Umm Al Quwain',
+    RK: 'Ras Al Khaimah',
+    FJ: 'Fujairah'
+  }
+  return emirates[code] || code
+}
+
+function logout() {
+  Auth.logout()
+}
+
+// ─── INITIAL LOAD ──────────────────────────────────────────────────────────
+loadProfile()
+</script>
+
+</body>
+</html>

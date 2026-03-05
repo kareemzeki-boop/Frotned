@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CladWise Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#080808;--bg2:#101010;--bg3:#181818;--card:#131313;--border:rgba(255,255,255,0.07);--accent:#00e5a0;--amber:#f59e0b;--red:#f87171;--text:#f0f0f0;--muted:#666}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px}
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px}
+.login-glow{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,160,0.06) 0%,transparent 70%);pointer-events:none}
+.login-box{position:relative;z-index:1;background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:52px 48px;width:100%;max-width:420px;text-align:center}
+.login-icon{width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000;margin:0 auto 24px}
+.login-title{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:3px;line-height:1;margin-bottom:6px}
+.login-sub{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:2px;margin-bottom:36px}
+.login-field{margin-bottom:16px;text-align:left}
+.login-field label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.login-field input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s}
+.login-field input:focus{border-color:rgba(0,229,160,0.4)}
+.login-btn{width:100%;background:var(--accent);color:#000;border:none;padding:15px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.login-btn:hover{background:#00ffb3}
+.login-err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:10px;font-size:12px;color:var(--red);margin-top:12px;display:none}
+.login-err.show{display:block}
+#admin-shell{display:none;min-height:100vh;flex-direction:column}
+#admin-shell.open{display:flex}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:12px}
+.topbar-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#000}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+.topbar-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.2);padding:3px 8px;border-radius:20px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.btn-export{background:var(--accent);color:#000;border:none;padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:1px;transition:all 0.2s}
+.btn-export:hover{background:#00ffb3}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.admin-layout{display:flex;flex:1}
+.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.sidebar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:0 20px;margin-bottom:6px;margin-top:16px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:500;transition:all 0.15s;border-left:2px solid transparent}
+.sidebar-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.sidebar-item.active{color:var(--accent);background:rgba(0,229,160,0.06);border-left-color:var(--accent)}
+.sidebar-item i{width:16px;text-align:center;font-size:13px}
+.scnt{margin-left:auto;background:var(--bg3);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:10px}
+.admin-main{flex:1;padding:32px;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+.page-hd{margin-bottom:28px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1}
+.page-sub{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-top:4px}
+.acard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.acard-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.acard-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.acard-title i{color:var(--accent)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;line-height:1;color:var(--accent)}
+.slbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.ssub{font-size:11px;color:var(--muted);margin-top:6px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.field input,.field textarea,.field select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(0,229,160,0.4)}
+.field textarea{resize:vertical;min-height:80px}
+.field input[type=range]{padding:6px 0;cursor:pointer;accent-color:var(--accent)}
+.rrow{display:flex;align-items:center;gap:12px}
+.rval{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);min-width:36px;text-align:right}
+.mtabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.mtab{padding:8px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all 0.15s}
+.mtab:hover{color:var(--text)}
+.mtab.active{background:rgba(0,229,160,0.1);border-color:rgba(0,229,160,0.3);color:var(--accent)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px}
+.pitem{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--bg3)}
+.pitem img{width:100%;height:130px;object-fit:cover;display:block}
+.pitem-body{padding:10px 12px}
+.pitem-lbl{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px}
+.pitem input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--text);outline:none;font-family:'DM Mono',monospace}
+.pitem input:focus{border-color:rgba(0,229,160,0.4)}
+.pref{position:absolute;top:8px;right:8px;width:28px;height:28px;background:rgba(0,0,0,0.7);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.pref:hover{background:var(--accent);color:#000}
+.sup-list{display:flex;flex-direction:column;gap:12px}
+.srow{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto auto;gap:12px;align-items:end}
+.srow .field input,.srow .field select{background:var(--bg2)}
+.sdel{background:none;border:1px solid rgba(248,113,113,0.2);color:var(--red);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:end}
+.sdel:hover{background:rgba(248,113,113,0.1);border-color:var(--red)}
+.add-btn{display:flex;align-items:center;gap:8px;background:rgba(0,229,160,0.08);border:1px dashed rgba(0,229,160,0.3);border-radius:12px;padding:14px 20px;cursor:pointer;color:var(--accent);font-size:13px;font-weight:600;transition:all 0.2s;width:100%;justify-content:center}
+.add-btn:hover{background:rgba(0,229,160,0.12)}
+.scgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sced{background:var(--bg3);border-radius:10px;padding:14px 16px}
+.sced-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--accent);color:var(--accent);padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* moved to mobile nav section */
+@media(max-width:900px){.sidebar{display:none}.stats-grid{grid-template-columns:1fr 1fr}.srow{grid-template-columns:1fr 1fr}.fg{grid-template-columns:1fr}.fg3{grid-template-columns:1fr}}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:999;padding:8px 0 12px}
+.mobile-nav-inner{display:flex;justify-content:space-around;align-items:center}
+.mobile-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;cursor:pointer;color:var(--muted);font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.5px;background:none;border:none;transition:color 0.15s}
+.mobile-nav-btn i{font-size:18px}
+.mobile-nav-btn.active{color:var(--accent)}
+.page-content{padding-bottom:80px}
+@media(max-width:900px){
+  .mobile-nav{display:block}
+  .sidebar{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-grid"></div>
+  <div class="login-glow"></div>
+  <div class="login-box">
+    <div class="login-icon"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">CladWise UAE &middot; Restricted Access</div>
+    <div class="login-field">
+      <label>Admin Password</label>
+      <input type="password" id="admin-pwd" placeholder="Enter your admin password" onkeydown="if(event.key==='Enter')adminLogin()"/>
+    </div>
+    <button class="login-btn" onclick="adminLogin()"><i class="fa-solid fa-unlock" style="margin-right:8px"></i>Enter Admin Panel</button>
+    <div class="login-err" id="login-err">Incorrect password. Try again.</div>
+    <div style="margin-top:20px;font-size:11px;color:var(--muted)">Default password: <span style="color:var(--accent);font-family:'DM Mono',monospace">cladwise2025</span></div>
+  </div>
+</div>
+
+<div id="admin-shell">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <span class="topbar-title">CladWise</span>
+      <span class="topbar-badge">ADMIN</span>
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="save-status">Ready</span>
+      <button class="btn-export" onclick="exportChanges()"><i class="fa-solid fa-download" style="margin-right:6px"></i>Export JSON</button>
+      <button class="btn-logout" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket" style="margin-right:6px"></i>Logout</button>
+    </div>
+  </div>
+  <div class="admin-layout">
+    <div class="sidebar">
+      <div class="sidebar-label">Overview</div>
+      <div class="sidebar-item active" onclick="showPage('dashboard',this)"><i class="fa-solid fa-gauge-high"></i> Dashboard</div>
+      <div class="sidebar-item" onclick="showPage('users',this)"><i class="fa-solid fa-users"></i> Users <span class="scnt" id="users-count">-</span></div>
+      <div class="sidebar-label">Content</div>
+      <div class="sidebar-item" onclick="showPage('materials',this)"><i class="fa-solid fa-cubes"></i> Materials <span class="scnt">5</span></div>
+      <div class="sidebar-item" onclick="showPage('photos',this)"><i class="fa-solid fa-images"></i> Photos</div>
+      <div class="sidebar-item" onclick="showPage('suppliers',this)"><i class="fa-solid fa-building"></i> Suppliers <span class="scnt" id="sup-count">9</span></div>
+      <div class="sidebar-item" onclick="showPage('pricing',this)"><i class="fa-solid fa-tag"></i> Pricing</div>
+      <div class="sidebar-label">System</div>
+      <div class="sidebar-item" onclick="showPage('settings',this)"><i class="fa-solid fa-gear"></i> Settings</div>
+    </div>
+    <div class="admin-main">
+
+      <div class="page active" id="page-dashboard">
+        <div class="page-hd"><div class="page-title">Dashboard</div><div class="page-sub">CladWise UAE Admin Overview</div></div>
+        <div class="stats-grid">
+          <div class="scard"><div class="snum" id="stat-users">-</div><div class="slbl">Total Users</div><div class="ssub">Registered accounts</div></div>
+          <div class="scard"><div class="snum" id="stat-premium">-</div><div class="slbl">Premium</div><div class="ssub">Active subscriptions</div></div>
+          <div class="scard"><div class="snum">5</div><div class="slbl">Materials</div><div class="ssub">GFRC, GFRP, ALU, Stone, ACM</div></div>
+          <div class="scard"><div class="snum" id="stat-sups">9</div><div class="slbl">Suppliers</div><div class="ssub">Listed companies</div></div>
+        </div>
+        <div class="acard">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-circle-info"></i> Quick Guide</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div style="background:var(--bg3);border-radius:10px;padding:18px"><div style="color:var(--accent);font-size:20px;margin-bottom:10px"><i class="fa-solid fa-images"></i></div><div style="font-weight:700;margin-bottom:6px">Change Photos</div><div style="font-size:12px;color:var(--muted)">Photos tab &rarr; paste Unsplash ID &rarr; click refresh to preview instantly</div></div>
+            <div style="background:var(--bg3);border-radius:10px;padding:18px"><div style="color:var(--accent);font-size:20px;margin-bottom:10px"><i class="fa-solid fa-cubes"></i></div><div style="font-weight:700;margin-bottom:6px">Edit Specs & Prices</div><div style="font-size:12px;color:var(--muted)">Materials tab &rarr; select material &rarr; edit specs, scores, prices, pros/cons</div></div>
+            <div style="background:var(--bg3);border-radius:10px;padding:18px"><div style="color:var(--accent);font-size:20px;margin-bottom:10px"><i class="fa-solid fa-building"></i></div><div style="font-weight:700;margin-bottom:6px">Manage Suppliers</div><div style="font-size:12px;color:var(--muted)">Suppliers tab &rarr; add new, edit name/phone/email or remove listings</div></div>
+          </div>
+        </div>
+        <div class="acard">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-users"></i> Backend Login (for user stats)</div></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Login with your account credentials to see user statistics.</div>
+          <div style="display:flex;gap:8px;max-width:440px">
+            <input type="email" id="admin-email" placeholder="Your email" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);outline:none">
+            <input type="password" id="admin-backend-pwd" placeholder="Password" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);outline:none">
+            <button onclick="quickAdminLogin()" style="background:var(--accent);color:#000;border:none;padding:9px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;white-space:nowrap">Login</button>
+          </div>
+          <div id="dash-status" style="margin-top:12px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace"></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-users">
+        <div class="page-hd"><div class="page-title">Users</div><div class="page-sub">Registered accounts</div></div>
+        <div class="acard"><div id="users-wrap" style="padding:16px;text-align:center;color:var(--muted);font-size:12px;font-family:'DM Mono',monospace">Login on Dashboard first to view users</div></div>
+      </div>
+
+      <div class="page" id="page-materials">
+        <div class="page-hd"><div class="page-title">Materials</div><div class="page-sub">Edit specs, scores, prices and descriptions</div></div>
+        <div class="mtabs" id="mat-tabs"></div>
+        <div id="mat-editor"></div>
+      </div>
+
+      <div class="page" id="page-photos">
+        <div class="page-hd"><div class="page-title">Photos</div><div class="page-sub">Change material photos using Unsplash IDs</div></div>
+        <div class="acard">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-circle-info"></i> How to Change a Photo</div></div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">
+            1. Go to <strong style="color:var(--accent)">unsplash.com</strong> &rarr; search for image &rarr; click it<br>
+            2. Copy the ID from the URL: unsplash.com/photos/<strong style="color:var(--accent);font-family:'DM Mono',monospace">THIS-IS-THE-ID</strong><br>
+            3. Paste ID in the box below &rarr; click the green refresh button to preview<br>
+            4. When happy click <strong style="color:var(--accent)">Export JSON</strong> at the top to save all changes
+          </div>
+        </div>
+        <div class="mtabs" id="photo-tabs"></div>
+        <div id="photo-editor"></div>
+      </div>
+
+      <div class="page" id="page-suppliers">
+        <div class="page-hd"><div class="page-title">Suppliers</div><div class="page-sub">Add, edit or remove supplier listings</div></div>
+        <div class="acard">
+          <div class="acard-hd">
+            <div class="acard-title"><i class="fa-solid fa-building"></i> Supplier Directory</div>
+            <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="sup-total">9 suppliers</div>
+          </div>
+          <div class="sup-list" id="sup-list"></div>
+          <div style="margin-top:12px"><div class="add-btn" onclick="addSupplier()"><i class="fa-solid fa-plus"></i> Add New Supplier</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-pricing">
+        <div class="page-hd"><div class="page-title">Pricing</div><div class="page-sub">Edit plan names and prices in the subscription modal</div></div>
+        <div class="acard">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-tag"></i> Architect Plans</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div id="plan-explorer-editor"></div><div id="plan-pro-editor"></div><div id="plan-enterprise-editor"></div>
+          </div>
+        </div>
+        <div class="acard">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-tag"></i> Supplier Listing Plans</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div id="plan-standard-editor"></div><div id="plan-verified-editor"></div><div id="plan-featured-editor"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-settings">
+        <div class="page-hd"><div class="page-title">Settings</div><div class="page-sub">Admin panel configuration</div></div>
+        <div class="acard" style="max-width:420px">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-lock"></i> Change Admin Password</div></div>
+          <div class="field" style="margin-bottom:14px"><label>Current Password</label><input type="password" id="pwd-current" placeholder="Current password"/></div>
+          <div class="field" style="margin-bottom:14px"><label>New Password</label><input type="password" id="pwd-new" placeholder="New password"/></div>
+          <div class="field" style="margin-bottom:20px"><label>Confirm New Password</label><input type="password" id="pwd-confirm" placeholder="Confirm"/></div>
+          <button class="btn-export" onclick="changePassword()">Update Password</button>
+        </div>
+        <div class="acard" style="max-width:420px;margin-top:20px">
+          <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-server"></i> Backend Connection</div></div>
+          <div class="field" style="margin-bottom:14px"><label>API Base URL</label><input type="text" id="api-base-setting" value="https://backend-cladwise-production.up.railway.app/api"/></div>
+          <button class="btn-export" onclick="testConn()" style="margin-right:10px">Test Connection</button>
+          <span id="conn-status" style="font-size:12px;font-family:'DM Mono',monospace;color:var(--muted)"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APWK='cw_admin_pwd', AAUT='cw_admin_auth';
+let ABASE='https://backend-cladwise-production.up.railway.app/api';
+
+let MAT={
+  GFRC:{name:'GFRC',full:'Glass Fibre Reinforced Concrete',emoji:'x1F3D7',tagline:'Custom Shapes - Fireproof - UAE Favourite',scores:{heat:94,fire:98,weight:78,cost:70,speed:72},overall:9.2,specs:{'Weight':{val:'75-110 kg/m',sub:'vs 180+ for solid concrete'},'Thickness':{val:'10-25 mm',sub:'Typical panel range'},'Fire Rating':{val:'Class A1',sub:'Non-combustible (BS EN 13501-1)'},'Compressive Strength':{val:'40-80 MPa',sub:'Depending on mix design'},'Thermal Conductivity':{val:'1.0 W/m K',sub:'Good with backing insulation'},'Service Life':{val:'50+ years',sub:'UAE climate tested'},'Surface Finishes':{val:'12+ options',sub:'Smooth, textured, stone-look'},'Lead Time':{val:'8-14 weeks',sub:'Custom mould fabrication'}},priceRange:'AED 450-900/m',pros:['Fully non-combustible','Complex 3D forms','Excellent thermal mass','Long service life'],cons:['Higher tooling cost','Longer lead time','Requires skilled crew']},
+  GFRP:{name:'GFRP',full:'Glass Fibre Reinforced Polymer',emoji:'x26A1',tagline:'Ultra-Light - Complex Geometry - Modern',scores:{heat:80,fire:72,weight:96,cost:65,speed:80},overall:8.7,specs:{'Weight':{val:'10-25 kg/m',sub:'Lightest facade option'},'Thickness':{val:'4-15 mm',sub:'Single skin or sandwich'},'Fire Rating':{val:'Class B-C',sub:'Fire retardant grade available'},'Tensile Strength':{val:'150-350 MPa',sub:'Directional (fibre aligned)'},'Thermal Conductivity':{val:'0.3-0.5 W/m K',sub:'Better insulator than concrete'},'Service Life':{val:'25-40 years',sub:'UV stabilised grade required'},'Surface Finishes':{val:'8+ options',sub:'Gel coat, paint, UV coating'},'Lead Time':{val:'6-10 weeks',sub:'Mould fabrication required'}},priceRange:'AED 380-750/m',pros:['Extremely lightweight','Complex parametric forms','Good impact resistance'],cons:['Not fully non-combustible','Requires UV-stable resin','Less proven long-term']},
+  Aluminum:{name:'Aluminum',full:'Aluminum Composite Panels',emoji:'x1F527',tagline:'Fast - Cost-Effective - Modern Aesthetic',scores:{heat:76,fire:85,weight:90,cost:88,speed:96},overall:8.1,specs:{'Weight':{val:'5-12 kg/m',sub:'Solid Al or composite'},'Thickness':{val:'3-6 mm',sub:''},'Fire Rating':{val:'A2-B (FR core)',sub:'Fire-resistant mineral core required'},'Panel Width':{val:'Up to 1500 mm',sub:'Standard mill widths'},'Thermal Conductivity':{val:'0.04 W/m K',sub:'With PE or FR core'},'Service Life':{val:'20-35 years',sub:'PVDF coating life in UAE sun'},'Surface Finishes':{val:'Unlimited',sub:'PVDF, anodised, mirror, wood-print'},'Lead Time':{val:'3-6 weeks',sub:'Fastest of all options'}},priceRange:'AED 180-420/m',pros:['Fastest delivery','Lowest cost','Unlimited colours'],cons:['FR core mandatory','Not for complex 3D','UV degradation']},
+  Stone:{name:'Stone',full:'Natural and Engineered Stone Cladding',emoji:'x1F5FF',tagline:'Timeless - Premium - UAE Heritage',scores:{heat:88,fire:99,weight:40,cost:35,speed:38},overall:7.6,specs:{'Weight':{val:'60-180 kg/m',sub:'Varies by stone type'},'Thickness':{val:'20-40 mm',sub:'Structural or rainscreen'},'Fire Rating':{val:'Class A1',sub:'Non-combustible natural material'},'Compressive Strength':{val:'100-200 MPa',sub:'Granite highest, limestone lower'},'Thermal Conductivity':{val:'1.5-3.5 W/m K',sub:'Needs backing insulation'},'Service Life':{val:'100+ years',sub:'If properly maintained'},'Surface Finishes':{val:'Polished, honed, sandblasted',sub:''},'Lead Time':{val:'10-20 weeks',sub:'Quarry sourcing'}},priceRange:'AED 600-2000/m',pros:['Timeless aesthetic','100+ year life','Non-combustible'],cons:['Heaviest option','Highest cost','Longest lead time']},
+  ACMFR:{name:'ACM-FR',full:'Fire-Rated Aluminum Composite Material',emoji:'x1F6E1',tagline:'UAE Fire Code Compliant - Cost Smart',scores:{heat:78,fire:92,weight:88,cost:82,speed:90},overall:8.4,specs:{'Weight':{val:'6-8 kg/m',sub:'Mineral filled FR core'},'Thickness':{val:'4-6 mm',sub:'Standard ACM-FR panel'},'Fire Rating':{val:'Class A2',sub:'UAE fire code compliant'},'Panel Width':{val:'Up to 1250 mm',sub:'Standard coil width'},'Thermal Conductivity':{val:'0.04 W/m K',sub:'With FR mineral core'},'Service Life':{val:'20-30 years',sub:'PVDF coating'},'Surface Finishes':{val:'PVDF, polyester, anodised',sub:'Wide RAL range'},'Lead Time':{val:'4-7 weeks',sub:'Faster than GFRC/Stone'}},priceRange:'AED 220-480/m',pros:['UAE Fire Code compliant','Cost effective','Faster than GFRC'],cons:['Not for complex forms','Must verify core certification','Flat panels only']},
+};
+
+let SUP=[
+  {name:'Duratec Facades LLC',loc:'Jebel Ali, Dubai',mats:'GFRC, GFRP',tel:'+971 4 812 4400',email:'info@duratec.ae',ver:true},
+  {name:'Arabian GFRC Industries',loc:'ICAD, Abu Dhabi',mats:'GFRC',tel:'+971 2 550 9800',email:'sales@arabiangfrc.ae',ver:true},
+  {name:'Alubond UAE',loc:'Ajman Industrial',mats:'Aluminum, ACM-FR',tel:'+971 6 742 2211',email:'info@alubond.ae',ver:true},
+  {name:'Zahrat Al Khaleej Marble',loc:'Sharjah Industrial',mats:'Stone',tel:'+971 6 535 1100',email:'info@zakmarble.ae',ver:true},
+  {name:'Alucobond Gulf',loc:'Dubai Investment Park',mats:'ACM-FR, Aluminum',tel:'+971 4 885 7700',email:'gulf@alucobond.com',ver:true},
+  {name:'Al Marjan Composites',loc:'RAK Free Zone',mats:'GFRP, ACM-FR',tel:'+971 7 228 9900',email:'info@almarjan.ae',ver:true},
+  {name:'Emirates Precast LLC',loc:'Dubai Silicon Oasis',mats:'GFRC',tel:'+971 4 501 3300',email:'info@emiratesprecast.ae',ver:true},
+  {name:'Marmara Stone Trading',loc:'Mussafah, Abu Dhabi',mats:'Stone',tel:'+971 2 553 6688',email:'sales@marmara.ae',ver:false},
+  {name:'Technal Middle East',loc:'DAFZA, Dubai',mats:'Aluminum',tel:'+971 4 299 9800',email:'middleeast@technal.com',ver:true},
+];
+
+let PHOTOS={
+  GFRC:{hero:'1510798831971-661eb04b3739',v:['1582407947304-fd86f28320c7','1487958449943-2429e8be8625','1509741399-3e9ab8f33fd5','1525438160292-a4a860951216']},
+  GFRP:{hero:'1480714378408-67cf0d13bc1b',v:['1525438160292-a4a860951216','1464822759023-fed622ff2c3b','1509741399-3e9ab8f33fd5','1486325212027-8081e485255e']},
+  Aluminum:{hero:'1509741399-3e9ab8f33fd5',v:['1464822759023-fed622ff2c3b','1525438160292-a4a860951216','1587174486073-ae5a5cff23aa','1510798831971-661eb04b3739']},
+  Stone:{hero:'1487958449943-2429e8be8625',v:['1487958449943-2429e8be8625','1582407947304-fd86f28320c7','1510798831971-661eb04b3739','1489514354504-1653aa90e34e']},
+  ACMFR:{hero:'1464822759023-fed622ff2c3b',v:['1582407947304-fd86f28320c7','1525438160292-a4a860951216','1510798831971-661eb04b3739','1449157291145-7efd050a4d0e']},
+};
+
+let PLANS={
+  explorer:{name:'Explorer',price:'0',period:'Free forever',desc:'Get started with material data and advisor wizard.'},
+  pro:{name:'Professional',price:'149',period:'per month billed monthly',desc:'Full directory access for architects and procurement teams.'},
+  enterprise:{name:'Enterprise',price:'499',period:'per month up to 10 seats',desc:'For developer firms and large design offices.'},
+  standard:{name:'Standard',price:'599',period:'per year 1 listing',desc:'Get listed in the UAE supplier directory.'},
+  verified:{name:'Verified Pro',price:'1799',period:'per year includes verification',desc:'Verified badge, priority placement and analytics.'},
+  featured:{name:'Featured',price:'3999',period:'per year top placement',desc:'Top-of-page placement with full marketing suite.'},
+};
+
+function getPwd(){return localStorage.getItem(APWK)||'cladwise2025';}
+
+function adminLogin(){
+  if(document.getElementById('admin-pwd').value===getPwd()){
+    sessionStorage.setItem(AAUT,'1');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-shell').classList.add('open');
+    init();
+  } else {
+    document.getElementById('login-err').classList.add('show');
+    document.getElementById('admin-pwd').value='';
+  }
+}
+
+function adminLogout(){sessionStorage.removeItem(AAUT);location.reload();}
+
+if(sessionStorage.getItem(AAUT)){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-shell').classList.add('open');
+  init();
+}
+
+function init(){
+  document.getElementById('stat-sups').textContent=SUP.length;
+  document.getElementById('sup-count').textContent=SUP.length;
+  buildMats();buildPhotos();buildSups();buildPricing();testConn();
+}
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='materials')buildMats();
+  if(id==='photos')buildPhotos();
+  if(id==='suppliers')buildSups();
+  if(id==='pricing')buildPricing();
+}
+
+async function quickAdminLogin(){
+  const e=document.getElementById('admin-email').value;
+  const p=document.getElementById('admin-backend-pwd').value;
+  try{
+    const r=await fetch(ABASE+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,password:p})});
+    const d=await r.json();
+    if(d.token){
+      localStorage.setItem('cw_token',d.token);
+      document.getElementById('dash-status').innerHTML='<span style="color:var(--accent)">Connected to backend as '+e+'</span>';
+      document.getElementById('stat-users').textContent='OK';
+      document.getElementById('stat-premium').textContent='OK';
+      document.getElementById('users-count').textContent='OK';
+      document.getElementById('users-wrap').innerHTML='<div style="padding:16px;color:var(--accent);font-family:\'DM Mono\',monospace;font-size:12px">Connected. Add GET /api/users admin endpoint to list all users here.</div>';
+      showToast('Logged in to backend');
+    } else {showToast('Login failed: '+(d.message||'Check credentials'));}
+  } catch{showToast('Cannot reach backend');}
+}
+
+async function testConn(){
+  const el=document.getElementById('conn-status');
+  try{
+    const r=await fetch('https://backend-cladwise-production.up.railway.app/api/health');
+    const d=await r.json();
+    if(d.status==='ok'){el.textContent='Connected';el.style.color='var(--accent)';}
+    else{el.textContent='Error';el.style.color='var(--red)';}
+  }catch{el.textContent='Backend offline - run npm run dev';el.style.color='var(--red)';}
+}
+
+function changePassword(){
+  const c=document.getElementById('pwd-current').value;
+  const n=document.getElementById('pwd-new').value;
+  const f=document.getElementById('pwd-confirm').value;
+  if(c!==getPwd()){showToast('Current password incorrect');return;}
+  if(n!==f){showToast('Passwords do not match');return;}
+  if(n.length<6){showToast('Min 6 characters');return;}
+  localStorage.setItem(APWK,n);
+  showToast('Password updated');
+  ['pwd-current','pwd-new','pwd-confirm'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ── MATERIALS ─────────────────────────────────────────────
+let AM=Object.keys(MAT)[0];
+function buildMats(){
+  document.getElementById('mat-tabs').innerHTML=Object.keys(MAT).map(k=>
+    `<div class="mtab ${k===AM?'active':''}" onclick="switchMat('${k}')">${k}</div>`
+  ).join('');
+  renderMat(AM);
+}
+function switchMat(k){AM=k;document.querySelectorAll('#mat-tabs .mtab').forEach((t,i)=>{t.classList.toggle('active',Object.keys(MAT)[i]===k)});renderMat(k);}
+function renderMat(k){
+  const m=MAT[k];
+  const sp=Object.entries(m.specs).map(([sk,sv])=>`
+    <div class="fg" style="margin-bottom:10px">
+      <div class="field"><label>${sk} Value</label><input value="${sv.val}" onchange="MAT['${k}'].specs['${sk}'].val=this.value;dirty()"/></div>
+      <div class="field"><label>${sk} Note</label><input value="${sv.sub}" onchange="MAT['${k}'].specs['${sk}'].sub=this.value;dirty()"/></div>
+    </div>`).join('');
+  const sc=Object.entries(m.scores).map(([sk,sv])=>`
+    <div class="sced">
+      <div class="sced-lbl">${sk}</div>
+      <div class="rrow">
+        <input type="range" min="0" max="100" value="${sv}" id="sc-${k}-${sk}" oninput="document.getElementById('sv-${k}-${sk}').textContent=this.value;MAT['${k}'].scores['${sk}']=parseInt(this.value);dirty()">
+        <span class="rval" id="sv-${k}-${sk}">${sv}</span>
+      </div>
+    </div>`).join('');
+  document.getElementById('mat-editor').innerHTML=`
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-circle-info"></i> ${k} Basic Info</div></div>
+      <div class="fg fg3" style="margin-bottom:16px">
+        <div class="field"><label>Name</label><input value="${m.name}" onchange="MAT['${k}'].name=this.value;dirty()"/></div>
+        <div class="field"><label>Full Name</label><input value="${m.full}" onchange="MAT['${k}'].full=this.value;dirty()"/></div>
+        <div class="field"><label>Price Range</label><input value="${m.priceRange}" onchange="MAT['${k}'].priceRange=this.value;dirty()"/></div>
+      </div>
+      <div class="fg">
+        <div class="field"><label>Tagline</label><input value="${m.tagline}" onchange="MAT['${k}'].tagline=this.value;dirty()"/></div>
+        <div class="field"><label>Overall Score (0-10)</label><input type="number" min="0" max="10" step="0.1" value="${m.overall}" onchange="MAT['${k}'].overall=parseFloat(this.value);dirty()"/></div>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-sliders"></i> Performance Scores</div></div>
+      <div class="scgrid">${sc}</div>
+    </div>
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-table-list"></i> Specifications</div></div>
+      ${sp}
+    </div>
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-list-check"></i> Pros and Cons</div></div>
+      <div class="fg">
+        <div class="field"><label>Pros (one per line)</label><textarea rows="5" onchange="MAT['${k}'].pros=this.value.split('\\n').filter(l=>l.trim());dirty()">${m.pros.join('\n')}</textarea></div>
+        <div class="field"><label>Cons (one per line)</label><textarea rows="5" onchange="MAT['${k}'].cons=this.value.split('\\n').filter(l=>l.trim());dirty()">${m.cons.join('\n')}</textarea></div>
+      </div>
+    </div>`;
+}
+
+// ── PHOTOS ────────────────────────────────────────────────
+let AP=Object.keys(PHOTOS)[0];
+function buildPhotos(){
+  document.getElementById('photo-tabs').innerHTML=Object.keys(PHOTOS).map(k=>
+    `<div class="mtab ${k===AP?'active':''}" onclick="switchPhoto('${k}')">${k}</div>`
+  ).join('');
+  renderPhoto(AP);
+}
+function switchPhoto(k){AP=k;document.querySelectorAll('#photo-tabs .mtab').forEach((t,i)=>{t.classList.toggle('active',Object.keys(PHOTOS)[i]===k)});renderPhoto(k);}
+function renderPhoto(k){
+  const p=PHOTOS[k];
+  const vHTML=p.v.map((id,i)=>`
+    <div class="pitem">
+      <img id="vp-${k}-${i}" src="https://images.unsplash.com/photo-${id}?w=200&h=130&fit=crop&q=70" onerror="this.style.background='#181818'">
+      <button class="pref" onclick="refreshV('${k}',${i})"><i class="fa-solid fa-rotate-right"></i></button>
+      <div class="pitem-body">
+        <div class="pitem-lbl">Variant ${i+1}</div>
+        <input id="vid-${k}-${i}" value="${id}" placeholder="Unsplash Photo ID"/>
+      </div>
+    </div>`).join('');
+  document.getElementById('photo-editor').innerHTML=`
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-star"></i> Hero Photo</div></div>
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <img id="hp-${k}" src="https://images.unsplash.com/photo-${p.hero}?w=300&h=160&fit=crop&q=70" style="width:280px;height:150px;object-fit:cover;border-radius:10px;border:1px solid var(--border);flex-shrink:0">
+        <div style="flex:1">
+          <div class="field"><label>Unsplash Photo ID</label><input id="hid-${k}" value="${p.hero}" placeholder="paste-id-here"/></div>
+          <div style="margin-top:8px;font-size:11px;color:var(--muted)">From: unsplash.com/photos/<strong style="color:var(--accent)">THIS-IS-THE-ID</strong></div>
+          <button onclick="refreshH('${k}')" style="margin-top:12px;background:var(--accent);color:#000;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700"><i class="fa-solid fa-rotate-right"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="acard-hd"><div class="acard-title"><i class="fa-solid fa-images"></i> Variant Photos</div></div>
+      <div class="pgrid">${vHTML}</div>
+    </div>`;
+}
+function refreshH(k){
+  const id=document.getElementById('hid-'+k).value.trim();
+  if(!id)return;
+  PHOTOS[k].hero=id;
+  document.getElementById('hp-'+k).src='https://images.unsplash.com/photo-'+id+'?w=300&h=160&fit=crop&q=70';
+  dirty();showToast('Hero photo updated');
+}
+function refreshV(k,i){
+  const id=document.getElementById('vid-'+k+'-'+i).value.trim();
+  if(!id)return;
+  PHOTOS[k].v[i]=id;
+  document.getElementById('vp-'+k+'-'+i).src='https://images.unsplash.com/photo-'+id+'?w=200&h=130&fit=crop&q=70';
+  dirty();showToast('Photo updated');
+}
+
+// ── SUPPLIERS ─────────────────────────────────────────────
+function buildSups(){
+  document.getElementById('sup-total').textContent=SUP.length+' suppliers';
+  document.getElementById('stat-sups').textContent=SUP.length;
+  document.getElementById('sup-count').textContent=SUP.length;
+  document.getElementById('sup-list').innerHTML=SUP.map((s,i)=>`
+    <div class="srow">
+      <div class="field"><label>Name</label><input value="${s.name}" onchange="SUP[${i}].name=this.value;dirty()"/></div>
+      <div class="field"><label>Location</label><input value="${s.loc}" onchange="SUP[${i}].loc=this.value;dirty()"/></div>
+      <div class="field"><label>Phone</label><input value="${s.tel}" onchange="SUP[${i}].tel=this.value;dirty()"/></div>
+      <div class="field"><label>Email</label><input value="${s.email}" onchange="SUP[${i}].email=this.value;dirty()"/></div>
+      <div class="field"><label>Materials</label><input value="${s.mats}" onchange="SUP[${i}].mats=this.value;dirty()"/></div>
+      <div class="field"><label>Verified</label><select onchange="SUP[${i}].ver=this.value==='true';dirty()"><option value="true" ${s.ver?'selected':''}>Verified</option><option value="false" ${!s.ver?'selected':''}>Not Verified</option></select></div>
+      <button class="sdel" onclick="delSup(${i})"><i class="fa-solid fa-trash"></i></button>
+    </div>`).join('');
+}
+function addSupplier(){
+  SUP.push({name:'New Supplier LLC',loc:'Dubai, UAE',mats:'GFRC',tel:'+971 4 000 0000',email:'info@supplier.ae',ver:false});
+  buildSups();dirty();showToast('Supplier added');
+  document.getElementById('sup-list').lastElementChild?.scrollIntoView({behavior:'smooth'});
+}
+function delSup(i){
+  if(!confirm('Remove '+SUP[i].name+'?'))return;
+  SUP.splice(i,1);buildSups();dirty();showToast('Removed');
+}
+
+// ── PRICING ───────────────────────────────────────────────
+function buildPricing(){
+  Object.keys(PLANS).forEach(k=>{
+    const w=document.getElementById('plan-'+k+'-editor');
+    if(!w)return;
+    const p=PLANS[k];
+    w.innerHTML=`<div style="background:var(--bg3);border-radius:12px;padding:18px">
+      <div style="font-weight:700;margin-bottom:14px">${p.name}</div>
+      <div class="field" style="margin-bottom:10px"><label>Plan Name</label><input value="${p.name}" onchange="PLANS['${k}'].name=this.value;dirty()"/></div>
+      <div class="field" style="margin-bottom:10px"><label>Price (AED)</label><input value="${p.price}" onchange="PLANS['${k}'].price=this.value;dirty()"/></div>
+      <div class="field" style="margin-bottom:10px"><label>Period</label><input value="${p.period}" onchange="PLANS['${k}'].period=this.value;dirty()"/></div>
+      <div class="field"><label>Description</label><textarea rows="2" onchange="PLANS['${k}'].desc=this.value;dirty()">${p.desc}</textarea></div>
+    </div>`;
+  });
+}
+
+// ── EXPORT ────────────────────────────────────────────────
+function dirty(){
+  document.getElementById('save-status').textContent='Unsaved changes';
+  document.getElementById('save-status').style.color='var(--amber)';
+}
+function exportChanges(){
+  const d={MATERIALS:MAT,SUPPLIERS:SUP,PHOTOS,PLANS,exportedAt:new Date().toISOString()};
+  const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a');a.href=u;a.download='cladwise-admin-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  URL.revokeObjectURL(u);
+  document.getElementById('save-status').textContent='Exported';
+  document.getElementById('save-status').style.color='var(--accent)';
+  showToast('Exported as JSON');
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+function showToast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function setMnav(id){
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('mnav-'+id);
+  if(btn) btn.classList.add('active');
+}
+</script>
+
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" id="mnav-dashboard" onclick="showPage('dashboard',this);setMnav('dashboard')">
+      <i class="fa-solid fa-gauge-high"></i>Home
+    </button>
+    <button class="mobile-nav-btn" id="mnav-materials" onclick="showPage('materials',this);setMnav('materials')">
+      <i class="fa-solid fa-cubes"></i>Materials
+    </button>
+    <button class="mobile-nav-btn" id="mnav-suppliers" onclick="showPage('suppliers',this);setMnav('suppliers')">
+      <i class="fa-solid fa-building"></i>Suppliers
+    </button>
+    <button class="mobile-nav-btn" id="mnav-photos" onclick="showPage('photos',this);setMnav('photos')">
+      <i class="fa-solid fa-images"></i>Photos
+    </button>
+    <button class="mobile-nav-btn" id="mnav-pricing" onclick="showPage('pricing',this);setMnav('pricing')">
+      <i class="fa-solid fa-tag"></i>Pricing
+    </button>
+    <button class="mobile-nav-btn" id="mnav-settings" onclick="showPage('settings',this);setMnav('settings')">
+      <i class="fa-solid fa-gear"></i>Settings
+    </button>
+  </div>
+</div>
+</body>
+</html>
