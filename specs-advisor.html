@@ -106,6 +106,26 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 .disclaimer{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;gap:8px;align-items:flex-start}
 .disclaimer i{color:var(--amber);margin-top:1px;flex-shrink:0}
 
+
+/* ── PAYWALL ── */
+.paywall-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:linear-gradient(to bottom, transparent 0%, rgba(10,10,10,0.6) 30%, rgba(10,10,10,0.97) 60%);border-radius:12px}
+.blurred-wrap{position:relative;border-radius:12px;overflow:hidden}
+.blurred-content{filter:blur(5px);user-select:none;pointer-events:none}
+.paywall-card{background:var(--bg2);border:1px solid rgba(0,229,160,0.4);border-radius:14px;padding:24px 20px;text-align:center;max-width:320px;box-shadow:0 0 40px rgba(0,229,160,0.1)}
+.paywall-icon{font-size:32px;margin-bottom:12px}
+.paywall-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:1px;margin-bottom:8px}
+.paywall-title span{color:var(--accent)}
+.paywall-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.paywall-features{text-align:left;margin-bottom:20px;display:flex;flex-direction:column;gap:7px}
+.paywall-feature{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)}
+.paywall-feature i{color:var(--accent);width:14px}
+.paywall-cta{background:var(--accent);color:#000;border:none;border-radius:8px;padding:12px 24px;font-weight:800;font-size:14px;cursor:pointer;width:100%;letter-spacing:0.5px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif}
+.paywall-cta:hover{background:var(--accent2)}
+.paywall-sub{font-size:11px;color:var(--muted);margin-top:10px;font-family:'DM Mono',monospace}
+.free-counter{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.free-dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.free-dot.used{background:var(--border)}
+
 /* ── MOBILE ── */
 @media(max-width:600px){
   .hero-title{font-size:28px}
@@ -184,6 +204,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
     </div>
     <div class="input-meta">
       <span class="input-hint">Jurisdiction: <span id="jurisLabel" style="color:var(--accent)">Dubai (DBC)</span></span>
+      <div id="freeCounter"></div>
       <button class="clear-btn" onclick="clearChat()">✕ Clear chat</button>
     </div>
   </div>
@@ -191,6 +212,57 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
 
 <script>
 let currentJuris = 'Dubai (DBC)';
+let freeQuestionsUsed = parseInt(localStorage.getItem('cw_free_qs') || '0');
+const FREE_LIMIT = 2;
+let isPremium = false;
+
+// Check subscription status from token
+function checkSubscription() {
+  const token = localStorage.getItem('cw_token');
+  if (!token) return;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // Will be checked against backend on premium routes
+  } catch(e) {}
+  // Check backend for subscription
+  fetch('https://backend-cladwise-production.up.railway.app/api/payments/status', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  }).then(r => r.json()).then(d => {
+    if (d.isPremium) {
+      isPremium = true;
+      updateCounter();
+    }
+  }).catch(() => {});
+}
+
+function updateCounter() {
+  const counterEl = document.getElementById('freeCounter');
+  if (!counterEl) return;
+  if (isPremium) {
+    counterEl.innerHTML = '<span style="color:var(--accent);font-family:\'DM Mono\',monospace;font-size:11px">✅ PRO — Unlimited access</span>';
+    return;
+  }
+  const remaining = FREE_LIMIT - freeQuestionsUsed;
+  const dots = Array(FREE_LIMIT).fill(0).map((_, i) => 
+    `<div class="free-dot ${i < freeQuestionsUsed ? 'used' : ''}"></div>`
+  ).join('');
+  counterEl.innerHTML = `<div class="free-counter">${dots} <span>${remaining} free check${remaining !== 1 ? 's' : ''} remaining</span></div>`;
+}
+
+function goUpgrade() {
+  const token = localStorage.getItem('cw_token');
+  if (!token) {
+    window.location.href = 'index.html';
+    return;
+  }
+  fetch('https://backend-cladwise-production.up.railway.app/api/payments/create-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  }).then(r => r.json()).then(d => {
+    if (d.url) window.location.href = d.url;
+    else alert('Please log in to upgrade.');
+  }).catch(() => { window.location.href = 'index.html'; });
+}
 let conversationHistory = [];
 let isLoading = false;
 
@@ -331,6 +403,12 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
+  // Check paywall BEFORE sending
+  if (!isPremium && freeQuestionsUsed >= FREE_LIMIT) {
+    showPaywall();
+    return;
+  }
+
   // Hide quick prompts
   document.getElementById('quickPrompts').style.display = 'none';
 
@@ -363,11 +441,21 @@ async function sendMessage() {
     removeTyping();
 
     const reply = data.content?.[0]?.text || 'Sorry, I could not process that request.';
-
-    // Add to history
     conversationHistory.push({ role: 'assistant', content: reply });
 
-    addMessage('assistant', reply);
+    // Increment usage if not premium
+    if (!isPremium) {
+      freeQuestionsUsed++;
+      localStorage.setItem('cw_free_qs', freeQuestionsUsed);
+      updateCounter();
+    }
+
+    // If this was their LAST free question — show blurred + paywall after
+    if (!isPremium && freeQuestionsUsed >= FREE_LIMIT) {
+      addBlurredMessage('assistant', reply);
+    } else {
+      addMessage('assistant', reply);
+    }
 
   } catch (err) {
     removeTyping();
@@ -379,6 +467,64 @@ async function sendMessage() {
   input.focus();
 }
 
+function addBlurredMessage(role, content) {
+  const msgs = document.getElementById('messages');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg assistant';
+  wrapper.style.position = 'relative';
+
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = 'SPECS ADVISOR';
+
+  const blurWrap = document.createElement('div');
+  blurWrap.className = 'blurred-wrap';
+  blurWrap.style.position = 'relative';
+  blurWrap.style.width = '100%';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble blurred-content';
+  bubble.style.maxWidth = '100%';
+  bubble.innerHTML = formatResponse(content);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'paywall-overlay';
+  overlay.innerHTML = `
+    <div class="paywall-card">
+      <div class="paywall-icon">🔒</div>
+      <div class="paywall-title">Unlock <span>Full Report</span></div>
+      <div class="paywall-desc">You've used your 2 free compliance checks. Subscribe to read the full answer and get unlimited access.</div>
+      <div class="paywall-features">
+        <div class="paywall-feature"><i class="fa-solid fa-check"></i> Unlimited compliance checks</div>
+        <div class="paywall-feature"><i class="fa-solid fa-check"></i> Full detailed reports</div>
+        <div class="paywall-feature"><i class="fa-solid fa-check"></i> Civil Defense & DCL guidance</div>
+      </div>
+      <button class="paywall-cta" onclick="goUpgrade()">UPGRADE TO PRO — AED 299/mo</button>
+      <div class="paywall-sub">Cancel anytime · Instant access</div>
+    </div>
+  `;
+
+  blurWrap.appendChild(bubble);
+  blurWrap.appendChild(overlay);
+  wrapper.appendChild(label);
+  wrapper.appendChild(blurWrap);
+  msgs.appendChild(wrapper);
+  wrapper.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+  // Disable input
+  document.getElementById('userInput').disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('userInput').placeholder = '🔒 Upgrade to continue asking...';
+}
+
+function showPaywall() {
+  document.getElementById('paywallModal').style.display = 'flex';
+}
+
+// Init
+checkSubscription();
+updateCounter();
+
 function clearChat() {
   conversationHistory = [];
   const msgs = document.getElementById('messages');
@@ -389,5 +535,24 @@ function clearChat() {
   addMessage('assistant', `<strong>Chat cleared.</strong> Select your jurisdiction and ask a new question about cladding compliance in ${currentJuris}.`, true);
 }
 </script>
+
+<!-- Paywall Modal -->
+<div id="paywallModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;padding:20px">
+  <div class="paywall-card">
+    <div class="paywall-icon">🔒</div>
+    <div class="paywall-title">Unlock <span>Full Access</span></div>
+    <div class="paywall-desc">You've used your 2 free compliance checks. Subscribe to get unlimited access to the UAE Specs Advisor.</div>
+    <div class="paywall-features">
+      <div class="paywall-feature"><i class="fa-solid fa-check"></i> Unlimited compliance checks</div>
+      <div class="paywall-feature"><i class="fa-solid fa-check"></i> All 5 UAE jurisdictions</div>
+      <div class="paywall-feature"><i class="fa-solid fa-check"></i> Full material validation reports</div>
+      <div class="paywall-feature"><i class="fa-solid fa-check"></i> Civil Defense & DCL guidance</div>
+      <div class="paywall-feature"><i class="fa-solid fa-check"></i> Priority response</div>
+    </div>
+    <button class="paywall-cta" onclick="goUpgrade()">UPGRADE TO PRO — AED 299/mo</button>
+    <div class="paywall-sub">Cancel anytime · Instant access</div>
+  </div>
+</div>
+
 </body>
 </html>
