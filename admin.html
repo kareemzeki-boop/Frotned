@@ -96,7 +96,20 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .sced-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--accent);color:var(--accent);padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* moved to mobile nav section */
 @media(max-width:900px){.sidebar{display:none}.stats-grid{grid-template-columns:1fr 1fr}.srow{grid-template-columns:1fr 1fr}.fg{grid-template-columns:1fr}.fg3{grid-template-columns:1fr}}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:999;padding:8px 0 12px}
+.mobile-nav-inner{display:flex;justify-content:space-around;align-items:center}
+.mobile-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;cursor:pointer;color:var(--muted);font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.5px;background:none;border:none;transition:color 0.15s}
+.mobile-nav-btn i{font-size:18px}
+.mobile-nav-btn.active{color:var(--accent)}
+.page-content{padding-bottom:80px}
+@media(max-width:900px){
+  .mobile-nav{display:block}
+  .sidebar{display:none}
+}
 </style>
 </head>
 <body>
@@ -541,6 +554,35 @@ function showToast(m){
   t.textContent=m;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
+
+function setMnav(id){
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('mnav-'+id);
+  if(btn) btn.classList.add('active');
+}
 </script>
+
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" id="mnav-dashboard" onclick="showPage('dashboard',this);setMnav('dashboard')">
+      <i class="fa-solid fa-gauge-high"></i>Home
+    </button>
+    <button class="mobile-nav-btn" id="mnav-materials" onclick="showPage('materials',this);setMnav('materials')">
+      <i class="fa-solid fa-cubes"></i>Materials
+    </button>
+    <button class="mobile-nav-btn" id="mnav-suppliers" onclick="showPage('suppliers',this);setMnav('suppliers')">
+      <i class="fa-solid fa-building"></i>Suppliers
+    </button>
+    <button class="mobile-nav-btn" id="mnav-photos" onclick="showPage('photos',this);setMnav('photos')">
+      <i class="fa-solid fa-images"></i>Photos
+    </button>
+    <button class="mobile-nav-btn" id="mnav-pricing" onclick="showPage('pricing',this);setMnav('pricing')">
+      <i class="fa-solid fa-tag"></i>Pricing
+    </button>
+    <button class="mobile-nav-btn" id="mnav-settings" onclick="showPage('settings',this);setMnav('settings')">
+      <i class="fa-solid fa-gear"></i>Settings
+    </button>
+  </div>
+</div>
 </body>
 </html>
