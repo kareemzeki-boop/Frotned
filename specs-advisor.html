@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CladWise — UAE Specs Advisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;
+  --bg2:#111111;
+  --bg3:#1a1a1a;
+  --bg4:#222222;
+  --border:#2a2a2a;
+  --accent:#00e5a0;
+  --accent2:#00b87a;
+  --text:#f0f0f0;
+  --muted:#666;
+  --red:#ff4444;
+  --amber:#f59e0b;
+  --blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#000;font-size:14px}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;color:var(--text)}
+.logo-text span{color:var(--accent)}
+.header-badge{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;letter-spacing:1px}
+.back-btn{color:var(--muted);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color 0.15s}
+.back-btn:hover{color:var(--text)}
+
+/* ── LAYOUT ── */
+.main{flex:1;display:flex;flex-direction:column;max-width:900px;margin:0 auto;width:100%;padding:24px 16px 100px}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:32px 0 24px}
+.hero-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;letter-spacing:1px;line-height:1.1;margin-bottom:10px}
+.hero-title span{color:var(--accent)}
+.hero-sub{color:var(--muted);font-size:14px;max-width:500px;margin:0 auto;line-height:1.6}
+
+/* ── JURISDICTION BAR ── */
+.jurisdiction-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+.juris-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.15s;letter-spacing:0.5px}
+.juris-btn:hover{border-color:var(--accent);color:var(--accent)}
+.juris-btn.active{background:rgba(0,229,160,0.1);border-color:var(--accent);color:var(--accent)}
+
+/* ── CHAT AREA ── */
+.chat-container{flex:1;display:flex;flex-direction:column;gap:0}
+.messages{display:flex;flex-direction:column;gap:16px;margin-bottom:16px;min-height:300px}
+
+/* ── MESSAGE BUBBLES ── */
+.msg{display:flex;flex-direction:column;gap:6px;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-items:flex-end}
+.msg.assistant{align-items:flex-start}
+.msg-bubble{max-width:85%;padding:14px 18px;border-radius:12px;font-size:14px;line-height:1.7}
+.msg.user .msg-bubble{background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.25);color:var(--text);border-bottom-right-radius:4px}
+.msg.assistant .msg-bubble{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
+.msg-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;padding:0 4px}
+
+/* ── COMPLIANCE CARD ── */
+.compliance-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:8px;font-size:13px}
+.compliance-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)}
+.compliance-row:last-child{border-bottom:none}
+.compliance-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;min-width:130px;padding-top:2px}
+.compliance-val{flex:1;color:var(--text);line-height:1.5}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:0.5px}
+.badge.pass{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent)}
+.badge.fail{background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);color:var(--red)}
+.badge.conditional{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber)}
+
+/* ── QUICK PROMPTS ── */
+.quick-prompts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.qp-btn{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;transition:all 0.15s;text-align:left;line-height:1.4}
+.qp-btn:hover{border-color:var(--accent);color:var(--text)}
+
+/* ── INPUT AREA ── */
+.input-area{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;gap:10px;position:sticky;bottom:16px}
+.input-row{display:flex;gap:10px;align-items:flex-end}
+.input-field{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'Barlow',sans-serif;resize:none;min-height:48px;max-height:120px;outline:none;transition:border-color 0.15s;line-height:1.5}
+.input-field:focus{border-color:rgba(0,229,160,0.4)}
+.input-field::placeholder{color:var(--muted)}
+.send-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:12px 20px;cursor:pointer;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;transition:all 0.15s;white-space:nowrap;height:48px}
+.send-btn:hover{background:var(--accent2)}
+.send-btn:disabled{opacity:0.5;cursor:not-allowed}
+.input-meta{display:flex;align-items:center;justify-content:space-between}
+.input-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.5px}
+.clear-btn{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.5px;transition:color 0.15s}
+.clear-btn:hover{color:var(--red)}
+
+/* ── TYPING INDICATOR ── */
+.typing{display:flex;align-items:center;gap:4px;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;border-bottom-left-radius:4px;width:fit-content}
+.typing span{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:0.2s}
+.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── DISCLAIMER ── */
+.disclaimer{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;gap:8px;align-items:flex-start}
+.disclaimer i{color:var(--amber);margin-top:1px;flex-shrink:0}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .hero-title{font-size:28px}
+  .main{padding:16px 12px 80px}
+  .msg-bubble{max-width:95%}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-building"></i></div>
+    <div class="logo-text">CLAD<span>WISE</span></div>
+  </a>
+  <div class="header-badge">AI ADVISOR</div>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-label">UAE Compliance Engine</div>
+    <h1 class="hero-title">Technical <span>Specs</span> Advisor</h1>
+    <p class="hero-sub">Ask about any cladding material — get instant compliance status against UAE Federal, Dubai, Abu Dhabi, and Sharjah codes.</p>
+  </div>
+
+  <!-- Jurisdiction selector -->
+  <div class="jurisdiction-bar">
+    <button class="juris-btn active" onclick="setJuris(this,'Dubai (DBC)')">🏙️ Dubai</button>
+    <button class="juris-btn" onclick="setJuris(this,'Abu Dhabi (Estidama)')">🏛️ Abu Dhabi</button>
+    <button class="juris-btn" onclick="setJuris(this,'Sharjah')">🏗️ Sharjah</button>
+    <button class="juris-btn" onclick="setJuris(this,'UAE Federal')">🇦🇪 UAE Federal</button>
+    <button class="juris-btn" onclick="setJuris(this,'KIZAD / Free Zone')">🏭 Free Zone</button>
+  </div>
+
+  <div class="disclaimer">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>This advisor provides technical guidance based on published UAE codes. Always verify with the relevant authority (DCL, DCD, QCC) before final specification. Regulations update periodically.</span>
+  </div>
+
+  <!-- Chat messages -->
+  <div class="messages" id="messages">
+    <!-- Welcome message -->
+    <div class="msg assistant">
+      <div class="msg-label">SPECS ADVISOR</div>
+      <div class="msg-bubble">
+        <strong>Welcome to the CladWise UAE Specifications Advisor.</strong><br><br>
+        I act as your Digital Rulebook for facade cladding compliance across all UAE jurisdictions. I cross-reference material data against:<br><br>
+        🏛️ <strong>Dubai Building Code (DBC 2021)</strong><br>
+        🌿 <strong>Al Sa'fat Green Building System</strong><br>
+        💎 <strong>Estidama Pearl Rating (Abu Dhabi)</strong><br>
+        🔥 <strong>UAE Fire & Life Safety Code</strong><br>
+        🏅 <strong>Civil Defense (DCD/ADCD) Requirements</strong><br><br>
+        Select your jurisdiction above, then ask me anything — material validation, fire ratings, ECAS certification, or project-specific compliance checks.
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick prompts -->
+  <div class="quick-prompts" id="quickPrompts">
+    <button class="qp-btn" onclick="sendQuick(this)">Is ACM-FR compliant for towers above 18m in Dubai?</button>
+    <button class="qp-btn" onclick="sendQuick(this)">What fire rating does GFRC need for Abu Dhabi Civil Defense?</button>
+    <button class="qp-btn" onclick="sendQuick(this)">Does aluminum cladding need ECAS certification in UAE?</button>
+    <button class="qp-btn" onclick="sendQuick(this)">What are Al Sa'fat requirements for facade U-value?</button>
+    <button class="qp-btn" onclick="sendQuick(this)">Stone cladding fixing specs for high-rise — Dubai Municipality</button>
+    <button class="qp-btn" onclick="sendQuick(this)">GFRP on a building above 60m — is it allowed?</button>
+  </div>
+
+  <!-- Input -->
+  <div class="input-area">
+    <div class="input-row">
+      <textarea class="input-field" id="userInput" placeholder="Ask about any cladding material, UAE code, fire rating, compliance requirement..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <i class="fa-solid fa-paper-plane"></i> Send
+      </button>
+    </div>
+    <div class="input-meta">
+      <span class="input-hint">Jurisdiction: <span id="jurisLabel" style="color:var(--accent)">Dubai (DBC)</span></span>
+      <button class="clear-btn" onclick="clearChat()">✕ Clear chat</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentJuris = 'Dubai (DBC)';
+let conversationHistory = [];
+let isLoading = false;
+
+const SYSTEM_PROMPT = `You are the Lead Technical Specifications Advisor for a UAE-based construction and design firm called CladWise UAE. Your primary function is to act as a "Digital Rulebook" for facade cladding material specification and compliance.
+
+KNOWLEDGE BASE & HIERARCHY (apply in this order):
+1. UAE Federal Laws: UAE Fire and Life Safety Code of Practice, MoIAT ECAS certification requirements
+2. Local Authority Regulations:
+   - Dubai: Dubai Building Code (DBC 2021), Al Sa'fat Green Building System, DEWA standards, DM (Dubai Municipality), DCL (Dubai Central Laboratory)
+   - Abu Dhabi: Estidama Pearl Rating System, ADM (Abu Dhabi Municipality) Specs, ADSSC, QCC (Abu Dhabi Quality & Conformity), ADCD (Abu Dhabi Civil Defense)
+   - Sharjah: SEWA and Sharjah Municipality requirements
+3. International Standards: ISO, ASTM, BS EN, DIN (where local codes reference them or are silent)
+
+KEY AUTHORITIES:
+- MoIAT: UAE Federal product conformity and ECAS certification
+- DCL (Dubai Central Lab): Testing and certification for materials used in Dubai
+- QCC (Abu Dhabi Quality & Conformity): Product certification for Abu Dhabi
+- Civil Defense (DCD/ADCD): Essential for cladding, insulation, and fire-related specs
+
+MATERIALS YOU COVER:
+- GFRC (Glass Fibre Reinforced Concrete)
+- GFRP (Glass Fibre Reinforced Polymer)  
+- Aluminum Composite/Cladding (ACM-FR and solid aluminum)
+- Natural Stone
+- ACM-FR (Aluminium Composite Material - Fire Resistant)
+
+OPERATIONAL INSTRUCTIONS:
+- Always note the jurisdiction the user selected (provided in each message)
+- Ask for project height, building type, and location if not provided — regulations differ significantly
+- For conflict between BS and Dubai Building Code, prioritize DBC unless project specs say otherwise
+- Always check Al Sa'fat or Estidama sustainability requirements for relevant jurisdictions
+- Flag when Civil Defense (DCD/ADCD) approval is mandatory
+
+OUTPUT FORMAT — Always structure responses as follows:
+
+**Compliance Status:** PASS ✅ / FAIL ❌ / CONDITIONAL ⚠️ / MORE INFO NEEDED ℹ️
+
+**Primary Reference:** [Specific code, year, part, section]
+
+**Technical Requirement:** [Specific values — fire rating, U-value, thickness, test standard]
+
+**Local Nuance:** [Jurisdiction-specific note, approval body, special requirement]
+
+**Recommendation:** [Clear action for the specifier]
+
+Be precise, cite specific standards, and flag when Civil Defense approval or DCL/QCC testing is mandatory. Keep responses focused and professional but clear enough for architects and suppliers to act on.`;
+
+function setJuris(btn, juris) {
+  document.querySelectorAll('.juris-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentJuris = juris;
+  document.getElementById('jurisLabel').textContent = juris;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function sendQuick(btn) {
+  document.getElementById('userInput').value = btn.textContent;
+  document.getElementById('quickPrompts').style.display = 'none';
+  sendMessage();
+}
+
+function addMessage(role, content, isHTML = false) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = role === 'user' ? 'YOU' : 'SPECS ADVISOR';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  if (isHTML) {
+    bubble.innerHTML = content;
+  } else {
+    // Format markdown-like content
+    bubble.innerHTML = formatResponse(content);
+  }
+
+  div.appendChild(label);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  return div;
+}
+
+function formatResponse(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/✅/g, '<span style="color:var(--accent)">✅</span>')
+    .replace(/❌/g, '<span style="color:var(--red)">❌</span>')
+    .replace(/⚠️/g, '<span style="color:var(--amber)">⚠️</span>')
+    .replace(/ℹ️/g, '<span style="color:var(--blue)">ℹ️</span>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = 'typing-indicator';
+
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = 'SPECS ADVISOR';
+
+  const typing = document.createElement('div');
+  typing.className = 'typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+
+  div.appendChild(label);
+  div.appendChild(typing);
+  msgs.appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Hide quick prompts
+  document.getElementById('quickPrompts').style.display = 'none';
+
+  // Add user message
+  addMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Add to history
+  const userMsg = { role: 'user', content: `[Jurisdiction: ${currentJuris}]\n\n${text}` };
+  conversationHistory.push(userMsg);
+
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory
+      })
+    });
+
+    const data = await response.json();
+    removeTyping();
+
+    const reply = data.content?.[0]?.text || 'Sorry, I could not process that request.';
+
+    // Add to history
+    conversationHistory.push({ role: 'assistant', content: reply });
+
+    addMessage('assistant', reply);
+
+  } catch (err) {
+    removeTyping();
+    addMessage('assistant', '❌ Connection error. Please check your internet and try again.');
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+function clearChat() {
+  conversationHistory = [];
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  document.getElementById('quickPrompts').style.display = 'flex';
+
+  // Re-add welcome
+  addMessage('assistant', `<strong>Chat cleared.</strong> Select your jurisdiction and ask a new question about cladding compliance in ${currentJuris}.`, true);
+}
+</script>
+</body>
+</html>
