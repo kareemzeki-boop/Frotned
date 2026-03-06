@@ -426,31 +426,41 @@ async function sendMessage() {
   showTyping();
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const token = localStorage.getItem('cw_token') || '';
+    const response = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/specs', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: conversationHistory
+        messages: conversationHistory,
+        jurisdiction: currentJuris
       })
     });
 
     const data = await response.json();
     removeTyping();
 
-    const reply = data.content?.[0]?.text || 'Sorry, I could not process that request.';
+    // Paywall hit on backend
+    if (response.status === 402 || data.paywall) {
+      addBlurredMessage('assistant', 'This compliance report covers fire rating requirements, UAE Civil Defense approval process, DCL testing certification, Al Sa'fat sustainability compliance, and specific fixing specifications required by Dubai Municipality for this material type and building height...');
+      return;
+    }
+
+    const reply = data.reply || 'Sorry, I could not process that request.';
     conversationHistory.push({ role: 'assistant', content: reply });
 
-    // Increment usage if not premium
-    if (!isPremium) {
+    if (data.isPremium) {
+      isPremium = true;
+      updateCounter();
+    } else {
       freeQuestionsUsed++;
       localStorage.setItem('cw_free_qs', freeQuestionsUsed);
       updateCounter();
     }
 
-    // If this was their LAST free question — show blurred + paywall after
+    // Show blurred if just hit limit
     if (!isPremium && freeQuestionsUsed >= FREE_LIMIT) {
       addBlurredMessage('assistant', reply);
     } else {
