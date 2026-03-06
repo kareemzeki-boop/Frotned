@@ -730,365 +730,175 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
 </section>
 
 
-<!-- STANDARDS & RATES -->
+
+
+<!-- PROJECT SPEC ANALYSER — PREMIUM FEATURE -->
 <section id="standards" style="padding:80px 0;background:var(--bg)">
   <div class="section-inner">
-    <span class="section-label">Professional Reference</span>
-    <h2 class="section-title" style="margin-bottom:8px">Ground Rules & Market Rates</h2>
-    <p class="section-desc" style="margin-bottom:32px">UAE-specific standards, project suitability rules, and current market pricing for all 5 cladding materials.</p>
 
-    <!-- TABS -->
-    <div class="std-tabs">
-      <button class="std-tab active" onclick="stdTab('rules',this)">📋 Project Rules</button>
-      <button class="std-tab" onclick="stdTab('rates',this)">💰 Market Rates</button>
-      <button class="std-tab" onclick="stdTab('install',this)">🔧 Installation</button>
-      <button class="std-tab" onclick="stdTab('complexity',this)">🎨 Design Complexity</button>
-      <button class="std-tab" onclick="stdTab('codes',this)">🏛️ UAE Codes</button>
-      <button class="std-tab" onclick="stdTab('matstandards',this)">📐 Material Standards</button>
-    </div>
+    <span class="section-label">Premium Intelligence</span>
+    <h2 class="section-title" style="margin-bottom:8px">Project Spec <span style="color:var(--accent)">Analyser</span></h2>
+    <p class="section-desc" style="margin-bottom:40px">Upload your project brief, drawings, or requirements. Our AI returns a precise material recommendation with UAE compliance status, real market costs, and supplier references — tailored to your exact project.</p>
 
-    <!-- PANEL 1: PROJECT RULES -->
-    <div class="std-panel active" id="std-rules">
-      <div class="rules-grid">
-
-        <div class="rule-card">
-          <div class="rule-mat-tag" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent)">🏗️ GFRC</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Glass Fibre Reinforced Concrete</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cultural, mosque & landmark facades</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Hospitality & luxury hotel exteriors</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Heritage & restoration projects</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>High-rise with complex geometry</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Budget under AED 350/m²</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Programme under 4 months</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Fully flat/rectilinear panels only</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
-            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px">Compliant with DCD / Civil Defence requirements for all building heights</div>
-          </div>
-        </div>
-
-        <div class="rule-card">
-          <div class="rule-mat-tag" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);color:#818cf8">⚡ GFRP</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Glass Fibre Reinforced Polymer</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Parametric & sculptural facades</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Theme parks, retail & entertainment</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Lightweight rooftop additions</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Coastal buildings (corrosion-free)</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Building over 60m — fire review needed</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Client requires A1 fire classification</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Long-term UV exposure without coating</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
-            <div style="color:var(--amber);font-weight:700;font-size:13px">B1 – Fire Retardant ⚠️</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px">Requires Civil Defence approval above 23m. FR grade mandatory.</div>
-          </div>
-        </div>
-
-        <div class="rule-card">
-          <div class="rule-mat-tag" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#60a5fa">🔩 Aluminum</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Aluminium Cladding Systems</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Commercial towers & curtain walls</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>High-speed programme projects</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Modular, large-floor-plate buildings</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#60a5fa"></div>Any height — proven system</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Highly corrosive coastal zone (anodise req.)</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Project needs organic / warm aesthetic</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
-            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px">No restrictions. PVDF coating recommended for UAE climate.</div>
-          </div>
-        </div>
-
-        <div class="rule-card">
-          <div class="rule-mat-tag" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--amber)">🗿 Stone</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Natural & Engineered Stone</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Ultra-luxury residential & palace</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Podium levels of high-rise towers</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Government & embassy buildings</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>Heritage-sensitive zones (Deira, Al Fahidi)</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Budget under AED 600/m²</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Structural loads are restricted</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>High-rise above 15 floors (weight)</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
-            <div style="color:var(--accent);font-weight:700;font-size:13px">A1 Non-combustible ✓</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px">Sealant & fixing system must also be A1 rated.</div>
-          </div>
-        </div>
-
-        <div class="rule-card">
-          <div class="rule-mat-tag" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171">🛡️ ACM-FR</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Aluminium Composite – Fire Rated</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:10px">BEST FOR</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Mid-rise residential (4–20 floors)</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Retail podiums & commercial units</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Refurbishment of existing buildings</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#f87171"></div>Fast-track & budget-sensitive projects</div>
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin:12px 0 10px">AVOID WHEN</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Non-FR grade (PE core) — banned in UAE</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#ef4444"></div>Ultra-luxury projects (perceived value)</div>
-          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">UAE FIRE RATING</div>
-            <div style="color:var(--accent);font-weight:700;font-size:13px">B1 FR Core mandatory ✓</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:4px">PE core banned post-Grenfell. Only FR/A2 core permitted by UAE Civil Defence.</div>
-          </div>
-        </div>
-
-        <div class="rule-card" style="background:linear-gradient(135deg,var(--bg2),#0a1a0f);border-color:rgba(0,229,160,0.15)">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:12px">UAE Decision Tree</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7);line-height:1.8">
-            <div style="margin-bottom:8px"><span style="color:var(--accent)">High-rise &gt;60m?</span> → GFRC or Aluminum only</div>
-            <div style="margin-bottom:8px"><span style="color:var(--accent)">Curved geometry?</span> → GFRC or GFRP</div>
-            <div style="margin-bottom:8px"><span style="color:var(--accent)">Budget &lt;AED 350/m²?</span> → ACM-FR or Aluminum</div>
-            <div style="margin-bottom:8px"><span style="color:var(--accent)">Luxury / prestige?</span> → Stone or GFRC</div>
-            <div style="margin-bottom:8px"><span style="color:var(--accent)">Fast track &lt;6 months?</span> → Aluminum or ACM-FR</div>
-            <div><span style="color:var(--accent)">Coastal / humid?</span> → Aluminum (anodised) or GFRC</div>
-          </div>
-        </div>
-
+    <!-- FEATURE HIGHLIGHTS -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px" class="spec-highlights-grid">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:10px">📄</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:6px">Upload Your Brief</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">PDF, Word, or paste your project specs directly</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:10px">🎯</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:6px">Precise Recommendation</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">Ranked materials with scores, trade-offs, and justification</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center">
+        <div style="font-size:28px;margin-bottom:10px">💰</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:6px">UAE Live Pricing</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">Current AED market rates, supply & install, lead times</div>
       </div>
     </div>
 
-    <!-- PANEL 2: MARKET RATES -->
-    <div class="std-panel" id="std-rates">
-      <div style="background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.1);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--muted)">
-        <i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:8px"></i>
-        Rates based on UAE market data Q1 2025. Prices in AED per m² (supply only). Excludes VAT, fixings, and installation.
+    <!-- MAIN ANALYSER CARD -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+
+      <!-- TOP BAR -->
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px">🔬</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">Material Intelligence Engine</div>
+            <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">Powered by CladWise AI · UAE Market Data 2025</div>
+          </div>
+        </div>
+        <div id="analyser-status" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:5px 12px;border-radius:20px;letter-spacing:1px">PREMIUM</div>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
-        <table class="rates-table">
-          <thead>
-            <tr>
-              <th>Material</th>
-              <th>Entry Rate</th>
-              <th>Mid Range</th>
-              <th>Premium</th>
-              <th>Typical UAE Project</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="rate-mat">GFRC</div><div style="font-size:11px;color:var(--muted)">Glass Fibre Reinforced Concrete</div></td>
-              <td><div class="rate-val">AED 350</div><div class="rate-range">basic flat panels</div></td>
-              <td><div class="rate-val">AED 550</div><div class="rate-range">textured / formed</div></td>
-              <td><div class="rate-val">AED 900+</div><div class="rate-range">bespoke sculptural</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Hotels, mosques, cultural</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">GFRP</div><div style="font-size:11px;color:var(--muted)">Glass Fibre Reinforced Polymer</div></td>
-              <td><div class="rate-val">AED 280</div><div class="rate-range">flat GRP sheet</div></td>
-              <td><div class="rate-val">AED 480</div><div class="rate-range">formed panels</div></td>
-              <td><div class="rate-val">AED 750+</div><div class="rate-range">complex 3D moulded</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Retail, theme, lightweight</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">Aluminum</div><div style="font-size:11px;color:var(--muted)">Extruded & sheet cladding</div></td>
-              <td><div class="rate-val">AED 220</div><div class="rate-range">standard extrusion</div></td>
-              <td><div class="rate-val">AED 380</div><div class="rate-range">PVDF coated</div></td>
-              <td><div class="rate-val">AED 600+</div><div class="rate-range">anodised / bespoke</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Commercial towers, offices</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">Natural Stone</div><div style="font-size:11px;color:var(--muted)">Marble, limestone, granite</div></td>
-              <td><div class="rate-val">AED 600</div><div class="rate-range">local limestone</div></td>
-              <td><div class="rate-val">AED 900</div><div class="rate-range">imported marble</div></td>
-              <td><div class="rate-val">AED 1,800+</div><div class="rate-range">rare/bookmatched</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Luxury villas, palaces</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">ACM-FR</div><div style="font-size:11px;color:var(--muted)">Aluminium Composite – FR core</div></td>
-              <td><div class="rate-val">AED 180</div><div class="rate-range">standard FR panel</div></td>
-              <td><div class="rate-val">AED 280</div><div class="rate-range">PVDF finish</div></td>
-              <td><div class="rate-val">AED 420+</div><div class="rate-range">metallic / special finish</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">Mid-rise, retail, refurb</td>
-            </tr>
-          </tbody>
-        </table>
+
+      <!-- INPUT FORM -->
+      <div style="padding:24px" id="analyser-form">
+
+        <!-- PROJECT DETAILS ROW -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px" class="spec-form-grid">
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT TYPE</label>
+            <select id="spec-project-type" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
+              <option value="">Select type...</option>
+              <option>Residential Tower</option>
+              <option>Commercial Office Tower</option>
+              <option>Hospitality / Hotel</option>
+              <option>Mixed-Use Development</option>
+              <option>Cultural / Civic Building</option>
+              <option>Retail / Mall</option>
+              <option>Government / Embassy</option>
+              <option>Industrial / Warehouse</option>
+              <option>Villa / Low-Rise Residential</option>
+              <option>Healthcare / Hospital</option>
+              <option>Education</option>
+              <option>Refurbishment / Retrofit</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">LOCATION / EMIRATE</label>
+            <select id="spec-location" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
+              <option value="">Select location...</option>
+              <option>Dubai — Downtown / DIFC</option>
+              <option>Dubai — JBR / Marina / Coastal</option>
+              <option>Dubai — Business Bay</option>
+              <option>Dubai — Dubai South / Expo City</option>
+              <option>Dubai — Deira / Heritage Zone</option>
+              <option>Dubai — KIZAD / Industrial</option>
+              <option>Abu Dhabi — City Centre</option>
+              <option>Abu Dhabi — Saadiyat Island</option>
+              <option>Abu Dhabi — Reem Island</option>
+              <option>Abu Dhabi — KIZAD</option>
+              <option>Sharjah</option>
+              <option>Ajman</option>
+              <option>Ras Al Khaimah</option>
+              <option>Fujairah</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">BUILDING HEIGHT</label>
+            <select id="spec-height" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
+              <option value="">Select height...</option>
+              <option>Low-rise (under 15m)</option>
+              <option>Mid-rise (15m – 30m)</option>
+              <option>High-rise (30m – 60m)</option>
+              <option>Tall (60m – 150m)</option>
+              <option>Super-tall (150m+)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">FACADE BUDGET (AED/m²)</label>
+            <select id="spec-budget" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
+              <option value="">Select budget range...</option>
+              <option>Under AED 200/m²</option>
+              <option>AED 200 – 400/m²</option>
+              <option>AED 400 – 700/m²</option>
+              <option>AED 700 – 1,200/m²</option>
+              <option>AED 1,200 – 2,000/m²</option>
+              <option>Above AED 2,000/m² (Ultra-luxury)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PROGRAMME -->
+        <div style="margin-bottom:14px">
+          <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROGRAMME / LEAD TIME AVAILABLE</label>
+          <select id="spec-programme" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
+            <option value="">Select programme...</option>
+            <option>Under 8 weeks (urgent)</option>
+            <option>8 – 16 weeks</option>
+            <option>16 – 24 weeks</option>
+            <option>24 – 40 weeks</option>
+            <option>Over 40 weeks (no rush)</option>
+          </select>
+        </div>
+
+        <!-- PROJECT BRIEF TEXT -->
+        <div style="margin-bottom:14px">
+          <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT BRIEF & REQUIREMENTS</label>
+          <textarea id="spec-brief" placeholder="Describe your project: facade area, aesthetic requirements, sustainability targets, special constraints (coastal exposure, seismic zone, heritage area), performance requirements (wind load, thermal, acoustic), client brief highlights..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:13px;font-family:'Barlow',sans-serif;resize:vertical;min-height:120px;outline:none;line-height:1.6" onfocus="this.style.borderColor='rgba(0,229,160,0.4)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+
+        <!-- FILE UPLOAD -->
+        <div style="margin-bottom:20px">
+          <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">UPLOAD PROJECT DOCUMENT (OPTIONAL)</label>
+          <div id="spec-dropzone" onclick="document.getElementById('spec-file-input').click()" style="border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='rgba(0,229,160,0.4)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:24px;margin-bottom:8px">📎</div>
+            <div style="font-size:13px;color:var(--muted)">Drop PDF or tap to upload</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace">PDF · Max 10MB</div>
+          </div>
+          <input type="file" id="spec-file-input" accept=".pdf" style="display:none" onchange="handleSpecFile(this)">
+          <div id="spec-file-name" style="font-size:12px;color:var(--accent);margin-top:6px;font-family:'DM Mono',monospace"></div>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button onclick="runSpecAnalyser()" id="spec-submit-btn" style="width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px 24px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px">
+          <i class="fa-solid fa-microscope"></i> ANALYSE MY PROJECT
+        </button>
+        <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">🔒 Premium feature · Login required · Powered by CladWise AI</div>
+
       </div>
+
+      <!-- RESULTS AREA (hidden initially) -->
+      <div id="analyser-results" style="display:none;padding:24px;border-top:1px solid var(--border)">
+        <!-- Populated by JS -->
+      </div>
+
     </div>
 
-    <!-- PANEL 3: INSTALLATION RATES -->
-    <div class="std-panel" id="std-install">
-      <div style="background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.1);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--muted)">
-        <i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:8px"></i>
-        UAE installation labour rates Q1 2025. Includes scaffold, fixing, sealant & basic MEP coordination. Excludes substructure.
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px">
-        <table class="rates-table">
-          <thead>
-            <tr>
-              <th>Material</th>
-              <th>Labour Only</th>
-              <th>Supply & Fix</th>
-              <th>Lead Time</th>
-              <th>Crew Size / 1000m²</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="rate-mat">GFRC</div></td>
-              <td><div class="rate-val">AED 120–180</div><div class="rate-range">per m²</div></td>
-              <td><div class="rate-val">AED 470–1,080</div><div class="rate-range">per m² total</div></td>
-              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">10–16 weeks</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">12–18 skilled fixers</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">GFRP</div></td>
-              <td><div class="rate-val">AED 90–150</div><div class="rate-range">per m²</div></td>
-              <td><div class="rate-val">AED 370–900</div><div class="rate-range">per m² total</div></td>
-              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">8–14 weeks</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">8–12 skilled fixers</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">Aluminum</div></td>
-              <td><div class="rate-val">AED 80–130</div><div class="rate-range">per m²</div></td>
-              <td><div class="rate-val">AED 300–730</div><div class="rate-range">per m² total</div></td>
-              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)">4–8 weeks</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">6–10 fixers</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">Natural Stone</div></td>
-              <td><div class="rate-val">AED 180–280</div><div class="rate-range">per m²</div></td>
-              <td><div class="rate-val">AED 780–2,080</div><div class="rate-range">per m² total</div></td>
-              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:#ef4444">16–24 weeks</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">15–24 skilled stone fixers</td>
-            </tr>
-            <tr>
-              <td><div class="rate-mat">ACM-FR</div></td>
-              <td><div class="rate-val">AED 60–100</div><div class="rate-range">per m²</div></td>
-              <td><div class="rate-val">AED 240–520</div><div class="rate-range">per m² total</div></td>
-              <td><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)">3–6 weeks</div></td>
-              <td style="font-size:12px;color:rgba(240,240,240,0.65)">4–8 fixers</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- PANEL 4: DESIGN COMPLEXITY -->
-    <div class="std-panel" id="std-complexity">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-
-        <div class="complexity-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-weight:700">Flat / Rectilinear</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Complexity: 1/5</div>
-          </div>
-          <div class="complexity-bar" style="width:20%"></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Standard panels, no curves, modular grid.</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> ACM-FR, Aluminum</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Cost premium:</span> 0% — base rate</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Typical lead time:</span> 3–6 weeks</div>
-        </div>
-
-        <div class="complexity-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-weight:700">Simple Curves</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Complexity: 2/5</div>
-          </div>
-          <div class="complexity-bar" style="width:40%"></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Single-axis bends, chamfers, angled reveals.</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, ACM-FR, Aluminum</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Cost premium:</span> +15–25%</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Typical lead time:</span> 6–10 weeks</div>
-        </div>
-
-        <div class="complexity-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-weight:700">Double Curvature</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber)">Complexity: 3/5</div>
-          </div>
-          <div class="complexity-bar" style="width:60%;background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0.2))"></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Compound curves, domed shapes, wave facades.</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, GFRP</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Cost premium:</span> +35–60%</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Typical lead time:</span> 10–16 weeks</div>
-        </div>
-
-        <div class="complexity-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-weight:700">Parametric / Algorithmic</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber)">Complexity: 4/5</div>
-          </div>
-          <div class="complexity-bar" style="width:80%;background:linear-gradient(90deg,var(--amber),rgba(245,158,11,0.2))"></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Unique panel per position, CNC moulds, BIM-driven.</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC, GFRP</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Cost premium:</span> +60–120%</div>
-          <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--amber)">Typical lead time:</span> 14–22 weeks</div>
-        </div>
-
-        <div class="complexity-card" style="grid-column:1/-1">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-weight:700">Fully Bespoke Sculptural</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:#ef4444">Complexity: 5/5</div>
-          </div>
-          <div class="complexity-bar" style="width:100%;background:linear-gradient(90deg,#ef4444,rgba(239,68,68,0.2))"></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Landmark / museum / cultural icon. Fully custom tooling, structural integration, specialist contractor.</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:var(--accent)">Best materials:</span> GFRC only</div>
-            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:#ef4444">Cost premium:</span> +120–300%</div>
-            <div style="font-size:12px;color:rgba(240,240,240,0.7)"><span style="color:#ef4444">Lead time:</span> 20–40 weeks</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- PANEL 5: UAE CODES -->
-    <div class="std-panel" id="std-codes">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div class="complexity-card">
-          <div style="color:#818cf8;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">DUBAI</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">DCD Fire & Life Safety Code</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Buildings &gt;15m must use non-combustible cladding</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>ACM PE core completely banned</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>GFRP requires Civil Defence NOC above 23m</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>All cladding must have FM/UL/BS EN test reports</div>
-          <span class="uae-standard-badge" style="margin-top:10px">DCD 2018 + Amendments</span>
-        </div>
-        <div class="complexity-card">
-          <div style="color:#818cf8;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">ABU DHABI</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">ADCD Building Fire Code</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Stricter than Dubai — A1/A2 preferred across board</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Cladding system test (not just material) required</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>GFRP allowed only with full system approval</div>
-          <div class="rule-item"><div class="rule-dot" style="background:#818cf8"></div>Mandate for third-party inspection on facades</div>
-          <span class="uae-standard-badge" style="margin-top:10px">ADCD 2022 Edition</span>
-        </div>
-        <div class="complexity-card">
-          <div style="color:var(--accent);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">FEDERAL</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">UAE Fire & Life Safety Code</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Applies across all 7 Emirates as baseline</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>References BS EN 13501 fire classification</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cladding material + fixing + insulation = system test</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--accent)"></div>Cavities must have fire barriers at each floor</div>
-          <span class="uae-standard-badge" style="margin-top:10px;background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2);color:var(--accent)">UAE FLS Code 2018</span>
-        </div>
-        <div class="complexity-card">
-          <div style="color:var(--amber);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:8px">SPECIFICATIONS</div>
-          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Key Standards Referenced</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>BS EN 13501-1 — Fire classification of products</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>BS 8414-1/2 — Large-scale facade fire test</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>ASTM E84 — Surface burning characteristics</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>ISO 13785 — Intermediate scale test</div>
-          <div class="rule-item"><div class="rule-dot" style="background:var(--amber)"></div>AAMA 2605 — Aluminum coating durability</div>
-          <span class="uae-standard-badge" style="margin-top:10px;background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:var(--amber)">International Standards</span>
-        </div>
-      </div>
+    <!-- PAYWALL TEASER (for non-premium) -->
+    <div id="spec-paywall" style="display:none;margin-top:24px;background:var(--bg2);border:1px solid rgba(0,229,160,0.3);border-radius:16px;padding:32px;text-align:center">
+      <div style="font-size:36px;margin-bottom:12px">🔒</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px">Premium Feature</div>
+      <div style="color:var(--muted);font-size:14px;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6">Upgrade to CladWise Pro to access the Project Spec Analyser and get AI-powered material recommendations tailored to your exact project.</div>
+      <button onclick="openSubscribeModal()" style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:12px 28px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">UPGRADE TO PRO — AED 299/mo</button>
     </div>
 
   </div>
 </section>
+
 
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-overlay" onclick="authOverlayClick(event)">
@@ -3210,6 +3020,124 @@ function stdTab(name, btn) {
   btn.classList.add('active');
   document.getElementById('std-' + name).classList.add('active');
 }
+
+// ── PROJECT SPEC ANALYSER ────────────────────────────────────────────────────
+let specFileData = null;
+
+function handleSpecFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { showToast('File too large — max 10MB'); return; }
+  document.getElementById('spec-file-name').textContent = '📎 ' + file.name;
+  const reader = new FileReader();
+  reader.onload = e => { specFileData = { name: file.name, data: e.target.result.split(',')[1] }; };
+  reader.readAsDataURL(file);
+}
+
+async function runSpecAnalyser() {
+  const token = localStorage.getItem('cw_token');
+  if (!token) { openAuthModal('login'); showToast('Please login to use the Spec Analyser'); return; }
+
+  try {
+    const statusRes = await cwFetch('GET', '/payments/status');
+    if (!statusRes.isPremium) {
+      document.getElementById('analyser-form').style.display = 'none';
+      document.getElementById('spec-paywall').style.display = 'block';
+      return;
+    }
+  } catch(e) {
+    document.getElementById('analyser-form').style.display = 'none';
+    document.getElementById('spec-paywall').style.display = 'block';
+    return;
+  }
+
+  const projectType = document.getElementById('spec-project-type').value;
+  const location = document.getElementById('spec-location').value;
+  const height = document.getElementById('spec-height').value;
+  const budget = document.getElementById('spec-budget').value;
+  const programme = document.getElementById('spec-programme').value;
+  const brief = document.getElementById('spec-brief').value.trim();
+
+  if (!projectType || !location || !height || !budget) {
+    showToast('Please fill in Project Type, Location, Height and Budget');
+    return;
+  }
+
+  const btn = document.getElementById('spec-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ANALYSING YOUR PROJECT...';
+
+  const resultsDiv = document.getElementById('analyser-results');
+  resultsDiv.style.display = 'block';
+  resultsDiv.innerHTML = `
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:32px;margin-bottom:16px">⚙️</div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:1px">ANALYSING PROJECT REQUIREMENTS</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px">Cross-referencing UAE codes, market pricing, and material database...</div>
+    </div>`;
+
+  try {
+    const payload = { projectType, location, height, budget, programme, brief };
+    if (specFileData) payload.file = specFileData;
+
+    const res = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/spec-analyser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Analysis failed');
+
+    renderSpecResults(data.report, { projectType, location, height, budget });
+
+  } catch(err) {
+    resultsDiv.innerHTML = `<div style="color:var(--red);padding:20px;font-size:13px">❌ ${err.message || 'Analysis failed. Please try again.'}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-microscope"></i> ANALYSE MY PROJECT';
+}
+
+function renderSpecResults(report, meta) {
+  const resultsDiv = document.getElementById('analyser-results');
+  resultsDiv.innerHTML = `
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;margin-bottom:4px">ANALYSIS COMPLETE</div>
+        <div style="font-weight:700;font-size:16px">${meta.projectType} · ${meta.location}</div>
+        <div style="font-size:12px;color:var(--muted)">${meta.height} · Budget ${meta.budget}</div>
+      </div>
+      <button onclick="downloadSpecReport()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:'DM Mono',monospace">⬇ Download Report</button>
+    </div>
+    <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text)" id="spec-report-content">${formatSpecReport(report)}</div>
+    <div style="margin-top:20px;padding:14px;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);border-radius:8px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">
+      ⚠ Based on published UAE codes and 2025 market data. Verify with DCL, DCD, or QCC before final specification.
+    </div>`;
+  resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function formatSpecReport(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^### (.*)/gm, '<div style="font-size:13px;font-weight:700;color:var(--accent);margin:16px 0 6px;font-family:\'DM Mono\',monospace;letter-spacing:1px;text-transform:uppercase">$1</div>')
+    .replace(/^## (.*)/gm, '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:20px;font-weight:800;margin:24px 0 10px;color:var(--text)">$1</div>')
+    .replace(/✅/g, '<span style="color:var(--accent)">✅</span>')
+    .replace(/❌/g, '<span style="color:#ef4444">❌</span>')
+    .replace(/⚠️/g, '<span style="color:#f59e0b">⚠️</span>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+function downloadSpecReport() {
+  const content = document.getElementById('spec-report-content')?.innerText || '';
+  const blob = new Blob([content], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CladWise_Spec_Report.txt';
+  a.click();
+}
+
 </script>
 </body>
 </html>
