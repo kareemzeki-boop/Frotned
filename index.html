@@ -527,11 +527,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 .sup-bg-default{background-image:url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=60')}
 .sup-bg-fc{background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60')}
 
-@media(max-width:700px){
-  .sup-editorial-grid{grid-template-columns:1fr}
-  .sup-editorial-card.featured{grid-column:span 1;min-height:280px}
-  .sup-editorial-card.featured .sup-card-name{font-size:30px}
-}
+
 .sup-phone-real{font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);font-weight:600}
 
 /* ── TIER CARDS ──────────────────────────────────────── */
@@ -555,19 +551,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 .sup-email-real{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
 
 /* RESPONSIVE */
-@media(max-width:900px){
-  h1{font-size:56px}
-  .hero-inner{grid-template-columns:1fr}
-  .hero-visual{display:none}
-  .materials-grid{grid-template-columns:1fr 1fr}
-  .sup-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:600px){
-  .materials-grid{grid-template-columns:1fr}
-  .sup-grid{grid-template-columns:1fr}
-  .spec-grid{grid-template-columns:1fr}
-  .pros-cons{grid-template-columns:1fr}
-}
+
 
 /* ── STANDARDS & RATES SECTION ──────────────────────────────────────────── */
 .std-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
@@ -594,8 +578,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 .complexity-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px}
 .complexity-bar{height:6px;border-radius:3px;margin:8px 0;background:linear-gradient(90deg,var(--accent),rgba(0,229,160,0.2))}
 .uae-standard-badge{display:inline-block;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#818cf8;padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace}
-@media(max-width:900px){.rules-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.rules-grid{grid-template-columns:1fr}}
+
 
 /* ── GLOBAL EDITORIAL OVERRIDES ─────────────────────────────────────────────── */
 
@@ -677,17 +660,252 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 /* Spec form dropzone */
 #spec-dropzone { border-radius: 0 !important; }
 
-/* Responsive tweaks */
-@media(max-width:900px) {
-  h1 { font-size: 68px; }
-  .hero-visual { display: none !important; }
-  .section-inner { padding: 0 24px; }
-  .materials-grid { grid-template-columns: 1fr 1fr; }
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPREHENSIVE RESPONSIVE SYSTEM
+   Breakpoints:
+     lg:  1024px – 1279px  (large tablet / small desktop)
+     md:  768px  – 1023px  (tablet portrait / landscape)
+     sm:  480px  – 767px   (phone landscape / large phone)
+     xs:  < 480px           (phone portrait)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── HAMBURGER BUTTON ─────────────────────────────────────────────────────── */
+.nav-ham {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
-@media(max-width:600px) {
-  h1 { font-size: 52px; }
+.nav-ham span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text);
+  transition: all 0.25s;
+}
+.nav-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-ham.open span:nth-child(2) { opacity: 0; }
+.nav-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE DRAWER ────────────────────────────────────────────────────────── */
+.mob-drawer {
+  display: none;
+  position: fixed;
+  top: 68px;
+  left: 0; right: 0;
+  background: var(--bg2);
+  border-bottom: 2px solid rgba(0,229,160,0.15);
+  z-index: 99;
+  flex-direction: column;
+  padding: 8px 0 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.mob-drawer.open { display: flex; }
+.mob-drawer a {
+  padding: 14px 28px;
+  color: rgba(200,220,205,0.7);
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: color 0.15s, background 0.15s;
+}
+.mob-drawer a:hover { color: var(--accent); background: rgba(0,229,160,0.04); }
+.mob-drawer-auth { padding: 16px 28px 0; }
+
+/* ── LARGE DESKTOP (1280px+) ─────────────────────────────────────────────── */
+/* Base styles are already designed for this — no overrides needed */
+
+/* ── LARGE TABLET (1024px – 1279px) ──────────────────────────────────────── */
+@media (max-width: 1279px) {
+  .nav-inner { padding: 0 24px; }
+  .hero-inner { padding: 0 28px; }
+  h1 { font-size: 80px; }
+  .section-inner { padding: 0 28px; }
+  .section-title { font-size: 54px; }
+}
+
+/* ── TABLET (768px – 1023px) ─────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* NAV */
+  .nav-links { display: none; }
+  .nav-ham   { display: flex; }
+  #nav-logged-out .nav-cta { display: none; }
+  #nav-logged-in .nav-user-info,
+  #nav-logged-in .nav-logout { display: none; }
+  .nav-inner { padding: 0 20px; }
+
+  /* HERO */
+  h1 { font-size: 64px; }
+  .hero-inner { padding: 0 24px; }
+  .hero-visual { display: none !important; }
+  .hero-desc   { font-size: 14px; }
+  .hero-stats  { grid-template-columns: 1fr 1fr 1fr; }
+  .stat-num    { font-size: 48px; }
+
+  /* SECTIONS */
+  section        { padding: 70px 0; }
+  .section-inner { padding: 0 24px; }
+  .section-title { font-size: 48px; }
+
+  /* MATERIALS */
+  .materials-grid { grid-template-columns: 1fr 1fr; }
+
+  /* COMPARISON */
+  .compare-controls { gap: 8px; }
+
+  /* WIZARD */
+  .wizard-wrap  { margin-top: 36px; }
+  .wizard-body  { padding: 36px 36px; }
+  .wizard-q     { font-size: 36px; }
+
+  /* SUPPLIERS */
+  .sup-editorial-grid { grid-template-columns: 1fr 1fr; }
+  .sup-section-head   { flex-direction: column; align-items: flex-start; }
+
+  /* STANDARDS */
+  .rules-grid  { grid-template-columns: 1fr 1fr; }
+  .std-tabs    { gap: 6px; }
+
+  /* PLANS MODAL */
+  .plans-grid      { grid-template-columns: 1fr 1fr; }
+  .reach-strip     { grid-template-columns: 1fr 1fr; }
+  .sub-modal-body  { padding: 28px 32px 40px; }
+  .sub-modal-header { padding: 32px 32px 0; }
+
+  /* MODAL */
+  .modal { max-height: 90vh; }
+  .spec-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── PHONE (< 768px) ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* NAV */
+  .nav-inner { height: 60px; }
+  nav .nav-inner { height: 60px; }
+  .logo-text { font-size: 22px; }
+  .logo-sub  { display: none; }
+  .logo-icon { width: 32px; height: 32px; font-size: 14px; }
+
+  /* HERO */
+  h1 { font-size: 48px; letter-spacing: -0.5px; }
+  #home { padding: 60px 0 48px; min-height: auto; }
+  .mob-drawer { top: 60px; }
+  .hero-inner { padding: 0 18px; }
+  .hero-eyebrow { font-size: 9px; }
+  .hero-desc    { font-size: 13px; max-width: 100%; }
+  .hero-btns    { flex-direction: column; gap: 10px; }
+  .hero-btns .btn-primary,
+  .hero-btns .btn-outline { width: 100%; text-align: center; padding: 14px 20px; }
+  .hero-stats   { grid-template-columns: 1fr 1fr 1fr; border-radius: 0; }
+  .stat-box     { padding: 20px 12px; }
+  .stat-num     { font-size: 36px; }
+  .stat-label   { font-size: 9px; }
+
+  /* SECTIONS */
+  section        { padding: 56px 0; }
+  .section-inner { padding: 0 18px; }
+  .section-title { font-size: 38px; line-height: 1; }
+  .section-label { font-size: 9px; letter-spacing: 3px; }
+  .section-desc  { font-size: 13px; }
+
+  /* MATERIALS */
   .materials-grid { grid-template-columns: 1fr; }
-  section { padding: 56px 0; }
+  .mat-card-img   { height: 220px; }
+  .mat-card-img-label { font-size: 26px; }
+
+  /* COMPARISON */
+  .compare-controls { gap: 6px; }
+  .mat-toggle       { padding: 7px 12px; font-size: 11px; }
+  th, td            { padding: 10px 12px; font-size: 12px; }
+
+  /* WIZARD */
+  .wizard-body     { padding: 28px 20px; }
+  .wizard-q        { font-size: 28px; }
+  .wizard-hint     { font-size: 12px; margin-bottom: 24px; }
+  .wiz-opt         { padding: 12px 14px; font-size: 13px; }
+  .wiz-opt .wiz-icon { width: 32px; height: 32px; font-size: 15px; }
+  .wizard-nav      { flex-direction: column; gap: 12px; align-items: stretch; }
+  .wizard-nav .btn-wiz { width: 100%; text-align: center; padding: 14px; }
+  .result-header h3 { font-size: 32px; }
+  .result-name      { font-size: 20px; }
+  .result-score-bar { display: none; }
+
+  /* SUPPLIERS */
+  .sup-editorial-grid { grid-template-columns: 1fr; }
+  .sup-editorial-card.featured { grid-column: span 1; min-height: 280px; }
+  .sup-editorial-card.featured .sup-card-name { font-size: 28px; }
+  .sup-editorial-card:not(.featured) .sup-card-name { font-size: 22px; }
+  .sup-section-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .sup-list-cta     { width: 100%; }
+
+  /* STANDARDS */
+  .rules-grid { grid-template-columns: 1fr; }
+  .std-tabs   { flex-wrap: wrap; gap: 6px; }
+  .std-tab    { font-size: 10px; padding: 7px 12px; }
+  .rates-table { font-size: 12px; }
+  .rates-table th, .rates-table td { padding: 9px 10px; }
+
+  /* SUBSCRIPTION MODAL */
+  .plans-grid       { grid-template-columns: 1fr; gap: 2px; }
+  .reach-strip      { grid-template-columns: 1fr 1fr; }
+  .sub-modal-body   { padding: 20px 18px 32px; }
+  .sub-modal-header { padding: 24px 18px 0; }
+  .sub-modal-header h2 { font-size: 32px; }
+
+  /* AUTH MODAL */
+  .auth-box   { max-width: 100%; margin: 0; }
+  .auth-hd    { padding: 24px 20px 0; }
+  .auth-hd-left h2 { font-size: 30px; }
+  .auth-body  { padding: 20px 20px 28px; }
+  .auth-tabs  { margin: 16px 20px 0; }
+  .auth-row   { grid-template-columns: 1fr; }
+
+  /* MATERIAL DETAIL MODAL */
+  .modal { border-radius: 0; }
+  .modal-header { padding: 16px 18px; }
+  .modal-body   { padding: 20px 18px; }
+  .modal-tabs   { padding: 0 18px; overflow-x: auto; white-space: nowrap; }
+  .modal-title  { font-size: 28px; }
+  .spec-grid    { grid-template-columns: 1fr; }
+  .pros-cons    { grid-template-columns: 1fr; }
+  .gallery-hero { height: 220px; }
+  .variant-grid { grid-template-columns: 1fr 1fr; }
+
+  /* FOOTER */
+  footer { padding: 40px 18px; }
+  .footer-brand { font-size: 28px; }
+
+  /* MISC */
+  .spec-highlights-grid { grid-template-columns: 1fr 1fr !important; }
+  .sup-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── SMALL PHONE (< 480px) ───────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  h1 { font-size: 40px; }
+  .section-title { font-size: 32px; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-stats .stat-box:last-child { grid-column: span 2; }
+  .stat-num  { font-size: 32px; }
+  .reach-strip { grid-template-columns: 1fr; }
+  .spec-highlights-grid { grid-template-columns: 1fr !important; }
+  .compare-controls { gap: 4px; }
+  .mat-toggle { padding: 6px 10px; font-size: 10px; gap: 6px; }
+  .wizard-q   { font-size: 24px; }
+  .sub-modal-body { padding: 16px 14px 24px; }
 }
 
 </style>
@@ -725,8 +943,26 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <span class="nav-premium-badge" id="nav-premium" style="display:none">PRO</span>
       <button class="nav-logout" onclick="authLogout()">Logout</button>
     </div>
+    <!-- HAMBURGER -->
+    <button class="nav-ham" id="nav-ham" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<!-- MOBILE MENU DRAWER -->
+<div class="mob-drawer" id="mob-drawer">
+  <a href="#home"     onclick="closeMobileMenu()">Home</a>
+  <a href="#explore"  onclick="closeMobileMenu()">Materials</a>
+  <a href="#compare"  onclick="closeMobileMenu()">Compare</a>
+  <a href="#wizard"   onclick="closeMobileMenu()">Advisor</a>
+  <a href="#suppliers" onclick="closeMobileMenu()">Suppliers</a>
+  <a href="#standards" onclick="closeMobileMenu()">Standards</a>
+  <a href="u-value-calculator.html">U-Value Calc</a>
+  <a href="cost-estimator.html">Cost Estimator</a>
+  <div class="mob-drawer-auth">
+    <button class="btn-primary" onclick="openAuthModal('login');closeMobileMenu()" style="width:100%;text-align:center">Login / Sign Up</button>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="home" style="min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column">
@@ -2922,6 +3158,24 @@ function cwUpdateNav() {
   // Also sync the API tester token display
   if (typeof refreshTok === 'function') refreshTok();
 }
+
+// ── MOBILE MENU ──────────────────────────────────────────────────────────────
+function toggleMobileMenu() {
+  const drawer = document.getElementById('mob-drawer');
+  const ham    = document.getElementById('nav-ham');
+  const open   = drawer.classList.toggle('open');
+  ham.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('nav-ham').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close drawer on resize to desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 1024) closeMobileMenu();
+});
 
 function authLogout() {
   cwClearToken();
