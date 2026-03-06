@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U-Value Calculator · CladWise UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg:      #0b110d;
+  --bg2:     #111a13;
+  --bg3:     #182318;
+  --bg4:     #1f2e20;
+  --border:  rgba(255,255,255,0.07);
+  --accent:  #00e5a0;
+  --amber:   #f59e0b;
+  --red:     #ef4444;
+  --blue:    #60a5fa;
+  --text:    #edf2ed;
+  --muted:   #6b7d6d;
+  --card:    #131d14;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── NAV ── */
+nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,0.08);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:3px;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--accent)}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;transition:color 0.2s}
+.nav-back:hover{color:var(--accent)}
+.nav-badge{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.25);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:4px 12px;border-radius:2px;letter-spacing:2px}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:60px 40px 40px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.page-eyebrow::before{content:'';width:24px;height:1px;background:var(--accent);display:inline-block}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;line-height:0.9;text-transform:uppercase;letter-spacing:-1px}
+.page-title span{color:var(--accent)}
+.page-desc{color:var(--muted);font-size:14px;margin-top:14px;max-width:480px;line-height:1.7}
+.page-formula{background:var(--bg2);border:1px solid rgba(0,229,160,0.12);padding:20px 24px;font-family:'DM Mono',monospace;font-size:12px;line-height:2;color:var(--muted)}
+.page-formula .formula-line{color:var(--text);font-size:13px}
+.page-formula .formula-title{color:var(--accent);font-size:10px;letter-spacing:2px;margin-bottom:8px}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:1200px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+
+/* ── ASSEMBLY PANEL ── */
+.panel{background:var(--bg2);border:1px solid var(--border)}
+.panel-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.panel-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px}
+
+/* ── SURFACE RESISTANCE ROW ── */
+.surface-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,229,160,0.06);border-bottom:1px solid var(--border)}
+.surface-cell{background:var(--bg3);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.surface-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.surface-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--blue)}
+.surface-unit{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+
+/* ── LAYER TABLE ── */
+.layer-table{width:100%;border-collapse:collapse}
+.layer-table thead tr{background:var(--bg3);border-bottom:2px solid rgba(0,229,160,0.12)}
+.layer-table th{padding:10px 14px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:500}
+.layer-table th.r-align{text-align:right}
+.layer-row{border-bottom:1px solid var(--border);animation:rowIn 0.2s ease}
+@keyframes rowIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.layer-row:hover{background:rgba(255,255,255,0.02)}
+.layer-row td{padding:10px 14px;vertical-align:middle}
+.layer-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:28px}
+.layer-drag{color:var(--muted);opacity:0.4;cursor:grab;font-size:12px;padding-right:4px}
+
+/* Inputs inside table */
+.layer-select,.layer-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color 0.15s;width:100%}
+.layer-select:focus,.layer-input:focus{border-color:rgba(0,229,160,0.4)}
+.layer-select{cursor:pointer}
+.layer-select option{background:var(--bg2)}
+.layer-input{text-align:right;font-family:'DM Mono',monospace}
+.layer-lambda{color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;text-align:right}
+.layer-r{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-align:right;color:var(--accent);min-width:70px}
+.layer-r.zero{color:var(--muted)}
+.btn-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:6px;transition:color 0.15s;opacity:0.5}
+.btn-del:hover{color:var(--red);opacity:1}
+
+/* ── ADD LAYER ROW ── */
+.add-row{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.btn-add{display:flex;align-items:center;gap:8px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.15s}
+.btn-add:hover{background:rgba(0,229,160,0.15);border-color:var(--accent)}
+.btn-preset{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.15s}
+.btn-preset:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── RESULTS PANEL ── */
+.result-panel{position:sticky;top:80px;display:flex;flex-direction:column;gap:2px}
+
+/* U-Value Big Display */
+.u-display{background:var(--bg2);border:1px solid var(--border);padding:28px 24px;position:relative;overflow:hidden}
+.u-display::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.u-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.u-value-num{font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;line-height:1;transition:color 0.3s}
+.u-value-unit{font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);margin-top:4px}
+
+/* UAE Compliance badge */
+.compliance-badge-wrap{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.compliance-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.chip-pass{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent)}
+.chip-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber)}
+.chip-fail{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red)}
+.compliance-desc{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* R-Value breakdown */
+.r-breakdown{background:var(--bg2);border:1px solid var(--border);padding:20px 24px}
+.r-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.r-row:last-child{border-bottom:none}
+.r-row-label{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.r-row-bar-wrap{flex:1;margin:0 12px;height:3px;background:rgba(255,255,255,0.05)}
+.r-row-bar{height:3px;background:var(--accent);transition:width 0.4s ease}
+.r-row-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text);min-width:52px;text-align:right}
+.r-total-row{background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);padding:12px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.r-total-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
+.r-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent)}
+
+/* UAE Reference card */
+.ref-panel{background:var(--bg2);border:1px solid var(--border);padding:20px 24px}
+.ref-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.ref-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px}
+.ref-row:last-child{border-bottom:none}
+.ref-name{color:var(--muted)}
+.ref-val{font-family:'DM Mono',monospace;color:var(--text);font-size:11px}
+.ref-val.highlight{color:var(--accent)}
+
+/* Export button */
+.btn-export{width:100%;background:var(--accent);color:#000;border:none;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-export:hover{background:#00ffb3}
+.btn-reset{width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;margin-top:2px}
+.btn-reset:hover{border-color:var(--red);color:var(--red)}
+
+/* ── PRESETS ── */
+.presets-strip{max-width:1200px;margin:0 auto 16px;padding:0 40px;display:flex;gap:8px;flex-wrap:wrap}
+.preset-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:8px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+.preset-btn i{font-size:10px}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .result-panel{position:static}
+  .page-header{grid-template-columns:1fr;gap:20px}
+  .page-title{font-size:52px}
+  nav{padding:0 20px}
+  .main,.presets-strip,.page-header{padding-left:20px;padding-right:20px}
+}
+@media(max-width:600px){
+  .page-title{font-size:40px}
+  .u-value-num{font-size:60px}
+  .surface-row{grid-template-columns:1fr}
+  .layer-table th:nth-child(3),.layer-row td:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
+  <span class="nav-badge">ENGINEERING TOOLS</span>
+  <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Thermal Performance · ISO 6946</div>
+    <h1 class="page-title">Facade<br>U-Value<br><span>Calculator</span></h1>
+    <p class="page-desc">Build a wall assembly layer by layer. Real-time calculation of R-values, total U-value, and UAE / ASHRAE 90.1 compliance check. Based on ISO 6946 methodology.</p>
+  </div>
+  <div class="page-formula">
+    <div class="formula-title">ENGINEERING FORMULAE</div>
+    <div class="formula-line">R<sub>layer</sub> = d (m) / λ (W/m·K)</div>
+    <div style="margin:4px 0;color:var(--muted)">─────────────────────</div>
+    <div class="formula-line">R<sub>total</sub> = R<sub>si</sub> + ΣR<sub>layers</sub> + R<sub>se</sub></div>
+    <div style="margin:4px 0;color:var(--muted)">─────────────────────</div>
+    <div class="formula-line">U = 1 / R<sub>total</sub> &nbsp;&nbsp;(W/m²K)</div>
+    <div style="margin-top:10px;color:var(--muted);font-size:10px">R<sub>si</sub> = 0.13 · R<sub>se</sub> = 0.04 m²K/W</div>
+  </div>
+</div>
+
+<!-- ASSEMBLY PRESETS -->
+<div class="presets-strip">
+  <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;align-self:center">LOAD PRESET:</span>
+  <button class="preset-btn" onclick="loadPreset('rainscreen')"><i class="fa-solid fa-layer-group"></i> Ventilated Rainscreen</button>
+  <button class="preset-btn" onclick="loadPreset('insulated')"><i class="fa-solid fa-layer-group"></i> Insulated Concrete Wall</button>
+  <button class="preset-btn" onclick="loadPreset('gfrc')"><i class="fa-solid fa-layer-group"></i> GFRC Facade Assembly</button>
+  <button class="preset-btn" onclick="loadPreset('acm')"><i class="fa-solid fa-layer-group"></i> ACM-FR Curtain Wall</button>
+  <button class="preset-btn" onclick="loadPreset('stone')"><i class="fa-solid fa-layer-group"></i> Stone Cladding</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: ASSEMBLY BUILDER -->
+  <div>
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Wall Assembly</div>
+          <div class="panel-sub">Outside → Inside · Add layers in order</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count">0 LAYERS</div>
+      </div>
+
+      <!-- Surface resistances -->
+      <div class="surface-row">
+        <div class="surface-cell">
+          <div>
+            <div class="surface-label">External Surface (R<sub>se</sub>)</div>
+            <div class="surface-unit">ISO 6946 · Exposed facade</div>
+          </div>
+          <div style="text-align:right">
+            <div class="surface-val">0.04</div>
+            <div class="surface-unit">m²K/W</div>
+          </div>
+        </div>
+        <div class="surface-cell">
+          <div>
+            <div class="surface-label">Internal Surface (R<sub>si</sub>)</div>
+            <div class="surface-unit">ISO 6946 · Horizontal heat flow</div>
+          </div>
+          <div style="text-align:right">
+            <div class="surface-val">0.13</div>
+            <div class="surface-unit">m²K/W</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer table -->
+      <div style="overflow-x:auto">
+        <table class="layer-table">
+          <thead>
+            <tr>
+              <th style="width:32px">#</th>
+              <th>Material / Layer</th>
+              <th style="width:110px">Thickness (mm)</th>
+              <th style="width:130px" class="r-align">λ (W/m·K)</th>
+              <th style="width:90px" class="r-align">R (m²K/W)</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="layers-tbody">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Add layer -->
+      <div class="add-row">
+        <button class="btn-add" onclick="addLayer()">
+          <i class="fa-solid fa-plus"></i> Add Layer
+        </button>
+        <button class="btn-preset" onclick="addAirCavity()">+ Air Cavity</button>
+        <button class="btn-preset" onclick="addInsulation()">+ Insulation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="result-panel">
+
+    <!-- U-Value display -->
+    <div class="u-display">
+      <div class="u-label">U-Value Result</div>
+      <div class="u-value-num" id="u-value-display">—</div>
+      <div class="u-value-unit">W/m²·K</div>
+      <div class="compliance-badge-wrap">
+        <div class="compliance-chip chip-warn" id="compliance-chip">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+          <span id="compliance-text">ADD LAYERS</span>
+        </div>
+        <div class="compliance-desc" id="compliance-desc">Add cladding layers to begin thermal analysis.</div>
+      </div>
+    </div>
+
+    <!-- R breakdown -->
+    <div class="r-breakdown">
+      <div class="panel-header" style="padding:0 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px">
+        <div class="panel-title" style="font-size:14px">R-Value Breakdown</div>
+      </div>
+      <div id="r-breakdown-rows">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);padding:12px 0">No layers yet.</div>
+      </div>
+      <div class="r-total-row" id="r-total-row" style="display:none">
+        <div class="r-total-label">Total R</div>
+        <div class="r-total-val" id="r-total-display">—</div>
+      </div>
+    </div>
+
+    <!-- UAE Reference values -->
+    <div class="ref-panel">
+      <div class="ref-title">UAE / Gulf Thermal Reference</div>
+      <div class="ref-row">
+        <span class="ref-name">ASHRAE 90.1 · Gulf Climate Zone 1</span>
+        <span class="ref-val highlight">U ≤ 0.70</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-name">Dubai Green Building Regs</span>
+        <span class="ref-val highlight">U ≤ 0.57</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-name">Abu Dhabi Estidama Pearl</span>
+        <span class="ref-val highlight">U ≤ 0.45</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-name">LEED v4 Gulf Baseline</span>
+        <span class="ref-val highlight">U ≤ 0.40</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-name">Passive House (reference)</span>
+        <span class="ref-val">U ≤ 0.15</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <button class="btn-export" onclick="exportReport()">
+      <i class="fa-solid fa-file-arrow-down"></i> Export Report
+    </button>
+    <button class="btn-reset" onclick="resetAll()">
+      <i class="fa-solid fa-rotate-left"></i> Reset Assembly
+    </button>
+
+  </div>
+</div>
+
+<script>
+// ── MATERIALS DATABASE ───────────────────────────────────────────────────────
+const MATERIALS_DB = [
+  { id: 'gfrc',         name: 'GFRC Panel',              lambda: 0.75,  note: 'Glass Fibre Reinforced Concrete' },
+  { id: 'gfrp',         name: 'GFRP Panel',              lambda: 0.35,  note: 'Glass Fibre Reinforced Polymer' },
+  { id: 'aluminum',     name: 'Aluminum Sheet',          lambda: 160,   note: 'Solid aluminium alloy' },
+  { id: 'acm',          name: 'ACM Panel (mineral)',     lambda: 0.20,  note: 'Aluminium Composite Mineral Core' },
+  { id: 'fibrecement',  name: 'Fibre Cement Board',      lambda: 0.35,  note: 'Fibre cement cladding panel' },
+  { id: 'concrete',     name: 'Dense Concrete',          lambda: 1.70,  note: '2300 kg/m³ concrete' },
+  { id: 'lwconcrete',   name: 'Lightweight Concrete',    lambda: 0.70,  note: '1200 kg/m³' },
+  { id: 'blockwork',    name: 'Concrete Blockwork',      lambda: 1.13,  note: 'Hollow core 200mm block' },
+  { id: 'brick',        name: 'Clay Brick',              lambda: 0.77,  note: 'Common clay brick' },
+  { id: 'rockwool',     name: 'Rockwool / Mineral Wool', lambda: 0.036, note: 'Mineral wool insulation' },
+  { id: 'pir',          name: 'PIR Insulation',          lambda: 0.022, note: 'Polyisocyanurate foam board' },
+  { id: 'eps',          name: 'EPS Insulation',          lambda: 0.038, note: 'Expanded polystyrene' },
+  { id: 'xps',          name: 'XPS Insulation',          lambda: 0.032, note: 'Extruded polystyrene' },
+  { id: 'aircavity',    name: 'Unventilated Air Cavity', lambda: null,  r: 0.18, note: 'ISO 6946 Table 2' },
+  { id: 'aircavityv',   name: 'Ventilated Air Cavity',   lambda: null,  r: 0.13, note: 'ISO 6946 ventilated' },
+  { id: 'gypsumboard',  name: 'Gypsum Board',            lambda: 0.25,  note: 'Standard plasterboard' },
+  { id: 'stone',        name: 'Natural Stone',           lambda: 2.30,  note: 'Limestone / granite avg' },
+  { id: 'marble',       name: 'Marble',                  lambda: 2.90,  note: 'Dense marble' },
+  { id: 'ceramic',      name: 'Ceramic / Porcelain',     lambda: 1.30,  note: 'Fired ceramic tile' },
+  { id: 'timber',       name: 'Timber / Wood',           lambda: 0.14,  note: 'Softwood average' },
+  { id: 'glass',        name: 'Glass (solid)',            lambda: 1.00,  note: 'Dense soda-lime glass' },
+  { id: 'custom',       name: '— Custom Material —',     lambda: null,  note: 'Enter λ manually' },
+];
+
+// Surface resistances (ISO 6946)
+const RSI = 0.13;
+const RSE = 0.04;
+
+let layers = [];
+let layerIdCounter = 0;
+
+// ── PRESET ASSEMBLIES ────────────────────────────────────────────────────────
+const PRESETS = {
+  rainscreen: [
+    { matId: 'gfrc',       thickness: 20,  lambda: 0.75 },
+    { matId: 'aircavityv', thickness: 50,  lambda: null  },
+    { matId: 'rockwool',   thickness: 80,  lambda: 0.036 },
+    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
+    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+  ],
+  insulated: [
+    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
+    { matId: 'pir',        thickness: 60,  lambda: 0.022 },
+    { matId: 'aircavity',  thickness: 25,  lambda: null  },
+    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+  ],
+  gfrc: [
+    { matId: 'gfrc',       thickness: 25,  lambda: 0.75  },
+    { matId: 'aircavityv', thickness: 40,  lambda: null  },
+    { matId: 'rockwool',   thickness: 100, lambda: 0.036 },
+    { matId: 'blockwork',  thickness: 200, lambda: 1.13  },
+    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+  ],
+  acm: [
+    { matId: 'acm',        thickness: 4,   lambda: 0.20  },
+    { matId: 'aircavityv', thickness: 50,  lambda: null  },
+    { matId: 'pir',        thickness: 80,  lambda: 0.022 },
+    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
+    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+  ],
+  stone: [
+    { matId: 'stone',      thickness: 30,  lambda: 2.30  },
+    { matId: 'aircavity',  thickness: 40,  lambda: null  },
+    { matId: 'rockwool',   thickness: 80,  lambda: 0.036 },
+    { matId: 'blockwork',  thickness: 200, lambda: 1.13  },
+    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+  ],
+};
+
+function loadPreset(key) {
+  layers = [];
+  layerIdCounter = 0;
+  const preset = PRESETS[key];
+  preset.forEach(p => {
+    const mat = MATERIALS_DB.find(m => m.id === p.matId) || MATERIALS_DB[0];
+    layers.push({
+      id: ++layerIdCounter,
+      matId: p.matId,
+      name: mat.name,
+      thickness: p.thickness,
+      lambda: p.lambda !== null ? p.lambda : (mat.lambda || ''),
+      fixedR: mat.r || null,
+    });
+  });
+  renderTable();
+  calculate();
+}
+
+// ── ADD / REMOVE LAYERS ───────────────────────────────────────────────────────
+function addLayer(matId = 'concrete', thickness = 100) {
+  const mat = MATERIALS_DB.find(m => m.id === matId) || MATERIALS_DB[2];
+  layers.push({
+    id: ++layerIdCounter,
+    matId: mat.id,
+    name: mat.name,
+    thickness,
+    lambda: mat.lambda || '',
+    fixedR: mat.r || null,
+  });
+  renderTable();
+  calculate();
+}
+
+function addAirCavity() { addLayer('aircavity', 25); }
+function addInsulation() { addLayer('rockwool', 80); }
+
+function removeLayer(id) {
+  layers = layers.filter(l => l.id !== id);
+  renderTable();
+  calculate();
+}
+
+// ── RENDER TABLE ─────────────────────────────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('layers-tbody');
+  document.getElementById('layer-count').textContent = `${layers.length} LAYER${layers.length !== 1 ? 'S' : ''}`;
+
+  if (layers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:32px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">No layers yet — add a layer or load a preset above ↑</td></tr>`;
+    return;
+  }
+
+  const matOptions = MATERIALS_DB.map(m =>
+    `<option value="${m.id}">${m.name}${m.note ? ' — ' + m.note : ''}</option>`
+  ).join('');
+
+  tbody.innerHTML = layers.map((l, i) => {
+    const r = calcLayerR(l);
+    const rDisplay = r !== null ? r.toFixed(3) : '—';
+    const isAirCavity = l.fixedR !== null;
+
+    return `
+    <tr class="layer-row" id="layer-row-${l.id}">
+      <td class="layer-num">${i + 1}</td>
+      <td>
+        <select class="layer-select" onchange="onMatChange(${l.id}, this.value)">
+          ${MATERIALS_DB.map(m => `<option value="${m.id}" ${m.id === l.matId ? 'selected' : ''}>${m.name}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <input class="layer-input" type="number" min="0.1" step="1"
+               value="${l.thickness}"
+               onchange="onThicknessChange(${l.id}, this.value)"
+               ${isAirCavity ? 'disabled style="opacity:0.4"' : ''}
+               placeholder="mm">
+      </td>
+      <td class="layer-lambda" style="text-align:right;padding:10px 14px">
+        ${isAirCavity
+          ? `<span style="color:var(--blue)">R = ${l.fixedR} fixed</span>`
+          : `<input class="layer-input" type="number" min="0.001" step="0.001"
+                    value="${l.lambda}"
+                    onchange="onLambdaChange(${l.id}, this.value)"
+                    placeholder="λ"
+                    style="max-width:90px">`
+        }
+      </td>
+      <td class="layer-r ${r === 0 || r === null ? 'zero' : ''}">${rDisplay}</td>
+      <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer"><i class="fa-solid fa-xmark"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── LAYER CHANGE HANDLERS ─────────────────────────────────────────────────────
+function onMatChange(id, matId) {
+  const mat = MATERIALS_DB.find(m => m.id === matId);
+  const layer = layers.find(l => l.id === id);
+  if (!layer || !mat) return;
+  layer.matId = mat.id;
+  layer.name = mat.name;
+  layer.fixedR = mat.r || null;
+  if (mat.lambda !== null && mat.lambda !== undefined) layer.lambda = mat.lambda;
+  else if (!mat.r) layer.lambda = '';
+  renderTable();
+  calculate();
+}
+
+function onThicknessChange(id, val) {
+  const layer = layers.find(l => l.id === id);
+  if (layer) { layer.thickness = parseFloat(val) || 0; calculate(); }
+}
+
+function onLambdaChange(id, val) {
+  const layer = layers.find(l => l.id === id);
+  if (layer) { layer.lambda = parseFloat(val) || 0; calculate(); }
+}
+
+// ── CALCULATE ────────────────────────────────────────────────────────────────
+function calcLayerR(layer) {
+  if (layer.fixedR !== null) return layer.fixedR;
+  const d = (layer.thickness || 0) / 1000; // mm → m
+  const lambda = parseFloat(layer.lambda) || 0;
+  if (!d || !lambda) return null;
+  return d / lambda;
+}
+
+function calculate() {
+  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
+  const sumR = layerRs.reduce((acc, { r }) => acc + (r || 0), 0);
+  const totalR = RSE + sumR + RSI;
+  const uValue = totalR > 0 ? 1 / totalR : null;
+
+  // Update U display
+  const uDisplay = document.getElementById('u-value-display');
+  const chip = document.getElementById('compliance-chip');
+  const chipText = document.getElementById('compliance-text');
+  const desc = document.getElementById('compliance-desc');
+
+  if (uValue === null || layers.length === 0) {
+    uDisplay.textContent = '—';
+    uDisplay.style.color = 'var(--muted)';
+    chip.className = 'compliance-chip chip-warn';
+    chipText.textContent = 'ADD LAYERS';
+    desc.textContent = 'Add cladding layers to begin thermal analysis.';
+  } else {
+    uDisplay.textContent = uValue.toFixed(3);
+    // UAE compliance check
+    if (uValue <= 0.40) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'LEED / ESTIDAMA ✓';
+      desc.textContent = `Excellent — meets Estidama Pearl (≤0.45) and LEED v4 (≤0.40). Superior Gulf climate performance.`;
+    } else if (uValue <= 0.45) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'ESTIDAMA PASS ✓';
+      desc.textContent = `Meets Abu Dhabi Estidama Pearl requirement (U ≤ 0.45 W/m²K). Add more insulation for LEED.`;
+    } else if (uValue <= 0.57) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'DUBAI GREEN PASS ✓';
+      desc.textContent = `Meets Dubai Green Building Regulations (U ≤ 0.57 W/m²K). Does not meet Estidama.`;
+    } else if (uValue <= 0.70) {
+      uDisplay.style.color = 'var(--amber)';
+      chip.className = 'compliance-chip chip-warn';
+      chipText.textContent = 'ASHRAE 90.1 PASS ⚠';
+      desc.textContent = `Meets ASHRAE 90.1 Gulf minimum (U ≤ 0.70). Below Dubai Green standard — improve insulation.`;
+    } else {
+      uDisplay.style.color = 'var(--red)';
+      chip.className = 'compliance-chip chip-fail';
+      chipText.textContent = 'NON-COMPLIANT ✗';
+      desc.textContent = `U-value exceeds all UAE and Gulf standards. Significant additional insulation required.`;
+    }
+  }
+
+  // R breakdown
+  const breakdownEl = document.getElementById('r-breakdown-rows');
+  const totalRowEl = document.getElementById('r-total-row');
+  const totalDisplay = document.getElementById('r-total-display');
+
+  const allRows = [
+    { label: 'R_se (External surface)', r: RSE, fixed: true },
+    ...layerRs.map(({ layer, r }) => ({
+      label: `${layer.name} (${layer.thickness}mm)`,
+      r: r || 0,
+      fixed: false,
+    })),
+    { label: 'R_si (Internal surface)', r: RSI, fixed: true },
+  ];
+
+  const maxR = Math.max(...allRows.map(row => row.r));
+
+  breakdownEl.innerHTML = allRows.map(row => `
+    <div class="r-row">
+      <div class="r-row-label" title="${row.label}">${row.label}</div>
+      <div class="r-row-bar-wrap">
+        <div class="r-row-bar" style="width:${maxR > 0 ? (row.r / maxR * 100) : 0}%;${row.fixed ? 'background:var(--blue)' : ''}"></div>
+      </div>
+      <div class="r-row-val" style="${row.fixed ? 'color:var(--blue)' : ''}">${row.r.toFixed(3)}</div>
+    </div>`).join('');
+
+  if (layers.length > 0) {
+    totalRowEl.style.display = 'flex';
+    totalDisplay.textContent = totalR.toFixed(3);
+  } else {
+    totalRowEl.style.display = 'none';
+  }
+}
+
+// ── EXPORT REPORT ────────────────────────────────────────────────────────────
+function exportReport() {
+  if (layers.length === 0) { alert('Add layers first.'); return; }
+
+  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
+  const sumR = layerRs.reduce((acc, { r }) => acc + (r || 0), 0);
+  const totalR = RSE + sumR + RSI;
+  const uValue = totalR > 0 ? 1 / totalR : 0;
+
+  let report = `CLADWISE UAE — FACADE U-VALUE CALCULATION REPORT
+${'='.repeat(52)}
+Generated: ${new Date().toLocaleString()}
+Method: ISO 6946 / ASHRAE 90.1
+${'─'.repeat(52)}
+
+WALL ASSEMBLY (Outside → Inside)
+${'─'.repeat(52)}
+`;
+
+  report += `${'Layer'.padEnd(4)} ${'Material'.padEnd(28)} ${'d (mm)'.padEnd(10)} ${'λ (W/mK)'.padEnd(12)} ${'R (m²K/W)'}\n`;
+  report += `${'-'.repeat(68)}\n`;
+  report += `     ${'External surface (Rse)'.padEnd(28)} ${''.padEnd(10)} ${''.padEnd(12)} ${RSE.toFixed(3)}\n`;
+
+  layers.forEach((l, i) => {
+    const r = calcLayerR(l);
+    const lambda = l.fixedR !== null ? 'fixed' : String(l.lambda);
+    report += `${String(i + 1).padEnd(4)} ${l.name.padEnd(28)} ${String(l.thickness).padEnd(10)} ${lambda.padEnd(12)} ${r !== null ? r.toFixed(3) : '—'}\n`;
+  });
+
+  report += `     ${'Internal surface (Rsi)'.padEnd(28)} ${''.padEnd(10)} ${''.padEnd(12)} ${RSI.toFixed(3)}\n`;
+  report += `${'─'.repeat(68)}\n`;
+  report += `\nTOTAL R-VALUE:  ${totalR.toFixed(3)} m²K/W\n`;
+  report += `U-VALUE:        ${uValue.toFixed(3)} W/m²K\n\n`;
+
+  report += `UAE / GULF COMPLIANCE CHECK\n${'─'.repeat(52)}\n`;
+  report += `ASHRAE 90.1 Gulf (U ≤ 0.70):      ${uValue <= 0.70 ? 'PASS ✓' : 'FAIL ✗'}\n`;
+  report += `Dubai Green Building (U ≤ 0.57):   ${uValue <= 0.57 ? 'PASS ✓' : 'FAIL ✗'}\n`;
+  report += `Estidama Pearl (U ≤ 0.45):         ${uValue <= 0.45 ? 'PASS ✓' : 'FAIL ✗'}\n`;
+  report += `LEED v4 Gulf (U ≤ 0.40):           ${uValue <= 0.40 ? 'PASS ✓' : 'FAIL ✗'}\n`;
+  report += `\n${'='.repeat(52)}\nCladWise UAE · cladwise.netlify.app\n`;
+
+  const blob = new Blob([report], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CladWise_UValue_Report.txt';
+  a.click();
+}
+
+// ── RESET ────────────────────────────────────────────────────────────────────
+function resetAll() {
+  layers = [];
+  layerIdCounter = 0;
+  renderTable();
+  calculate();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadPreset('gfrc');
+</script>
+</body>
+</html>
