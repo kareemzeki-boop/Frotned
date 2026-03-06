@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facade Cost Estimator · CladWise UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ── RESET & TOKENS ───────────────────────────────────────────────────────── */
+:root{
+  --bg:     #0b110d;
+  --bg2:    #111a13;
+  --bg3:    #182318;
+  --bg4:    #1f2e20;
+  --border: rgba(255,255,255,0.07);
+  --accent: #00e5a0;
+  --amber:  #f59e0b;
+  --red:    #ef4444;
+  --blue:   #60a5fa;
+  --purple: #a78bfa;
+  --text:   #edf2ed;
+  --muted:  #6b7d6d;
+  --card:   #131d14;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── NAV ──────────────────────────────────────────────────────────────────── */
+nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,0.08);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:3px;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-badge{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;padding:4px 12px;letter-spacing:2px}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;transition:color 0.2s}
+.nav-back:hover{color:var(--accent)}
+
+/* ── PAGE HEADER ──────────────────────────────────────────────────────────── */
+.page-header{padding:52px 40px 36px;max-width:1280px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.page-eyebrow::before{content:'';width:24px;height:1px;background:var(--amber);display:inline-block}
+.page-title{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;line-height:0.92;text-transform:uppercase;letter-spacing:-1px}
+.page-title span{color:var(--accent)}
+.page-desc{color:var(--muted);font-size:13px;margin-top:12px;max-width:500px;line-height:1.7}
+.disclaimer-banner{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);padding:12px 20px;display:flex;align-items:center;gap:12px;max-width:420px}
+.disclaimer-banner i{color:var(--amber);flex-shrink:0;font-size:16px}
+.disclaimer-banner p{font-size:12px;color:rgba(240,200,100,0.75);line-height:1.5;font-family:'DM Mono',monospace}
+
+/* ── MAIN GRID ────────────────────────────────────────────────────────────── */
+.main{max-width:1280px;margin:0 auto;padding:32px 40px 80px;display:grid;grid-template-columns:400px 1fr;gap:24px;align-items:start}
+
+/* ── INPUT PANEL ──────────────────────────────────────────────────────────── */
+.input-panel{background:var(--bg2);border:1px solid var(--border);position:sticky;top:80px}
+.panel-hd{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-hd-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.panel-hd-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px}
+.input-section{padding:18px 22px;border-bottom:1px solid var(--border)}
+.input-section:last-child{border-bottom:none}
+.input-section-title{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.input-section-title::before{content:'';width:16px;height:1px;background:var(--accent)}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.field input,.field select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:10px 12px;outline:none;transition:border-color 0.15s;appearance:none;-webkit-appearance:none}
+.field input:focus,.field select:focus{border-color:rgba(0,229,160,0.4)}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7d6d' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.field select option{background:var(--bg2)}
+.field-hint{font-size:11px;color:var(--muted);margin-top:5px;font-family:'DM Mono',monospace}
+
+/* Complexity selector */
+.complexity-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.complexity-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;text-align:center}
+.complexity-btn.active{background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.4);color:var(--accent)}
+.complexity-btn:hover:not(.active){border-color:rgba(255,255,255,0.15);color:var(--text)}
+
+/* Material selector cards */
+.material-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.mat-btn{background:var(--bg3);border:1px solid var(--border);padding:12px;cursor:pointer;transition:all 0.15s;text-align:left}
+.mat-btn:hover:not(.active){border-color:rgba(255,255,255,0.12)}
+.mat-btn.active{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.05)}
+.mat-btn-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2px;color:var(--text)}
+.mat-btn.active .mat-btn-name{color:var(--accent)}
+.mat-btn-range{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px}
+
+/* Calc button */
+.btn-calc{width:100%;background:var(--accent);color:#000;border:none;padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-calc:hover{background:#00ffb3}
+
+/* ── RESULTS PANEL ────────────────────────────────────────────────────────── */
+.results-panel{display:flex;flex-direction:column;gap:2px}
+
+/* Total cost hero */
+.total-hero{background:var(--bg2);border:1px solid var(--border);padding:32px 28px;position:relative;overflow:hidden}
+.total-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.total-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.total-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:end}
+.total-value{font-family:'Barlow Condensed',sans-serif;font-size:72px;font-weight:900;line-height:1;color:var(--accent);transition:all 0.3s}
+.total-currency{font-size:24px;color:var(--muted);margin-left:4px}
+.total-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:6px}
+.per-m2-block{text-align:right}
+.per-m2-value{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--text);line-height:1}
+.per-m2-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:4px}
+.range-bar{height:4px;background:rgba(255,255,255,0.06);margin-top:16px;border-radius:0;position:relative}
+.range-fill{height:4px;background:linear-gradient(90deg,var(--accent),rgba(0,229,160,0.4));transition:width 0.5s ease;position:absolute;left:0;top:0}
+.range-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:5px}
+
+/* Cost breakdown rows */
+.breakdown-panel{background:var(--bg2);border:1px solid var(--border);padding:24px 28px}
+.breakdown-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.breakdown-title::before{content:'';width:16px;height:1px;background:var(--muted);display:inline-block}
+.breakdown-rows{display:flex;flex-direction:column;gap:2px}
+.breakdown-row{background:var(--bg3);padding:14px 18px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:16px;transition:all 0.2s}
+.breakdown-row:hover{background:var(--bg4)}
+.brow-left{display:flex;align-items:center;gap:12px}
+.brow-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.brow-name{font-weight:600;font-size:14px}
+.brow-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.brow-bar-wrap{width:120px;height:3px;background:rgba(255,255,255,0.06)}
+.brow-bar{height:3px;transition:width 0.5s ease}
+.brow-value{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;text-align:right;min-width:120px}
+.brow-unit{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;min-width:80px}
+
+/* Chart panel */
+.chart-panel{background:var(--bg2);border:1px solid var(--border);padding:24px 28px}
+.chart-wrap{display:grid;grid-template-columns:180px 1fr;gap:28px;align-items:center}
+.donut-wrap{position:relative;width:180px;height:180px;flex-shrink:0}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.donut-center-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--text);line-height:1}
+.donut-center-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.chart-legend{display:flex;flex-direction:column;gap:10px}
+.legend-row{display:flex;align-items:center;gap:10px;cursor:pointer}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;transition:transform 0.15s}
+.legend-row:hover .legend-dot{transform:scale(1.3)}
+.legend-name{font-size:13px;font-weight:500;flex:1}
+.legend-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);min-width:36px;text-align:right}
+.legend-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;min-width:100px;text-align:right}
+
+/* Assumptions */
+.assumptions{background:var(--bg2);border:1px solid var(--border);padding:20px 28px}
+.assumptions-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);margin-top:14px}
+.assumption-cell{background:var(--bg3);padding:12px 16px}
+.assumption-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.assumption-val{font-size:13px;font-weight:600;color:var(--text)}
+
+/* Export / Reset */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.btn-export{background:var(--amber);color:#000;border:none;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-export:hover{background:#fbbf24}
+.btn-reset{background:var(--bg2);color:var(--muted);border:1px solid var(--border);padding:14px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-reset:hover{border-color:var(--red);color:var(--red)}
+
+/* Empty state */
+.empty-state{padding:80px 28px;text-align:center;background:var(--bg2);border:1px solid var(--border)}
+.empty-icon{font-size:40px;margin-bottom:16px;opacity:0.3}
+.empty-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;color:var(--muted)}
+.empty-desc{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;line-height:1.7}
+
+/* Responsive */
+@media(max-width:1024px){.main{grid-template-columns:1fr}.input-panel{position:static}.chart-wrap{grid-template-columns:1fr}.donut-wrap{margin:0 auto}}
+@media(max-width:600px){.page-title{font-size:44px}.total-grid{grid-template-columns:1fr}.per-m2-block{text-align:left}.assumptions-grid{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}.main,.page-header{padding-left:20px;padding-right:20px}nav{padding:0 20px}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
+  <div class="nav-right">
+    <span class="nav-badge">COST TOOLS</span>
+    <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div>
+    <div class="page-eyebrow">Early-Stage Estimation · Conceptual</div>
+    <h1 class="page-title">Facade Cost<br><span>Estimator</span></h1>
+    <p class="page-desc">Rapid conceptual facade cost estimation for early design stages. Material, substructure, installation, and access costs — broken down per system and location.</p>
+  </div>
+  <div class="disclaimer-banner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <p>CONCEPTUAL ESTIMATES ONLY. Not to be used as tender values, BOQ pricing, or contractual references. Always confirm with specialist quantity surveyors.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ── INPUT PANEL ── -->
+  <div class="input-panel">
+    <div class="panel-hd">
+      <div>
+        <div class="panel-hd-title">Project Parameters</div>
+        <div class="panel-hd-sub">ALL FIELDS REQUIRED</div>
+      </div>
+      <i class="fa-solid fa-sliders" style="color:var(--muted);font-size:16px"></i>
+    </div>
+
+    <!-- Material selection -->
+    <div class="input-section">
+      <div class="input-section-title">Cladding System</div>
+      <div class="material-grid" id="mat-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Geometry -->
+    <div class="input-section">
+      <div class="input-section-title">Project Geometry</div>
+      <div class="field">
+        <label>Total Facade Area (m²)</label>
+        <input type="number" id="inp-area" min="10" max="99999" placeholder="e.g. 2500" value="2500" oninput="calculate()">
+        <div class="field-hint">Gross facade area including openings</div>
+      </div>
+      <div class="field">
+        <label>Building Height</label>
+        <select id="inp-height" onchange="calculate()">
+          <option value="low">Low-rise — under 15m</option>
+          <option value="mid" selected>Mid-rise — 15m to 30m</option>
+          <option value="high">High-rise — 30m to 60m</option>
+          <option value="tall">Tall — 60m to 150m</option>
+          <option value="supertall">Super-tall — 150m+</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Complexity -->
+    <div class="input-section">
+      <div class="input-section-title">Design Complexity</div>
+      <div class="complexity-btns" id="complexity-btns">
+        <button class="complexity-btn active" data-val="simple" onclick="setComplexity('simple',this)">Simple</button>
+        <button class="complexity-btn" data-val="medium" onclick="setComplexity('medium',this)">Medium</button>
+        <button class="complexity-btn" data-val="complex" onclick="setComplexity('complex',this)">Complex</button>
+      </div>
+      <div class="field-hint" style="margin-top:8px" id="complexity-hint">Flat panels, rectilinear geometry, standard jointing.</div>
+    </div>
+
+    <!-- Location -->
+    <div class="input-section">
+      <div class="input-section-title">Location & Market</div>
+      <div class="field">
+        <label>Location Multiplier</label>
+        <select id="inp-location" onchange="calculate()">
+          <option value="uae" selected>UAE (Dubai / Abu Dhabi)</option>
+          <option value="uae_north">UAE Northern Emirates</option>
+          <option value="ksa">Saudi Arabia (KSA)</option>
+          <option value="gulf">Gulf Region (Qatar / Kuwait / Oman)</option>
+          <option value="egypt">Egypt / North Africa</option>
+          <option value="global">Global Average</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Calculate -->
+    <div style="padding:18px 22px">
+      <button class="btn-calc" onclick="calculate()">
+        <i class="fa-solid fa-calculator"></i> Calculate Estimate
+      </button>
+    </div>
+  </div>
+
+  <!-- ── RESULTS PANEL ── -->
+  <div class="results-panel" id="results-panel">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon"><i class="fa-solid fa-chart-pie"></i></div>
+      <div class="empty-title">Ready to Estimate</div>
+      <div class="empty-desc">Select a cladding system and fill in<br>project details — results appear instantly.</div>
+    </div>
+
+    <div id="results-content" style="display:none;display:flex;flex-direction:column;gap:2px">
+
+      <!-- Total hero -->
+      <div class="total-hero">
+        <div class="total-eyebrow">Total Estimated Cost (Conceptual)</div>
+        <div class="total-grid">
+          <div>
+            <div class="total-value"><span id="res-total">—</span> <span class="total-currency">AED</span></div>
+            <div class="total-label" id="res-range-label">—</div>
+            <div class="range-bar"><div class="range-fill" id="range-fill" style="width:50%"></div></div>
+            <div class="range-labels"><span id="res-range-low">—</span><span>▲ Mid estimate</span><span id="res-range-high">—</span></div>
+          </div>
+          <div class="per-m2-block">
+            <div class="per-m2-value" id="res-per-m2">—</div>
+            <div class="per-m2-label">AED / m²</div>
+            <div style="margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Cost efficiency index</div>
+            <div id="res-efficiency" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:4px">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost breakdown rows -->
+      <div class="breakdown-panel">
+        <div class="breakdown-title">Cost Breakdown by Component</div>
+        <div class="breakdown-rows" id="breakdown-rows"><!-- injected --></div>
+      </div>
+
+      <!-- Donut chart -->
+      <div class="chart-panel">
+        <div class="breakdown-title">Proportional Distribution</div>
+        <div class="chart-wrap">
+          <div class="donut-wrap">
+            <svg id="donut-svg" viewBox="0 0 200 200" width="180" height="180"></svg>
+            <div class="donut-center">
+              <div class="donut-center-val" id="donut-center-val">—</div>
+              <div class="donut-center-label">AED/m²</div>
+            </div>
+          </div>
+          <div class="chart-legend" id="chart-legend"><!-- injected --></div>
+        </div>
+      </div>
+
+      <!-- Assumptions -->
+      <div class="assumptions">
+        <div class="breakdown-title">Calculation Assumptions</div>
+        <div class="assumptions-grid" id="assumptions-grid"><!-- injected --></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn-export" onclick="exportPDF()">
+          <i class="fa-solid fa-file-pdf"></i> Export PDF Summary
+        </button>
+        <button class="btn-reset" onclick="resetAll()">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── COST DATABASE ────────────────────────────────────────────────────────────
+const SYSTEMS = {
+  gfrc: {
+    name: 'GFRC',
+    full: 'Glass Fibre Reinforced Concrete',
+    range: 'AED 350–900/m²',
+    material:  { base: 350, mid: 550, high: 900 },   // supply only
+    substruct: { pct: 0.28 },                          // % of material
+    install:   { base: 95,  mid: 130, high: 190 },
+    access:    { base: 40,  mid: 60,  high: 90  },
+  },
+  gfrp: {
+    name: 'GFRP',
+    full: 'Glass Fibre Reinforced Polymer',
+    range: 'AED 280–750/m²',
+    material:  { base: 280, mid: 430, high: 750 },
+    substruct: { pct: 0.22 },
+    install:   { base: 85,  mid: 115, high: 170 },
+    access:    { base: 35,  mid: 55,  high: 85  },
+  },
+  aluminum: {
+    name: 'Aluminum',
+    full: 'Aluminium Cladding Systems',
+    range: 'AED 220–600/m²',
+    material:  { base: 220, mid: 380, high: 600 },
+    substruct: { pct: 0.20 },
+    install:   { base: 70,  mid: 100, high: 150 },
+    access:    { base: 30,  mid: 48,  high: 75  },
+  },
+  stone: {
+    name: 'Stone',
+    full: 'Natural & Engineered Stone',
+    range: 'AED 600–1,800/m²',
+    material:  { base: 600, mid: 1000, high: 1800 },
+    substruct: { pct: 0.35 },
+    install:   { base: 130, mid: 180,  high: 280  },
+    access:    { base: 55,  mid: 80,   high: 130  },
+  },
+  acm: {
+    name: 'ACM-FR',
+    full: 'Fire-Rated Aluminium Composite',
+    range: 'AED 180–420/m²',
+    material:  { base: 180, mid: 290, high: 420 },
+    substruct: { pct: 0.18 },
+    install:   { base: 55,  mid: 80,  high: 115 },
+    access:    { base: 28,  mid: 44,  high: 68  },
+  },
+  fibrecement: {
+    name: 'Fibre Cement',
+    full: 'Fibre Cement Cladding Board',
+    range: 'AED 180–380/m²',
+    material:  { base: 180, mid: 265, high: 380 },
+    substruct: { pct: 0.20 },
+    install:   { base: 60,  mid: 85,  high: 120 },
+    access:    { base: 28,  mid: 42,  high: 65  },
+  },
+};
+
+const COMPLEXITY = {
+  simple:  { mult: 0.88, label: 'Flat panels, standard geometry, minimal corners', scaf_mult: 0.85 },
+  medium:  { mult: 1.00, label: 'Some angles, curved sections, mixed joint systems', scaf_mult: 1.00 },
+  complex: { mult: 1.35, label: 'Parametric, sculptural, 3D geometry, custom moulds', scaf_mult: 1.30 },
+};
+
+const LOCATION = {
+  uae:       { mult: 1.00, label: 'UAE — Dubai / Abu Dhabi', currency: 'AED' },
+  uae_north: { mult: 0.88, label: 'UAE — Northern Emirates', currency: 'AED' },
+  ksa:       { mult: 1.10, label: 'Saudi Arabia (KSA)', currency: 'AED' },
+  gulf:      { mult: 1.05, label: 'Gulf Region', currency: 'AED' },
+  egypt:     { mult: 0.72, label: 'Egypt / North Africa', currency: 'AED' },
+  global:    { mult: 0.90, label: 'Global Average', currency: 'AED' },
+};
+
+const HEIGHT_SCAF = {
+  low:       { mult: 1.00, label: 'Under 15m' },
+  mid:       { mult: 1.25, label: '15m – 30m' },
+  high:      { mult: 1.55, label: '30m – 60m' },
+  tall:      { mult: 2.10, label: '60m – 150m' },
+  supertall: { mult: 2.80, label: '150m+' },
+};
+
+const COLORS = ['#00e5a0','#f59e0b','#60a5fa','#a78bfa'];
+const COLOR_NAMES = ['Material','Substructure','Installation','Scaffolding/Access'];
+
+// State
+let selectedMat = 'gfrc';
+let complexity   = 'simple';
+let lastResult   = null;
+
+// ── BUILD MATERIAL BUTTONS ────────────────────────────────────────────────────
+function buildMatGrid() {
+  const el = document.getElementById('mat-grid');
+  el.innerHTML = Object.entries(SYSTEMS).map(([key, sys]) => `
+    <button class="mat-btn ${key === selectedMat ? 'active' : ''}"
+            onclick="selectMat('${key}',this)">
+      <div class="mat-btn-name">${sys.name}</div>
+      <div class="mat-btn-range">${sys.range}</div>
+    </button>`).join('');
+}
+
+function selectMat(key, el) {
+  selectedMat = key;
+  document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  calculate();
+}
+
+function setComplexity(val, el) {
+  complexity = val;
+  document.querySelectorAll('.complexity-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('complexity-hint').textContent = COMPLEXITY[val].label;
+  calculate();
+}
+
+// ── CORE CALCULATION ──────────────────────────────────────────────────────────
+function calculate() {
+  const area    = parseFloat(document.getElementById('inp-area').value) || 0;
+  const heightK = document.getElementById('inp-height').value;
+  const locKey  = document.getElementById('inp-location').value;
+  if (!area || area <= 0) return;
+
+  const sys  = SYSTEMS[selectedMat];
+  const comp = COMPLEXITY[complexity];
+  const loc  = LOCATION[locKey];
+  const hgt  = HEIGHT_SCAF[heightK];
+
+  // Material cost (mid estimate base)
+  const matBase  = sys.material.mid * comp.mult * loc.mult;
+  const matLow   = sys.material.base * comp.mult * loc.mult;
+  const matHigh  = sys.material.high * comp.mult * loc.mult;
+
+  // Substructure
+  const subBase  = matBase * sys.substruct.pct;
+
+  // Installation
+  const instBase = sys.install.mid * comp.mult * loc.mult;
+
+  // Scaffolding/Access (depends heavily on height + complexity)
+  const scafBase = sys.access.mid * comp.scaf_mult * hgt.mult * loc.mult;
+
+  const totalPerM2 = matBase + subBase + instBase + scafBase;
+  const totalMid   = totalPerM2 * area;
+  const totalLow   = (matLow + matLow * sys.substruct.pct + sys.install.base * comp.mult * loc.mult + sys.access.base * hgt.mult * loc.mult) * area;
+  const totalHigh  = (matHigh + matHigh * sys.substruct.pct + sys.install.high * comp.mult * loc.mult + sys.access.high * hgt.mult * loc.mult * comp.scaf_mult) * area;
+
+  lastResult = {
+    sys, comp, loc, hgt, area, heightK, locKey,
+    components: [
+      { name: 'Material Supply', perM2: matBase,  total: matBase  * area, pct: matBase  / totalPerM2, color: COLORS[0] },
+      { name: 'Substructure',    perM2: subBase,  total: subBase  * area, pct: subBase  / totalPerM2, color: COLORS[1] },
+      { name: 'Installation',    perM2: instBase, total: instBase * area, pct: instBase / totalPerM2, color: COLORS[2] },
+      { name: 'Access / Scaffold', perM2: scafBase, total: scafBase * area, pct: scafBase / totalPerM2, color: COLORS[3] },
+    ],
+    totalPerM2, totalMid, totalLow, totalHigh,
+  };
+
+  renderResults(lastResult);
+}
+
+// ── RENDER RESULTS ────────────────────────────────────────────────────────────
+function renderResults(r) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('results-content').style.display = 'flex';
+
+  // Total
+  document.getElementById('res-total').textContent      = fmt(r.totalMid);
+  document.getElementById('res-per-m2').textContent     = fmt(r.totalPerM2);
+  document.getElementById('res-range-low').textContent  = 'Low: AED ' + fmt(r.totalLow);
+  document.getElementById('res-range-high').textContent = 'High: AED ' + fmt(r.totalHigh);
+  document.getElementById('res-range-label').textContent = `Range: AED ${fmt(r.totalLow)} – ${fmt(r.totalHigh)}`;
+  document.getElementById('donut-center-val').textContent = fmt(r.totalPerM2);
+
+  // Efficiency rating
+  const effEl = document.getElementById('res-efficiency');
+  if      (r.totalPerM2 < 400)  { effEl.textContent = '◆ BUDGET EFFICIENT'; effEl.style.color = 'var(--accent)'; }
+  else if (r.totalPerM2 < 800)  { effEl.textContent = '◆ MID-RANGE';        effEl.style.color = 'var(--amber)'; }
+  else if (r.totalPerM2 < 1400) { effEl.textContent = '◆ PREMIUM SPEC';     effEl.style.color = 'var(--amber)'; }
+  else                           { effEl.textContent = '◆ ULTRA PREMIUM';    effEl.style.color = 'var(--red)';   }
+
+  // Range fill position (mid within low–high)
+  const span = r.totalHigh - r.totalLow;
+  const pct  = span > 0 ? ((r.totalMid - r.totalLow) / span) * 100 : 50;
+  document.getElementById('range-fill').style.width = pct + '%';
+
+  // Breakdown rows
+  document.getElementById('breakdown-rows').innerHTML = r.components.map(c => `
+    <div class="breakdown-row">
+      <div class="brow-left">
+        <div class="brow-dot" style="background:${c.color}"></div>
+        <div>
+          <div class="brow-name">${c.name}</div>
+          <div class="brow-pct">${(c.pct*100).toFixed(0)}% of total</div>
+        </div>
+      </div>
+      <div>
+        <div class="brow-bar-wrap"><div class="brow-bar" style="width:${c.pct*100}%;background:${c.color}"></div></div>
+      </div>
+      <div style="text-align:right">
+        <div class="brow-value" style="color:${c.color}">AED ${fmt(c.total)}</div>
+        <div class="brow-unit">${fmt(c.perM2)} / m²</div>
+      </div>
+    </div>`).join('');
+
+  // Donut chart
+  drawDonut(r.components);
+
+  // Legend
+  document.getElementById('chart-legend').innerHTML = r.components.map(c => `
+    <div class="legend-row">
+      <div class="legend-dot" style="background:${c.color}"></div>
+      <div class="legend-name">${c.name}</div>
+      <div class="legend-pct">${(c.pct*100).toFixed(0)}%</div>
+      <div class="legend-val" style="color:${c.color}">AED ${fmt(c.perM2)}</div>
+    </div>`).join('');
+
+  // Assumptions
+  document.getElementById('assumptions-grid').innerHTML = [
+    { l: 'Cladding System',   v: r.sys.name },
+    { l: 'Facade Area',       v: r.area.toLocaleString() + ' m²' },
+    { l: 'Building Height',   v: r.hgt.label },
+    { l: 'Design Complexity', v: complexity.charAt(0).toUpperCase() + complexity.slice(1) + ` (×${r.comp.mult.toFixed(2)})` },
+    { l: 'Location',          v: r.loc.label },
+    { l: 'Base Rate Year',    v: 'UAE 2025 Market' },
+  ].map(a => `
+    <div class="assumption-cell">
+      <div class="assumption-label">${a.l}</div>
+      <div class="assumption-val">${a.v}</div>
+    </div>`).join('');
+}
+
+// ── DONUT CHART ───────────────────────────────────────────────────────────────
+function drawDonut(components) {
+  const svg  = document.getElementById('donut-svg');
+  const cx = 100, cy = 100, R = 80, r = 52;
+  let angle = -90;
+  let paths = '';
+
+  components.forEach(c => {
+    const sweep = c.pct * 360;
+    const start = polarToXY(cx, cy, R, angle);
+    const end   = polarToXY(cx, cy, R, angle + sweep);
+    const inner_start = polarToXY(cx, cy, r, angle + sweep);
+    const inner_end   = polarToXY(cx, cy, r, angle);
+    const large = sweep > 180 ? 1 : 0;
+
+    paths += `<path d="
+      M ${start.x} ${start.y}
+      A ${R} ${R} 0 ${large} 1 ${end.x} ${end.y}
+      L ${inner_start.x} ${inner_start.y}
+      A ${r} ${r} 0 ${large} 0 ${inner_end.x} ${inner_end.y}
+      Z"
+      fill="${c.color}" opacity="0.9"
+      style="transition:all 0.3s"
+    />`;
+    angle += sweep;
+  });
+
+  svg.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--bg2)"/>` + paths;
+}
+
+function polarToXY(cx, cy, r, angleDeg) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+// ── EXPORT PDF ────────────────────────────────────────────────────────────────
+async function exportPDF() {
+  if (!lastResult) { alert('Run calculation first.'); return; }
+  const r = lastResult;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, M = 20;
+
+    // Dark background
+    doc.setFillColor(11, 17, 13);
+    doc.rect(0, 0, W, 297, 'F');
+
+    // Accent line top
+    doc.setFillColor(0, 229, 160);
+    doc.rect(0, 0, W, 2, 'F');
+
+    // Header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(237, 242, 237);
+    doc.text('CLADWISE UAE', M, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(0, 229, 160);
+    doc.text('FACADE COST ESTIMATION REPORT', M, 30);
+    doc.setFontSize(9);
+    doc.setTextColor(107, 125, 109);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, M, 37);
+
+    // Disclaimer box
+    doc.setFillColor(245, 158, 11, 20);
+    doc.setDrawColor(245, 158, 11);
+    doc.setLineWidth(0.4);
+    doc.rect(M, 44, W - M * 2, 12, 'FD');
+    doc.setFontSize(8);
+    doc.setTextColor(245, 158, 11);
+    doc.text('⚠  CONCEPTUAL ESTIMATE ONLY — Not for tendering, BOQ or contractual use. Confirm with QS.', M + 4, 51.5);
+
+    // System info
+    let y = 65;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(237, 242, 237);
+    doc.text(`${r.sys.name} — ${r.sys.full}`, M, y);
+
+    // Parameters table
+    y += 8;
+    const params = [
+      ['Facade Area', r.area.toLocaleString() + ' m²'],
+      ['Building Height', r.hgt.label],
+      ['Design Complexity', complexity.charAt(0).toUpperCase() + complexity.slice(1)],
+      ['Location', r.loc.label],
+      ['Base Rate', 'UAE 2025 Market'],
+    ];
+    doc.setFontSize(9);
+    params.forEach(([k, v], i) => {
+      const bg = i % 2 === 0 ? [24, 35, 24] : [17, 26, 19];
+      doc.setFillColor(...bg);
+      doc.rect(M, y, W - M * 2, 7, 'F');
+      doc.setTextColor(107, 125, 109);
+      doc.text(k, M + 3, y + 4.8);
+      doc.setTextColor(237, 242, 237);
+      doc.text(v, M + 70, y + 4.8);
+      y += 7;
+    });
+
+    // Total cost
+    y += 10;
+    doc.setFillColor(17, 26, 19);
+    doc.rect(M, y, W - M * 2, 28, 'F');
+    doc.setFillColor(0, 229, 160);
+    doc.rect(M, y, 2, 28, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(107, 125, 109);
+    doc.text('TOTAL ESTIMATED COST (MID)', M + 6, y + 8);
+    doc.setFontSize(28);
+    doc.setTextColor(0, 229, 160);
+    doc.text(`AED ${fmt(r.totalMid)}`, M + 6, y + 20);
+    doc.setFontSize(10);
+    doc.setTextColor(107, 125, 109);
+    doc.text(`Range: AED ${fmt(r.totalLow)} – AED ${fmt(r.totalHigh)}`, M + 6, y + 26);
+    doc.setFontSize(18);
+    doc.setTextColor(237, 242, 237);
+    doc.text(`AED ${fmt(r.totalPerM2)} / m²`, W - M - 2, y + 20, { align: 'right' });
+
+    // Breakdown
+    y += 38;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(107, 125, 109);
+    doc.text('COST BREAKDOWN BY COMPONENT', M, y);
+    doc.setFillColor(0, 229, 160);
+    doc.rect(M, y + 2, 24, 0.5, 'F');
+
+    y += 8;
+    const cols = [M, M + 60, M + 115, W - M - 2];
+    doc.setFontSize(8);
+    doc.setTextColor(107, 125, 109);
+    ['Component', 'Per m² (AED)', 'Total (AED)', '%'].forEach((h, i) => {
+      doc.text(h, i < 3 ? cols[i] : cols[i], y, { align: i === 3 ? 'right' : 'left' });
+    });
+    y += 2;
+    doc.setDrawColor(107, 125, 109, 40);
+    doc.setLineWidth(0.2);
+    doc.line(M, y, W - M, y);
+    y += 5;
+
+    r.components.forEach((c, i) => {
+      const bg = i % 2 === 0 ? [24, 35, 24] : [17, 26, 19];
+      doc.setFillColor(...bg);
+      doc.rect(M, y - 4, W - M * 2, 8, 'F');
+      doc.setTextColor(237, 242, 237);
+      doc.setFont('helvetica', 'normal');
+      doc.text(c.name,               cols[0],     y);
+      doc.text(fmt(c.perM2),         cols[1],     y);
+      doc.text(fmt(c.total),         cols[2],     y);
+      doc.text((c.pct*100).toFixed(0)+'%', cols[3], y, { align: 'right' });
+      y += 8;
+    });
+
+    // Footer
+    doc.setFillColor(0, 229, 160);
+    doc.rect(0, 292, W, 2, 'F');
+    doc.setFontSize(7);
+    doc.setTextColor(107, 125, 109);
+    doc.text('CladWise UAE · Facade Intelligence Platform · Conceptual estimates for early design stages only', W / 2, 289, { align: 'center' });
+
+    doc.save(`CladWise_Cost_Estimate_${r.sys.name}_${Date.now()}.pdf`);
+  } catch (e) {
+    // fallback text export
+    let txt = `CLADWISE UAE — FACADE COST ESTIMATE\n${'='.repeat(50)}\n`;
+    txt += `System: ${r.sys.name} — ${r.sys.full}\n`;
+    txt += `Area: ${r.area} m²  |  Height: ${r.hgt.label}\n`;
+    txt += `Complexity: ${complexity}  |  Location: ${r.loc.label}\n\n`;
+    txt += `TOTAL (MID): AED ${fmt(r.totalMid)}\n`;
+    txt += `Per m²: AED ${fmt(r.totalPerM2)}\n`;
+    txt += `Range: AED ${fmt(r.totalLow)} – AED ${fmt(r.totalHigh)}\n\n`;
+    r.components.forEach(c => txt += `${c.name.padEnd(22)} AED ${fmt(c.perM2).padStart(8)}/m²  |  AED ${fmt(c.total).padStart(12)} total\n`);
+    txt += `\n⚠ CONCEPTUAL ESTIMATE ONLY. Not for tendering or contractual use.\nCladWise UAE · 2025\n`;
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'CladWise_Cost_Estimate.txt'; a.click();
+  }
+}
+
+function resetAll() {
+  document.getElementById('inp-area').value = 2500;
+  document.getElementById('inp-height').value = 'mid';
+  document.getElementById('inp-location').value = 'uae';
+  setComplexity('simple', document.querySelector('[data-val="simple"]'));
+  selectedMat = 'gfrc';
+  buildMatGrid();
+  document.getElementById('empty-state').style.display = '';
+  document.getElementById('results-content').style.display = 'none';
+  lastResult = null;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === undefined || n === null || isNaN(n)) return '—';
+  if (n >= 1000000) return (n / 1000000).toFixed(2) + 'M';
+  if (n >= 1000)    return Math.round(n).toLocaleString();
+  return Math.round(n).toLocaleString();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildMatGrid();
+calculate();
+</script>
+</body>
+</html>
