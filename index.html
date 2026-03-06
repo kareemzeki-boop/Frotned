@@ -88,7 +88,7 @@ section{padding:100px 0}
 
 /* EXPLORE */
 #explore{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.07)}
-.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:52px;background:var(--border)}
+.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:40px;background:rgba(0,229,160,0.06)}
 .mat-card{background:var(--card);border-radius:0;overflow:hidden;cursor:pointer;transition:all 0.3s;border:none;position:relative}
 .mat-card:hover{transform:translateY(-4px);border-color:rgba(0,229,160,0.3);box-shadow:0 20px 60px rgba(0,229,160,0.06)}
 .mat-card-img{height:260px;position:relative;overflow:hidden;background:#0b110d}
@@ -525,6 +525,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 .sup-bg-acm{background-image:url('https://images.unsplash.com/photo-1464082354059-27db6ce50048?w=800&q=60')}
 .sup-bg-gfrp{background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=60')}
 .sup-bg-default{background-image:url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=60')}
+.sup-bg-fc{background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60')}
 
 @media(max-width:700px){
   .sup-editorial-grid{grid-template-columns:1fr}
@@ -749,26 +750,36 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     </div>
 
     <!-- Floating material score cards top right -->
-    <div class="hero-visual" style="position:absolute;right:40px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:1fr 1fr;gap:3px;width:320px">
-      <div onclick="openModal('GFRC')" style="background:rgba(9,15,11,0.85);border:1px solid rgba(0,229,160,0.2);padding:16px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(0,229,160,0.2)'">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px">GFRC</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);line-height:1">9.2</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Glass Fibre Concrete</div>
+    <div class="hero-visual" style="position:absolute;right:40px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;width:420px">
+      <div onclick="openModal('GFRC')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(0,229,160,0.2);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(0,229,160,0.2)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">GFRC</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">9.2</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Glass Fibre Concrete</div>
       </div>
-      <div onclick="openModal('GFRP')" style="background:rgba(9,15,11,0.85);border:1px solid rgba(255,255,255,0.07);padding:16px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px">GFRP</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);line-height:1">8.7</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Glass Fibre Polymer</div>
+      <div onclick="openModal('GFRP')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(255,255,255,0.07);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">GFRP</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">8.7</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Glass Fibre Polymer</div>
       </div>
-      <div onclick="openModal('Aluminum')" style="background:rgba(9,15,11,0.85);border:1px solid rgba(255,255,255,0.07);padding:16px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px">ALUMINUM</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);line-height:1">8.1</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Composite Panel</div>
+      <div onclick="openModal('Aluminum')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(255,255,255,0.07);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">ALUM</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">8.1</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Composite Panel</div>
       </div>
-      <div onclick="openModal('Stone')" style="background:rgba(9,15,11,0.85);border:1px solid rgba(255,255,255,0.07);padding:16px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px">STONE</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);line-height:1">7.6</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px">Natural & Engineered</div>
+      <div onclick="openModal('Stone')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(255,255,255,0.07);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">STONE</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">7.6</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Natural & Engineered</div>
+      </div>
+      <div onclick="openModal('ACM-FR')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(255,255,255,0.07);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">ACM-FR</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">8.5</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Fire-Rated Composite</div>
+      </div>
+      <div onclick="openModal('FibreCement')" style="background:rgba(9,15,11,0.88);border:1px solid rgba(0,229,160,0.15);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(0,229,160,0.15)'">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--accent);letter-spacing:2px;margin-bottom:6px">FC ✦NEW</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1">8.2</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px">Fibre Cement Board</div>
       </div>
     </div>
   </div>
@@ -776,7 +787,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <!-- Bottom stats bar — editorial numbers like the reference -->
   <div style="position:relative;z-index:2;border-top:1px solid rgba(255,255,255,0.07);background:rgba(9,15,11,0.9);backdrop-filter:blur(10px)">
     <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)">
-      <div class="stat-box"><span class="stat-num">5</span><span class="stat-label">Materials Covered</span></div>
+      <div class="stat-box"><span class="stat-num">6</span><span class="stat-label">Materials Covered</span></div>
       <div class="stat-box"><span class="stat-num">40+</span><span class="stat-label">Spec Data Points</span></div>
       <div class="stat-box"><span class="stat-num">18+</span><span class="stat-label">UAE Suppliers</span></div>
       <div class="stat-box" style="border-right:none"><span class="stat-num">7</span><span class="stat-label">UAE Jurisdictions</span></div>
@@ -1767,12 +1778,79 @@ const MATERIALS = {
     cons: ['Less design flexibility than GFRC (flat panels only)','Still has aluminium thermal bridge if not detailed correctly','Environmental debate on composite recyclability','Premium cost vs. standard ACM'],
     priceRange: 'AED 320–620/m²',
   },
+  'FibreCement': {
+    name: 'Fibre Cement',
+    full: 'Fibre Cement Cladding Panel',
+    emoji: '🪵',
+    color: '#1e2218',
+    tagline: 'Durable · Natural Look · Cost-Effective',
+    tags: ['Cement board', 'Wood-look', 'UV stable', 'Low maintenance'],
+    scores: { heat: 80, fire: 90, weight: 75, cost: 85, speed: 82 },
+    overall: 8.2,
+    specs: {
+      'Weight': { val: '14–22 kg/m²', sub: 'Heavier than ACM, lighter than stone' },
+      'Thickness': { val: '8–20 mm', sub: 'Standard facade boards' },
+      'Fire Rating': { val: 'Class A2 / Class 0 (BS476)', sub: 'Non-combustible mineral core' },
+      'Thermal Conductivity': { val: '0.20–0.35 W/m·K', sub: 'Good with ventilated rainscreen cavity' },
+      'Panel Size': { val: 'Up to 1220×3050 mm', sub: 'Large format boards available' },
+      'Service Life': { val: '30–50 years', sub: 'With UV-stable factory coating' },
+      'Surface Finishes': { val: 'Smooth, textured, wood-look, stone-look', sub: 'Factory painted or site-finished' },
+      'Lead Time': { val: '3–6 weeks', sub: 'Widely stocked in UAE market' },
+    },
+    compliance: {
+      'UAE Fire Code 2017': 'yes',
+      'Estidama Pearl Rating': 'yes',
+      'Dubai Civil Defence': 'yes',
+      'Abu Dhabi GSAS': 'yes',
+      'BS 8414 Façade Test': 'partial',
+      'ISO 9001 Certified Supply': 'yes',
+    },
+    pros: ['Non-combustible — safe for all building heights in UAE', 'Natural wood and stone look at fraction of real material cost', 'Excellent durability in harsh UAE UV and heat conditions', 'Low maintenance — no painting required for 10–15 years', 'Competitive price point for mid-range residential and commercial'],
+    cons: ['Heavier than ACM panels — additional subframe load', 'Limited to flat and single-curve geometries', 'Brittle — requires careful handling on site', 'Fewer high-end finish options vs GFRC or stone', 'Not ideal for complex parametric or 3D facades'],
+    priceRange: 'AED 180–380/m²',
+  },
 };
 
 // ─── IMAGE DATA ──────────────────────────────────────────────────────────────
 // All images sourced from Unsplash (unsplash.com). Free for use under Unsplash License.
 const IMG = (id, w=800, h=500) => `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&q=80`;
 const MATERIAL_IMAGES = {
+  FibreCement: {
+    hero: IMG('1558618666-fcd25c85cd64'),
+    heroCredit: 'Fibre cement facade panels, modern residential',
+    variants: [
+      {
+        name: 'Smooth / Painted',
+        desc: 'Factory-painted smooth boards — clean contemporary look',
+        tag: 'Most popular',
+        images: [
+          { src: IMG('1558618666-fcd25c85cd64'), caption: 'Smooth fibre cement, contemporary mid-rise, Dubai' },
+          { src: IMG('1486325212027-8081e485255e'), caption: 'White smooth boards, villa compound, Abu Dhabi' },
+          { src: IMG('1545324418-cc1a3fa10c00'), caption: 'Grey painted fibre cement, commercial office' },
+        ]
+      },
+      {
+        name: 'Wood-Look',
+        desc: 'Embossed grain texture — natural wood aesthetic without maintenance',
+        tag: 'Residential favourite',
+        images: [
+          { src: IMG('1487958449943-2429e8be8625'), caption: 'Woodgrain fibre cement, luxury villa, Palm Jumeirah' },
+          { src: IMG('1464082354059-27db6ce50048'), caption: 'Cedar-look boards, boutique hotel facade' },
+          { src: IMG('1497366216548-37526070297c'), caption: 'Dark wood-look panels, retail podium' },
+        ]
+      },
+      {
+        name: 'Textured / Stone-Look',
+        desc: 'Raked and embossed surfaces for depth and character',
+        tag: 'High visual interest',
+        images: [
+          { src: IMG('1518780664697-55e3ad937233'), caption: 'Stone-look fibre cement, heritage-zone building' },
+          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Raked texture boards, hospitality facade' },
+          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Horizontal textured boards, mid-rise residential' },
+        ]
+      },
+    ]
+  },
   GFRC: {
     hero: IMG('1510798831971-661eb04b3739'),
     heroCredit: 'Brutalist concrete facade, Europe',
