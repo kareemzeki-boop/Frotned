@@ -484,6 +484,49 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 32p
 /* ── PREMIUM SUPPLIER CARDS ─────────────────────────────────────────────── */
 .sup-card-unlocked{background:var(--card);border:1px solid rgba(0,229,160,0.2);border-radius:16px;padding:24px;transition:all 0.2s}
 .sup-card-unlocked:hover{border-color:rgba(0,229,160,0.4);transform:translateY(-2px)}
+
+/* ── NEW EDITORIAL SUPPLIER CARDS ── */
+.sup-editorial-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:32px;background:#111}
+.sup-editorial-card{position:relative;overflow:hidden;min-height:280px;cursor:pointer;background:#1a2a1f;transition:all 0.3s}
+.sup-editorial-card:hover .sup-card-img-bg{transform:scale(1.06)}
+.sup-editorial-card:hover .sup-card-arrow{transform:translate(3px,-3px)}
+.sup-editorial-card.featured{grid-column:span 2;min-height:360px}
+.sup-card-img-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 0.6s ease;filter:brightness(0.4) saturate(0.7)}
+.sup-card-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(5,15,8,0.97) 0%, rgba(5,15,8,0.5) 50%, transparent 100%)}
+.sup-card-body{position:relative;z-index:2;padding:24px;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.sup-card-tier{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
+.sup-card-tier.featured{color:#f59e0b}
+.sup-card-tier.verified{color:var(--accent)}
+.sup-card-tier.standard{color:#888}
+.sup-card-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:0.5px;line-height:1;margin-bottom:8px;color:#fff}
+.sup-editorial-card.featured .sup-card-name{font-size:42px}
+.sup-editorial-card:not(.featured) .sup-card-name{font-size:26px}
+.sup-card-location{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:12px;display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace}
+.sup-card-mats{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.sup-card-mat{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:3px;text-transform:uppercase}
+.sup-card-mat.featured{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:#f59e0b}
+.sup-card-mat.verified{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.25);color:var(--accent)}
+.sup-card-mat.standard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#888}
+.sup-card-footer{display:flex;align-items:center;justify-content:space-between}
+.sup-card-phone{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.6)}
+.sup-card-arrow{width:36px;height:36px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);font-size:14px;transition:all 0.2s;flex-shrink:0}
+.sup-editorial-card:hover .sup-card-arrow{border-color:var(--accent);color:var(--accent)}
+.sup-card-tagline{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.5;display:none}
+.sup-editorial-card.featured .sup-card-tagline{display:block}
+
+/* Unsplash BG images per material type */
+.sup-bg-gfrc{background-image:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=60')}
+.sup-bg-aluminum{background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=60')}
+.sup-bg-stone{background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=60')}
+.sup-bg-acm{background-image:url('https://images.unsplash.com/photo-1464082354059-27db6ce50048?w=800&q=60')}
+.sup-bg-gfrp{background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=60')}
+.sup-bg-default{background-image:url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=60')}
+
+@media(max-width:700px){
+  .sup-editorial-grid{grid-template-columns:1fr}
+  .sup-editorial-card.featured{grid-column:span 1;min-height:280px}
+  .sup-editorial-card.featured .sup-card-name{font-size:30px}
+}
 .sup-phone-real{font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);font-weight:600}
 
 /* ── TIER CARDS ──────────────────────────────────────── */
@@ -2737,6 +2780,11 @@ function cwHandleStripeReturn() {
 }
 
 // ─── SUPPLIER SECTION UPDATE ──────────────────────────────
+
+function supCardClick(phone, email) {
+  if (phone) window.location.href = 'tel:' + phone;
+}
+
 function cwUpdateSupplierSection() {
   const isPremium = cwSession?.user?.subscriptionStatus === 'ACTIVE';
   const isLoggedIn = cwIsLoggedIn();
@@ -2811,63 +2859,37 @@ function cwUpdateSupplierSection() {
     realGrid.id = 'sup-grid-real';
     realGrid.className = 'sup-grid';
     realGrid.style.marginTop = '32px';
-    realGrid.innerHTML = SUPPLIERS.filter(s => !s.freemium).map(s => {
-      if (s.tier === 'featured') return `
-        <div class="sup-featured">
-          <i class="fa-solid fa-star sup-featured-star"></i>
-          <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:14px">
-            <div style="background:${s.color};border:1px solid rgba(245,158,11,0.2);border-radius:12px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">${s.emoji}</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-                <span class="tier-badge-featured">⭐ Featured</span>
-                ${s.verified ? '<span style="color:var(--accent);font-size:10px;font-family:DM Mono,monospace">✓ Verified</span>' : ''}
-              </div>
-              <div style="font-weight:700;font-size:15px;margin-bottom:2px">${s.name}</div>
-              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
-            </div>
+    realGrid.className = 'sup-editorial-grid';
+    realGrid.innerHTML = SUPPLIERS.filter(s => !s.freemium).map((s, idx) => {
+      const isFeatured = s.tier === 'featured';
+      const isVerified = s.tier === 'verified_pro';
+      const tierClass = isFeatured ? 'featured' : isVerified ? 'verified' : 'standard';
+      const tierLabel = isFeatured ? '⭐ Featured Partner' : isVerified ? '✓ Verified Pro' : 'Listed Supplier';
+      
+      // Pick background based on primary material
+      const matBg = s.mats[0] === 'GFRC' ? 'sup-bg-gfrc' 
+                  : s.mats[0] === 'Aluminum' || s.mats[0] === 'ACM-FR' ? 'sup-bg-aluminum'
+                  : s.mats[0] === 'Stone' ? 'sup-bg-stone'
+                  : s.mats[0] === 'GFRP' ? 'sup-bg-gfrp'
+                  : 'sup-bg-default';
+
+      const matTagClass = isFeatured ? 'featured' : isVerified ? 'verified' : 'standard';
+
+      return `<div class="sup-editorial-card ${isFeatured ? 'featured' : ''}" onclick="supCardClick('${s.phone}','${s.email||''}')">
+        <div class="sup-card-img-bg ${matBg}"></div>
+        <div class="sup-card-overlay"></div>
+        <div class="sup-card-body">
+          <div class="sup-card-tier ${tierClass}">${tierLabel}</div>
+          <div class="sup-card-name">${s.name}</div>
+          <div class="sup-card-location"><i class="fa-solid fa-location-dot"></i>${s.location}</div>
+          <div class="sup-card-tagline">${s.tagline || ''}</div>
+          <div class="sup-card-mats">${s.mats.map(m=>`<span class="sup-card-mat ${matTagClass}">${m}</span>`).join('')}</div>
+          <div class="sup-card-footer">
+            <span class="sup-card-phone">${s.phone}</span>
+            <div class="sup-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
           </div>
-          <p style="font-size:12px;color:rgba(240,240,240,0.6);margin-bottom:12px;line-height:1.5">${s.tagline||''}</p>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${s.mats.map(m=>`<span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--amber);padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <a href="tel:${s.phone}" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-phone" style="margin-right:5px"></i>${s.phone}</a>
-            ${s.email ? `<a href="mailto:${s.email}" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-envelope" style="margin-right:5px"></i>Email</a>` : ''}
-          </div>
-        </div>`;
-      if (s.tier === 'verified_pro') return `
-        <div class="sup-verified">
-          <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:14px">
-            <div style="background:${s.color};border:1px solid rgba(0,229,160,0.15);border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${s.emoji}</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-                <span class="tier-badge-verified">✓ Verified Pro</span>
-              </div>
-              <div style="font-weight:700;font-size:15px;margin-bottom:2px">${s.name}</div>
-              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
-            </div>
-          </div>
-          <p style="font-size:12px;color:rgba(240,240,240,0.6);margin-bottom:12px;line-height:1.5">${s.tagline||''}</p>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${s.mats.map(m=>`<span style="background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.18);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <a href="tel:${s.phone}" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-phone" style="margin-right:5px"></i>${s.phone}</a>
-            ${s.email ? `<a href="mailto:${s.email}" style="background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);padding:7px 13px;border-radius:8px;font-size:11px;font-family:'DM Mono',monospace;text-decoration:none"><i class="fa-solid fa-envelope" style="margin-right:5px"></i>Email</a>` : ''}
-          </div>
-        </div>`;
-      return `
-        <div class="sup-standard">
-          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:13px">
-            <div style="background:${s.color};border-radius:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${s.emoji}</div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
-                <span class="tier-badge-standard">Standard</span>
-                ${s.verified ? '<span style="color:#666;font-size:10px;font-family:DM Mono,monospace">✓</span>' : ''}
-              </div>
-              <div style="font-weight:600;font-size:14px;margin-bottom:2px">${s.name}</div>
-              <div style="font-size:11px;color:var(--muted)"><i class="fa-solid fa-location-dot" style="margin-right:4px"></i>${s.location}</div>
-            </div>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">${s.mats.map(m=>`<span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#777;padding:3px 9px;border-radius:20px;font-size:10px;font-family:'DM Mono',monospace">${m}</span>`).join('')}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:12px;color:#888"><i class="fa-solid fa-phone" style="margin-right:5px;opacity:0.5"></i>${s.phone}</div>
-        </div>`;
+        </div>
+      </div>`;
     }).join('');
     section.appendChild(realGrid);
   } else {
