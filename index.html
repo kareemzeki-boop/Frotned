@@ -49,14 +49,16 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #0e1810;
+  background: rgba(14,24,16,0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 100px;
-  padding: 6px 6px 6px 8px;
-  height: 52px;
+  padding: 5px 5px 5px 8px;
+  height: 54px;
   box-shadow:
-    0 4px 24px rgba(0,0,0,0.55),
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 0 0 1px rgba(0,229,160,0.08);
+    0 8px 32px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 0 0 1px rgba(0,229,160,0.12);
   pointer-events: all;
   position: relative;
 }
@@ -103,7 +105,7 @@ nav {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -111,21 +113,27 @@ nav {
 .nav-links a {
   color: rgba(200,220,205,0.5);
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  padding: 6px 14px;
   border-radius: 100px;
-  transition: color 0.15s, background 0.15s;
+  border: 1px solid transparent;
+  transition: color 0.18s, background 0.18s, border-color 0.18s;
   white-space: nowrap;
   position: relative;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
 }
 .nav-links a:hover {
   color: var(--text);
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.08);
 }
 .nav-links a.active {
-  color: var(--accent);
+  color: var(--text);
+  background: rgba(0,229,160,0.12);
+  border-color: rgba(0,229,160,0.25);
 }
 /* Right side CTA – pill-within-pill */
 .nav-right-group {
@@ -135,24 +143,24 @@ nav {
   flex-shrink: 0;
 }
 .nav-cta {
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 8px 18px;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.5px;
-  font-family: 'Barlow', sans-serif;
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-}
-.nav-cta:hover {
   background: var(--accent);
   color: #000;
-  border-color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 9px 20px;
+  border-radius: 100px;
+  font-weight: 800;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.nav-cta:hover {
+  background: #00ffb3;
+  border-color: #00ffb3;
+  transform: scale(1.03);
 }
 /* Logged-in state */
 .nav-user { display: flex; align-items: center; gap: 8px; }
@@ -755,9 +763,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 .gate-card { border-radius: 0; }
 
 /* Editorial hover lines on nav links */
-.nav-links a { position: relative; }
-.nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.2s; }
-.nav-links a:hover::after { width: 100%; }
+/* nav link pills — see base styles */
 
 /* Plan cards flush grid */
 .plans-grid { gap: 1px; background: rgba(0,229,160,0.06); }
@@ -1058,6 +1064,47 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .sub-modal-body { padding: 16px 14px 24px; }
 }
 
+
+/* ── HERO TAGS ───────────────────────────────────────────────────────── */
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 28px;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.58s ease forwards;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(200,220,205,0.6);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,229,160,0.15);
+  padding: 5px 12px;
+  border-radius: 100px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.hero-tag i {
+  color: var(--accent);
+  font-size: 9px;
+}
+.hero-tag:hover {
+  color: var(--text);
+  background: rgba(0,229,160,0.07);
+  border-color: rgba(0,229,160,0.3);
+}
+/* Hero desc strong */
+.hero-desc strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 </style>
 </head>
 <body>
@@ -1137,10 +1184,19 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div style="max-width:780px">
       <span class="hero-eyebrow">UAE Facade Intelligence Platform</span>
       <h1>We Specify<br>Facades<br><span style="color:var(--accent)">For UAE.</span></h1>
-      <p class="hero-desc">GFRC · GFRP · Aluminum · Natural Stone · ACM-FR. Compare 5 cladding materials against UAE fire codes, extreme heat, Estidama compliance, and live market pricing.</p>
+
+      <p class="hero-desc">The UAE's toughest facades start with the right material call. CladWise is the only platform that puts <strong>6 cladding systems</strong>, UAE fire codes, Estidama compliance, thermal performance, and live AED market pricing in one place — so you specify faster, smarter, and with confidence.</p>
+
+      <div class="hero-tags">
+        <span class="hero-tag"><i class="fa-solid fa-fire-flame-curved"></i> Dubai Civil Defence</span>
+        <span class="hero-tag"><i class="fa-solid fa-leaf"></i> Estidama Pearl</span>
+        <span class="hero-tag"><i class="fa-solid fa-temperature-high"></i> Extreme Heat</span>
+        <span class="hero-tag"><i class="fa-solid fa-bolt"></i> AI Recommendations</span>
+      </div>
+
       <div class="hero-btns" style="opacity:0;animation:fadeUp 0.6s 0.65s ease forwards">
-        <a href="#wizard" class="btn-primary">Run Advisor Wizard</a>
-        <a href="#explore" class="btn-outline">Explore Materials</a>
+        <a href="#wizard" class="btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp; Run Advisor Wizard</a>
+        <a href="#explore" class="btn-outline">Explore Materials →</a>
       </div>
     </div>
 
