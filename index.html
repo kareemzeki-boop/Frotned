@@ -1589,6 +1589,57 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .trial-cta-btn { width: 100%; }
 }
 
+
+/* ── SUPPLIER FAQ ACCORDION ────────────────────────────────────────── */
+.faq-list { display: flex; flex-direction: column; gap: 1px; }
+.faq-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.faq-item[open] { border-color: rgba(0,229,160,0.25); }
+.faq-q {
+  padding: 13px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text);
+  user-select: none;
+}
+.faq-q::-webkit-details-marker { display: none; }
+.faq-q::after {
+  content: '+';
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.faq-item[open] .faq-q::after { transform: rotate(45deg); }
+.faq-a {
+  padding: 0 16px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.65;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+/* ── VERIFICATION STEPS RESPONSIVE ─────────────────────────────────── */
+@media (max-width: 767px) {
+  .verif-steps-grid { grid-template-columns: 1fr 1fr !important; }
+  .trust-footer-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 479px) {
+  .verif-steps-grid { grid-template-columns: 1fr !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1666,10 +1717,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <!-- Main hero content -->
   <div style="position:relative;z-index:2;flex:1;display:flex;align-items:center;max-width:1280px;margin:0 auto;width:100%;padding:0 40px">
     <div style="max-width:780px">
-      <span class="hero-eyebrow">UAE Facade Intelligence Platform</span>
+      <span class="hero-eyebrow">UAE Façade Specification Platform</span>
       <h1>We Specify<br>Facades<br><span style="color:var(--accent)">For UAE.</span></h1>
 
-      <p class="hero-desc">The UAE's toughest facades start with the right material call. CladWise is the only platform that puts <strong>6 cladding systems</strong>, UAE fire codes, Estidama compliance, thermal performance, and live AED market pricing in one place — so you specify faster, smarter, and with confidence.</p>
+      <p class="hero-desc">UAE façade specification means navigating Civil Defence approvals, Estidama compliance, thermal performance requirements, and a fragmented supplier market — simultaneously. CladWise UAE is purpose-built to solve this: <strong>specification-grade data</strong> on GFRC, GFRP, aluminium, stone and fire-rated systems, benchmarked against real UAE code requirements.</p>
 
 
       <div class="hero-btns" style="opacity:0;animation:fadeUp 0.6s 0.65s ease forwards">
@@ -1716,10 +1767,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <!-- Bottom stats bar — editorial numbers like the reference -->
   <div style="position:relative;z-index:2;border-top:1px solid rgba(255,255,255,0.07);background:rgba(9,15,11,0.9);backdrop-filter:blur(10px)">
     <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)">
-      <div class="stat-box"><span class="stat-num">6</span><span class="stat-label">Materials Covered</span></div>
+      <div class="stat-box"><span class="stat-num">6</span><span class="stat-label">Cladding Systems</span></div>
       <div class="stat-box"><span class="stat-num">40+</span><span class="stat-label">Spec Data Points</span></div>
-      <div class="stat-box"><span class="stat-num">18+</span><span class="stat-label">UAE Suppliers</span></div>
-      <div class="stat-box" style="border-right:none"><span class="stat-num">7</span><span class="stat-label">UAE Jurisdictions</span></div>
+      <div class="stat-box"><span class="stat-num">7</span><span class="stat-label">UAE Jurisdictions</span></div>
+      <div class="stat-box" style="border-right:none"><span class="stat-num" style="font-size:32px;line-height:1.2">Manually<br>Reviewed</span><span class="stat-label">Every Supplier</span></div>
     </div>
   </div>
 </section>
@@ -1782,7 +1833,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <span class="sup-list-cta-icon">🏭</span>
         <div class="sup-list-cta-text">
           <div class="sup-list-cta-label">List Your Company</div>
-          <div class="sup-list-cta-sub">Reach 4,000+ specifiers &amp; architects</div>
+          <div class="sup-list-cta-sub">Join as a Founding Supplier — 30 days free</div>
         </div>
         <i class="fa-solid fa-arrow-right" style="color:var(--amber);font-size:12px"></i>
       </button>
@@ -1798,9 +1849,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="gate-card">
           <div class="gate-badge"><i class="fa-solid fa-lock" style="font-size:10px"></i> Members Only</div>
           <div class="gate-title">Supplier Directory</div>
-          <p class="gate-desc">Access full contact details, certifications, and direct quote requests for 18+ verified UAE facade manufacturers.</p>
+          <p class="gate-desc">Access verified supplier profiles with compliance documents, direct contacts, and RFQ routing — across GFRC, GFRP, aluminium, stone and ACM-FR systems.</p>
           <div class="gate-stats">
-            <div><span class="gate-stat-num">18+</span><span class="gate-stat-label">Suppliers</span></div>
+            <div><span class="gate-stat-num">6</span><span class="gate-stat-label">Materials</span></div>
             <div><span class="gate-stat-num">7</span><span class="gate-stat-label">Emirates</span></div>
             <div><span class="gate-stat-num">5</span><span class="gate-stat-label">Materials</span></div>
           </div>
@@ -2117,7 +2168,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <!-- SPECIFIER ACCESS PANEL -->
       <div class="sub-panel active" id="sub-panel-access">
         <div style="text-align:center;margin-bottom:28px">
-          <p style="color:var(--muted);font-size:13px">Access the full verified UAE supplier directory, direct contacts &amp; quote requests.</p>
+          <p style="color:var(--muted);font-size:13px">A curated technical resource for façade specification in the UAE. Compare materials against code requirements, run compliance checks, and connect directly with verified manufacturers.</p>
         </div>
         <div class="plans-grid">
           <!-- FREE -->
@@ -2146,10 +2197,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
               <span class="plan-price-curr">AED</span><span class="plan-price-num">149</span>
               <span class="plan-price-period">per month · billed monthly</span>
             </div>
-            <p class="plan-desc">Full directory access for architects, specifiers and procurement teams.</p>
+            <p class="plan-desc">Full access for architects, specifiers and procurement teams actively sourcing façade materials on UAE projects.</p>
             <ul class="plan-features">
               <li><span class="fi">✓</span> Everything in Explorer</li>
-              <li><span class="fi">✓</span> Full Supplier Directory (18+ companies)</li>
+              <li><span class="fi">✓</span> Full Verified Supplier Directory</li>
               <li><span class="fi">✓</span> Direct phone &amp; email contacts</li>
               <li><span class="fi">✓</span> Unlimited quote requests</li>
               <li><span class="fi">✓</span> Material filter by emirate</li>
@@ -2188,7 +2239,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
             <div class="trial-banner-left">
               <div class="trial-pill"><i class="fa-solid fa-gift"></i> Limited Time</div>
               <div class="trial-title">30 Days <span>Free</span><br>Supplier Listing</div>
-              <div class="trial-desc">Get listed, verified and in front of 4,000+ architects and specifiers across the UAE — completely free for 30 days. No credit card required.</div>
+              <div class="trial-desc">Build your verified profile, upload your compliance documents, and go live on the UAE's dedicated façade specification platform — completely free for 30 days. No credit card required.</div>
             </div>
             <button class="trial-cta-btn" onclick="closeSubModal();openSupApply()">
               <i class="fa-solid fa-rocket" style="margin-right:8px"></i>Start Free Trial
@@ -2206,73 +2257,150 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
         <!-- paid plans header -->
         <div style="margin-bottom:16px">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">After Trial — Continue With</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">After Trial — Continue With a Plan</div>
         </div>
 
         <div class="list-hero" style="margin-bottom:28px;padding:20px 24px">
           <div class="list-hero-icon" style="font-size:32px">🏭</div>
           <div>
-            <div class="list-hero-title" style="font-size:24px">Reach Specifiers Across the UAE</div>
-            <div class="list-hero-desc">CladWise UAE is the go-to platform for architects, developers and procurement teams comparing facade materials. Get your company in front of the right decision-makers.</div>
+            <div class="list-hero-title" style="font-size:22px">The UAE's Façade Specification Platform</div>
+            <div class="list-hero-desc">CladWise UAE is a purpose-built technical tool for architects, engineers, and procurement managers making façade material decisions on UAE projects. Your products belong in front of them — with your compliance documents, certifications, and project portfolio fully searchable.</div>
           </div>
         </div>
         <div class="listing-plans">
-          <!-- BASIC -->
+          <!-- STARTER -->
           <div class="listing-plan">
-            <div class="listing-plan-name">Standard</div>
+            <div class="listing-plan-name">Starter</div>
             <div class="listing-plan-price">AED 599</div>
-            <div class="listing-plan-period">per year · 1 listing</div>
+            <div class="listing-plan-period">per year · basic presence</div>
             <ul class="listing-perks">
-              <li><span class="fi">★</span> Company name &amp; location</li>
-              <li><span class="fi">★</span> Materials supplied (up to 3)</li>
-              <li><span class="fi">★</span> Phone &amp; email listed</li>
+              <li><span class="fi">★</span> Company name, location &amp; contact</li>
+              <li><span class="fi">★</span> Up to 3 cladding materials listed</li>
+              <li><span class="fi">★</span> Phone &amp; email visible to subscribers</li>
               <li><span class="fi">★</span> Searchable in directory</li>
+              <li><span class="fi">★</span> 30-day free trial included</li>
               <li style="color:var(--muted)"><span style="color:#555">—</span> Verified badge</li>
-              <li style="color:var(--muted)"><span style="color:#555">—</span> Priority placement</li>
-              <li style="color:var(--muted)"><span style="color:#555">—</span> Analytics dashboard</li>
+              <li style="color:var(--muted)"><span style="color:#555">—</span> RFQ routing</li>
             </ul>
-            <button class="btn-plan btn-plan-outline" onclick="showToast('Standard listing request submitted!');closeSubModal()">Get Listed</button>
+            <button class="btn-plan btn-plan-outline" onclick="closeSubModal();openSupApply()">Start Free Trial</button>
           </div>
-          <!-- VERIFIED -->
+          <!-- FOUNDING SUPPLIER -->
           <div class="listing-plan featured">
-            <div class="plan-badge" style="background:var(--amber);color:#000">BEST VALUE</div>
-            <div class="listing-plan-name">Verified Pro</div>
-            <div class="listing-plan-price" style="color:var(--amber)">AED 1,799</div>
-            <div class="listing-plan-period">per year · includes verification audit</div>
+            <div class="plan-badge" style="background:var(--accent);color:#000;font-size:9px">FOUNDING SUPPLIER</div>
+            <div class="listing-plan-name" style="color:var(--accent)">Founding Supplier</div>
+            <div class="listing-plan-price" style="color:var(--text)">AED 1,799</div>
+            <div class="listing-plan-period">per year · rate locked for founding cohort</div>
             <ul class="listing-perks">
-              <li><span class="fi">★</span> Everything in Standard</li>
-              <li><span class="fi">★</span> ✓ Verified badge on listing</li>
-              <li><span class="fi">★</span> Priority placement in results</li>
-              <li><span class="fi">★</span> Up to 5 materials listed</li>
-              <li><span class="fi">★</span> Compliance docs uploaded</li>
-              <li><span class="fi">★</span> Quote requests routed to you</li>
-              <li><span class="fi">★</span> Monthly enquiry analytics</li>
+              <li><span class="fi">★</span> Everything in Starter</li>
+              <li><span class="fi">★</span> ✓ Verified badge (after doc review)</li>
+              <li><span class="fi">★</span> Priority placement in search results</li>
+              <li><span class="fi">★</span> Up to 6 materials &amp; services listed</li>
+              <li><span class="fi">★</span> Compliance doc uploads (DCD, ECAS, ISO)</li>
+              <li><span class="fi">★</span> RFQ enquiries routed directly to you</li>
+              <li><span class="fi">★</span> Project portfolio showcase (3 projects)</li>
+              <li><span class="fi">★</span> Listed as Founding Supplier at launch</li>
             </ul>
-            <button class="btn-plan btn-plan-amber" onclick="showToast('Verified Pro request submitted — our team will contact you!');closeSubModal()">Apply for Verified Pro</button>
+            <button class="btn-plan btn-plan-primary" onclick="closeSubModal();openSupApply()">Apply — 30 Days Free</button>
           </div>
           <!-- FEATURED -->
           <div class="listing-plan">
             <div class="listing-plan-name">Featured</div>
-            <div class="listing-plan-price">AED 3,999</div>
+            <div class="listing-plan-price">AED 3,499</div>
             <div class="listing-plan-period">per year · top placement guaranteed</div>
             <ul class="listing-perks">
-              <li><span class="fi">★</span> Everything in Verified Pro</li>
-              <li><span class="fi">★</span> Top-of-page featured placement</li>
-              <li><span class="fi">★</span> Highlighted card design</li>
-              <li><span class="fi">★</span> Banner on material pages</li>
-              <li><span class="fi">★</span> Unlimited materials listed</li>
-              <li><span class="fi">★</span> Quarterly profile refresh</li>
+              <li><span class="fi">★</span> Everything in Founding Supplier</li>
+              <li><span class="fi">★</span> Top-of-category placement guaranteed</li>
+              <li><span class="fi">★</span> Featured card on material pages</li>
+              <li><span class="fi">★</span> Unlimited materials &amp; products</li>
+              <li><span class="fi">★</span> Priority verification (48hr turnaround)</li>
+              <li><span class="fi">★</span> Monthly enquiry analytics report</li>
               <li><span class="fi">★</span> Dedicated account manager</li>
             </ul>
-            <button class="btn-plan btn-plan-outline" onclick="showToast('Featured listing enquiry sent — expect a call within 24hrs.');closeSubModal()">Enquire Now</button>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('Featured listing — our team will contact you within 24 hours.');closeSubModal()">Enquire Now</button>
           </div>
         </div>
-        <div class="reach-strip">
-          <div class="reach-box"><span class="reach-num">4K+</span><span class="reach-label">Monthly Specifiers</span></div>
-          <div class="reach-box"><span class="reach-num">7</span><span class="reach-label">Emirates Covered</span></div>
-          <div class="reach-box"><span class="reach-num">350+</span><span class="reach-label">Quote Requests/mo</span></div>
-          <div class="reach-box"><span class="reach-num">92%</span><span class="reach-label">Verified Leads</span></div>
+        <!-- verification process -->
+        <div style="margin-top:28px;margin-bottom:8px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px">
+            <span>How Verification Works</span>
+            <div style="flex:1;height:1px;background:rgba(0,229,160,0.15)"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,229,160,0.08);border-radius:8px;overflow:hidden" class="verif-steps-grid">
+            <div style="background:var(--bg3);padding:18px 16px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:6px">01</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:6px">Application</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">Submit company details, materials covered, trade licence and compliance documents.</div>
+            </div>
+            <div style="background:var(--bg3);padding:18px 16px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:6px">02</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:6px">Doc Review</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">CladWise team reviews trade licence, DCD/ADCD status and ECAS certifications. Every listing reviewed by a human — no auto-approval.</div>
+            </div>
+            <div style="background:var(--bg3);padding:18px 16px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:6px">03</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:6px">Go Live</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">Profile goes live within 2 business days. Verified badge issued once documents are confirmed.</div>
+            </div>
+            <div style="background:var(--bg3);padding:18px 16px">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:6px">04</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:6px">Annual Renewal</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">Documents reverified annually. Verified badge is removed if certifications lapse — keeping the directory credible.</div>
+            </div>
+          </div>
         </div>
+
+        <!-- trust footer -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px" class="trust-footer-grid">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+            <i class="fa-solid fa-shield-halved" style="color:var(--accent);font-size:16px;margin-top:2px;flex-shrink:0"></i>
+            <div>
+              <div style="font-size:12px;font-weight:700;margin-bottom:2px">No Fabricated Metrics</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">We show you exactly what we've verified and what we haven't. No guesswork.</div>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+            <i class="fa-solid fa-file-circle-check" style="color:var(--accent);font-size:16px;margin-top:2px;flex-shrink:0"></i>
+            <div>
+              <div style="font-size:12px;font-weight:700;margin-bottom:2px">Compliance-First</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">Data sourced from MoIAT, DCL, QCC and DCD published requirements. Not general directories.</div>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+            <i class="fa-solid fa-handshake" style="color:var(--accent);font-size:16px;margin-top:2px;flex-shrink:0"></i>
+            <div>
+              <div style="font-size:12px;font-weight:700;margin-bottom:2px">Founding Cohort</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5">Suppliers joining now are listed first, verified first, and shape how the platform develops.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- objection FAQs -->
+        <div style="margin-top:24px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px">
+            <span>Common Questions</span>
+            <div style="flex:1;height:1px;background:rgba(0,229,160,0.15)"></div>
+          </div>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary class="faq-q">The platform is new — how do I know anyone will see my listing?</summary>
+              <div class="faq-a">That is exactly why we are approaching you now rather than in six months. Platforms that take off in B2B construction do so because a credible supplier foundation was established early. Your listing will be seen by every architect who uses CladWise UAE from day one — and that audience grows over time. The alternative is joining after your competitors do.</div>
+            </details>
+            <details class="faq-item">
+              <summary class="faq-q">We already appear on other directories.</summary>
+              <div class="faq-a">General UAE business directories list every type of contractor. CladWise UAE lists only façade material suppliers — and only verified ones. Architects using this platform are specifically searching for façade systems, compliance documentation, and technical data. That is a fundamentally different audience to a general directory.</div>
+            </details>
+            <details class="faq-item">
+              <summary class="faq-q">What exactly is in the 30-day trial?</summary>
+              <div class="faq-a">The full platform experience: build your company profile, upload your compliance documents, list your materials and services, add your notable projects. Your listing goes live and is visible to platform users. After 30 days, you decide whether to continue on a paid plan. No auto-charge, no credit card required to start.</div>
+            </details>
+            <details class="faq-item">
+              <summary class="faq-q">How long does verification take?</summary>
+              <div class="faq-a">Standard verification is completed within 2 business days of document submission. Founding Supplier and Featured applications are prioritised within 48 hours. You will receive direct email confirmation when your verified badge is issued.</div>
+            </details>
+          </div>
+        </div>
+
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">All prices excl. 5% UAE VAT. Annual billing. Founding Supplier rate locked for founding cohort.</p>
       </div>
 
     </div>
@@ -4775,7 +4903,7 @@ function downloadSpecReport() {
         <div class="sap-trial-label">Day Free Trial Activated</div>
       </div>
       <div class="sap-success-title">Application Received!</div>
-      <div class="sap-success-msg">Your supplier profile is under review. Our team will verify your documents within <strong>2 business days</strong> and email confirmation to <strong id="sap-confirm-email"></strong>.<br><br>Once approved, your listing goes live with the <span style="color:var(--accent)">✓ Verified</span> badge — visible to 4,000+ specifiers, architects and developers across the UAE.</div>
+      <div class="sap-success-msg">Your supplier profile is under review. Our team will verify your documents within <strong>2 business days</strong> and email confirmation to <strong id="sap-confirm-email"></strong>.<br><br>Once approved, your listing goes live with the <span style="color:var(--accent)">✓ Verified</span> badge — visible to architects, specifiers and procurement teams actively using CladWise UAE.</div>
       <button class="trial-cta-btn" onclick="closeSupApply()" style="margin:0 auto">Close</button>
     </div>
 
