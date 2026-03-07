@@ -269,12 +269,12 @@ section{padding:100px 0}
   flex-direction: row;
   background: #131f14;
   border: 1px solid rgba(255,255,255,0.07);
-  transform-origin: center bottom;
+  transform-origin: center center;
   transition:
-    transform 0.5s cubic-bezier(0.34,1.56,0.64,1),
+    transform 0.52s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.4s ease,
     opacity 0.4s ease;
-  will-change: transform;
+  will-change: transform, opacity;
   user-select: none;
 }
 
@@ -317,10 +317,11 @@ section{padding:100px 0}
     0 0 0 1px rgba(0,229,160,0.15),
     inset 0 1px 0 rgba(255,255,255,0.06);
 }
-
-/* active 3D tilt (JS adds this) */
-.mat-card[data-pos="0"].tilting {
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+.mat-card[data-pos="0"]:hover {
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(0,229,160,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 /* ── IMAGE HALF ────────────────────────────────────────────────────── */
@@ -2016,19 +2017,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 
 
-/* ── MAT CARD 3D TILT (live cards) ───────────────────────────────── */
-.mat-card:not(.mat-card-locked) {
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-.mat-card:not(.mat-card-locked):hover {
-  box-shadow:
-    0 28px 56px rgba(0,0,0,0.6),
-    0 8px 20px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,229,160,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-  z-index: 2;
-}
+/* mat-card 3D tilt removed */
 
 /* ── JIGGLE ANIMATION (locked cards) ─────────────────────────────── */
 @keyframes mat-jiggle {
@@ -2213,6 +2202,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <!-- STACKED CARDS -->
       <div>
         <div class="mat-stack" id="mat-stack"></div>
+        <div style="text-align:center;margin-top:10px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(200,220,205,0.2);text-transform:uppercase">Scroll or drag to navigate</div>
         <div class="mat-deck-nav" id="mat-deck-nav"></div>
       </div>
       <!-- SIDEBAR LIST -->
@@ -3864,9 +3854,9 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8592;</div>` +
+    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
     keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8594;</div>`;
+    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
@@ -3898,17 +3888,101 @@ function buildDeck() {
     });
   }
 
-  window.deckGo = function(idx) {
-    current = ((idx % keys.length) + keys.length) % keys.length;
-    positionCards();
-    // Re-apply tilt to new front card
-    const front = stack.querySelector('.mat-card[data-pos="0"]');
-    if (front && !front.classList.contains('mat-card-locked') && !front._tilt) applyTilt(front);
-  };
-  window.deckNext = function() { deckGo(current + 1); };
-  window.deckPrev = function() { deckGo(current - 1); };
+  let animating = false;
 
-  // Jiggle on locked card click
+  window.deckGo = function(idx, dir) {
+    if (animating) return;
+    const prev = current;
+    current = ((idx % keys.length) + keys.length) % keys.length;
+    if (prev === current) return;
+
+    // Determine roll direction: dir=1 means swipe up (next), dir=-1 means swipe down (prev)
+    if (dir === undefined) dir = (current > prev || (prev === keys.length-1 && current === 0)) ? 1 : -1;
+
+    const cards = stack.querySelectorAll('.mat-card');
+    const prevFront = stack.querySelector('.mat-card[data-pos="0"]');
+    const nextCard  = Array.from(cards).find(c => parseInt(c.dataset.idx) === current);
+
+    animating = true;
+
+    // Snap next card just off screen in the incoming direction (no transition)
+    if (nextCard) {
+      nextCard.style.transition = 'none';
+      nextCard.style.transform  = `translateY(${dir * 100}%) scale(0.96)`;
+      nextCard.style.opacity    = '0';
+      nextCard.style.zIndex     = '9';
+      // Force reflow
+      nextCard.offsetHeight;
+    }
+
+    // Fly out current front card
+    if (prevFront) {
+      prevFront.style.transition = 'transform 0.48s cubic-bezier(0.4,0,0.6,1), opacity 0.48s ease';
+      prevFront.style.transform  = `translateY(${-dir * 100}%) scale(0.96)`;
+      prevFront.style.opacity    = '0';
+    }
+
+    // Roll in next card
+    if (nextCard) {
+      requestAnimationFrame(() => {
+        nextCard.style.transition = 'transform 0.52s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease';
+        nextCard.style.transform  = 'translateY(0) scale(1)';
+        nextCard.style.opacity    = '1';
+        nextCard.style.zIndex     = '10';
+      });
+    }
+
+    setTimeout(() => {
+      // Clean inline styles, let CSS data-pos take over
+      if (prevFront)  { prevFront.style.cssText  = ''; }
+      if (nextCard)   { nextCard.style.cssText    = ''; }
+      positionCards();
+      animating = false;
+    }, 540);
+
+    // Update dots + sidebar immediately
+    nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => item.classList.toggle('active', i === current));
+  };
+
+  window.deckNext = function() { deckGo(current + 1, 1);  };
+  window.deckPrev = function() { deckGo(current - 1, -1); };
+
+  // ── SWIPE UP / DOWN + MOUSE WHEEL ────────────────────────────────
+  let touchStartY = 0;
+  let mouseStartY = 0;
+  let mouseDragging = false;
+
+  stack.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  stack.addEventListener('touchend', function(e) {
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
+  }, { passive: true });
+
+  stack.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    mouseStartY = e.clientY;
+    mouseDragging = true;
+    e.preventDefault();
+  });
+
+  window.addEventListener('mouseup', function(e) {
+    if (!mouseDragging) return;
+    const dy = mouseStartY - e.clientY;
+    mouseDragging = false;
+    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
+  });
+
+  stack.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    if (animating) return;
+    e.deltaY > 0 ? deckNext() : deckPrev();
+  }, { passive: false });
+
+  // ── JIGGLE ON LOCKED CARD CLICK ──────────────────────────────────
   stack.addEventListener('click', function(e) {
     const locked = e.target.closest('.mat-card-locked[data-pos="0"]');
     if (!locked || e.target.closest('.mat-card-cs-btn')) return;
@@ -3918,35 +3992,6 @@ function buildDeck() {
   });
 
   positionCards();
-
-  // Tilt on front GFRC/GFRP card
-  const firstFront = stack.querySelector('.mat-card[data-pos="0"]');
-  if (firstFront && !firstFront.classList.contains('mat-card-locked')) applyTilt(firstFront);
-}
-
-function applyTilt(el) {
-  if (el._tilt) return;
-  el._tilt = true;
-  const MAX = 12;
-  el.addEventListener('mousemove', function(e) {
-    if (el.dataset.pos !== '0') return;
-    const r = el.getBoundingClientRect();
-    const rotY =  (((e.clientX - r.left)  / r.width)  - 0.5) * MAX * 2;
-    const rotX = -(((e.clientY - r.top)   / r.height) - 0.5) * MAX * 2;
-    el.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(20px)`;
-    el.style.boxShadow = `0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(0,229,160,0.2), inset 0 1px 0 rgba(255,255,255,0.08)`;
-  });
-  el.addEventListener('mouseleave', function() {
-    if (el.dataset.pos !== '0') return;
-    el.style.transition = 'transform 0.5s cubic-bezier(0.23,1,0.32,1), box-shadow 0.5s ease';
-    el.style.transform = '';
-    el.style.boxShadow = '';
-    setTimeout(() => { el.style.transition = ''; }, 520);
-  });
-  el.addEventListener('mouseenter', function() {
-    if (el.dataset.pos !== '0') return;
-    el.style.transition = 'transform 0.1s ease, box-shadow 0.1s ease';
-  });
 }
 
 function switchCardHero(key, vi) {
