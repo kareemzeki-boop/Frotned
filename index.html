@@ -1107,6 +1107,488 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   font-weight: 600;
 }
 
+
+/* ══ SUPPLIER TRIAL BANNER ════════════════════════════════════════════ */
+.trial-banner {
+  background: linear-gradient(135deg, rgba(0,229,160,0.1) 0%, rgba(0,229,160,0.04) 60%, rgba(0,0,0,0) 100%);
+  border: 1.5px solid rgba(0,229,160,0.3);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.trial-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(0,229,160,0.12), transparent 70%);
+  pointer-events: none;
+}
+.trial-banner-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.trial-banner-left {}
+.trial-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,229,160,0.15);
+  border: 1px solid rgba(0,229,160,0.35);
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+.trial-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.trial-title span { color: var(--accent); }
+.trial-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 500px;
+}
+.trial-cta-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.trial-cta-btn:hover { background: #00ffb3; transform: scale(1.03); }
+.trial-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(0,229,160,0.12);
+}
+.trial-check {
+  font-size: 11.5px;
+  color: rgba(200,220,205,0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.trial-check i { color: var(--accent); font-size: 10px; }
+
+/* ══ SUPPLIER APPLICATION MODAL ═══════════════════════════════════════ */
+#sup-apply-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 500;
+  backdrop-filter: blur(12px);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px 48px;
+  overflow-y: auto;
+}
+#sup-apply-overlay.open { display: flex; }
+.sup-apply-modal {
+  background: var(--bg2);
+  border: 1px solid rgba(0,229,160,0.15);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 740px;
+  animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1);
+  flex-shrink: 0;
+}
+.sap-header {
+  padding: 32px 36px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+}
+.sap-header-left {}
+.sap-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,229,160,0.12);
+  border: 1px solid rgba(0,229,160,0.25);
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 8px;
+}
+.sap-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.sap-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+.sap-close {
+  width: 36px; height: 36px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.sap-close:hover { color: var(--text); border-color: var(--accent); }
+/* Step indicator */
+.sap-steps {
+  display: flex;
+  align-items: center;
+  padding: 16px 36px;
+  background: var(--bg3);
+  gap: 4px;
+  overflow-x: auto;
+}
+.sap-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sap-step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.sap-step.active .sap-step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 700;
+}
+.sap-step.done .sap-step-num {
+  background: rgba(0,229,160,0.15);
+  border-color: rgba(0,229,160,0.4);
+  color: var(--accent);
+}
+.sap-step-label {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sap-step.active .sap-step-label { color: var(--text); }
+.sap-step-sep {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  min-width: 12px;
+  max-width: 32px;
+}
+/* Form body */
+.sap-body { padding: 28px 36px 36px; }
+.sap-section { display: none; }
+.sap-section.active { display: block; }
+.sap-section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sap-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,229,160,0.15);
+}
+.sap-section-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+/* Form fields */
+.sap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.sap-grid.cols-1 { grid-template-columns: 1fr; }
+.sap-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.sap-field { display: flex; flex-direction: column; gap: 5px; }
+.sap-field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sap-field label .req { color: var(--accent); margin-left: 2px; }
+.sap-field input,
+.sap-field select,
+.sap-field textarea {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.sap-field input:focus,
+.sap-field select:focus,
+.sap-field textarea:focus {
+  border-color: rgba(0,229,160,0.45);
+}
+.sap-field textarea { resize: vertical; min-height: 80px; }
+.sap-field select { -webkit-appearance: none; appearance: none; }
+.sap-field .hint {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+/* Checkbox grid */
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 12px;
+  font-weight: 600;
+}
+.check-item:hover { border-color: rgba(0,229,160,0.3); }
+.check-item input[type=checkbox] { display: none; }
+.check-item.checked {
+  border-color: rgba(0,229,160,0.4);
+  background: rgba(0,229,160,0.08);
+  color: var(--accent);
+}
+.check-dot {
+  width: 14px; height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  transition: all 0.15s;
+}
+.check-item.checked .check-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+/* Upload field */
+.sap-upload {
+  border: 1.5px dashed rgba(0,229,160,0.2);
+  border-radius: 4px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  background: rgba(0,229,160,0.02);
+}
+.sap-upload:hover { border-color: rgba(0,229,160,0.4); background: rgba(0,229,160,0.05); }
+.sap-upload input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.sap-upload-label { font-size: 12px; color: var(--muted); }
+.sap-upload-label span { color: var(--accent); font-weight: 600; }
+.sap-upload-name { font-size: 10px; color: var(--accent); margin-top: 4px; font-family: 'DM Mono', monospace; }
+/* Project row */
+.project-row {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.project-row-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+/* Navigation footer */
+.sap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 36px;
+  border-top: 1px solid var(--border);
+  background: var(--bg3);
+  gap: 12px;
+}
+.sap-progress {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.sap-progress-bar {
+  width: 120px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.sap-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.sap-nav { display: flex; gap: 10px; }
+.sap-btn-back {
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sap-btn-back:hover { border-color: var(--accent); color: var(--accent); }
+.sap-btn-next {
+  padding: 10px 26px;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sap-btn-next:hover { background: #00ffb3; }
+/* Success screen */
+.sap-success {
+  display: none;
+  text-align: center;
+  padding: 48px 36px;
+}
+.sap-success.show { display: block; }
+.sap-success-icon { font-size: 52px; margin-bottom: 16px; }
+.sap-success-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.sap-success-msg { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 440px; margin: 0 auto 24px; }
+.sap-trial-days {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.25);
+  border-radius: 12px;
+  padding: 16px 32px;
+  margin-bottom: 24px;
+}
+.sap-trial-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+.sap-trial-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+@media(max-width: 600px) {
+  .sap-header { padding: 20px 20px 16px; }
+  .sap-steps { padding: 12px 16px; }
+  .sap-body { padding: 20px 20px 24px; }
+  .sap-footer { padding: 16px 20px; }
+  .sap-grid { grid-template-columns: 1fr; }
+  .sap-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+  .check-grid { grid-template-columns: 1fr 1fr; }
+  .trial-banner-top { flex-direction: column; }
+  .trial-cta-btn { width: 100%; }
+}
+
 </style>
 </head>
 <body>
@@ -1699,10 +2181,38 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
       <!-- SUPPLIER LIST PANEL -->
       <div class="sub-panel" id="sub-panel-list">
-        <div class="list-hero">
-          <div class="list-hero-icon">🏭</div>
+
+        <!-- FREE 30-DAY TRIAL BANNER -->
+        <div class="trial-banner">
+          <div class="trial-banner-top">
+            <div class="trial-banner-left">
+              <div class="trial-pill"><i class="fa-solid fa-gift"></i> Limited Time</div>
+              <div class="trial-title">30 Days <span>Free</span><br>Supplier Listing</div>
+              <div class="trial-desc">Get listed, verified and in front of 4,000+ architects and specifiers across the UAE — completely free for 30 days. No credit card required.</div>
+            </div>
+            <button class="trial-cta-btn" onclick="closeSubModal();openSupApply()">
+              <i class="fa-solid fa-rocket" style="margin-right:8px"></i>Start Free Trial
+            </button>
+          </div>
+          <div class="trial-checklist">
+            <div class="trial-check"><i class="fa-solid fa-check"></i> Full verified listing</div>
+            <div class="trial-check"><i class="fa-solid fa-check"></i> ✓ Verified badge (after doc review)</div>
+            <div class="trial-check"><i class="fa-solid fa-check"></i> Quote requests routed to you</div>
+            <div class="trial-check"><i class="fa-solid fa-check"></i> Contact details publicly visible</div>
+            <div class="trial-check"><i class="fa-solid fa-check"></i> Projects &amp; portfolio showcase</div>
+            <div class="trial-check"><i class="fa-solid fa-check"></i> No credit card required</div>
+          </div>
+        </div>
+
+        <!-- paid plans header -->
+        <div style="margin-bottom:16px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">After Trial — Continue With</div>
+        </div>
+
+        <div class="list-hero" style="margin-bottom:28px;padding:20px 24px">
+          <div class="list-hero-icon" style="font-size:32px">🏭</div>
           <div>
-            <div class="list-hero-title">Reach Specifiers Across the UAE</div>
+            <div class="list-hero-title" style="font-size:24px">Reach Specifiers Across the UAE</div>
             <div class="list-hero-desc">CladWise UAE is the go-to platform for architects, developers and procurement teams comparing facade materials. Get your company in front of the right decision-makers.</div>
           </div>
         </div>
@@ -3792,5 +4302,497 @@ function downloadSpecReport() {
 }
 
 </script>
+
+<!-- ══════════════ SUPPLIER TRIAL APPLICATION MODAL ══════════════════ -->
+<div id="sup-apply-overlay" onclick="supApplyOutsideClick(event)">
+  <div class="sup-apply-modal" id="sup-apply-modal">
+
+    <!-- Header -->
+    <div class="sap-header">
+      <div class="sap-header-left">
+        <div class="sap-badge"><i class="fa-solid fa-star"></i> Free 30-Day Trial</div>
+        <div class="sap-title">Supplier Application</div>
+        <div class="sap-subtitle">Complete all sections to activate your free listing &amp; verification</div>
+      </div>
+      <button class="sap-close" onclick="closeSupApply()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Step indicator -->
+    <div class="sap-steps" id="sap-steps">
+      <div class="sap-step active" id="sap-step-1">
+        <div class="sap-step-num">1</div>
+        <div class="sap-step-label">Company</div>
+      </div>
+      <div class="sap-step-sep"></div>
+      <div class="sap-step" id="sap-step-2">
+        <div class="sap-step-num">2</div>
+        <div class="sap-step-label">Contact</div>
+      </div>
+      <div class="sap-step-sep"></div>
+      <div class="sap-step" id="sap-step-3">
+        <div class="sap-step-num">3</div>
+        <div class="sap-step-label">Materials</div>
+      </div>
+      <div class="sap-step-sep"></div>
+      <div class="sap-step" id="sap-step-4">
+        <div class="sap-step-num">4</div>
+        <div class="sap-step-label">Docs</div>
+      </div>
+      <div class="sap-step-sep"></div>
+      <div class="sap-step" id="sap-step-5">
+        <div class="sap-step-num">5</div>
+        <div class="sap-step-label">Projects</div>
+      </div>
+    </div>
+
+    <!-- Form body -->
+    <div class="sap-body" id="sap-form-body">
+
+      <!-- ── STEP 1: Company Details ── -->
+      <div class="sap-section active" id="sap-sec-1">
+        <div class="sap-section-title">Company Details</div>
+        <div class="sap-section-desc">This information appears on your public directory listing.</div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Company Name <span class="req">*</span></label>
+            <input type="text" id="sap-company-name" placeholder="e.g. ABM Group of Companies">
+          </div>
+          <div class="sap-field">
+            <label>Trade / Brand Name</label>
+            <input type="text" id="sap-trade-name" placeholder="If different from above">
+          </div>
+        </div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Trade License Number <span class="req">*</span></label>
+            <input type="text" id="sap-license-num" placeholder="e.g. CN-1234567">
+          </div>
+          <div class="sap-field">
+            <label>Licensing Emirate <span class="req">*</span></label>
+            <select id="sap-license-emirate">
+              <option value="">— Select —</option>
+              <option>Dubai</option>
+              <option>Abu Dhabi</option>
+              <option>Sharjah</option>
+              <option>Ajman</option>
+              <option>Ras Al Khaimah</option>
+              <option>Fujairah</option>
+              <option>Umm Al Quwain</option>
+              <option>Free Zone</option>
+            </select>
+          </div>
+        </div>
+        <div class="sap-grid cols-3">
+          <div class="sap-field">
+            <label>Year Established <span class="req">*</span></label>
+            <input type="number" id="sap-est-year" placeholder="e.g. 2012" min="1980" max="2025">
+          </div>
+          <div class="sap-field">
+            <label>Annual Turnover (AED)</label>
+            <select id="sap-turnover">
+              <option value="">— Select range —</option>
+              <option>Under AED 1M</option>
+              <option>AED 1M – 5M</option>
+              <option>AED 5M – 15M</option>
+              <option>AED 15M – 50M</option>
+              <option>AED 50M – 150M</option>
+              <option>AED 150M+</option>
+            </select>
+          </div>
+          <div class="sap-field">
+            <label>No. of Employees</label>
+            <select id="sap-employees">
+              <option value="">— Select —</option>
+              <option>1 – 10</option>
+              <option>11 – 50</option>
+              <option>51 – 200</option>
+              <option>200+</option>
+            </select>
+          </div>
+        </div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Company Website</label>
+            <input type="url" id="sap-website" placeholder="https://yourcompany.ae">
+          </div>
+          <div class="sap-field">
+            <label>LinkedIn / Social</label>
+            <input type="url" id="sap-social" placeholder="https://linkedin.com/company/...">
+          </div>
+        </div>
+        <div class="sap-grid cols-1">
+          <div class="sap-field">
+            <label>One-Line Company Tagline <span class="req">*</span></label>
+            <input type="text" id="sap-tagline" placeholder="e.g. Leading GFRC & GFRP facade manufacturer — Sharjah, est. 2013" maxlength="90">
+            <div class="hint">Shown on your directory card. Max 90 characters.</div>
+          </div>
+        </div>
+        <div class="sap-grid cols-1">
+          <div class="sap-field">
+            <label>Company Description <span class="req">*</span></label>
+            <textarea id="sap-about" placeholder="Briefly describe your company, specialisation, key markets and what sets you apart in the UAE facade industry..." rows="4"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Contact Person ── -->
+      <div class="sap-section" id="sap-sec-2">
+        <div class="sap-section-title">Contact Person</div>
+        <div class="sap-section-desc">The primary contact for your listing. Not publicly shown — used for verification and enquiries.</div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" id="sap-contact-name" placeholder="e.g. Mohammed Al Rashid">
+          </div>
+          <div class="sap-field">
+            <label>Job Title <span class="req">*</span></label>
+            <input type="text" id="sap-contact-title" placeholder="e.g. Sales Director">
+          </div>
+        </div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Mobile / WhatsApp <span class="req">*</span></label>
+            <input type="tel" id="sap-contact-phone" placeholder="+971 50 000 0000">
+          </div>
+          <div class="sap-field">
+            <label>Business Email <span class="req">*</span></label>
+            <input type="email" id="sap-contact-email" placeholder="name@yourcompany.ae">
+          </div>
+        </div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Public Phone (shown on listing) <span class="req">*</span></label>
+            <input type="tel" id="sap-public-phone" placeholder="+971 6 531 0000">
+          </div>
+          <div class="sap-field">
+            <label>Public Email (shown on listing) <span class="req">*</span></label>
+            <input type="email" id="sap-public-email" placeholder="info@yourcompany.ae">
+          </div>
+        </div>
+        <div class="sap-grid cols-1">
+          <div class="sap-field">
+            <label>Office / Factory Address <span class="req">*</span></label>
+            <input type="text" id="sap-address" placeholder="e.g. Sajja Industrial Area, Sharjah, UAE">
+          </div>
+        </div>
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Preferred Contact Method</label>
+            <select id="sap-pref-contact">
+              <option>WhatsApp</option>
+              <option>Email</option>
+              <option>Phone Call</option>
+            </select>
+          </div>
+          <div class="sap-field">
+            <label>Best Time to Contact</label>
+            <select id="sap-contact-time">
+              <option>Morning (8am – 12pm)</option>
+              <option>Afternoon (12pm – 5pm)</option>
+              <option>Anytime</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Materials & Services ── -->
+      <div class="sap-section" id="sap-sec-3">
+        <div class="sap-section-title">Materials &amp; Services</div>
+        <div class="sap-section-desc">Select all that apply — this determines your search visibility in the directory.</div>
+
+        <div class="sap-field" style="margin-bottom:10px">
+          <label>Cladding Materials Supplied <span class="req">*</span></label>
+        </div>
+        <div class="check-grid" id="mat-checks">
+          <div class="check-item" onclick="toggleCheck(this,'mat-gfrc')">
+            <input type="checkbox" id="mat-gfrc">
+            <div class="check-dot">✓</div>
+            GFRC
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'mat-gfrp')">
+            <input type="checkbox" id="mat-gfrp">
+            <div class="check-dot">✓</div>
+            GFRP
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'mat-alum')">
+            <input type="checkbox" id="mat-alum">
+            <div class="check-dot">✓</div>
+            Aluminum
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'mat-stone')">
+            <input type="checkbox" id="mat-stone">
+            <div class="check-dot">✓</div>
+            Stone
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'mat-acm')">
+            <input type="checkbox" id="mat-acm">
+            <div class="check-dot">✓</div>
+            ACM-FR
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'mat-fc')">
+            <input type="checkbox" id="mat-fc">
+            <div class="check-dot">✓</div>
+            Fibre Cement
+          </div>
+        </div>
+
+        <div class="sap-field" style="margin-bottom:10px;margin-top:6px">
+          <label>Services Offered <span class="req">*</span></label>
+        </div>
+        <div class="check-grid" id="svc-checks">
+          <div class="check-item" onclick="toggleCheck(this,'svc-mfg')">
+            <input type="checkbox" id="svc-mfg">
+            <div class="check-dot">✓</div>
+            Manufacturing
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'svc-supply')">
+            <input type="checkbox" id="svc-supply">
+            <div class="check-dot">✓</div>
+            Supply Only
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'svc-install')">
+            <input type="checkbox" id="svc-install">
+            <div class="check-dot">✓</div>
+            Installation
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'svc-design')">
+            <input type="checkbox" id="svc-design">
+            <div class="check-dot">✓</div>
+            Design &amp; Eng.
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'svc-consult')">
+            <input type="checkbox" id="svc-consult">
+            <div class="check-dot">✓</div>
+            Consultancy
+          </div>
+          <div class="check-item" onclick="toggleCheck(this,'svc-maintain')">
+            <input type="checkbox" id="svc-maintain">
+            <div class="check-dot">✓</div>
+            Maintenance
+          </div>
+        </div>
+
+        <div class="sap-field" style="margin-bottom:10px;margin-top:6px">
+          <label>Emirates / Markets Covered <span class="req">*</span></label>
+        </div>
+        <div class="check-grid" id="emr-checks">
+          <div class="check-item" onclick="toggleCheck(this,'emr-dxb')"><input type="checkbox" id="emr-dxb"><div class="check-dot">✓</div>Dubai</div>
+          <div class="check-item" onclick="toggleCheck(this,'emr-auh')"><input type="checkbox" id="emr-auh"><div class="check-dot">✓</div>Abu Dhabi</div>
+          <div class="check-item" onclick="toggleCheck(this,'emr-shj')"><input type="checkbox" id="emr-shj"><div class="check-dot">✓</div>Sharjah</div>
+          <div class="check-item" onclick="toggleCheck(this,'emr-ajm')"><input type="checkbox" id="emr-ajm"><div class="check-dot">✓</div>Ajman</div>
+          <div class="check-item" onclick="toggleCheck(this,'emr-rak')"><input type="checkbox" id="emr-rak"><div class="check-dot">✓</div>RAK</div>
+          <div class="check-item" onclick="toggleCheck(this,'emr-all')"><input type="checkbox" id="emr-all"><div class="check-dot">✓</div>All UAE</div>
+        </div>
+
+        <div class="sap-grid" style="margin-top:6px">
+          <div class="sap-field">
+            <label>Typical Project Value (AED)</label>
+            <select id="sap-proj-value">
+              <option value="">— Select —</option>
+              <option>Under AED 200K</option>
+              <option>AED 200K – 1M</option>
+              <option>AED 1M – 5M</option>
+              <option>AED 5M – 20M</option>
+              <option>AED 20M+</option>
+            </select>
+          </div>
+          <div class="sap-field">
+            <label>Lead Time (weeks from order)</label>
+            <select id="sap-lead-time">
+              <option value="">— Select —</option>
+              <option>1 – 2 weeks</option>
+              <option>2 – 4 weeks</option>
+              <option>4 – 8 weeks</option>
+              <option>8 – 16 weeks</option>
+              <option>16+ weeks</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Verification Documents ── -->
+      <div class="sap-section" id="sap-sec-4">
+        <div class="sap-section-title">Verification Documents</div>
+        <div class="sap-section-desc">Required to receive the <strong style="color:var(--accent)">✓ Verified</strong> badge. All documents are reviewed privately and never published.</div>
+
+        <div class="sap-grid cols-1" style="margin-bottom:14px">
+          <div class="sap-field">
+            <label>Trade License (PDF) <span class="req">*</span></label>
+            <div class="sap-upload" id="up-license">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="sapFileChange(this,'up-license-name')">
+              <div><i class="fa-solid fa-id-card" style="color:var(--accent);font-size:18px;margin-bottom:6px"></i></div>
+              <div class="sap-upload-label">Drop or <span>click to upload</span> trade license</div>
+              <div class="sap-upload-label" style="margin-top:2px">PDF · JPG · PNG</div>
+              <div class="sap-upload-name" id="up-license-name"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>Civil Defense Approval / DCD Certificate</label>
+            <div class="sap-upload" id="up-dcd">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="sapFileChange(this,'up-dcd-name')">
+              <i class="fa-solid fa-fire-flame-curved" style="color:var(--amber);font-size:16px;margin-bottom:4px"></i>
+              <div class="sap-upload-label">DCD / ADCD cert <span>(if held)</span></div>
+              <div class="sap-upload-name" id="up-dcd-name"></div>
+            </div>
+          </div>
+          <div class="sap-field">
+            <label>ECAS / MoIAT Product Certificate</label>
+            <div class="sap-upload" id="up-ecas">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="sapFileChange(this,'up-ecas-name')">
+              <i class="fa-solid fa-certificate" style="color:var(--accent);font-size:16px;margin-bottom:4px"></i>
+              <div class="sap-upload-label">ECAS / conformity cert <span>(if held)</span></div>
+              <div class="sap-upload-name" id="up-ecas-name"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sap-grid">
+          <div class="sap-field">
+            <label>ISO / Quality Certificate</label>
+            <div class="sap-upload" id="up-iso">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="sapFileChange(this,'up-iso-name')">
+              <i class="fa-solid fa-shield-halved" style="color:var(--accent);font-size:16px;margin-bottom:4px"></i>
+              <div class="sap-upload-label">ISO 9001 · 14001 · 45001 <span>(if held)</span></div>
+              <div class="sap-upload-name" id="up-iso-name"></div>
+            </div>
+          </div>
+          <div class="sap-field">
+            <label>Product Test Report (EN / ASTM / BS)</label>
+            <div class="sap-upload" id="up-test">
+              <input type="file" accept=".pdf" onchange="sapFileChange(this,'up-test-name')">
+              <i class="fa-solid fa-flask" style="color:var(--accent);font-size:16px;margin-bottom:4px"></i>
+              <div class="sap-upload-label">Lab test report <span>(optional)</span></div>
+              <div class="sap-upload-name" id="up-test-name"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sap-grid cols-1" style="margin-top:6px">
+          <div class="sap-field">
+            <label>Certifications &amp; Standards Held</label>
+            <div class="check-grid" id="cert-checks">
+              <div class="check-item" onclick="toggleCheck(this,'cert-iso9001')"><input type="checkbox" id="cert-iso9001"><div class="check-dot">✓</div>ISO 9001</div>
+              <div class="check-item" onclick="toggleCheck(this,'cert-iso14001')"><input type="checkbox" id="cert-iso14001"><div class="check-dot">✓</div>ISO 14001</div>
+              <div class="check-item" onclick="toggleCheck(this,'cert-dcd')"><input type="checkbox" id="cert-dcd"><div class="check-dot">✓</div>DCD Approved</div>
+              <div class="check-item" onclick="toggleCheck(this,'cert-ecas')"><input type="checkbox" id="cert-ecas"><div class="check-dot">✓</div>ECAS Certified</div>
+              <div class="check-item" onclick="toggleCheck(this,'cert-estidama')"><input type="checkbox" id="cert-estidama"><div class="check-dot">✓</div>Estidama Pearl</div>
+              <div class="check-item" onclick="toggleCheck(this,'cert-leed')"><input type="checkbox" id="cert-leed"><div class="check-dot">✓</div>LEED Listed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 5: Projects & Portfolio ── -->
+      <div class="sap-section" id="sap-sec-5">
+        <div class="sap-section-title">Notable Projects</div>
+        <div class="sap-section-desc">Add up to 3 completed UAE projects. These appear on your directory profile and strengthen your verification.</div>
+
+        <div class="project-row">
+          <div class="project-row-title">Project 1 <span style="color:var(--accent)">*</span></div>
+          <div class="sap-grid">
+            <div class="sap-field">
+              <label>Project Name</label>
+              <input type="text" id="proj1-name" placeholder="e.g. Marsa Al Arab Hotel">
+            </div>
+            <div class="sap-field">
+              <label>Location / Client</label>
+              <input type="text" id="proj1-loc" placeholder="e.g. Dubai, Meraas">
+            </div>
+          </div>
+          <div class="sap-grid cols-3">
+            <div class="sap-field">
+              <label>Year Completed</label>
+              <input type="number" id="proj1-year" placeholder="2023" min="2000" max="2025">
+            </div>
+            <div class="sap-field">
+              <label>Material Used</label>
+              <select id="proj1-mat">
+                <option value="">— Select —</option>
+                <option>GFRC</option><option>GFRP</option><option>Aluminum</option>
+                <option>Stone</option><option>ACM-FR</option><option>Fibre Cement</option><option>Mixed</option>
+              </select>
+            </div>
+            <div class="sap-field">
+              <label>Approx. Area (m²)</label>
+              <input type="number" id="proj1-area" placeholder="e.g. 4500">
+            </div>
+          </div>
+        </div>
+
+        <div class="project-row">
+          <div class="project-row-title">Project 2</div>
+          <div class="sap-grid">
+            <div class="sap-field"><label>Project Name</label><input type="text" id="proj2-name" placeholder="Optional"></div>
+            <div class="sap-field"><label>Location / Client</label><input type="text" id="proj2-loc" placeholder="Optional"></div>
+          </div>
+          <div class="sap-grid cols-3">
+            <div class="sap-field"><label>Year</label><input type="number" id="proj2-year" placeholder="2022" min="2000" max="2025"></div>
+            <div class="sap-field"><label>Material</label><select id="proj2-mat"><option value="">—</option><option>GFRC</option><option>GFRP</option><option>Aluminum</option><option>Stone</option><option>ACM-FR</option><option>Fibre Cement</option><option>Mixed</option></select></div>
+            <div class="sap-field"><label>Area (m²)</label><input type="number" id="proj2-area" placeholder="e.g. 2200"></div>
+          </div>
+        </div>
+
+        <div class="project-row">
+          <div class="project-row-title">Project 3</div>
+          <div class="sap-grid">
+            <div class="sap-field"><label>Project Name</label><input type="text" id="proj3-name" placeholder="Optional"></div>
+            <div class="sap-field"><label>Location / Client</label><input type="text" id="proj3-loc" placeholder="Optional"></div>
+          </div>
+          <div class="sap-grid cols-3">
+            <div class="sap-field"><label>Year</label><input type="number" id="proj3-year" placeholder="2021" min="2000" max="2025"></div>
+            <div class="sap-field"><label>Material</label><select id="proj3-mat"><option value="">—</option><option>GFRC</option><option>GFRP</option><option>Aluminum</option><option>Stone</option><option>ACM-FR</option><option>Fibre Cement</option><option>Mixed</option></select></div>
+            <div class="sap-field"><label>Area (m²)</label><input type="number" id="proj3-area" placeholder="e.g. 1800"></div>
+          </div>
+        </div>
+
+        <div class="sap-grid cols-1" style="margin-top:8px">
+          <div class="sap-field">
+            <label>Anything else you'd like specifiers to know?</label>
+            <textarea id="sap-extra" placeholder="Unique capabilities, awards, partnerships, MOQ, export markets..." rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div style="margin-top:16px;padding:14px;background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.12);border-radius:4px">
+          <div class="check-item" onclick="toggleCheck(this,'sap-terms')" style="border:none;background:none;padding:0">
+            <input type="checkbox" id="sap-terms">
+            <div class="check-dot" style="flex-shrink:0">✓</div>
+            <span style="font-size:11px;color:var(--muted);line-height:1.5">I confirm the information provided is accurate. I understand the free 30-day trial will be reviewed by the CladWise UAE team and the verified badge is subject to document approval. After 30 days, continued listing requires a paid plan.</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sap-body -->
+
+    <!-- Success screen (hidden until submit) -->
+    <div class="sap-success" id="sap-success">
+      <div class="sap-success-icon">🎉</div>
+      <div class="sap-trial-days">
+        <div class="sap-trial-num">30</div>
+        <div class="sap-trial-label">Day Free Trial Activated</div>
+      </div>
+      <div class="sap-success-title">Application Received!</div>
+      <div class="sap-success-msg">Your supplier profile is under review. Our team will verify your documents within <strong>2 business days</strong> and email confirmation to <strong id="sap-confirm-email"></strong>.<br><br>Once approved, your listing goes live with the <span style="color:var(--accent)">✓ Verified</span> badge — visible to 4,000+ specifiers, architects and developers across the UAE.</div>
+      <button class="trial-cta-btn" onclick="closeSupApply()" style="margin:0 auto">Close</button>
+    </div>
+
+    <!-- Footer nav -->
+    <div class="sap-footer" id="sap-footer">
+      <div>
+        <div class="sap-progress" id="sap-prog-label">Step 1 of 5</div>
+        <div class="sap-progress-bar"><div class="sap-progress-fill" id="sap-prog-fill" style="width:20%"></div></div>
+      </div>
+      <div class="sap-nav">
+        <button class="sap-btn-back" id="sap-back-btn" onclick="sapBack()" style="display:none">← Back</button>
+        <button class="sap-btn-next" id="sap-next-btn" onclick="sapNext()">Next →</button>
+      </div>
+    </div>
+
+  </div><!-- /sup-apply-modal -->
+</div>
+
 </body>
 </html>
