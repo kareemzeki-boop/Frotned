@@ -35,12 +35,12 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
 /* ── FLOATING PILL NAV ───────────────────────────────────────────────── */
 nav {
   position: fixed;
-  top: 16px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
-  width: calc(100% - 48px);
-  max-width: 900px;
+  width: calc(100% - 32px);
+  max-width: 960px;
   background: transparent;
   border: none;
   pointer-events: none;
@@ -49,16 +49,16 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(14,24,16,0.90);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(10,18,12,0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   border-radius: 100px;
-  padding: 5px 5px 5px 8px;
-  height: 54px;
+  padding: 5px 6px 5px 6px;
+  height: 52px;
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.6),
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    0 0 0 1px rgba(0,229,160,0.12);
+    0 8px 40px rgba(0,0,0,0.7),
+    0 1px 0 rgba(255,255,255,0.07) inset,
+    0 0 0 1px rgba(0,229,160,0.14);
   pointer-events: all;
   position: relative;
 }
@@ -893,14 +893,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* ── TABLET (768px – 1023px) ─────────────────────────────────────────────── */
 @media (max-width: 1023px) {
-  /* NAV – pill collapses on tablet */
-  nav { width: calc(100% - 32px); top: 12px; }
-  .nav-links { display: none !important; }
-  .nav-ham   { display: flex; }
-  #nav-logged-out .nav-cta { display: none; }
-  #nav-logged-in .nav-user-info,
-  #nav-logged-in .nav-logout { display: none; }
-  .nav-pill { padding: 5px 5px 5px 8px; height: 48px; }
+  /* NAV – shrink links on tablet but keep them visible */
+  nav { width: calc(100% - 24px); top: 12px; }
+  .nav-links a { font-size: 10.5px; padding: 5px 10px; letter-spacing: 0.4px; }
+  .nav-ham   { display: none; }
+  #nav-logged-out .nav-cta { font-size: 10.5px; padding: 8px 14px; }
+  #nav-logged-in .nav-user-info { display: none; }
+  .nav-pill { padding: 4px 5px; height: 48px; }
 
   /* HERO */
   h1 { font-size: 64px; }
@@ -947,10 +946,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* ── PHONE (< 768px) ─────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
-  /* NAV – pill on phone */
-  nav { width: calc(100% - 24px); top: 10px; }
-  .nav-pill { height: 46px; padding: 4px 4px 4px 6px; }
-  .logo-text { font-size: 18px; letter-spacing: 1px; }
+  /* NAV – pill on phone: hide links, show hamburger */
+  nav { width: calc(100% - 20px); top: 10px; }
+  .nav-pill { height: 48px; padding: 4px 5px; }
+  .nav-links { display: none !important; }
+  .nav-ham   { display: flex !important; }
+  #nav-logged-out .nav-cta { display: none; }
+  .logo-text { font-size: 17px; letter-spacing: 1px; }
   .logo-sub  { display: none; }
   .logo-icon { width: 34px; height: 34px; font-size: 14px; }
   .mob-drawer { top: 68px; }
@@ -1187,12 +1189,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
       <p class="hero-desc">The UAE's toughest facades start with the right material call. CladWise is the only platform that puts <strong>6 cladding systems</strong>, UAE fire codes, Estidama compliance, thermal performance, and live AED market pricing in one place — so you specify faster, smarter, and with confidence.</p>
 
-      <div class="hero-tags">
-        <span class="hero-tag"><i class="fa-solid fa-fire-flame-curved"></i> Dubai Civil Defence</span>
-        <span class="hero-tag"><i class="fa-solid fa-leaf"></i> Estidama Pearl</span>
-        <span class="hero-tag"><i class="fa-solid fa-temperature-high"></i> Extreme Heat</span>
-        <span class="hero-tag"><i class="fa-solid fa-bolt"></i> AI Recommendations</span>
-      </div>
 
       <div class="hero-btns" style="opacity:0;animation:fadeUp 0.6s 0.65s ease forwards">
         <a href="#wizard" class="btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp; Run Advisor Wizard</a>
