@@ -1838,7 +1838,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <span class="sup-list-cta-icon">🏭</span>
         <div class="sup-list-cta-text">
           <div class="sup-list-cta-label">List Your Company</div>
-          <div class="sup-list-cta-sub">Claim a Founding Supplier slot — free listing</div>
+          <div class="sup-list-cta-sub">Claim your free supplier listing</div>
         </div>
         <i class="fa-solid fa-arrow-right" style="color:var(--amber);font-size:12px"></i>
       </button>
@@ -2262,7 +2262,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
         <!-- paid plans header -->
         <div style="margin-bottom:16px">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Founding Listing is Free — Scale With a Plan</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Free to list. Upgrade when you're ready.</div>
         </div>
 
         <div class="list-hero" style="margin-bottom:28px;padding:20px 24px">
@@ -2273,56 +2273,69 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           </div>
         </div>
         <div class="listing-plans">
-          <!-- STARTER -->
+
+          <!-- STARTER — FREE -->
           <div class="listing-plan">
             <div class="listing-plan-name">Starter</div>
-            <div class="listing-plan-price">AED 599</div>
-            <div class="listing-plan-period">per year · basic presence</div>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
+              <div class="listing-plan-price" style="color:var(--accent)">Free</div>
+            </div>
+            <div class="listing-plan-period">permanent listing · no credit card</div>
             <ul class="listing-perks">
               <li><span class="fi">★</span> Company name, location &amp; contact</li>
+              <li><span class="fi">★</span> Basic company description</li>
               <li><span class="fi">★</span> Up to 3 cladding materials listed</li>
-              <li><span class="fi">★</span> Phone &amp; email visible to subscribers</li>
-              <li><span class="fi">★</span> Searchable in directory</li>
-              <li><span class="fi">★</span> Free founding listing (no time limit)</li>
-              <li style="color:var(--muted)"><span style="color:#555">—</span> Verified badge</li>
-              <li style="color:var(--muted)"><span style="color:#555">—</span> RFQ routing</li>
+              <li><span class="fi">★</span> Searchable in supplier directory</li>
+              <li><span class="fi">★</span> Claim &amp; manage your profile</li>
+              <li style="color:var(--muted)"><span style="color:#444">—</span> Verified badge</li>
+              <li style="color:var(--muted)"><span style="color:#444">—</span> RFQ routing</li>
+              <li style="color:var(--muted)"><span style="color:#444">—</span> Document uploads</li>
             </ul>
-            <button class="btn-plan btn-plan-outline" onclick="closeSubModal();openSupApply()">Claim Free Slot</button>
+            <button class="btn-plan btn-plan-outline" onclick="closeSubModal();openSupApply()">Claim Free Listing</button>
           </div>
-          <!-- FOUNDING SUPPLIER -->
+
+          <!-- VERIFIED SUPPLIER — AED 999 -->
           <div class="listing-plan featured">
-            <div class="plan-badge" style="background:var(--accent);color:#000;font-size:9px">FOUNDING SUPPLIER</div>
-            <div class="listing-plan-name" style="color:var(--accent)">Founding Supplier</div>
-            <div class="listing-plan-price" style="color:var(--text)">AED 1,799</div>
-            <div class="listing-plan-period">per year · rate locked for founding cohort</div>
+            <div class="plan-badge" style="background:var(--accent);color:#000;font-size:9px;letter-spacing:1px">MAIN PLAN</div>
+            <div class="listing-plan-name" style="color:var(--accent)">Verified Supplier</div>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
+              <div class="listing-plan-price" style="color:var(--text)">AED 999</div>
+            </div>
+            <div class="listing-plan-period">per year · incl. verification audit</div>
             <ul class="listing-perks">
               <li><span class="fi">★</span> Everything in Starter</li>
-              <li><span class="fi">★</span> ✓ Verified badge (after doc review)</li>
+              <li><span class="fi">★</span> <span style="color:var(--accent)">✓</span> Verified badge (after doc review)</li>
               <li><span class="fi">★</span> Priority placement in search results</li>
               <li><span class="fi">★</span> Up to 6 materials &amp; services listed</li>
-              <li><span class="fi">★</span> Compliance doc uploads (DCD, ECAS, ISO)</li>
+              <li><span class="fi">★</span> Compliance doc uploads — DCD, ECAS, ISO</li>
               <li><span class="fi">★</span> RFQ enquiries routed directly to you</li>
               <li><span class="fi">★</span> Project portfolio showcase (3 projects)</li>
-              <li><span class="fi">★</span> Listed as Founding Supplier at launch</li>
+              <li style="color:var(--muted)"><span style="color:#444">—</span> Featured placement on material pages</li>
             </ul>
-            <button class="btn-plan btn-plan-primary" onclick="closeSubModal();openSupApply()">Apply as Founding Supplier</button>
+            <button class="btn-plan btn-plan-primary" onclick="closeSubModal();openSupApply()">Get Verified — AED 999</button>
           </div>
-          <!-- FEATURED -->
+
+          <!-- FEATURED — AED 2,499 -->
           <div class="listing-plan">
+            <div class="plan-badge" style="background:var(--amber);color:#000;font-size:9px;letter-spacing:1px">PREMIUM</div>
             <div class="listing-plan-name">Featured</div>
-            <div class="listing-plan-price">AED 3,499</div>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
+              <div class="listing-plan-price">AED 2,499</div>
+            </div>
             <div class="listing-plan-period">per year · top placement guaranteed</div>
             <ul class="listing-perks">
-              <li><span class="fi">★</span> Everything in Founding Supplier</li>
+              <li><span class="fi">★</span> Everything in Verified Supplier</li>
               <li><span class="fi">★</span> Top-of-category placement guaranteed</li>
-              <li><span class="fi">★</span> Featured card on material pages</li>
-              <li><span class="fi">★</span> Unlimited materials &amp; products</li>
-              <li><span class="fi">★</span> Priority verification (48hr turnaround)</li>
+              <li><span class="fi">★</span> Featured card on all material pages</li>
+              <li><span class="fi">★</span> Unlimited materials &amp; products listed</li>
+              <li><span class="fi">★</span> Priority verification — 48hr turnaround</li>
               <li><span class="fi">★</span> Monthly enquiry analytics report</li>
-              <li><span class="fi">★</span> Dedicated account manager</li>
+              <li><span class="fi">★</span> Dedicated account support</li>
+              <li><span class="fi">★</span> Quarterly profile &amp; content refresh</li>
             </ul>
-            <button class="btn-plan btn-plan-outline" onclick="showToast('Featured listing — our team will contact you within 24 hours.');closeSubModal()">Enquire Now</button>
+            <button class="btn-plan btn-plan-outline" onclick="showToast('Featured listing enquiry — our team will contact you within 24 hours.');closeSubModal()">Enquire Now</button>
           </div>
+
         </div>
         <!-- verification process -->
         <div style="margin-top:28px;margin-bottom:8px">
@@ -2396,7 +2409,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
             </details>
             <details class="faq-item">
               <summary class="faq-q">What does the free founding listing include?</summary>
-              <div class="faq-a">The full platform experience, with no time limit on the listing itself. Build your company profile, upload your compliance documents, list your materials and services, and add your notable projects. Your listing goes live and remains active as long as CladWise UAE operates. Founding suppliers who want priority placement, RFQ routing, or additional features can upgrade to a paid plan — but the base listing stays free.</div>
+              <div class="faq-a">The full platform experience, with no time limit on the listing itself. Build your company profile, upload your compliance documents, list your materials and services, and add your notable projects. Your listing goes live and remains active as long as CladWise UAE operates. Suppliers who want verification, priority placement, and RFQ routing can upgrade to Verified Supplier at AED 999/year. The Featured plan at AED 2,499/year adds top-category placement and dedicated support. The base listing stays free permanently.</div>
             </details>
             <details class="faq-item">
               <summary class="faq-q">How long does verification take?</summary>
@@ -2405,7 +2418,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           </div>
         </div>
 
-        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">All prices excl. 5% UAE VAT. Annual billing. Founding Supplier rate locked for founding cohort.</p>
+        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">All prices excl. 5% UAE VAT · Annual billing · Starter listing is permanently free · Verified AED 999/yr · Featured AED 2,499/yr</p>
       </div>
 
     </div>
