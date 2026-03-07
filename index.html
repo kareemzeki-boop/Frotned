@@ -1942,6 +1942,39 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   border-color: rgba(0,229,160,0.25) !important;
 }
 
+
+/* ── MAT CARD 3D TILT (live cards) ───────────────────────────────── */
+.mat-card:not(.mat-card-locked) {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.mat-card:not(.mat-card-locked):hover {
+  box-shadow:
+    0 28px 56px rgba(0,0,0,0.6),
+    0 8px 20px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(0,229,160,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  z-index: 2;
+}
+
+/* ── JIGGLE ANIMATION (locked cards) ─────────────────────────────── */
+@keyframes mat-jiggle {
+  0%   { transform: translateX(0)    rotate(0deg);   }
+  10%  { transform: translateX(-5px) rotate(-1.2deg);}
+  20%  { transform: translateX(5px)  rotate(1.2deg); }
+  30%  { transform: translateX(-4px) rotate(-0.9deg);}
+  40%  { transform: translateX(4px)  rotate(0.9deg); }
+  50%  { transform: translateX(-3px) rotate(-0.5deg);}
+  60%  { transform: translateX(3px)  rotate(0.5deg); }
+  70%  { transform: translateX(-2px) rotate(-0.2deg);}
+  80%  { transform: translateX(2px)  rotate(0.2deg); }
+  90%  { transform: translateX(-1px) rotate(0deg);   }
+  100% { transform: translateX(0)    rotate(0deg);   }
+}
+.mat-card-locked.jiggling {
+  animation: mat-jiggle 0.55s cubic-bezier(0.36,0.07,0.19,0.97);
+}
+
 </style>
 </head>
 <body>
@@ -4896,7 +4929,7 @@ function downloadSpecReport() {
   }
 
   function initTiltCards() {
-    document.querySelectorAll('.plan-card, .listing-plan').forEach(applyTilt);
+    document.querySelectorAll('.plan-card, .listing-plan, .mat-card:not(.mat-card-locked)').forEach(applyTilt);
   }
 
   if (document.readyState === 'loading') {
@@ -4944,6 +4977,22 @@ function csPreReg(name, btn) {
   btn.style.borderColor = 'rgba(0,229,160,0.3)';
   showToast('Pre-registered for ' + name + ' — you\'ll be notified when this category launches.');
 }
+
+
+/* ── JIGGLE FOR LOCKED MATERIAL CARDS ───────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('materials-grid').addEventListener('click', function(e) {
+    var locked = e.target.closest('.mat-card-locked');
+    if (!locked) return;
+    // Don't jiggle if they clicked the pre-register button itself
+    if (e.target.closest('.mat-card-cs-btn')) return;
+    if (locked.classList.contains('jiggling')) return;
+    locked.classList.add('jiggling');
+    locked.addEventListener('animationend', function() {
+      locked.classList.remove('jiggling');
+    }, { once: true });
+  });
+});
 
 </script>
 
