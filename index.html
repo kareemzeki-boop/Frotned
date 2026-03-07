@@ -240,31 +240,315 @@ section{padding:100px 0}
 
 /* EXPLORE */
 #explore{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.07)}
-.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:40px;background:rgba(0,229,160,0.06)}
-.mat-card{background:var(--card);border-radius:0;overflow:hidden;cursor:pointer;transition:all 0.3s;border:none;position:relative}
-.mat-card:hover{transform:translateY(-4px);border-color:rgba(0,229,160,0.3);box-shadow:0 20px 60px rgba(0,229,160,0.06)}
-.mat-card-img{height:260px;position:relative;overflow:hidden;background:#0b110d}
-.mat-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
-.mat-card:hover .mat-card-img img{transform:scale(1.05)}
-.mat-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%)}
-.mat-card-img-score{position:absolute;top:12px;right:12px;background:rgba(9,15,11,0.8);border:1px solid rgba(0,229,160,0.3);backdrop-filter:blur(8px);border-radius:4px;padding:6px 12px;font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1}
-.mat-card-img-label{position:absolute;bottom:12px;left:12px;font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.5);text-transform:uppercase}
-.mat-card-thumbs{display:flex;gap:4px;padding:8px 8px 0}
-.mat-thumb{flex:1;height:48px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s}
-.mat-thumb:hover{border-color:var(--accent)}
-.mat-thumb.active{border-color:var(--accent)}
-.mat-thumb img{width:100%;height:100%;object-fit:cover}
-.mat-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--bg3)}
-.mat-card-body{padding:20px 18px 22px}
-.mat-card-name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:0.5px;margin-bottom:2px;text-transform:uppercase}
-.mat-card-tagline{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:14px;letter-spacing:1px}
-.mat-card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
-.tag{background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:2px;padding:2px 8px;font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
-.mat-card-scores{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.score-item{text-align:center}
-.score-bar-wrap{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-bottom:3px}
-.score-bar{height:3px;border-radius:2px;background:var(--accent);transition:width 0.5s ease}
-.score-label{font-size:10px;color:var(--muted);letter-spacing:0.5px}
+/* ── MATERIALS GRID — ARCHIVE FILE LAYOUT ──────────────────────────── */
+.materials-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  margin-top:40px;
+  border:1px solid rgba(0,229,160,0.12);
+}
+
+/* ── ARCHIVE CARD BASE ─────────────────────────────────────────────── */
+.mat-card{
+  background:var(--card);
+  border-right:1px solid rgba(0,229,160,0.08);
+  border-bottom:1px solid rgba(0,229,160,0.08);
+  cursor:pointer;
+  transition:background 0.2s;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+.mat-card:hover{ background:#0e1a0f; }
+
+/* folder-tab ear at top-left */
+.mat-card::before{
+  content:'';
+  position:absolute;
+  top:-1px; left:0;
+  width:56px; height:4px;
+  background:rgba(0,229,160,0.18);
+  transition:background 0.2s;
+}
+.mat-card:hover::before{ background:var(--accent); }
+
+/* ── ARCHIVE HEADER ROW ────────────────────────────────────────────── */
+.mat-card-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  gap:12px;
+}
+.mat-card-ref{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  color:rgba(0,229,160,0.5);
+  text-transform:uppercase;
+  line-height:1;
+  margin-bottom:6px;
+}
+.mat-card-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  line-height:1;
+  color:var(--text);
+}
+.mat-card-full{
+  font-size:10px;
+  color:var(--muted);
+  font-family:'DM Mono',monospace;
+  margin-top:4px;
+  letter-spacing:0.5px;
+  line-height:1.4;
+}
+.mat-card-score-box{
+  flex-shrink:0;
+  border:1px solid rgba(0,229,160,0.2);
+  padding:8px 14px;
+  text-align:center;
+  background:rgba(0,229,160,0.04);
+}
+.mat-card-score-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:36px;
+  font-weight:900;
+  color:var(--accent);
+  line-height:1;
+  display:block;
+}
+.mat-card-score-lbl{
+  font-family:'DM Mono',monospace;
+  font-size:7px;
+  letter-spacing:2px;
+  color:rgba(0,229,160,0.5);
+  text-transform:uppercase;
+  display:block;
+  margin-top:2px;
+}
+
+/* ── ARCHIVE IMAGE STRIP ───────────────────────────────────────────── */
+.mat-card-img{
+  height:180px;
+  position:relative;
+  overflow:hidden;
+  background:#0b110d;
+  border-top:1px solid rgba(255,255,255,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.mat-card-img img{
+  width:100%;height:100%;
+  object-fit:cover;
+  transition:transform 0.5s ease;
+  filter:contrast(0.9) brightness(0.85);
+}
+.mat-card:hover .mat-card-img img{ transform:scale(1.04); filter:contrast(1) brightness(0.95); }
+
+/* scan-line texture overlay */
+.mat-card-img::after{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.08) 3px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events:none;
+}
+.mat-card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 55%);
+}
+.mat-card-img-label{
+  position:absolute;
+  bottom:10px;left:12px;
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  letter-spacing:3px;
+  color:rgba(255,255,255,0.35);
+  text-transform:uppercase;
+}
+
+/* ── ARCHIVE BODY ──────────────────────────────────────────────────── */
+.mat-card-body{ padding:16px 20px 20px; flex:1; }
+.mat-card-tagline{
+  font-size:10px;
+  color:rgba(200,220,205,0.35);
+  font-family:'DM Mono',monospace;
+  margin-bottom:14px;
+  letter-spacing:0.5px;
+  line-height:1.5;
+}
+.mat-card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.tag{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:2px 7px;
+  font-size:8px;
+  color:rgba(200,220,205,0.3);
+  font-family:'DM Mono',monospace;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* ── ARCHIVE DATA ROWS (scores) ────────────────────────────────────── */
+.mat-card-scores{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.score-item{ display:flex; align-items:center; gap:8px; }
+.score-item-lbl{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  letter-spacing:2px;
+  color:rgba(200,220,205,0.3);
+  text-transform:uppercase;
+  width:44px;
+  flex-shrink:0;
+}
+.score-bar-wrap{
+  flex:1;
+  height:2px;
+  background:rgba(255,255,255,0.05);
+}
+.score-bar{
+  height:2px;
+  background:var(--accent);
+  transition:width 0.6s ease;
+  opacity:0.7;
+}
+.score-val{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  color:rgba(0,229,160,0.5);
+  width:26px;
+  text-align:right;
+  flex-shrink:0;
+}
+
+/* ── ARCHIVE FOOTER STRIP ─────────────────────────────────────────── */
+.mat-card-footer{
+  padding:9px 20px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(0,0,0,0.15);
+}
+.mat-card-footer-id{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  letter-spacing:2px;
+  color:rgba(200,220,205,0.2);
+  text-transform:uppercase;
+}
+.mat-card-footer-arrow{
+  font-size:10px;
+  color:rgba(0,229,160,0.3);
+  transition:color 0.2s, transform 0.2s;
+}
+.mat-card:hover .mat-card-footer-arrow{
+  color:var(--accent);
+  transform:translateX(3px);
+}
+
+/* ── THUMBNAIL ROW ─────────────────────────────────────────────────── */
+.mat-thumb{
+  flex:1;height:36px;overflow:hidden;cursor:pointer;
+  border:1px solid transparent;
+  transition:all 0.2s;
+  border-bottom:2px solid transparent;
+}
+.mat-thumb:hover{ border-bottom-color:rgba(0,229,160,0.4); }
+.mat-thumb.active{ border-bottom-color:var(--accent); }
+.mat-thumb img{width:100%;height:100%;object-fit:cover;filter:brightness(0.7)}
+.mat-thumb:hover img,.mat-thumb.active img{ filter:brightness(0.9); }
+.mat-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--bg3)}
+
+/* ── COMING SOON LOCKED CARD ───────────────────────────────────────── */
+.mat-card-locked{
+  cursor:default !important;
+  pointer-events:auto;
+}
+.mat-card-locked::before{ background:rgba(255,255,255,0.04) !important; }
+.mat-card-locked:hover{ background:var(--card) !important; }
+.mat-card-locked:hover .mat-card-img img{ transform:none !important; }
+.mat-card-locked .mat-card-header,
+.mat-card-locked .mat-card-body,
+.mat-card-locked .mat-card-img{
+  filter:grayscale(1);
+  opacity:0.22;
+}
+.mat-card-cs-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  z-index:2;
+  background:rgba(11,17,13,0.45);
+  backdrop-filter:blur(1.5px);
+}
+.mat-card-cs-badge{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#0b110d;
+  background:rgba(200,200,190,0.75);
+  padding:4px 12px;
+  border-radius:2px;
+}
+.mat-card-cs-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;
+  font-weight:900;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.45);
+  text-align:center;
+  padding:0 24px;
+  line-height:1.1;
+}
+.mat-card-cs-desc{
+  font-size:10px;
+  color:rgba(200,220,205,0.3);
+  text-align:center;
+  max-width:180px;
+  line-height:1.6;
+  font-family:'DM Mono',monospace;
+  letter-spacing:0.3px;
+}
+.mat-card-cs-btn{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(0,229,160,0.7);
+  background:rgba(0,229,160,0.06);
+  border:1px solid rgba(0,229,160,0.18);
+  padding:6px 14px;
+  cursor:pointer;
+  transition:all 0.15s;
+  pointer-events:auto;
+}
+.mat-card-cs-btn:hover{
+  background:rgba(0,229,160,0.12);
+  color:var(--accent);
+  border-color:rgba(0,229,160,0.35);
+}
 
 /* MODAL GALLERY TAB */
 .gallery-hero{position:relative;border-radius:16px;overflow:hidden;height:320px;margin-bottom:20px;background:var(--bg3);cursor:zoom-in}
@@ -3402,46 +3686,115 @@ function showToast(msg) {
 const cardHeroImg = {}; // track active hero per card
 
 function buildMaterialCards() {
+  const LIVE = ['GFRC','GFRP'];
+  const CS_LABELS = {
+    Aluminum:    'Aluminium Composite',
+    Stone:       'Natural & Engineered Stone',
+    ACM:         'ACM-FR · Fire-Rated Panels',
+    FibreCement: 'Fibre Cement Board',
+  };
+  const REF_IDS = { GFRC:'CW-001', GFRP:'CW-002', Aluminum:'CW-003', Stone:'CW-004', ACM:'CW-005', FibreCement:'CW-006' };
   const grid = document.getElementById('materials-grid');
-  Object.entries(MATERIALS).forEach(([key, m]) => {
+
+  Object.entries(MATERIALS).forEach(([key, m], idx) => {
     const s = m.scores;
     const imgs = MATERIAL_IMAGES[key];
-    cardHeroImg[key] = 0; // track active variant index
+    cardHeroImg[key] = 0;
 
     const card = document.createElement('div');
-    card.className = 'mat-card';
+    const isLive = LIVE.includes(key);
     card.id = `mat-card-${key}`;
 
-    // Thumbnail strip (first image from each variant)
+    if (!isLive) {
+      // ── COMING SOON CARD ─────────────────────────────────────────
+      card.className = 'mat-card mat-card-locked';
+      card.innerHTML = `
+        <div class="mat-card-header">
+          <div>
+            <div class="mat-card-ref">${REF_IDS[key] || 'CW-00' + (idx+1)} / ARCHIVE</div>
+            <div class="mat-card-name" style="color:rgba(255,255,255,0.18)">${m.name}</div>
+            <div class="mat-card-full">${m.full || ''}</div>
+          </div>
+          <div class="mat-card-score-box" style="opacity:0.15">
+            <span class="mat-card-score-num">—</span>
+            <span class="mat-card-score-lbl">Score</span>
+          </div>
+        </div>
+        <div class="mat-card-img">
+          <img src="${imgs?.hero||''}" alt="${m.name}" onerror="this.style.display='none'">
+          <div class="mat-card-img-overlay"></div>
+          <div class="mat-card-img-label">${m.name} · ${m.full||''}</div>
+        </div>
+        <div class="mat-card-body">
+          <div class="mat-card-tagline">${m.tagline||''}</div>
+          <div class="mat-card-scores">
+            ${[['Heat','heat'],['Fire','fire'],['Weight','weight'],['Cost','cost']].map(([l,k])=>`
+            <div class="score-item">
+              <span class="score-item-lbl">${l}</span>
+              <div class="score-bar-wrap"><div class="score-bar" style="width:${s[k]}%"></div></div>
+              <span class="score-val">${s[k]}%</span>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="mat-card-footer">
+          <span class="mat-card-footer-id">${REF_IDS[key]} · UAE FAÇADE SPEC</span>
+          <span class="mat-card-footer-arrow">→</span>
+        </div>
+        <div class="mat-card-cs-overlay">
+          <div class="mat-card-cs-badge">Coming Soon</div>
+          <div class="mat-card-cs-title">${CS_LABELS[key]||m.name}</div>
+          <div class="mat-card-cs-desc">Expanding to include this category. Suppliers can pre-register to be notified at launch.</div>
+          <button class="mat-card-cs-btn" onclick="csPreReg('${CS_LABELS[key]||m.name}',this)">Pre-register interest →</button>
+        </div>`;
+      grid.appendChild(card);
+      return;
+    }
+
+    // ── LIVE ARCHIVE CARD ──────────────────────────────────────────
+    card.className = 'mat-card';
+
     const thumbs = imgs.variants.map((v, vi) => `
       <div class="mat-thumb ${vi===0?'active':''}" id="thumb-${key}-${vi}"
            onclick="event.stopPropagation();switchCardHero('${key}',${vi})"
            title="${v.name}">
         <img src="${v.images[0].src}&w=120&h=60" alt="${v.name}"
-             onerror="this.parentNode.innerHTML='<div class=\\'mat-thumb-placeholder\\'>${m.emoji}</div>'">
+             onerror="this.parentNode.innerHTML='<div class=\"mat-thumb-placeholder\">${m.emoji}</div>'">
       </div>`).join('');
 
     card.innerHTML = `
+      <div class="mat-card-header" onclick="openModal('${key}')">
+        <div>
+          <div class="mat-card-ref">${REF_IDS[key]} / UAE FAÇADE SPEC · ${new Date().getFullYear()}</div>
+          <div class="mat-card-name">${m.name}</div>
+          <div class="mat-card-full">${m.full||''}</div>
+        </div>
+        <div class="mat-card-score-box">
+          <span class="mat-card-score-num">${m.overall}</span>
+          <span class="mat-card-score-lbl">Score</span>
+        </div>
+      </div>
       <div class="mat-card-img" onclick="openModal('${key}')">
         <img id="card-hero-${key}" src="${imgs.hero}" alt="${m.name} facade cladding"
              onerror="this.style.display='none'">
         <div class="mat-card-img-overlay"></div>
-        <div class="mat-card-img-score">${m.overall}</div>
-        <div class="mat-card-img-label">${m.name}</div>
+        <div class="mat-card-img-label">${m.name} · ${m.full||''}</div>
       </div>
-      <div style="display:flex;gap:4px;padding:8px 8px 0">${thumbs}</div>
+      <div style="display:flex;gap:0;padding:0;border-bottom:1px solid rgba(255,255,255,0.05)">${thumbs}</div>
       <div class="mat-card-body" onclick="openModal('${key}')">
-        <div class="mat-card-name">${m.name}</div>
         <div class="mat-card-tagline">${m.tagline}</div>
         <div class="mat-card-tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
         <div class="mat-card-scores">
           ${[['Heat','heat'],['Fire','fire'],['Weight','weight'],['Cost','cost']].map(([l,k])=>`
           <div class="score-item">
+            <span class="score-item-lbl">${l}</span>
             <div class="score-bar-wrap"><div class="score-bar" style="width:${s[k]}%"></div></div>
-            <div class="score-label">${l} ${s[k]}%</div>
+            <span class="score-val">${s[k]}%</span>
           </div>`).join('')}
         </div>
-        <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">From ${m.priceRange} &nbsp;·&nbsp; ${imgs.variants.length} finish variants</div>
+      </div>
+      <div class="mat-card-footer" onclick="openModal('${key}')">
+        <span class="mat-card-footer-id">${REF_IDS[key]} · ${m.priceRange} · ${imgs.variants.length} VARIANTS</span>
+        <span class="mat-card-footer-arrow">→</span>
       </div>`;
     grid.appendChild(card);
   });
@@ -4578,6 +4931,18 @@ function preRegisterMaterial(materialName, el) {
 
 function preRegisterSupplier(categoryName) {
   showToast('Pre-registered for ' + categoryName + ' — you will be among the first notified when this category opens for supplier listings.');
+}
+
+
+/* ── COMING SOON PRE-REGISTER ────────────────────────────────────── */
+function csPreReg(name, btn) {
+  if (btn.dataset.done) return;
+  btn.dataset.done = '1';
+  btn.textContent = '✓ Registered';
+  btn.style.color = 'var(--accent)';
+  btn.style.background = 'rgba(0,229,160,0.1)';
+  btn.style.borderColor = 'rgba(0,229,160,0.3)';
+  showToast('Pre-registered for ' + name + ' — you\'ll be notified when this category launches.');
 }
 
 </script>
