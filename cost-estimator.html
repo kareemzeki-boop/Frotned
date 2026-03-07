@@ -173,6 +173,127 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
 /* RESPONSIVE */
 @media(max-width:1060px){.main{grid-template-columns:1fr}.inp{position:static}.chart-inner{grid-template-columns:1fr}.donut-wrap{margin:0 auto}}
 @media(max-width:700px){.hd-title{font-size:48px}.ht-val{font-size:56px}.ht-grid{grid-template-columns:1fr}.pm2-box{text-align:left}.ass-grid{grid-template-columns:1fr 1fr}.act-row{grid-template-columns:1fr}.page-hd{grid-template-columns:1fr;gap:20px}.main,.page-hd,.disc{padding-left:20px;padding-right:20px}nav{padding:0 20px}.brow{grid-template-columns:14px 1fr 60px;}.brow .b-pm2,.brow .b-pm2-sub,.brow .b-tot,.brow .b-tot-sub{display:none}}
+
+/* ── DRAWING UPLOAD ZONE ──────────────────────────────────────────────── */
+.upload-zone {
+  border: 1.5px dashed rgba(0,229,160,0.25);
+  border-radius: 8px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(0,229,160,0.02);
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: rgba(0,229,160,0.55);
+  background: rgba(0,229,160,0.05);
+}
+.upload-zone input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  border: none; background: none;
+}
+.upload-icon {
+  font-size: 24px; color: var(--accent); margin-bottom: 8px;
+}
+.upload-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text); margin-bottom: 4px;
+}
+.upload-hint {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted);
+}
+/* AI processing state */
+.upload-processing {
+  display: none;
+  align-items: center; gap: 12px;
+  padding: 14px 16px;
+  background: rgba(0,229,160,0.06);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.upload-processing.show { display: flex; }
+.proc-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(0,229,160,0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.proc-text {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; color: var(--accent); flex: 1;
+}
+/* AI result card */
+.ai-result-card {
+  display: none;
+  background: rgba(0,229,160,0.05);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 10px;
+}
+.ai-result-card.show { display: block; }
+.ai-result-title {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ai-result-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 10px;
+}
+.ai-result-item {
+  background: rgba(0,0,0,0.2); border-radius: 4px;
+  padding: 8px 10px;
+}
+.ai-result-lbl {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 3px;
+}
+.ai-result-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 800; color: var(--accent);
+}
+.ai-result-notes {
+  font-size: 11.5px; color: var(--muted); line-height: 1.5;
+  margin-bottom: 10px; font-style: italic;
+}
+.ai-apply-btn {
+  width: 100%; background: var(--accent); color: #000;
+  border: none; padding: 10px; border-radius: 4px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; cursor: pointer;
+  transition: background 0.15s;
+}
+.ai-apply-btn:hover { background: #00ffb3; }
+.ai-error-card {
+  display: none;
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px; padding: 12px 14px;
+  margin-top: 10px;
+  font-size: 12px; color: #fca5a5; line-height: 1.5;
+}
+.ai-error-card.show { display: block; }
+.upload-filename {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  color: var(--accent); margin-top: 8px;
+  display: none; letter-spacing: 1px;
+}
+.upload-filename.show { display: block; }
+
 </style>
 </head>
 <body>
@@ -226,8 +347,66 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
       <div class="mat-grid" id="mat-grid"></div>
     </div>
 
+
+    <div class="sec" id="upload-sec">
+      <div class="sec-lbl" style="display:flex;align-items:center;gap:8px">
+        02 · Drawing Upload
+        <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;background:rgba(0,229,160,0.12);color:var(--accent);border:1px solid rgba(0,229,160,0.25);padding:2px 8px;border-radius:20px">AI · OPTIONAL</span>
+      </div>
+      <div class="f-hint" style="margin-bottom:10px">Upload a PDF or DXF drawing — AI will extract facade area, height and complexity automatically</div>
+
+      <div class="upload-zone" id="upload-zone"
+           ondragover="uploadDragOver(event)"
+           ondragleave="uploadDragLeave(event)"
+           ondrop="uploadDrop(event)">
+        <input type="file" id="drawing-file" accept=".pdf,.dxf,.jpg,.jpeg,.png"
+               onchange="handleDrawingUpload(event)">
+        <div class="upload-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+        <div class="upload-label">Drop drawing here or click to browse</div>
+        <div class="upload-hint">PDF · DXF · JPG · PNG &nbsp;·&nbsp; Max 20MB</div>
+      </div>
+
+      <div class="upload-filename" id="upload-filename"></div>
+
+      <!-- Processing indicator -->
+      <div class="upload-processing" id="upload-processing">
+        <div class="proc-spinner"></div>
+        <div class="proc-text" id="proc-text">Analysing drawing with AI...</div>
+      </div>
+
+      <!-- AI result -->
+      <div class="ai-result-card" id="ai-result">
+        <div class="ai-result-title">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          AI Extraction Complete
+        </div>
+        <div class="ai-result-grid">
+          <div class="ai-result-item">
+            <div class="ai-result-lbl">Facade Area</div>
+            <div class="ai-result-val" id="ai-area">—</div>
+            <div style="font-size:10px;color:var(--muted)">m²</div>
+          </div>
+          <div class="ai-result-item">
+            <div class="ai-result-lbl">Est. Height</div>
+            <div class="ai-result-val" id="ai-height">—</div>
+          </div>
+          <div class="ai-result-item" style="grid-column:span 2">
+            <div class="ai-result-lbl">Complexity</div>
+            <div class="ai-result-val" id="ai-complexity" style="font-size:14px">—</div>
+          </div>
+        </div>
+        <div class="ai-result-notes" id="ai-notes"></div>
+        <button class="ai-apply-btn" onclick="applyAIResult()">
+          <i class="fa-solid fa-check"></i> Apply to Estimator
+        </button>
+      </div>
+
+      <!-- Error -->
+      <div class="ai-error-card" id="ai-error"></div>
+    </div>
+
     <div class="sec">
-      <div class="sec-lbl">02 · Project Geometry</div>
+      <div class="sec-lbl">03 · Project Geometry</div>
       <div class="f">
         <label>Total Facade Area (m²)</label>
         <input type="number" id="inp-area" value="2500" min="10" max="999999" placeholder="e.g. 2500" oninput="calc()">
@@ -246,7 +425,7 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
     </div>
 
     <div class="sec">
-      <div class="sec-lbl">03 · Design Complexity</div>
+      <div class="sec-lbl">04 · Design Complexity</div>
       <div class="comp-row">
         <button class="comp-btn on" data-c="simple"  onclick="setComp('simple',this)">Simple</button>
         <button class="comp-btn"    data-c="medium"  onclick="setComp('medium',this)">Medium</button>
@@ -256,7 +435,7 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
     </div>
 
     <div class="sec">
-      <div class="sec-lbl">04 · Location &amp; Market</div>
+      <div class="sec-lbl">05 · Location &amp; Market</div>
       <div class="f">
         <label>Location Multiplier</label>
         <select id="inp-loc" onchange="calc()">
@@ -835,6 +1014,323 @@ function h2rgb(hex){const m=hex.replace('#','').match(/.{2}/g);return m?m.map(x=
 buildMatGrid();
 calc();
 window.addEventListener('resize',()=>{if(lastR)drawBar(lastR.comps)});
+
+/* ════════════════════════════════════════════════════════════════════
+   DRAWING UPLOAD + AI EXTRACTION
+   Supports: PDF (vision), DXF (text parse), JPG/PNG (vision)
+   ════════════════════════════════════════════════════════════════════ */
+
+let aiExtracted = null; // stores last AI result
+
+/* ── Drag & drop helpers ──────────────────────────────────────────── */
+function uploadDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('drag-over');
+}
+function uploadDragLeave(e) {
+  document.getElementById('upload-zone').classList.remove('drag-over');
+}
+function uploadDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) processDrawingFile(file);
+}
+function handleDrawingUpload(e) {
+  const file = e.target.files[0];
+  if (file) processDrawingFile(file);
+}
+
+/* ── Main dispatch ────────────────────────────────────────────────── */
+async function processDrawingFile(file) {
+  // Reset UI
+  hideAll(['ai-result','ai-error']);
+  aiExtracted = null;
+
+  const maxMB = 20;
+  if (file.size > maxMB * 1024 * 1024) {
+    showError(`File too large (${(file.size/1048576).toFixed(1)} MB). Max ${maxMB} MB.`);
+    return;
+  }
+
+  const fn = document.getElementById('upload-filename');
+  fn.textContent = '📎 ' + file.name;
+  fn.classList.add('show');
+
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext === 'dxf') {
+    await parseDXF(file);
+  } else if (['pdf','jpg','jpeg','png'].includes(ext)) {
+    await analyseWithAI(file, ext);
+  } else {
+    showError('Unsupported file type. Please upload a PDF, DXF, JPG or PNG.');
+  }
+}
+
+/* ── DXF Parser ───────────────────────────────────────────────────── */
+async function parseDXF(file) {
+  showProcessing('Parsing DXF geometry...');
+  try {
+    const text = await file.text();
+    const areas = extractDXFAreas(text);
+
+    if (areas.totalArea > 0) {
+      const height = guessHeightFromDXF(text);
+      const complexity = guessDXFComplexity(text);
+      showAIResult({
+        area: Math.round(areas.totalArea),
+        heightKey: height.key,
+        heightLabel: height.label,
+        complexityKey: complexity.key,
+        complexityLabel: complexity.label,
+        notes: `Extracted from DXF: ${areas.entityCount} polyline entities found. Total closed area: ${Math.round(areas.totalArea)} m². ${areas.notes}`
+      });
+    } else {
+      // Fall back to AI for complex DXF
+      await analyseWithAI(file, 'dxf');
+    }
+  } catch(e) {
+    showError('Could not parse DXF file. Try exporting as PDF or image instead.');
+  }
+}
+
+function extractDXFAreas(text) {
+  // Extract LWPOLYLINE / POLYLINE vertices and compute Shoelace area
+  const lines = text.split('\n').map(l => l.trim());
+  let totalArea = 0;
+  let entityCount = 0;
+  let i = 0;
+  let notes = '';
+
+  // Also try to grab any AREA group codes (42/43 style)
+  const areaMatches = text.match(/^\s*\d+\.\d+\s*$/gm);
+
+  while (i < lines.length) {
+    if (lines[i] === 'LWPOLYLINE' || lines[i] === 'POLYLINE') {
+      const vertices = [];
+      let j = i;
+      while (j < Math.min(i + 2000, lines.length)) {
+        if (lines[j] === '10' && lines[j-1] !== '210') {
+          const x = parseFloat(lines[j+1]);
+          const y = parseFloat(lines[j+2] === '20' ? lines[j+3] : lines[j+2]);
+          if (!isNaN(x) && !isNaN(y)) vertices.push([x, y]);
+        }
+        if (j > i + 5 && (lines[j] === 'LWPOLYLINE' || lines[j] === 'POLYLINE' || lines[j] === 'ENDSEC')) break;
+        j++;
+      }
+      if (vertices.length >= 3) {
+        const area = shoelace(vertices);
+        if (area > 1) { // filter tiny entities
+          totalArea += area;
+          entityCount++;
+        }
+      }
+      i = j;
+    } else {
+      i++;
+    }
+  }
+
+  // Convert from drawing units — try to detect mm vs m
+  // If total area > 100000, likely in mm², convert to m²
+  if (totalArea > 100000) {
+    totalArea = totalArea / 1e6; // mm² → m²
+    notes = 'Units detected: mm (converted to m²).';
+  } else if (totalArea < 10 && totalArea > 0) {
+    totalArea = totalArea * 10000; // likely in cm, rough
+    notes = 'Units detected: cm (converted to m²).';
+  }
+
+  return { totalArea, entityCount, notes };
+}
+
+function shoelace(pts) {
+  let area = 0;
+  const n = pts.length;
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    area += pts[i][0] * pts[j][1];
+    area -= pts[j][0] * pts[i][1];
+  }
+  return Math.abs(area / 2);
+}
+
+function guessHeightFromDXF(text) {
+  // Look for elevation / height values in DXF
+  const heightMatch = text.match(/HEIGHT[\s\S]{0,40}?(\d+(?:\.\d+)?)/i);
+  const h = heightMatch ? parseFloat(heightMatch[1]) : 0;
+  if (h > 150 || text.includes('SUPERTALL') || text.includes('super')) return { key:'stall', label:'Super-tall 150m+' };
+  if (h > 60)  return { key:'tall',  label:'Tall 60–150m' };
+  if (h > 30)  return { key:'high',  label:'High-rise 30–60m' };
+  if (h > 15)  return { key:'mid',   label:'Mid-rise 15–30m' };
+  return { key:'mid', label:'Mid-rise 15–30m' };
+}
+
+function guessDXFComplexity(text) {
+  const entityCount = (text.match(/\bLWPOLYLINE\b|\bSPLINE\b|\bARC\b/g) || []).length;
+  const hasCurves = /SPLINE|ARC|ELLIPSE/.test(text);
+  if (hasCurves || entityCount > 200) return { key:'complex', label:'Complex' };
+  if (entityCount > 80) return { key:'medium', label:'Medium' };
+  return { key:'simple', label:'Simple' };
+}
+
+/* ── AI Vision Analysis (PDF / image) ────────────────────────────── */
+async function analyseWithAI(file, ext) {
+  showProcessing('Sending to AI for analysis...');
+
+  try {
+    const base64 = await fileToBase64(file);
+    const isPDF = ext === 'pdf' || ext === 'dxf'; // dxf fallback as pdf
+    const mediaType = ext === 'pdf' ? 'application/pdf'
+                    : ext === 'png' ? 'image/png'
+                    : 'image/jpeg';
+
+    setProcText('AI reading drawing dimensions...');
+
+    const messages = [{
+      role: 'user',
+      content: [
+        isPDF && ext === 'pdf' ? {
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: base64 }
+        } : {
+          type: 'image',
+          source: { type: 'base64', media_type: mediaType, data: base64 }
+        },
+        {
+          type: 'text',
+          text: `You are a UAE facade cost estimation assistant. Analyse this architectural drawing/document and extract facade specification data.
+
+Return ONLY a JSON object (no markdown, no explanation) with exactly these fields:
+{
+  "area_m2": <number — total facade cladding area in m², your best estimate>,
+  "height_category": <one of: "low" | "mid" | "high" | "tall" | "stall">,
+  "complexity": <one of: "simple" | "medium" | "complex">,
+  "confidence": <"high" | "medium" | "low">,
+  "notes": "<one sentence explaining what you found and any assumptions made>"
+}
+
+Height categories: low = under 15m, mid = 15-30m, high = 30-60m, tall = 60-150m, stall = 150m+
+Complexity: simple = flat rectilinear panels, medium = some articulation/mixed panels, complex = curves/3D geometry/parametric
+
+If you cannot determine a value with any confidence, make a reasonable assumption based on what is visible and note it. Always return valid JSON.`
+        }
+      ]
+    }];
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages
+      })
+    });
+
+    if (!response.ok) throw new Error('API error ' + response.status);
+    const data = await response.json();
+
+    // Parse AI response
+    const rawText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = rawText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    const heightLabels = {
+      low: 'Low-rise <15m', mid: 'Mid-rise 15–30m',
+      high: 'High-rise 30–60m', tall: 'Tall 60–150m', stall: 'Super-tall 150m+'
+    };
+    const complexLabels = { simple: 'Simple', medium: 'Medium', complex: 'Complex' };
+
+    showAIResult({
+      area: Math.round(parsed.area_m2),
+      heightKey: parsed.height_category,
+      heightLabel: heightLabels[parsed.height_category] || 'Mid-rise 15–30m',
+      complexityKey: parsed.complexity,
+      complexityLabel: complexLabels[parsed.complexity] || 'Medium',
+      confidence: parsed.confidence,
+      notes: parsed.notes
+    });
+
+  } catch(e) {
+    console.error('AI analysis error:', e);
+    showError('AI could not fully analyse this drawing. You can still enter dimensions manually below. Error: ' + e.message);
+  }
+}
+
+/* ── Apply AI result to form ─────────────────────────────────────── */
+function applyAIResult() {
+  if (!aiExtracted) return;
+  document.getElementById('inp-area').value = aiExtracted.area;
+  const heightSel = document.getElementById('inp-height');
+  if (aiExtracted.heightKey) heightSel.value = aiExtracted.heightKey;
+  if (aiExtracted.complexityKey) {
+    document.querySelectorAll('.comp-btn').forEach(b => {
+      b.classList.toggle('on', b.dataset.c === aiExtracted.complexityKey);
+    });
+    selComp = aiExtracted.complexityKey;
+    const hint = document.getElementById('comp-hint');
+    if (hint && COMP[selComp]) hint.textContent = COMP[selComp].hint;
+  }
+  calc();
+  // Smooth scroll to results
+  setTimeout(() => {
+    const res = document.getElementById('res-content');
+    if (res && res.style.display !== 'none') {
+      res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 200);
+  showToastLocal('AI values applied — estimate updated ✓');
+}
+
+/* ── UI helpers ───────────────────────────────────────────────────── */
+function showProcessing(msg) {
+  hideAll(['ai-result','ai-error']);
+  const el = document.getElementById('upload-processing');
+  el.classList.add('show');
+  setProcText(msg);
+}
+function setProcText(t) {
+  document.getElementById('proc-text').textContent = t;
+}
+function showAIResult(data) {
+  aiExtracted = data;
+  document.getElementById('upload-processing').classList.remove('show');
+  document.getElementById('ai-area').textContent = data.area ? data.area.toLocaleString() : '—';
+  document.getElementById('ai-height').textContent = data.heightLabel || '—';
+  document.getElementById('ai-complexity').textContent = data.complexityLabel || '—';
+  document.getElementById('ai-notes').textContent = data.notes || '';
+  document.getElementById('ai-result').classList.add('show');
+}
+function showError(msg) {
+  document.getElementById('upload-processing').classList.remove('show');
+  const el = document.getElementById('ai-error');
+  el.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#f87171;margin-right:8px"></i>' + msg;
+  el.classList.add('show');
+}
+function hideAll(ids) {
+  ids.forEach(id => document.getElementById(id)?.classList.remove('show'));
+}
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+function showToastLocal(msg) {
+  // reuse existing toast if available, else create
+  if (typeof showToast === 'function') { showToast(msg); return; }
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0e1810;border:1px solid var(--accent);color:var(--accent);padding:10px 20px;border-radius:8px;font-family:DM Mono,monospace;font-size:11px;letter-spacing:1px;z-index:9999';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+
 </script>
 </body>
 </html>
