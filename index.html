@@ -1658,6 +1658,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   border-color: rgba(0,229,160,0.25) !important;
 }
 
+
+/* ── COMING SOON LOCKED MATERIAL CARDS ──────────────────────────── */
+.mat-card-locked:hover { transform: none !important; box-shadow: none !important; }
+
 </style>
 </head>
 <body>
@@ -3402,8 +3406,36 @@ function showToast(msg) {
 const cardHeroImg = {}; // track active hero per card
 
 function buildMaterialCards() {
+  const LIVE_MATS = ['GFRC', 'GFRP'];
+  const COMING_SOON_LABELS = {
+    Aluminum:    'Aluminium Composite & ACM-FR',
+    Stone:       'Natural & Engineered Stone',
+    ACM:         'Fire-Rated ACM / ACM-FR',
+    FibreCement: 'Fibre Cement Board',
+  };
   const grid = document.getElementById('materials-grid');
   Object.entries(MATERIALS).forEach(([key, m]) => {
+    // ── COMING SOON — locked card ──────────────────────────────────
+    if (!LIVE_MATS.includes(key)) {
+      const locked = document.createElement('div');
+      locked.className = 'mat-card mat-card-locked';
+      locked.style.cssText = 'cursor:default;position:relative;overflow:hidden';
+      locked.innerHTML = \`
+        <div class="mat-card-img" style="filter:grayscale(1);opacity:0.35">
+          <img src="\${MATERIAL_IMAGES[key]?.hero || ''}" alt="\${m.name}" onerror="this.style.display='none'">
+          <div class="mat-card-img-overlay"></div>
+          <div class="mat-card-img-label">\${m.name}</div>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(11,17,13,0.72);backdrop-filter:blur(3px)">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;opacity:0.8">Coming Soon</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:rgba(255,255,255,0.55);text-transform:uppercase;text-align:center;padding:0 20px;line-height:1.1">\${COMING_SOON_LABELS[key] || m.name}</div>
+          <div style="font-size:11px;color:rgba(200,220,205,0.4);text-align:center;max-width:200px;line-height:1.5">We are expanding to include this category. Suppliers can pre-register to be notified at launch.</div>
+          <button onclick="preRegisterMaterial('\${COMING_SOON_LABELS[key] || m.name}',this)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.25);border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='rgba(0,229,160,0.15)'" onmouseout="this.style.background='rgba(0,229,160,0.08)'">Pre-register interest →</button>
+        </div>\`;
+      grid.appendChild(locked);
+      return;
+    }
+    // ── LIVE ───────────────────────────────────────────────────────
     const s = m.scores;
     const imgs = MATERIAL_IMAGES[key];
     cardHeroImg[key] = 0; // track active variant index
@@ -3729,13 +3761,20 @@ document.addEventListener('keydown', e => {
 let selectedMats = ['GFRC', 'Aluminum', 'ACM'];
 
 function buildCompare() {
+  const LIVE_MATS = ['GFRC', 'GFRP'];
   const controls = document.getElementById('compare-controls');
-  const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
-  controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
-      <div class="dot" style="background:${colors[key] || '#666'}"></div>
-      ${key}
-    </div>`).join('');
+  const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa' };
+  controls.innerHTML = Object.keys(MATERIALS).map(key => {
+    const live = LIVE_MATS.includes(key);
+    if (live) {
+      return `<div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+        <div class="dot" style="background:${colors[key]||'#666'}"></div>${key}</div>`;
+    } else {
+      return `<div class="mat-toggle" style="opacity:0.3;cursor:not-allowed;pointer-events:none" title="Coming soon">
+        <div class="dot" style="background:#333"></div>${key}
+        <span style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--muted);margin-left:4px">SOON</span></div>`;
+    }
+  }).join('');
   renderTable();
 }
 
@@ -4578,6 +4617,22 @@ function preRegisterMaterial(materialName, el) {
 
 function preRegisterSupplier(categoryName) {
   showToast('Pre-registered for ' + categoryName + ' — you will be among the first notified when this category opens for supplier listings.');
+}
+
+
+/* ── PRE-REGISTER FOR COMING SOON MATERIALS ──────────────────────── */
+function preRegisterMaterial(name, btn) {
+  if (btn && btn.dataset.done) return;
+  if (btn) {
+    btn.textContent = '✓ Registered';
+    btn.style.color = 'var(--accent)';
+    btn.style.background = 'rgba(0,229,160,0.12)';
+    btn.dataset.done = '1';
+  }
+  showToast('Pre-registered for ' + name + ' — you\'ll be notified when this category launches.');
+}
+function preRegisterSupplier(name) {
+  showToast('Pre-registered for ' + name + ' — you will be among the first notified when this category opens for supplier listings.');
 }
 
 </script>
