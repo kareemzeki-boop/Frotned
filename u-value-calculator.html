@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --bg:      #0b110d;
@@ -325,7 +326,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 
     <!-- Actions -->
     <button class="btn-export" onclick="exportReport()">
-      <i class="fa-solid fa-file-arrow-down"></i> Export Report
+      <i class="fa-solid fa-file-pdf"></i> Export PDF Report
     </button>
     <button class="btn-reset" onclick="resetAll()">
       <i class="fa-solid fa-rotate-left"></i> Reset Assembly
@@ -616,52 +617,228 @@ function calculate() {
 }
 
 // ── EXPORT REPORT ────────────────────────────────────────────────────────────
-function exportReport() {
-  if (layers.length === 0) { alert('Add layers first.'); return; }
+function exportReport(){
+  if(layers.length === 0){ alert('Add at least one layer first.'); return; }
+  if(!window.jspdf){ alert('PDF library not loaded — check internet connection.'); return; }
 
-  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
-  const sumR = layerRs.reduce((acc, { r }) => acc + (r || 0), 0);
-  const totalR = RSE + sumR + RSI;
-  const uValue = totalR > 0 ? 1 / totalR : 0;
+  const layerRs = layers.map(l=>({ layer:l, r:calcLayerR(l) }));
+  const sumR    = layerRs.reduce((acc,{r})=>acc+(r||0), 0);
+  const totalR  = RSE + sumR + RSI;
+  const uVal    = totalR > 0 ? 1/totalR : 0;
 
-  let report = `CLADWISE UAE — FACADE U-VALUE CALCULATION REPORT
-${'='.repeat(52)}
-Generated: ${new Date().toLocaleString()}
-Method: ISO 6946 / ASHRAE 90.1
-${'─'.repeat(52)}
+  const standards = [
+    {name:'ASHRAE 90.1  ·  Gulf Climate Zone 1', limit:0.70, pass:uVal<=0.70},
+    {name:'Dubai Green Building Regulations',    limit:0.57, pass:uVal<=0.57},
+    {name:'Abu Dhabi Estidama Pearl Rating',     limit:0.45, pass:uVal<=0.45},
+    {name:'LEED v4  ·  Gulf Baseline',          limit:0.40, pass:uVal<=0.40},
+    {name:'GSAS (Qatar/Gulf) Façade',           limit:0.35, pass:uVal<=0.35},
+    {name:'Passive House (PHPP)',               limit:0.15, pass:uVal<=0.15},
+  ];
 
-WALL ASSEMBLY (Outside → Inside)
-${'─'.repeat(52)}
-`;
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const PW=210, PH=297, M=16, IW=PW-M*2;
+  let y = 0;
 
-  report += `${'Layer'.padEnd(4)} ${'Material'.padEnd(28)} ${'d (mm)'.padEnd(10)} ${'λ (W/mK)'.padEnd(12)} ${'R (m²K/W)'}\n`;
-  report += `${'-'.repeat(68)}\n`;
-  report += `     ${'External surface (Rse)'.padEnd(28)} ${''.padEnd(10)} ${''.padEnd(12)} ${RSE.toFixed(3)}\n`;
+  /* ── palette ── */
+  const BG   = [10,17,13], BG2=[17,26,19], BG3=[24,36,26];
+  const ACCT = [0,229,160], TEXT=[237,242,237], MUT=[107,125,109];
+  const PASS_C=[0,229,160], FAIL_C=[239,68,68], WARN_C=[245,158,11];
 
-  layers.forEach((l, i) => {
-    const r = calcLayerR(l);
-    const lambda = l.fixedR !== null ? 'fixed' : String(l.lambda);
-    report += `${String(i + 1).padEnd(4)} ${l.name.padEnd(28)} ${String(l.thickness).padEnd(10)} ${lambda.padEnd(12)} ${r !== null ? r.toFixed(3) : '—'}\n`;
+  const sf = (r,g,b)=>doc.setFillColor(r,g,b);
+  const st = (r,g,b)=>doc.setTextColor(r,g,b);
+  const sd = (r,g,b)=>doc.setDrawColor(r,g,b);
+  const B  = sz=>{ doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
+  const N  = sz=>{ doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
+  const MN = sz=>{ doc.setFont('courier','normal');   doc.setFontSize(sz); };
+
+  function newPage(){
+    doc.addPage();
+    sf(...BG); doc.rect(0,0,PW,PH,'F');
+    sf(...ACCT); doc.rect(0,0,PW,1.5,'F'); doc.rect(0,PH-1.5,PW,1.5,'F');
+    N(7); st(...MUT);
+    doc.text('CladWise UAE  ·  U-Value Thermal Calculation Report  ·  ISO 6946 / ASHRAE 90.1', PW/2, PH-4, {align:'center'});
+    y = 14;
+  }
+  function checkY(need){ if(y+need>PH-18) newPage(); }
+  function sectionLabel(txt){
+    checkY(12);
+    B(8); st(...ACCT); doc.text(txt, M, y);
+    sd(...ACCT); doc.setLineWidth(0.2);
+    doc.line(M+doc.getTextWidth(txt)+3, y-0.5, PW-M, y-0.5);
+    y += 7;
+  }
+
+  /* ════════════════════════════════════════════════════
+     PAGE 1
+     ════════════════════════════════════════════════════ */
+  sf(...BG); doc.rect(0,0,PW,PH,'F');
+  sf(...ACCT); doc.rect(0,0,PW,2,'F'); doc.rect(0,PH-1.5,PW,1.5,'F');
+
+  /* ── header band ── */
+  sf(...BG2); doc.rect(0,2,PW,42,'F');
+  B(26); st(...TEXT); doc.text('CLADWISE', M, 22);
+  st(...ACCT);  doc.text(' UAE', M+doc.getTextWidth('CLADWISE'), 22);
+  N(10); st(...MUT); doc.text('FACADE U-VALUE THERMAL CALCULATION REPORT', M, 31);
+  MN(7.5); st(60,80,65); doc.text('ISO 6946  ·  ASHRAE 90.1  ·  UAE / Gulf Compliance Verification', M, 37);
+  MN(7.5); st(...MUT); doc.text(`Generated: ${new Date().toLocaleString()}`, PW-M, 37, {align:'right'});
+
+  /* ── big U-value result box ── */
+  y = 54;
+  const topCol = uVal<=0.40?PASS_C : uVal<=0.70?WARN_C : FAIL_C;
+  const topLabel = uVal<=0.40?'LEED v4 COMPLIANT' : uVal<=0.45?'ESTIDAMA COMPLIANT' : uVal<=0.57?'DUBAI GREEN COMPLIANT' : uVal<=0.70?'ASHRAE COMPLIANT' : 'NON-COMPLIANT';
+
+  sf(...BG2); doc.rect(M,y,IW,32,'F');
+  sf(...topCol); doc.rect(M,y,3,32,'F');
+
+  /* u-value */
+  N(9); st(...MUT); doc.text('CALCULATED U-VALUE (W/m²K)', M+8, y+9);
+  B(36); st(...topCol); doc.text(uVal.toFixed(3), M+8, y+25);
+  N(12); st(...TEXT); doc.text('W/m²K', M+8+doc.getTextWidth(uVal.toFixed(3))+3, y+25);
+
+  /* R-value on right */
+  N(9); st(...MUT); doc.text('TOTAL R-VALUE', M+IW-70, y+9);
+  B(18); st(...TEXT); doc.text(totalR.toFixed(3)+' m²K/W', M+IW-70, y+22);
+  N(7.5); st(...MUT);
+  doc.text(`Rse ${RSE.toFixed(3)}  +  Σ layers ${sumR.toFixed(3)}  +  Rsi ${RSI.toFixed(3)}`, M+IW-70, y+28);
+
+  /* compliance label */
+  sf(...topCol); doc.roundedRect(M+8, y+26, 52, 6, 1.5, 1.5, 'F');
+  B(7.5); st(0,0,0); doc.text(topLabel, M+34, y+30, {align:'center'});
+
+  y += 40;
+
+  /* ── layer assembly table ── */
+  sectionLabel('WALL ASSEMBLY  —  OUTSIDE → INSIDE');
+
+  /* column x positions */
+  const T=[M, M+7, M+68, M+97, M+120, M+143, PW-M];
+
+  /* header */
+  sf(...BG3); doc.rect(M,y,IW,8,'F');
+  MN(7.5); st(...MUT);
+  ['#','Material','d (mm)','λ (W/mK)','R (m²K/W)','R share',''].forEach((h,i)=>{ if(i<6) doc.text(h, T[i]+1, y+5.5); });
+  y += 8;
+
+  /* Rse */
+  sf(...BG2); doc.rect(M,y,IW,7,'F');
+  MN(8); st(...MUT);
+  doc.text('—', T[0]+1, y+4.8);
+  doc.text('External surface resistance (Rse)', T[1]+1, y+4.8);
+  doc.text('—', T[2]+1, y+4.8); doc.text('—', T[3]+1, y+4.8);
+  st(...ACCT); doc.text(RSE.toFixed(3), T[4]+1, y+4.8);
+  const rseShare = RSE/totalR;
+  sf(0,100,70); doc.rect(T[5], y+1.5, rseShare*20, 4, 'F');
+  y += 7;
+
+  /* layers */
+  const maxLayerR = Math.max(...layerRs.map(lr=>lr.r||0), 0.001);
+  layerRs.forEach(({layer:l, r}, i)=>{
+    checkY(8);
+    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,7.5,'F');
+    MN(8); st(...TEXT);
+    doc.text(String(i+1), T[0]+1, y+5.2);
+    const nm = l.name.length>32 ? l.name.slice(0,30)+'…' : l.name;
+    doc.text(nm, T[1]+1, y+5.2);
+    st(...MUT);
+    doc.text(String(l.thickness), T[2]+1, y+5.2);
+    doc.text(l.fixedR!==null?'(fixed)':String(l.lambda), T[3]+1, y+5.2);
+    st(...ACCT);
+    const rStr = r!=null ? r.toFixed(3) : '—';
+    doc.text(rStr, T[4]+1, y+5.2);
+    /* R share bar */
+    if(r && totalR>0){
+      const share = r/totalR;
+      sf(...ACCT); doc.setGState && doc.setGState(doc.GState({opacity:0.5}));
+      doc.rect(T[5], y+1.8, share*20, 3.5, 'F');
+      if(doc.setGState) doc.setGState(doc.GState({opacity:1}));
+      N(7); st(...MUT); doc.text((share*100).toFixed(0)+'%', T[5]+22, y+5.2);
+    }
+    y += 7.5;
   });
 
-  report += `     ${'Internal surface (Rsi)'.padEnd(28)} ${''.padEnd(10)} ${''.padEnd(12)} ${RSI.toFixed(3)}\n`;
-  report += `${'─'.repeat(68)}\n`;
-  report += `\nTOTAL R-VALUE:  ${totalR.toFixed(3)} m²K/W\n`;
-  report += `U-VALUE:        ${uValue.toFixed(3)} W/m²K\n\n`;
+  /* Rsi */
+  checkY(8);
+  sf(...BG2); doc.rect(M,y,IW,7,'F');
+  MN(8); st(...MUT);
+  doc.text('—', T[0]+1, y+4.8);
+  doc.text('Internal surface resistance (Rsi)', T[1]+1, y+4.8);
+  doc.text('—', T[2]+1, y+4.8); doc.text('—', T[3]+1, y+4.8);
+  st(...ACCT); doc.text(RSI.toFixed(3), T[4]+1, y+4.8);
+  const rsiShare = RSI/totalR;
+  sf(0,100,70); doc.rect(T[5], y+1.5, rsiShare*20, 4, 'F');
+  y += 7;
 
-  report += `UAE / GULF COMPLIANCE CHECK\n${'─'.repeat(52)}\n`;
-  report += `ASHRAE 90.1 Gulf (U ≤ 0.70):      ${uValue <= 0.70 ? 'PASS ✓' : 'FAIL ✗'}\n`;
-  report += `Dubai Green Building (U ≤ 0.57):   ${uValue <= 0.57 ? 'PASS ✓' : 'FAIL ✗'}\n`;
-  report += `Estidama Pearl (U ≤ 0.45):         ${uValue <= 0.45 ? 'PASS ✓' : 'FAIL ✗'}\n`;
-  report += `LEED v4 Gulf (U ≤ 0.40):           ${uValue <= 0.40 ? 'PASS ✓' : 'FAIL ✗'}\n`;
-  report += `\n${'='.repeat(52)}\nCladWise UAE · cladwise.netlify.app\n`;
+  /* totals row */
+  checkY(10);
+  sf(30,52,36); doc.rect(M,y,IW,9,'F');
+  sf(...ACCT); doc.rect(M,y,3,9,'F');
+  B(9); st(...ACCT);
+  doc.text('TOTAL R', T[1]+1, y+6.2);
+  doc.text(totalR.toFixed(3), T[4]+1, y+6.2);
+  st(...TEXT); doc.text('U = '+uVal.toFixed(3)+' W/m²K', PW-M-2, y+6.2, {align:'right'});
+  y += 16;
 
-  const blob = new Blob([report], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'CladWise_UValue_Report.txt';
-  a.click();
+  /* ── compliance table ── */
+  checkY(20);
+  sectionLabel('UAE / GULF COMPLIANCE VERIFICATION');
+
+  /* header */
+  sf(...BG3); doc.rect(M,y,IW,8,'F');
+  MN(7.5); st(...MUT);
+  doc.text('Standard', M+2, y+5.5);
+  doc.text('Limit (W/m²K)', M+IW-80, y+5.5);
+  doc.text('Status', PW-M-18, y+5.5);
+  y += 8;
+
+  standards.forEach((s,i)=>{
+    checkY(12);
+    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,11,'F');
+    /* pass/fail badge */
+    const bc = s.pass?PASS_C:FAIL_C;
+    sf(...bc); doc.roundedRect(PW-M-18, y+2, 15, 7, 1.5, 1.5, 'F');
+    B(7.5); st(0,0,0); doc.text(s.pass?'PASS':'FAIL', PW-M-10.5, y+6.8, {align:'center'});
+    /* standard name */
+    N(8.5); st(...TEXT); doc.text(s.name, M+3, y+5.5);
+    /* limit value */
+    MN(8.5); st(...(s.pass?ACCT:FAIL_C)); doc.text('≤ '+s.limit.toFixed(2), M+IW-80, y+5.5);
+    /* U-value progress bar — shows your value vs limit */
+    const barX=M+3, barY2=y+7.5, barW=IW-100, barH=2;
+    const limitFrac = Math.min(s.limit/0.80, 1);
+    const uFrac     = Math.min(uVal/0.80,    1);
+    sf(...BG3); doc.rect(barX,barY2,barW,barH,'F');
+    sf(...(s.pass?[0,120,90]:[140,40,40])); doc.rect(barX,barY2,uFrac*barW,barH,'F');
+    /* limit tick */
+    sf(...WARN_C); doc.rect(barX+limitFrac*barW-0.4, barY2-1, 0.8, barH+2, 'F');
+    y += 11;
+  });
+
+  /* legend */
+  y += 3; checkY(10);
+  N(7.5); st(...MUT);
+  doc.text('▲ Orange tick = standard limit   ■ Coloured bar = your U-value', M, y);
+  y += 10;
+
+  /* ── method note ── */
+  checkY(26);
+  sf(...BG2); doc.rect(M,y,IW,22,'F');
+  sf(...ACCT); doc.rect(M,y,2.5,22,'F');
+  B(8); st(...ACCT); doc.text('CALCULATION METHOD', M+6, y+7);
+  N(7.5); st(...MUT);
+  const methodTxt='Calculated per ISO 6946:2017. Combined method used for thermal bridges. Surface resistances: Rse = 0.04 m²K/W (external, horizontal), Rsi = 0.13 m²K/W (internal, horizontal). U-value = 1 / (Rse + ΣR_layers + Rsi). Fixed-R layers use manufacturer-declared resistance values. Results are for horizontal heat flow (typical external wall). Verify against project-specific boundary conditions with a qualified thermal engineer.';
+  const mLines = doc.splitTextToSize(methodTxt, IW-10);
+  doc.text(mLines, M+6, y+13);
+  y += 26;
+
+  /* footer p1 */
+  N(7); st(...MUT);
+  doc.text('CladWise UAE  ·  Facade Intelligence Platform  ·  For guidance only — verify with a qualified thermal engineer', PW/2, PH-4, {align:'center'});
+
+  /* ── save ── */
+  const dateStr = new Date().toISOString().slice(0,10);
+  doc.save(`CladWise_UValue_${dateStr}.pdf`);
 }
+
 
 // ── RESET ────────────────────────────────────────────────────────────────────
 function resetAll() {
