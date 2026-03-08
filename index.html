@@ -2037,6 +2037,218 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   animation: mat-jiggle 0.55s cubic-bezier(0.36,0.07,0.19,0.97);
 }
 
+
+/* ══════════════════════════════════════════════════════════════════
+   SUPPLIER 3D ROTATING CAROUSEL
+══════════════════════════════════════════════════════════════════ */
+.sup-carousel-wrap {
+  position: relative;
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+.sup-carousel-scene {
+  perspective: 1200px;
+  perspective-origin: 50% 40%;
+  width: 100%;
+  height: 420px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sup-carousel-ring {
+  width: 260px;
+  height: 360px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: grab;
+}
+.sup-carousel-ring.dragging { cursor: grabbing; transition: none; }
+
+/* Individual card item */
+.sup-ccard {
+  position: absolute;
+  width: 260px;
+  height: 360px;
+  left: 0; top: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(0,229,160,0.12);
+  background: #111a13;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sup-ccard-active {
+  border-color: rgba(0,229,160,0.4) !important;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(0,229,160,0.25),
+    0 0 40px rgba(0,229,160,0.06) !important;
+}
+
+/* Card top accent bar */
+.sup-ccard::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00e5a0, rgba(0,229,160,0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 3;
+}
+.sup-ccard-active::before { opacity: 1 !important; }
+
+/* Card visual: background block */
+.sup-ccard-bg {
+  height: 130px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: #0d1a0f;
+}
+.sup-ccard-bg-inner {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5) saturate(0.7);
+  transition: transform 0.6s ease;
+}
+.sup-ccard-active .sup-ccard-bg-inner { transform: scale(1.05); filter: brightness(0.65) saturate(0.85); }
+.sup-ccard-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, #111a13 100%);
+}
+.sup-ccard-emoji {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  opacity: 0.35;
+}
+
+/* Card body */
+.sup-ccard-body {
+  flex: 1;
+  padding: 14px 18px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.sup-ccard-tier {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.sup-ccard-tier.featured { color: #f59e0b; }
+.sup-ccard-tier.verified { color: #00e5a0; }
+.sup-ccard-tier.standard { color: rgba(200,220,205,0.35); }
+
+.sup-ccard-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.3px; line-height: 1.05;
+  color: #e8f0ea; margin-bottom: 4px;
+}
+.sup-ccard-loc {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: rgba(200,220,205,0.38);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 5px;
+}
+.sup-ccard-mats { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.sup-ccard-mat {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; padding: 2px 7px;
+  border-radius: 2px; text-transform: uppercase;
+  background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
+  color: rgba(0,229,160,0.7);
+}
+.sup-ccard-tagline {
+  font-size: 11px; color: rgba(200,220,205,0.35);
+  line-height: 1.5; margin-bottom: auto; flex: 1;
+}
+
+/* Card footer */
+.sup-ccard-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sup-ccard-phone {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: rgba(200,220,205,0.45);
+}
+.sup-ccard-phone.blurred { filter: blur(5px); user-select: none; }
+.sup-ccard-action {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: #00e5a0; text-decoration: none;
+  opacity: 0; transition: opacity 0.25s;
+  display: flex; align-items: center; gap: 4px;
+}
+.sup-ccard-active .sup-ccard-action { opacity: 1; }
+
+/* Navigation */
+.sup-carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+.sup-carousel-btn {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(200,220,205,0.5);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.sup-carousel-btn:hover {
+  border-color: rgba(0,229,160,0.4);
+  color: #00e5a0;
+  background: rgba(0,229,160,0.06);
+}
+.sup-carousel-dots {
+  display: flex; gap: 6px; align-items: center;
+}
+.sup-carousel-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer; transition: all 0.2s;
+}
+.sup-carousel-dot.active {
+  background: #00e5a0;
+  transform: scale(1.4);
+}
+.sup-carousel-hint {
+  text-align: center; margin-top: 10px;
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(200,220,205,0.18);
+}
+/* Ground reflection */
+.sup-carousel-scene::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: 50%; transform: translateX(-50%);
+  width: 280px; height: 40px;
+  background: radial-gradient(ellipse, rgba(0,229,160,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .sup-carousel-scene { height: 380px; perspective: 900px; }
+  .sup-carousel-ring, .sup-ccard { width: 220px; height: 320px; }
+}
+
 </style>
 </head>
 <body>
@@ -2263,10 +2475,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </button>
     </div>
 
-    <!-- GATE WRAP: teaser cards + overlay -->
+    <!-- GATE WRAP: 3D carousel teaser + overlay -->
     <div class="sup-gate-wrap">
-      <!-- Teaser: 3 blurred/partial cards -->
-      <div class="sup-teaser-grid" id="sup-teaser"></div>
+      <div class="sup-carousel-wrap" id="sup-teaser"></div>
 
       <!-- Gate overlay -->
       <div class="sup-gate">
@@ -4426,24 +4637,139 @@ function resetWizard() {
 }
 
 // ─── SUPPLIERS (PREMIUM GATE) ────────────────────────────────────────────────
-function buildSuppliers() {
-  // Show 3 teaser cards (blurred/locked)
-  const teaser = document.getElementById('sup-teaser');
-  const teaserData = SUPPLIERS.slice(0, 3);
-  teaser.innerHTML = teaserData.map((s, i) => `
-    <div class="sup-card-teaser sup-card-locked" style="opacity:${1 - i * 0.18}">
-      <div class="sup-logo" style="background:${s.color};font-size:22px">${s.emoji}</div>
-      <div class="sup-name">${s.name} ${s.verified ? '<span style="color:var(--accent);font-size:11px">✓ Verified</span>' : ''}</div>
-      <div class="sup-location"><i class="fa-solid fa-location-dot" style="margin-right:6px"></i>${s.location}</div>
-      <div class="sup-mats">${s.mats.map(m=>`<span class="sup-mat">${m}</span>`).join('')}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="sup-phone-blur">+971 ${Math.floor(Math.random()*9+1)} ••• ••••</span>
-        <span style="font-size:12px;color:var(--accent);font-weight:600;opacity:0.5">Unlock →</span>
+/* ─── 3D CAROUSEL HELPERS ───────────────────────────────────── */
+let supCarouselAngle = 0;
+let supCarouselActive = 0;
+let supCarouselDragging = false;
+let supCarouselDragStartX = 0;
+let supCarouselDragStartAngle = 0;
+let supCarouselBlurred = false;
+
+const SUP_BG_COLORS = {
+  GFRC: 'linear-gradient(135deg,#0d2a1a,#1a3d20)',
+  GFRP: 'linear-gradient(135deg,#0a1f30,#102840)',
+  Aluminum: 'linear-gradient(135deg,#1a1a2a,#22223a)',
+  'ACM-FR': 'linear-gradient(135deg,#1a1215,#2a1a20)',
+  Stone: 'linear-gradient(135deg,#2a1e10,#3a2a18)',
+  default: 'linear-gradient(135deg,#0d180f,#182318)',
+};
+
+function supCardHTML(s, blurred) {
+  const tierClass = s.tier === 'featured' ? 'featured' : s.tier === 'verified_pro' ? 'verified' : 'standard';
+  const tierLabel = s.tier === 'featured' ? '⭐ Featured' : s.tier === 'verified_pro' ? '✓ Verified' : 'Listed';
+  const bg = SUP_BG_COLORS[s.mats[0]] || SUP_BG_COLORS.default;
+  const phone = blurred ? '+971 • ••• ••••' : (s.phone || '');
+  return `<div class="sup-ccard" data-idx="${SUPPLIERS.indexOf(s)}">
+    <div class="sup-ccard-bg">
+      <div class="sup-ccard-bg-inner" style="background:${bg}"></div>
+      <div class="sup-ccard-bg-overlay"></div>
+      <div class="sup-ccard-emoji">${s.emoji}</div>
+    </div>
+    <div class="sup-ccard-body">
+      <div class="sup-ccard-tier ${tierClass}">${tierLabel}</div>
+      <div class="sup-ccard-name">${s.name}</div>
+      <div class="sup-ccard-loc">📍 ${s.location}</div>
+      <div class="sup-ccard-mats">${s.mats.map(m => `<span class="sup-ccard-mat">${m}</span>`).join('')}</div>
+      <div class="sup-ccard-tagline">${s.tagline || ''}</div>
+      <div class="sup-ccard-footer">
+        <span class="sup-ccard-phone${blurred ? ' blurred' : ''}">${phone}</span>
+        ${blurred
+          ? `<span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:rgba(0,229,160,0.35);text-transform:uppercase">Unlock →</span>`
+          : `<a class="sup-ccard-action" href="tel:${s.phone}">Call →</a>`
+        }
       </div>
-    </div>`).join('');
-  // Set gate height dynamically
+    </div>
+  </div>`;
+}
+
+function buildCarousel(container, data, blurred) {
+  const n = data.length;
+  const radius = Math.round((260 / 2) / Math.tan(Math.PI / n)) + 120;
+
+  container.innerHTML = `
+    <div class="sup-carousel-scene">
+      <div class="sup-carousel-ring" id="sup-ring">
+        ${data.map((s, i) => supCardHTML(s, blurred)).join('')}
+      </div>
+    </div>
+    <div class="sup-carousel-nav">
+      <button class="sup-carousel-btn" id="sup-prev">&#8592;</button>
+      <div class="sup-carousel-dots" id="sup-dots">
+        ${data.map((_, i) => `<div class="sup-carousel-dot${i===0?' active':''}" data-i="${i}"></div>`).join('')}
+      </div>
+      <button class="sup-carousel-btn" id="sup-next">&#8594;</button>
+    </div>
+    <div class="sup-carousel-hint">Drag or use arrows to rotate</div>`;
+
+  const ring = container.querySelector('#sup-ring');
+  const cards = ring.querySelectorAll('.sup-ccard');
+  const dots  = container.querySelectorAll('.sup-carousel-dot');
+
+  // Position cards on the circle
+  cards.forEach((card, i) => {
+    const angle = (360 / n) * i;
+    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+  });
+
+  let angle = 0;
+  let active = 0;
+  let animFrame = null;
+
+  function rotateTo(idx) {
+    active = ((idx % n) + n) % n;
+    angle  = -active * (360 / n);
+    ring.style.transform = `rotateY(${angle}deg)`;
+    cards.forEach((c, i) => c.classList.toggle('sup-ccard-active', i === active));
+    dots.forEach((d, i)  => d.classList.toggle('active', i === active));
+  }
+
+  rotateTo(0);
+
+  container.querySelector('#sup-next').addEventListener('click', () => rotateTo(active + 1));
+  container.querySelector('#sup-prev').addEventListener('click', () => rotateTo(active - 1));
+  dots.forEach(d => d.addEventListener('click', () => rotateTo(+d.dataset.i)));
+
+  // ── Drag / swipe ──
+  let dragStartX = 0, dragStartAngle = 0, isDragging = false;
+  const PER_DEG = 360 / n;
+
+  function onDragStart(x) {
+    isDragging = true;
+    dragStartX = x;
+    dragStartAngle = angle;
+    ring.classList.add('dragging');
+    ring.style.transition = 'none';
+  }
+  function onDragMove(x) {
+    if (!isDragging) return;
+    const diff = (dragStartX - x) * 0.4;
+    angle = dragStartAngle - diff;
+    ring.style.transform = `rotateY(${angle}deg)`;
+  }
+  function onDragEnd(x) {
+    if (!isDragging) return;
+    isDragging = false;
+    ring.classList.remove('dragging');
+    ring.style.transition = '';
+    const diff = dragStartX - x;
+    const steps = Math.round(diff / 60);
+    rotateTo(active + steps);
+  }
+
+  ring.addEventListener('mousedown',  e => { e.preventDefault(); onDragStart(e.clientX); });
+  window.addEventListener('mousemove', e => onDragMove(e.clientX));
+  window.addEventListener('mouseup',   e => onDragEnd(e.clientX));
+
+  ring.addEventListener('touchstart',  e => onDragStart(e.touches[0].clientX), { passive: true });
+  ring.addEventListener('touchmove',   e => onDragMove(e.touches[0].clientX),  { passive: true });
+  ring.addEventListener('touchend',    e => onDragEnd(e.changedTouches[0].clientX));
+}
+
+function buildSuppliers() {
+  const container = document.getElementById('sup-teaser');
+  buildCarousel(container, SUPPLIERS, true /* blurred */);
   const gateWrap = document.querySelector('.sup-gate-wrap');
-  gateWrap.style.minHeight = '620px';
+  gateWrap.style.minHeight = '560px';
 }
 
 // ─── SUBSCRIPTION MODAL ──────────────────────────────────────────────────────
@@ -4745,43 +5071,12 @@ function cwUpdateSupplierSection() {
   if (isPremium) {
     if (gate) gate.style.display = 'none';
     const grid = document.getElementById('sup-grid-real');
-    if (grid) { grid.style.display = 'grid'; return; }
+    if (grid) { grid.style.display = 'block'; return; }
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
-    realGrid.className = 'sup-grid';
+    realGrid.className = 'sup-carousel-wrap';
     realGrid.style.marginTop = '32px';
-    realGrid.className = 'sup-editorial-grid';
-    realGrid.innerHTML = SUPPLIERS.map((s, idx) => {
-      const isFeatured = s.tier === 'featured';
-      const isVerified = s.tier === 'verified_pro';
-      const tierClass = isFeatured ? 'featured' : isVerified ? 'verified' : 'standard';
-      const tierLabel = isFeatured ? '⭐ Featured Partner' : isVerified ? '✓ Verified Pro' : 'Listed Supplier';
-      
-      // Pick background based on primary material
-      const matBg = s.mats[0] === 'GFRC' ? 'sup-bg-gfrc' 
-                  : s.mats[0] === 'Aluminum' || s.mats[0] === 'ACM-FR' ? 'sup-bg-aluminum'
-                  : s.mats[0] === 'Stone' ? 'sup-bg-stone'
-                  : s.mats[0] === 'GFRP' ? 'sup-bg-gfrp'
-                  : 'sup-bg-default';
-
-      const matTagClass = isFeatured ? 'featured' : isVerified ? 'verified' : 'standard';
-
-      return `<div class="sup-editorial-card ${isFeatured ? 'featured' : ''}" onclick="supCardClick('${s.phone}','${s.email||''}')">
-        <div class="sup-card-img-bg ${matBg}"></div>
-        <div class="sup-card-overlay"></div>
-        <div class="sup-card-body">
-          <div class="sup-card-tier ${tierClass}">${tierLabel}</div>
-          <div class="sup-card-name">${s.name}</div>
-          <div class="sup-card-location"><i class="fa-solid fa-location-dot"></i>${s.location}</div>
-          <div class="sup-card-tagline">${s.tagline || ''}</div>
-          <div class="sup-card-mats">${s.mats.map(m=>`<span class="sup-card-mat ${matTagClass}">${m}</span>`).join('')}</div>
-          <div class="sup-card-footer">
-            <span class="sup-card-phone">${s.phone}</span>
-            <div class="sup-card-arrow"><i class="fa-solid fa-arrow-up-right"></i></div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
+    buildCarousel(realGrid, SUPPLIERS, false /* full data */);
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
