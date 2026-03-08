@@ -195,7 +195,7 @@ nav {
 }
 /* Hero offset — account for fixed pill nav */
 body { padding-top: 0; }
-#home { padding-top: 84px; }
+#home { padding-top: 80px; }
 
 /* HERO */
 #home{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--bg)}
@@ -2343,6 +2343,82 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .btn-outline:hover        { transform: none !important; }
 }
 
+
+/* ── HERO CONTENT WRAPPER ───────────────────────────────────────────── */
+.hero-content-wrap {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+/* ── HERO STATS BAR ─────────────────────────────────────────────────── */
+.hero-stats-bar {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: rgba(9,15,11,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.hero-stats-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ── HERO RESPONSIVE ────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .hero-content-wrap { padding: 0 24px; }
+  .hero-stats-inner  { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 767px) {
+  /* Full-bleed true viewport height on mobile — no scrollbar, no browser chrome */
+  #home {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 64px;
+  }
+  .hero-content-wrap {
+    padding: 20px 20px 0;
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+  .hero-content-wrap > div { max-width: 100% !important; }
+  /* Tighten h1 */
+  #home h1 { font-size: 52px !important; line-height: 0.88; margin-bottom: 16px; }
+  /* Shorter description on mobile */
+  .hero-desc { font-size: 13px; line-height: 1.65; margin-bottom: 28px; }
+  /* Stack buttons */
+  .hero-btns { flex-direction: column !important; gap: 10px !important; }
+  .hero-btns .btn-primary,
+  .hero-btns .btn-outline { width: 100% !important; text-align: center; padding: 14px 20px; justify-content: center; display: flex; }
+  /* Stats bar: 2x2 grid */
+  .hero-stats-inner {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .stat-box { padding: 18px 14px; }
+  .stat-num { font-size: 36px !important; }
+  .stat-label { font-size: 8px; }
+}
+
+@media (max-width: 479px) {
+  #home { padding-top: 58px; }
+  .hero-content-wrap { padding: 16px 16px 0; }
+  #home h1 { font-size: 42px !important; }
+  .hero-stats-inner { grid-template-columns: 1fr 1fr; }
+  .stat-num { font-size: 30px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -2407,7 +2483,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- HERO -->
-<section id="home" style="min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column">
+<section id="home" style="min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;display:flex;flex-direction:column">
   <!-- Full bleed background image -->
   <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=75');background-size:cover;background-position:center;filter:brightness(0.28) saturate(0.6)"></div>
   <!-- Forest green gradient overlay -->
@@ -2418,7 +2494,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div style="position:absolute;bottom:20%;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,160,0.05) 0%,transparent 70%);pointer-events:none"></div>
 
   <!-- Main hero content -->
-  <div style="position:relative;z-index:2;flex:1;display:flex;align-items:center;max-width:1280px;margin:0 auto;width:100%;padding:0 40px">
+  <div class="hero-content-wrap">
     <div style="max-width:780px">
       <span class="hero-eyebrow">UAE Façade Specification Platform</span>
       <h1>We Specify<br>Facades<br><span style="color:var(--accent)">For UAE.</span></h1>
@@ -2486,9 +2562,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     </div>
   </div>
 
-  <!-- Bottom stats bar — editorial numbers like the reference -->
-  <div style="position:relative;z-index:2;border-top:1px solid rgba(255,255,255,0.07);background:rgba(9,15,11,0.9);backdrop-filter:blur(10px)">
-    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)">
+  <!-- Bottom stats bar -->
+  <div class="hero-stats-bar">
+    <div class="hero-stats-inner">
       <div class="stat-box"><span class="stat-num">2</span><span class="stat-label">Live at Launch</span></div>
       <div class="stat-box"><span class="stat-num">4</span><span class="stat-label">Categories Coming Soon</span></div>
       <div class="stat-box"><span class="stat-num">7</span><span class="stat-label">UAE Jurisdictions</span></div>
