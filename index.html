@@ -2609,6 +2609,146 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .sup-pcard-name { font-size: 26px; }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════
+   SUPPLIER DIRECTORY — UNHEAP-STYLE CARD GRID
+══════════════════════════════════════════════════════════════════ */
+.sup-grid-wrap {
+  margin-top: 32px;
+  columns: 4;
+  column-gap: 12px;
+}
+.sup-grid-card {
+  break-inside: avoid;
+  background: #111a13;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+  display: block;
+  position: relative;
+}
+.sup-grid-card:hover {
+  border-color: rgba(0,229,160,0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,160,0.12);
+}
+
+/* Top accent stripe on hover */
+.sup-grid-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: #00e5a0;
+  opacity: 0; transition: opacity 0.18s;
+  z-index: 2;
+}
+.sup-grid-card:hover::before { opacity: 1; }
+
+/* Preview area */
+.sup-gc-preview {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #0d1a0f;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.sup-gc-preview img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.78) saturate(0.85);
+  transition: transform 0.5s ease, filter 0.3s;
+}
+.sup-grid-card:hover .sup-gc-preview img {
+  transform: scale(1.06);
+  filter: brightness(0.92) saturate(1);
+}
+.sup-gc-preview-emoji {
+  font-size: 40px; opacity: 0.25;
+}
+/* Tier badge on preview */
+.sup-gc-tier-badge {
+  position: absolute; top: 8px; right: 8px;
+  font-family: 'DM Mono', monospace; font-size: 7px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 7px; border-radius: 2px;
+  z-index: 2;
+}
+.sup-gc-tier-badge.featured  { background: rgba(245,158,11,0.9);  color: #000; }
+.sup-gc-tier-badge.verified  { background: rgba(0,229,160,0.9);   color: #000; }
+.sup-gc-tier-badge.standard  { background: rgba(255,255,255,0.12); color: rgba(200,220,205,0.7); }
+
+/* Blurred overlay for locked cards */
+.sup-gc-locked .sup-gc-preview img { filter: blur(8px) brightness(0.4); }
+.sup-gc-locked .sup-gc-body { filter: blur(5px); user-select: none; pointer-events: none; }
+.sup-gc-lock-icon {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: rgba(0,229,160,0.5);
+  z-index: 3;
+}
+
+/* Card body */
+.sup-gc-body { padding: 14px 16px 12px; }
+.sup-gc-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.3px; line-height: 1.05;
+  color: #e8f0ea; margin-bottom: 4px;
+}
+.sup-gc-tagline {
+  font-size: 11.5px; color: rgba(200,220,205,0.45);
+  line-height: 1.55; margin-bottom: 10px;
+}
+.sup-gc-mats {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
+}
+.sup-gc-mat {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; padding: 2px 7px; border-radius: 2px;
+  text-transform: uppercase;
+  background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
+  color: rgba(0,229,160,0.65);
+}
+
+/* Footer row — like Unheap's author + category row */
+.sup-gc-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);
+}
+.sup-gc-loc {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  color: rgba(200,220,205,0.3); letter-spacing: 1px;
+  display: flex; align-items: center; gap: 5px;
+  text-transform: uppercase;
+}
+.sup-gc-loc-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(0,229,160,0.4); flex-shrink: 0;
+}
+.sup-gc-arrow {
+  font-size: 11px; color: rgba(0,229,160,0.4);
+  transition: transform 0.15s, color 0.15s;
+}
+.sup-grid-card:hover .sup-gc-arrow { transform: translate(2px,-2px); color: #00e5a0; }
+
+/* Featured card — wider (span 2 in grid via different approach — CSS grid version) */
+.sup-grid-card.featured-card { border-color: rgba(245,158,11,0.2); }
+.sup-grid-card.featured-card:hover { border-color: rgba(245,158,11,0.5); }
+.sup-grid-card.featured-card::before { background: #f59e0b; }
+
+/* Responsive */
+@media (max-width: 1200px) { .sup-grid-wrap { columns: 3; } }
+@media (max-width: 900px)  { .sup-grid-wrap { columns: 2; } }
+@media (max-width: 540px)  { .sup-grid-wrap { columns: 1; } }
+
+/* Teaser grid (locked state — 2 rows visible, faded) */
+.sup-grid-wrap.teaser { columns: 4; position: relative; }
+@media (max-width: 1200px) { .sup-grid-wrap.teaser { columns: 3; } }
+@media (max-width: 900px)  { .sup-grid-wrap.teaser { columns: 2; } }
+@media (max-width: 540px)  { .sup-grid-wrap.teaser { columns: 1; } }
+
 </style>
 </head>
 <body>
@@ -2837,7 +2977,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
     <!-- GATE WRAP: 3D carousel teaser + overlay -->
     <div class="sup-gate-wrap">
-      <div class="sup-profile-grid" id="sup-teaser"></div>
+      <div class="sup-grid-wrap teaser" id="sup-teaser"></div>
 
       <!-- Gate overlay -->
       <div class="sup-gate">
@@ -5137,93 +5277,56 @@ function buildCarousel(container, data, blurred) {
   ring.addEventListener('touchend',    e => onDragEnd(e.changedTouches[0].clientX));
 }
 
-/* ─── SUPPLIER PROFILE CARD RENDERER ──────────────────────────── */
-function supProfileCardHTML(s, blurred) {
-  const idx = SUPPLIERS.indexOf(s);
-  const refId = 'SUP-' + String(idx + 1).padStart(3, '0');
-  const tierLabel = s.tier === 'featured' ? '⭐ Featured Partner'
-                  : s.tier === 'verified_pro' ? '✓ Verified Supplier'
-                  : 'Listed Supplier';
+/* ─── SUPPLIER GRID CARD RENDERER (Unheap-style) ─────────────── */
+const SUP_MAT_IMGS = {
+  GFRC:    'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=70',
+  GFRP:    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=70',
+  Aluminum:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=70',
+  'ACM-FR':'https://images.unsplash.com/photo-1464082354059-27db6ce50048?w=600&q=70',
+  Stone:   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=70',
+  default: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=70',
+};
 
-  const photoSlots = [0,1,2,3].map(i => {
-    const src = s.photos && s.photos[i];
-    return src
-      ? `<div class="sup-pcard-photo"><img src="${src}" alt="${s.name}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\"sup-pcard-photo-placeholder\">${s.emoji}</div>'"></div>`
-      : `<div class="sup-pcard-photo"><div class="sup-pcard-photo-placeholder">${s.emoji}</div></div>`;
-  }).join('');
+function supGridCardHTML(s, blurred) {
+  const tierClass = s.tier === 'featured' ? 'featured' : s.tier === 'verified_pro' ? 'verified' : 'standard';
+  const tierLabel = s.tier === 'featured' ? '⭐ Featured' : s.tier === 'verified_pro' ? '✓ Verified' : 'Listed';
+  const isFeatured = s.tier === 'featured';
+  // pick preview image: supplier photo[0] > material default
+  const previewImg = (s.photos && s.photos[0]) || SUP_MAT_IMGS[s.mats[0]] || SUP_MAT_IMGS.default;
+  const mats = s.mats.map(m => `<span class="sup-gc-mat">${m}</span>`).join('');
+  const locCity = s.location.split(',').pop().trim();
 
-  const licFields = `
-    <div class="sup-pcard-field">
-      <div class="sup-pcard-field-label">Trade Licence</div>
-      <div class="sup-pcard-field-value">${s.licenceNo || '—'}</div>
-    </div>
-    <div class="sup-pcard-field">
-      <div class="sup-pcard-field-label">Reg. No.</div>
-      <div class="sup-pcard-field-value">${s.regNo || '—'}</div>
-    </div>
-    <div class="sup-pcard-field">
-      <div class="sup-pcard-field-label">Established</div>
-      <div class="sup-pcard-field-value">${s.established || '—'}</div>
-    </div>
-    <div class="sup-pcard-field">
-      <div class="sup-pcard-field-label">Jurisdiction</div>
-      <div class="sup-pcard-field-value">${s.jurisdiction || s.location.split(',').pop().trim()}</div>
+  const preview = `
+    <div class="sup-gc-preview">
+      <img src="${previewImg}" alt="${s.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="sup-gc-preview-emoji" style="display:none">${s.emoji}</div>
+      <div class="sup-gc-tier-badge ${tierClass}">${tierLabel}</div>
+      ${blurred ? '<div class="sup-gc-lock-icon">🔒</div>' : ''}
     </div>`;
 
-  const specs = (s.specialisations || s.mats).map(t => `<span class="sup-pcard-tag">${t}</span>`).join('');
+  const body = `
+    <div class="sup-gc-body">
+      <div class="sup-gc-name">${s.name}</div>
+      <div class="sup-gc-tagline">${s.tagline || ''}</div>
+      <div class="sup-gc-mats">${mats}</div>
+      <div class="sup-gc-footer">
+        <div class="sup-gc-loc">
+          <div class="sup-gc-loc-dot"></div>
+          ${locCity}
+        </div>
+        <span class="sup-gc-arrow">↗</span>
+      </div>
+    </div>`;
 
-  const loc  = `<a class="sup-pcard-contact-row" href="#" onclick="return false">
-    <div class="sup-pcard-contact-icon">📍</div>
-    <div><div class="sup-pcard-contact-lbl">Location</div>
-    <div class="sup-pcard-contact-val">${s.address || s.location}</div></div></a>`;
-  const tel  = s.phone ? `<a class="sup-pcard-contact-row" href="tel:${s.phone}">
-    <div class="sup-pcard-contact-icon">📞</div>
-    <div><div class="sup-pcard-contact-lbl">Phone</div>
-    <div class="sup-pcard-contact-val">${blurred ? '+971 • ••• ••••' : s.phone}</div></div></a>` : '';
-  const mail = s.email && !blurred ? `<a class="sup-pcard-contact-row" href="mailto:${s.email}">
-    <div class="sup-pcard-contact-icon">✉</div>
-    <div><div class="sup-pcard-contact-lbl">Email</div>
-    <div class="sup-pcard-contact-val">${s.email}</div></div></a>` : '';
-  const web  = s.website && !blurred ? `<a class="sup-pcard-contact-row" href="${s.website}" target="_blank" rel="noreferrer">
-    <div class="sup-pcard-contact-icon">🌐</div>
-    <div><div class="sup-pcard-contact-lbl">Website</div>
-    <div class="sup-pcard-contact-val">${s.website.replace('https://','')}</div></div></a>` : '';
-
-  return `<div class="sup-profile-card${blurred ? ' sup-profile-teaser' : ''}">
-    <div class="sup-pcard-left">
-      <div class="sup-pcard-photogrid">${photoSlots}</div>
-      <div class="sup-pcard-license">
-        <div class="sup-pcard-license-label">Registration Details</div>
-        <div class="sup-pcard-license-fields">${licFields}</div>
-      </div>
-    </div>
-    <div class="sup-pcard-divider"></div>
-    <div class="sup-pcard-right">
-      <div style="margin-bottom:14px">
-        <div class="sup-pcard-badge">★ ${tierLabel}</div>
-        <div class="sup-pcard-name">${s.name}</div>
-        ${s.fullName ? `<div class="sup-pcard-fullname">${s.fullName}</div>` : ''}
-        <div class="sup-pcard-cats">${s.mats.join(' · ')}</div>
-      </div>
-      <div class="sup-pcard-divider-h"></div>
-      <div class="sup-pcard-section-lbl">Contact Details</div>
-      ${loc}${tel}${mail}${web}
-      <div class="sup-pcard-divider-h"></div>
-      <div class="sup-pcard-section-lbl">Specialisations</div>
-      <div class="sup-pcard-tags">${specs}</div>
-      <div class="sup-pcard-footer">
-        <span class="sup-pcard-footer-id">${refId} · CladWise UAE</span>
-        ${s.website && !blurred ? `<a class="sup-pcard-footer-link" href="${s.website}" target="_blank" rel="noreferrer">View Profile →</a>` : ''}
-      </div>
-    </div>
-  </div>`;
+  const clickAction = blurred ? '' : (s.phone ? `onclick="window.location.href='tel:${s.phone}'"` : '');
+  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${blurred ? ' sup-gc-locked' : ''}" ${clickAction}>${preview}${body}</div>`;
 }
 
 function buildSuppliers() {
   const container = document.getElementById('sup-teaser');
-  container.innerHTML = SUPPLIERS.slice(0, 2).map(s => supProfileCardHTML(s, true)).join('');
+  container.innerHTML = SUPPLIERS.slice(0, 8).map(s => supGridCardHTML(s, true)).join('');
   const gateWrap = document.querySelector('.sup-gate-wrap');
-  gateWrap.style.minHeight = '480px';
+  gateWrap.style.minHeight = '520px';
 }
 
 // ─── SUBSCRIPTION MODAL ──────────────────────────────────────────────────────
@@ -5528,8 +5631,8 @@ function cwUpdateSupplierSection() {
     if (grid) { grid.style.display = 'block'; return; }
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
-    realGrid.className = 'sup-profile-grid';
-    realGrid.innerHTML = SUPPLIERS.map(s => supProfileCardHTML(s, false)).join('');
+    realGrid.className = 'sup-grid-wrap';
+    realGrid.innerHTML = SUPPLIERS.map(s => supGridCardHTML(s, false)).join('');
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
