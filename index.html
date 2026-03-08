@@ -6525,5 +6525,175 @@ document.addEventListener('DOMContentLoaded', function() {
   </div><!-- /sup-apply-modal -->
 </div>
 
+
+/* ─── SUPPLIER APPLICATION FORM (5 STEPS) ───────────────────────────── */
+let sapStep = 1
+const SAP_TOTAL = 5
+
+function openSupApply() {
+  sapStep = 1
+  sapReset()
+  document.getElementById('sup-apply-overlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+function closeSupApply() {
+  document.getElementById('sup-apply-overlay').classList.remove('open')
+  document.body.style.overflow = ''
+}
+function supApplyOutsideClick(e) {
+  if (e.target === document.getElementById('sup-apply-overlay')) closeSupApply()
+}
+function sapReset() {
+  sapGoTo(1)
+  document.getElementById('sap-form-body').style.display = ''
+  document.getElementById('sap-footer').style.display = ''
+  document.getElementById('sap-success').style.display = 'none'
+}
+function sapGoTo(step) {
+  sapStep = step
+  for (let i = 1; i <= SAP_TOTAL; i++) {
+    const sec  = document.getElementById(`sap-sec-${i}`)
+    const stp  = document.getElementById(`sap-step-${i}`)
+    if (!sec || !stp) continue
+    sec.classList.toggle('active', i === step)
+    stp.classList.remove('active', 'done')
+    if (i < step)  stp.classList.add('done')
+    if (i === step) stp.classList.add('active')
+  }
+  document.getElementById('sap-back-btn').style.display = step > 1 ? '' : 'none'
+  const nextBtn = document.getElementById('sap-next-btn')
+  nextBtn.textContent = step === SAP_TOTAL ? 'Submit Application →' : 'Next →'
+  document.getElementById('sap-prog-label').textContent = `Step ${step} of ${SAP_TOTAL}`
+  document.getElementById('sap-prog-fill').style.width = `${(step / SAP_TOTAL) * 100}%`
+}
+function sapBack() { if (sapStep > 1) sapGoTo(sapStep - 1) }
+function sapNext() {
+  if (!sapValidate()) return
+  if (sapStep < SAP_TOTAL) { sapGoTo(sapStep + 1); return }
+  sapSubmit()
+}
+function sapValidate() {
+  const required = {
+    1: ['sap-company-name', 'sap-license-num', 'sap-license-emirate', 'sap-est-year', 'sap-tagline', 'sap-about'],
+    2: ['sap-contact-name', 'sap-contact-title', 'sap-contact-phone', 'sap-contact-email', 'sap-public-phone', 'sap-public-email', 'sap-address'],
+    3: [], // checkboxes handled separately
+    4: [], // file uploads optional for now
+    5: [],
+  }
+  const ids = required[sapStep] || []
+  let ok = true
+  ids.forEach(id => {
+    const el = document.getElementById(id)
+    if (!el) return
+    if (!el.value?.trim()) {
+      el.style.borderColor = '#f87171'
+      el.focus()
+      if (ok) ok = false
+    } else { el.style.borderColor = '' }
+  })
+  // Step 3: need at least one material
+  if (sapStep === 3) {
+    const hasMat = document.getElementById('mat-gfrc').checked || document.getElementById('mat-gfrp').checked
+    if (!hasMat) { showToast('Please select at least one cladding material.'); return false }
+  }
+  if (!ok) showToast('Please fill in all required fields.')
+  return ok
+}
+function toggleCheck(wrapper, checkId) {
+  const cb = document.getElementById(checkId)
+  if (!cb) return
+  cb.checked = !cb.checked
+  wrapper.classList.toggle('checked', cb.checked)
+}
+function preRegisterMaterial(mat, wrapper) {
+  wrapper.classList.toggle('checked')
+  const isNow = wrapper.classList.contains('checked')
+  if (isNow) showToast(`Pre-registered interest for ${mat}`)
+}
+function sapFileChange(input, nameId) {
+  const nameEl = document.getElementById(nameId)
+  if (nameEl && input.files[0]) nameEl.textContent = input.files[0].name
+}
+function sapCollectData() {
+  const gv = id => document.getElementById(id)?.value?.trim() || ''
+  const gc = id => document.getElementById(id)?.checked || false
+  const mats = []
+  if (gc('mat-gfrc'))  mats.push('GFRC')
+  if (gc('mat-gfrp'))  mats.push('GFRP')
+  const svcs = []
+  if (gc('svc-mfg'))     svcs.push('Manufacturing')
+  if (gc('svc-supply'))  svcs.push('Supply Only')
+  if (gc('svc-install')) svcs.push('Installation')
+  if (gc('svc-design'))  svcs.push('Design & Engineering')
+  if (gc('svc-consult')) svcs.push('Consultancy')
+  if (gc('svc-maintain'))svcs.push('Maintenance')
+  const emirates = []
+  if (gc('emr-dxb'))   emirates.push('Dubai')
+  if (gc('emr-auh'))   emirates.push('Abu Dhabi')
+  if (gc('emr-shj'))   emirates.push('Sharjah')
+  if (gc('emr-ajm'))   emirates.push('Ajman')
+  if (gc('emr-rak'))   emirates.push('RAK')
+  if (gc('emr-all'))   emirates.push('All UAE')
+  return {
+    company: {
+      name: gv('sap-company-name'),
+      tradeName: gv('sap-trade-name'),
+      licenseNum: gv('sap-license-num'),
+      licenseEmirate: gv('sap-license-emirate'),
+      established: gv('sap-est-year'),
+      turnover: gv('sap-turnover'),
+      employees: gv('sap-employees'),
+      website: gv('sap-website'),
+      social: gv('sap-social'),
+      tagline: gv('sap-tagline'),
+      about: gv('sap-about'),
+    },
+    contact: {
+      name: gv('sap-contact-name'),
+      title: gv('sap-contact-title'),
+      phone: gv('sap-contact-phone'),
+      email: gv('sap-contact-email'),
+      publicPhone: gv('sap-public-phone'),
+      publicEmail: gv('sap-public-email'),
+      address: gv('sap-address'),
+      prefContact: gv('sap-pref-contact'),
+      bestTime: gv('sap-contact-time'),
+    },
+    materials: {
+      live: mats,
+      services: svcs,
+      emirates: emirates,
+      projectValue: gv('sap-proj-value'),
+      leadTime: gv('sap-lead-time'),
+    }
+  }
+}
+async function sapSubmit() {
+  const nextBtn = document.getElementById('sap-next-btn')
+  nextBtn.textContent = 'Submitting…'
+  nextBtn.disabled = true
+  const payload = sapCollectData()
+  try {
+    const r = await fetch('https://backend-cladwise-production.up.railway.app/api/suppliers/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    const data = await r.json()
+    if (r.ok && data.success) {
+      document.getElementById('sap-form-body').style.display = 'none'
+      document.getElementById('sap-footer').style.display = 'none'
+      document.getElementById('sap-success').style.display = 'flex'
+      document.getElementById('sap-confirm-email').textContent = payload.contact.email
+    } else {
+      showToast('Submission error: ' + (data.message || 'Please try again.'))
+    }
+  } catch (e) {
+    showToast('Network error — please check your connection and try again.')
+  }
+  nextBtn.textContent = 'Submit Application →'
+  nextBtn.disabled = false
+}
+
 </body>
 </html>
