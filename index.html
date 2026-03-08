@@ -2426,6 +2426,189 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 
 
+
+/* ══════════════════════════════════════════════════════════════════
+   SUPPLIER PROFILE CARD DESIGN
+══════════════════════════════════════════════════════════════════ */
+.sup-profile-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 32px;
+  background: rgba(0,229,160,0.06);
+}
+.sup-profile-card {
+  background: #111a13;
+  border: 1px solid rgba(0,229,160,0.1);
+  display: grid;
+  grid-template-columns: 380px 1px 1fr;
+  min-height: 360px;
+  transition: border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.sup-profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00e5a0 0%, rgba(0,229,160,0.08) 100%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.sup-profile-card:hover { border-color: rgba(0,229,160,0.22); }
+.sup-profile-card:hover::before { opacity: 1; }
+
+/* left column */
+.sup-pcard-left { display: flex; flex-direction: column; }
+.sup-pcard-photogrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  height: 220px;
+  gap: 1px;
+  background: rgba(0,229,160,0.04);
+  flex-shrink: 0;
+}
+.sup-pcard-photo { overflow: hidden; background: #0e1a0f; }
+.sup-pcard-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.82) contrast(0.95) saturate(0.9);
+  transition: transform 0.5s ease, filter 0.3s ease;
+}
+.sup-profile-card:hover .sup-pcard-photo img {
+  transform: scale(1.04);
+  filter: brightness(0.92) contrast(1) saturate(1);
+}
+.sup-pcard-photo-placeholder {
+  width: 100%; height: 100%;
+  background: #131f14;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.sup-pcard-license {
+  padding: 18px 22px 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  flex: 1;
+}
+.sup-pcard-license-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(200,220,205,0.22); margin-bottom: 12px;
+}
+.sup-pcard-license-fields {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.sup-pcard-field { display: flex; flex-direction: column; gap: 5px; }
+.sup-pcard-field-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(0,229,160,0.4);
+}
+.sup-pcard-field-value {
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 3px;
+  padding: 7px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 1px;
+  color: rgba(232,240,234,0.8);
+}
+.sup-pcard-divider { background: rgba(0,229,160,0.07); }
+
+/* right column */
+.sup-pcard-right {
+  padding: 26px 28px 22px;
+  display: flex; flex-direction: column;
+}
+.sup-pcard-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.28);
+  border-radius: 3px; padding: 3px 9px; margin-bottom: 12px;
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 2px; color: #00e5a0; text-transform: uppercase;
+}
+.sup-pcard-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.5px; line-height: 0.95;
+  color: #e8f0ea; margin-bottom: 4px;
+}
+.sup-pcard-fullname {
+  font-size: 14px; color: rgba(232,240,234,0.4);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+}
+.sup-pcard-cats {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: rgba(0,229,160,0.5);
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.sup-pcard-divider-h { height: 1px; background: rgba(255,255,255,0.05); margin: 14px 0; }
+.sup-pcard-section-lbl {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(200,220,205,0.22); margin-bottom: 8px;
+}
+.sup-pcard-contact-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-decoration: none;
+}
+.sup-pcard-contact-icon {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.14);
+  border-radius: 5px; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; color: #00e5a0;
+}
+.sup-pcard-contact-lbl {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 2px; color: rgba(0,229,160,0.4);
+  text-transform: uppercase; margin-bottom: 2px;
+}
+.sup-pcard-contact-val { font-size: 12px; color: rgba(232,240,234,0.7); line-height: 1.4; }
+.sup-pcard-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.sup-pcard-tag {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2px; padding: 3px 9px;
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; color: rgba(200,220,205,0.4); text-transform: uppercase;
+}
+.sup-pcard-footer {
+  margin-top: auto; padding-top: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.sup-pcard-footer-id {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(200,220,205,0.2);
+}
+.sup-pcard-footer-link {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: #00e5a0; text-decoration: none;
+  display: flex; align-items: center; gap: 5px; transition: opacity 0.15s;
+}
+.sup-pcard-footer-link:hover { opacity: 0.75; }
+
+/* blurred teaser */
+.sup-profile-teaser .sup-pcard-right,
+.sup-profile-teaser .sup-pcard-license { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.6; }
+.sup-profile-teaser .sup-pcard-photogrid { filter: blur(3px) grayscale(0.5); }
+
+/* responsive */
+@media (max-width: 900px) {
+  .sup-profile-card { grid-template-columns: 1fr; }
+  .sup-pcard-divider { display: none; }
+  .sup-pcard-photogrid { height: 180px; }
+}
+@media (max-width: 600px) {
+  .sup-pcard-license-fields { grid-template-columns: 1fr; }
+  .sup-pcard-right { padding: 20px; }
+  .sup-pcard-name { font-size: 26px; }
+}
+
 </style>
 </head>
 <body>
@@ -2654,7 +2837,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
     <!-- GATE WRAP: 3D carousel teaser + overlay -->
     <div class="sup-gate-wrap">
-      <div class="sup-carousel-wrap" id="sup-teaser"></div>
+      <div class="sup-profile-grid" id="sup-teaser"></div>
 
       <!-- Gate overlay -->
       <div class="sup-gate">
@@ -4069,6 +4252,8 @@ const SUPPLIERS = [
     name: 'ABM Group of Companies',
     fullName: 'Al Bait Al Malaky Industries',
     location: 'Sajja Industrial Area, Sharjah',
+    address: 'P.O Box 40345, Sajja Industrial Area, Sharjah, UAE',
+    jurisdiction: 'Sharjah, UAE',
     mats: ['GFRC', 'GFRP'],
     phone: '+971 6 531 1385',
     email: 'info@abm-i.com',
@@ -4077,10 +4262,20 @@ const SUPPLIERS = [
     color: '#0a2015',
     verified: true,
     tier: 'verified_pro',
-    tagline: 'Leading GFRC & GFRP manufacturer — Sharjah, est. 2013',
-    established: '2013',
+    licenceNo: '721178',
+    regNo: '154855',
+    established: 'Dec 2013',
+    jurisdiction: 'Sharjah, UAE',
     turnover: 'AED 20–25M / year',
+    tagline: 'Leading GFRC & GFRP manufacturer — Sharjah, est. 2013',
+    specialisations: ['GRC / Precast', 'GRP / GFRP', 'Prefab Buildings', 'Container Conversion', 'LGS Structure', 'Interior Fit-Out'],
     about: 'Leading UAE manufacturer specialising in GFRC & GFRP facade cladding. Established 2013 in Sharjah with major projects across Dubai, Abu Dhabi and Fujairah.',
+    photos: [
+      'https://abm-i.com/wp-content/themes/abm-theme/assets/images/services-thumb/precast.jpg',
+      'https://abm-i.com/wp-content/themes/abm-theme/assets/images/services-thumb/Grp.jpg',
+      'https://abm-i.com/wp-content/themes/abm-theme/assets/images/about/img-2.jpg',
+      'https://abm-i.com/wp-content/uploads/2024/07/1.png',
+    ],
     projects: ['Fujairah Beach Hotel', 'ADNOC Kitchen – Abu Dhabi', 'Khadijah Mosque – Sharjah', 'GRP Roof Cladding – Marsa Al Arab Dubai'],
   },
   { name: 'Duratec Facades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', email: 'info@duratec.ae', emoji: '🏭', color: '#0f3020', verified: true, tier: 'featured', tagline: 'Premium GFRC & GFRP facade contractor for landmark projects' },
@@ -4942,11 +5137,93 @@ function buildCarousel(container, data, blurred) {
   ring.addEventListener('touchend',    e => onDragEnd(e.changedTouches[0].clientX));
 }
 
+/* ─── SUPPLIER PROFILE CARD RENDERER ──────────────────────────── */
+function supProfileCardHTML(s, blurred) {
+  const idx = SUPPLIERS.indexOf(s);
+  const refId = 'SUP-' + String(idx + 1).padStart(3, '0');
+  const tierLabel = s.tier === 'featured' ? '⭐ Featured Partner'
+                  : s.tier === 'verified_pro' ? '✓ Verified Supplier'
+                  : 'Listed Supplier';
+
+  const photoSlots = [0,1,2,3].map(i => {
+    const src = s.photos && s.photos[i];
+    return src
+      ? `<div class="sup-pcard-photo"><img src="${src}" alt="${s.name}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\"sup-pcard-photo-placeholder\">${s.emoji}</div>'"></div>`
+      : `<div class="sup-pcard-photo"><div class="sup-pcard-photo-placeholder">${s.emoji}</div></div>`;
+  }).join('');
+
+  const licFields = `
+    <div class="sup-pcard-field">
+      <div class="sup-pcard-field-label">Trade Licence</div>
+      <div class="sup-pcard-field-value">${s.licenceNo || '—'}</div>
+    </div>
+    <div class="sup-pcard-field">
+      <div class="sup-pcard-field-label">Reg. No.</div>
+      <div class="sup-pcard-field-value">${s.regNo || '—'}</div>
+    </div>
+    <div class="sup-pcard-field">
+      <div class="sup-pcard-field-label">Established</div>
+      <div class="sup-pcard-field-value">${s.established || '—'}</div>
+    </div>
+    <div class="sup-pcard-field">
+      <div class="sup-pcard-field-label">Jurisdiction</div>
+      <div class="sup-pcard-field-value">${s.jurisdiction || s.location.split(',').pop().trim()}</div>
+    </div>`;
+
+  const specs = (s.specialisations || s.mats).map(t => `<span class="sup-pcard-tag">${t}</span>`).join('');
+
+  const loc  = `<a class="sup-pcard-contact-row" href="#" onclick="return false">
+    <div class="sup-pcard-contact-icon">📍</div>
+    <div><div class="sup-pcard-contact-lbl">Location</div>
+    <div class="sup-pcard-contact-val">${s.address || s.location}</div></div></a>`;
+  const tel  = s.phone ? `<a class="sup-pcard-contact-row" href="tel:${s.phone}">
+    <div class="sup-pcard-contact-icon">📞</div>
+    <div><div class="sup-pcard-contact-lbl">Phone</div>
+    <div class="sup-pcard-contact-val">${blurred ? '+971 • ••• ••••' : s.phone}</div></div></a>` : '';
+  const mail = s.email && !blurred ? `<a class="sup-pcard-contact-row" href="mailto:${s.email}">
+    <div class="sup-pcard-contact-icon">✉</div>
+    <div><div class="sup-pcard-contact-lbl">Email</div>
+    <div class="sup-pcard-contact-val">${s.email}</div></div></a>` : '';
+  const web  = s.website && !blurred ? `<a class="sup-pcard-contact-row" href="${s.website}" target="_blank" rel="noreferrer">
+    <div class="sup-pcard-contact-icon">🌐</div>
+    <div><div class="sup-pcard-contact-lbl">Website</div>
+    <div class="sup-pcard-contact-val">${s.website.replace('https://','')}</div></div></a>` : '';
+
+  return `<div class="sup-profile-card${blurred ? ' sup-profile-teaser' : ''}">
+    <div class="sup-pcard-left">
+      <div class="sup-pcard-photogrid">${photoSlots}</div>
+      <div class="sup-pcard-license">
+        <div class="sup-pcard-license-label">Registration Details</div>
+        <div class="sup-pcard-license-fields">${licFields}</div>
+      </div>
+    </div>
+    <div class="sup-pcard-divider"></div>
+    <div class="sup-pcard-right">
+      <div style="margin-bottom:14px">
+        <div class="sup-pcard-badge">★ ${tierLabel}</div>
+        <div class="sup-pcard-name">${s.name}</div>
+        ${s.fullName ? `<div class="sup-pcard-fullname">${s.fullName}</div>` : ''}
+        <div class="sup-pcard-cats">${s.mats.join(' · ')}</div>
+      </div>
+      <div class="sup-pcard-divider-h"></div>
+      <div class="sup-pcard-section-lbl">Contact Details</div>
+      ${loc}${tel}${mail}${web}
+      <div class="sup-pcard-divider-h"></div>
+      <div class="sup-pcard-section-lbl">Specialisations</div>
+      <div class="sup-pcard-tags">${specs}</div>
+      <div class="sup-pcard-footer">
+        <span class="sup-pcard-footer-id">${refId} · CladWise UAE</span>
+        ${s.website && !blurred ? `<a class="sup-pcard-footer-link" href="${s.website}" target="_blank" rel="noreferrer">View Profile →</a>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
 function buildSuppliers() {
   const container = document.getElementById('sup-teaser');
-  buildCarousel(container, SUPPLIERS, true /* blurred */);
+  container.innerHTML = SUPPLIERS.slice(0, 2).map(s => supProfileCardHTML(s, true)).join('');
   const gateWrap = document.querySelector('.sup-gate-wrap');
-  gateWrap.style.minHeight = '560px';
+  gateWrap.style.minHeight = '480px';
 }
 
 // ─── SUBSCRIPTION MODAL ──────────────────────────────────────────────────────
@@ -5251,9 +5528,8 @@ function cwUpdateSupplierSection() {
     if (grid) { grid.style.display = 'block'; return; }
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
-    realGrid.className = 'sup-carousel-wrap';
-    realGrid.style.marginTop = '32px';
-    buildCarousel(realGrid, SUPPLIERS, false /* full data */);
+    realGrid.className = 'sup-profile-grid';
+    realGrid.innerHTML = SUPPLIERS.map(s => supProfileCardHTML(s, false)).join('');
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
