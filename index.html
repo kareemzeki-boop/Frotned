@@ -29,6 +29,12 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
+/* GLOBAL FOCUS VISIBILITY */
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
 
@@ -2078,7 +2084,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <button class="nav-logout" onclick="authLogout()">Out</button>
       </div>
       <!-- HAMBURGER (mobile only) -->
-      <button class="nav-ham" id="nav-ham" onclick="toggleMobileMenu()" aria-label="Menu">
+      <button class="nav-ham" id="nav-ham" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mob-drawer">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -2350,7 +2356,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <!-- PROJECT DETAILS ROW -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px" class="spec-form-grid">
           <div>
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT TYPE</label>
+            <label for="spec-project-type" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT TYPE</label>
             <select id="spec-project-type" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
               <option value="">Select type...</option>
               <option>Residential Tower</option>
@@ -2368,7 +2374,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
             </select>
           </div>
           <div>
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">LOCATION / EMIRATE</label>
+            <label for="spec-location" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">LOCATION / EMIRATE</label>
             <select id="spec-location" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
               <option value="">Select location...</option>
               <option>Dubai — Downtown / DIFC</option>
@@ -2388,7 +2394,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
             </select>
           </div>
           <div>
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">BUILDING HEIGHT</label>
+            <label for="spec-height" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">BUILDING HEIGHT</label>
             <select id="spec-height" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
               <option value="">Select height...</option>
               <option>Low-rise (under 15m)</option>
@@ -2399,7 +2405,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
             </select>
           </div>
           <div>
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">FACADE BUDGET (AED/m²)</label>
+            <label for="spec-budget" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">FACADE BUDGET (AED/m²)</label>
             <select id="spec-budget" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
               <option value="">Select budget range...</option>
               <option>Under AED 200/m²</option>
@@ -2414,7 +2420,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
         <!-- PROGRAMME -->
         <div style="margin-bottom:14px">
-          <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROGRAMME / LEAD TIME AVAILABLE</label>
+          <label for="spec-programme" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROGRAMME / LEAD TIME AVAILABLE</label>
           <select id="spec-programme" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
             <option value="">Select programme...</option>
             <option>Under 8 weeks (urgent)</option>
@@ -2427,7 +2433,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
         <!-- PROJECT BRIEF TEXT -->
         <div style="margin-bottom:14px">
-          <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT BRIEF & REQUIREMENTS</label>
+          <label for="spec-brief" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT BRIEF & REQUIREMENTS</label>
           <textarea id="spec-brief" placeholder="Describe your project: facade area, aesthetic requirements, sustainability targets, special constraints (coastal exposure, seismic zone, heritage area), performance requirements (wind load, thermal, acoustic), client brief highlights..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:13px;font-family:'Barlow',sans-serif;resize:vertical;min-height:120px;outline:none;line-height:1.6" onfocus="this.style.borderColor='rgba(0,229,160,0.4)'" onblur="this.style.borderColor='var(--border)'"></textarea>
         </div>
 
@@ -2478,7 +2484,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close authentication modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -2490,11 +2496,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <!-- LOGIN FIELDS -->
       <div id="auth-login-fields">
         <div class="auth-field" style="margin-bottom:14px">
-          <label>Email Address</label>
+          <label for="auth-email">Email Address</label>
           <input type="email" id="auth-email" placeholder="you@company.com"/>
         </div>
         <div class="auth-field" style="margin-bottom:6px">
-          <label>Password</label>
+          <label for="auth-password">Password</label>
           <input type="password" id="auth-password" placeholder="Your password" onkeydown="if(event.key==='Enter')authSubmit()"/>
         </div>
       </div>
@@ -2502,7 +2508,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <!-- REGISTER EXTRA FIELDS -->
       <div id="auth-register-fields" style="display:none">
         <div class="auth-field" style="margin-bottom:14px">
-          <label>I am a</label>
+          <label for="auth-role">I am a</label>
           <select id="auth-role" onchange="authRoleChange()">
             <option value="ARCHITECT">🏗 Architect / Specifier / Developer</option>
             <option value="SUPPLIER">🏭 Supplier / Manufacturer</option>
@@ -2511,11 +2517,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div id="auth-arch-extra">
           <div class="auth-row" style="margin-bottom:14px">
             <div class="auth-field">
-              <label>Company Name</label>
+              <label for="auth-company">Company Name</label>
               <input type="text" id="auth-company" placeholder="Design Studio LLC"/>
             </div>
             <div class="auth-field">
-              <label>License No.</label>
+              <label for="auth-license">License No.</label>
               <input type="text" id="auth-license" placeholder="LIC-2025-001"/>
             </div>
           </div>
@@ -2523,27 +2529,27 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div id="auth-supp-extra" style="display:none">
           <div class="auth-row" style="margin-bottom:14px">
             <div class="auth-field">
-              <label>Company / Brand Name</label>
+              <label for="auth-shop">Company / Brand Name</label>
               <input type="text" id="auth-shop" placeholder="Gulf Facades LLC"/>
             </div>
             <div class="auth-field">
-              <label>Category</label>
+              <label for="auth-category">Category</label>
               <input type="text" id="auth-category" placeholder="Facade Cladding"/>
             </div>
           </div>
           <div class="auth-field" style="margin-bottom:14px">
-            <label>Tax ID / TRN</label>
+            <label for="auth-taxid">Tax ID / TRN</label>
             <input type="text" id="auth-taxid" placeholder="TAX-UAE-2025-001"/>
           </div>
           <div style="background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
             <div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🏛 UAE Trade Licence</div>
             <div class="auth-row" style="margin-bottom:10px">
               <div class="auth-field">
-                <label>Trade Licence Number</label>
+                <label for="auth-tln">Trade Licence Number</label>
                 <input type="text" id="auth-tln" placeholder="DED-2024-123456"/>
               </div>
               <div class="auth-field">
-                <label>Issuing Emirate</label>
+                <label for="auth-emirate">Issuing Emirate</label>
                 <select id="auth-emirate" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%">
                   <option value="">Select Emirate</option>
                   <option value="Dubai">Dubai (DED)</option>
@@ -2557,7 +2563,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
               </div>
             </div>
             <div class="auth-field" style="margin-bottom:0">
-              <label>Licence Expiry Date</label>
+              <label for="auth-expiry">Licence Expiry Date</label>
               <input type="date" id="auth-expiry" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%;color-scheme:dark"/>
             </div>
           </div>
@@ -2581,7 +2587,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close subscription modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fa-solid fa-search" style="margin-right:6px"></i>For Specifiers &amp; Architects</button>
@@ -2908,14 +2914,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </div>
       <div class="tstr-right">
         <div class="cfg-row">
-          <span class="cfg-lbl">URL</span>
+          <label for="api-base-url" class="cfg-lbl">URL</label>
           <input class="cfg-inp" id="api-base-url" value="http://localhost:5000/api" placeholder="http://localhost:5000/api"/>
           <button class="cfg-ping" onclick="apiPing()">⚡ Ping</button>
         </div>
         <div class="cfg-row">
           <span class="cfg-lbl tok-lbl">JWT</span>
           <span class="tok-val" id="tok-display">no token — log in first</span>
-          <button class="tok-clr" onclick="apiClearToken()">✕</button>
+          <button class="tok-clr" onclick="apiClearToken()" aria-label="Clear JWT token">✕</button>
         </div>
       </div>
     </div>
@@ -2935,26 +2941,26 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </div>
         <div class="ep-body">
           <div class="frow">
-            <div class="ffield"><label>Email</label><input type="email" id="reg-email" value="architect@test.com"/></div>
-            <div class="ffield"><label>Password</label><input type="text" id="reg-pass" value="Test1234!"/></div>
+            <div class="ffield"><label for="reg-email">Email</label><input type="email" id="reg-email" value="architect@test.com"/></div>
+            <div class="ffield"><label for="reg-pass">Password</label><input type="text" id="reg-pass" value="Test1234!"/></div>
           </div>
           <div class="ffield">
-            <label>Role</label>
-            <div class="role-row">
-              <button class="trb arch" id="trb-arch" onclick="apiSetRole('ARCHITECT')">🏗 ARCHITECT</button>
-              <button class="trb" id="trb-supp" onclick="apiSetRole('SUPPLIER')">🏭 SUPPLIER</button>
+            <label id="reg-role-label">Role</label>
+            <div class="role-row" role="group" aria-labelledby="reg-role-label">
+              <button class="trb arch" id="trb-arch" onclick="apiSetRole('ARCHITECT')" aria-pressed="true">🏗 ARCHITECT</button>
+              <button class="trb" id="trb-supp" onclick="apiSetRole('SUPPLIER')" aria-pressed="false">🏭 SUPPLIER</button>
             </div>
           </div>
           <input type="hidden" id="reg-role" value="ARCHITECT"/>
           <div class="frow subf" id="arch-fields">
-            <div class="ffield"><label>Company Name</label><input type="text" id="reg-company" value="Design Studio LLC"/></div>
-            <div class="ffield"><label>License Number</label><input type="text" id="reg-license" value="LIC-2025-001"/></div>
-            <div class="ffield full"><label>Portfolio URL (optional)</label><input type="text" id="reg-portfolio" placeholder="https://myportfolio.com"/></div>
+            <div class="ffield"><label for="reg-company">Company Name</label><input type="text" id="reg-company" value="Design Studio LLC"/></div>
+            <div class="ffield"><label for="reg-license">License Number</label><input type="text" id="reg-license" value="LIC-2025-001"/></div>
+            <div class="ffield full"><label for="reg-portfolio">Portfolio URL (optional)</label><input type="text" id="reg-portfolio" placeholder="https://myportfolio.com"/></div>
           </div>
           <div class="frow subf hidden" id="supp-fields">
-            <div class="ffield"><label>Shop Name</label><input type="text" id="reg-shop" value="Gulf Facades LLC"/></div>
-            <div class="ffield"><label>Category</label><input type="text" id="reg-cat" value="Facade Cladding"/></div>
-            <div class="ffield full"><label>Tax ID</label><input type="text" id="reg-taxid" value="TAX-UAE-2025-001"/></div>
+            <div class="ffield"><label for="reg-shop">Shop Name</label><input type="text" id="reg-shop" value="Gulf Facades LLC"/></div>
+            <div class="ffield"><label for="reg-cat">Category</label><input type="text" id="reg-cat" value="Facade Cladding"/></div>
+            <div class="ffield full"><label for="reg-taxid">Tax ID</label><input type="text" id="reg-taxid" value="TAX-UAE-2025-001"/></div>
           </div>
           <button class="api-send" id="btn-register" onclick="apiRegister()"><span class="api-spin">↻</span> Send Request</button>
           <div class="res-wrap">
@@ -2971,8 +2977,8 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </div>
         <div class="ep-body">
           <div class="frow">
-            <div class="ffield"><label>Email</label><input type="email" id="login-email" value="architect@test.com"/></div>
-            <div class="ffield"><label>Password</label><input type="text" id="login-pass" value="Test1234!"/></div>
+            <div class="ffield"><label for="login-email">Email</label><input type="email" id="login-email" value="architect@test.com"/></div>
+            <div class="ffield"><label for="login-pass">Password</label><input type="text" id="login-pass" value="Test1234!"/></div>
           </div>
           <button class="api-send" id="btn-login" onclick="apiLogin()"><span class="api-spin">↻</span> Login &amp; Save Token</button>
           <div class="res-wrap">
@@ -3010,7 +3016,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
         </div>
         <div class="ep-body">
-          <div class="ffield"><label>JSON Body</label><textarea id="profile-body">{"companyName": "Updated Studio", "portfolio": "https://newportfolio.com"}</textarea></div>
+          <div class="ffield"><label for="profile-body">JSON Body</label><textarea id="profile-body">{"companyName": "Updated Studio", "portfolio": "https://newportfolio.com"}</textarea></div>
           <button class="api-send" id="btn-profile" onclick="apiUpdateProfile()"><span class="api-spin">↻</span> Send Request</button>
           <div class="res-wrap">
             <div class="res-bar"><div class="res-left"><span class="res-code rD" id="profile-code">—</span><span class="res-ms" id="profile-ms"></span></div><button class="res-cp" onclick="apiCopy('profile-res')">copy</button></div>
@@ -3047,10 +3053,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </div>
         <div class="ep-body">
           <div class="frow">
-            <div class="ffield"><label>Title</label><input type="text" id="proj-title" value="Dubai Villa Facade"/></div>
-            <div class="ffield"><label>Budget (AED)</label><input type="number" id="proj-budget" value="150000"/></div>
+            <div class="ffield"><label for="proj-title">Title</label><input type="text" id="proj-title" value="Dubai Villa Facade"/></div>
+            <div class="ffield"><label for="proj-budget">Budget (AED)</label><input type="number" id="proj-budget" value="150000"/></div>
           </div>
-          <div class="ffield"><label>Description</label><input type="text" id="proj-desc" value="GFRC cladding for 3-storey villa in Jumeirah"/></div>
+          <div class="ffield"><label for="proj-desc">Description</label><input type="text" id="proj-desc" value="GFRC cladding for 3-storey villa in Jumeirah"/></div>
           <button class="api-send" id="btn-createproject" onclick="apiCreateProject()"><span class="api-spin">↻</span> Create Project</button>
           <div class="res-wrap">
             <div class="res-bar"><div class="res-left"><span class="res-code rD" id="createproject-code">—</span><span class="res-ms" id="createproject-ms"></span></div><button class="res-cp" onclick="apiCopy('createproject-res')">copy</button></div>
@@ -3087,12 +3093,12 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </div>
         <div class="ep-body">
           <div class="frow">
-            <div class="ffield"><label>Name</label><input type="text" id="prod-name" value="GFRC Panel Type A"/></div>
-            <div class="ffield"><label>Category</label><input type="text" id="prod-cat" value="Facade Cladding"/></div>
+            <div class="ffield"><label for="prod-name">Name</label><input type="text" id="prod-name" value="GFRC Panel Type A"/></div>
+            <div class="ffield"><label for="prod-cat">Category</label><input type="text" id="prod-cat" value="Facade Cladding"/></div>
           </div>
           <div class="frow">
-            <div class="ffield"><label>Price (AED / m²)</label><input type="number" id="prod-price" value="650"/></div>
-            <div class="ffield"><label>Description</label><input type="text" id="prod-desc" value="Per m², fixings included"/></div>
+            <div class="ffield"><label for="prod-price">Price (AED / m²)</label><input type="number" id="prod-price" value="650"/></div>
+            <div class="ffield"><label for="prod-desc">Description</label><input type="text" id="prod-desc" value="Per m², fixings included"/></div>
           </div>
           <button class="api-send" id="btn-createproduct" onclick="apiCreateProduct()"><span class="api-spin">↻</span> Create Product</button>
           <div class="res-wrap">
@@ -3130,7 +3136,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           <span class="ep-lock"><i class="fa-solid fa-lock"></i></span><i class="fa-solid fa-chevron-down ep-chev"></i>
         </div>
         <div class="ep-body">
-          <div class="ffield"><label>Stripe Price ID</label><input type="text" id="price-id" placeholder="price_xxxxxxxxxxxxxxxx"/></div>
+          <div class="ffield"><label for="price-id">Stripe Price ID</label><input type="text" id="price-id" placeholder="price_xxxxxxxxxxxxxxxx"/></div>
           <button class="api-send" id="btn-checkout" onclick="apiCheckout()"><span class="api-spin">↻</span> Get Checkout URL</button>
           <div class="res-wrap">
             <div class="res-bar"><div class="res-left"><span class="res-code rD" id="checkout-code">—</span><span class="res-ms" id="checkout-ms"></span></div><button class="res-cp" onclick="apiCopy('checkout-res')">copy</button></div>
@@ -3158,7 +3164,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close details modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -3167,7 +3173,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close image gallery"><i class="fa-solid fa-xmark"></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -4667,11 +4673,14 @@ function toggleMobileMenu() {
   const ham    = document.getElementById('nav-ham');
   const open   = drawer.classList.toggle('open');
   ham.classList.toggle('open', open);
+  ham.setAttribute('aria-expanded', open);
   document.body.style.overflow = open ? 'hidden' : '';
 }
 function closeMobileMenu() {
   document.getElementById('mob-drawer').classList.remove('open');
-  document.getElementById('nav-ham').classList.remove('open');
+  const ham = document.getElementById('nav-ham');
+  ham.classList.remove('open');
+  ham.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
 }
 // Close drawer on resize to desktop
@@ -4842,9 +4851,12 @@ async function apiPing(){
 
 function apiSetRole(r){
   document.getElementById('reg-role').value=r;
-  document.getElementById('trb-arch').className='trb'+(r==='ARCHITECT'?' arch':'');
+  const isArch = r==='ARCHITECT';
+  document.getElementById('trb-arch').className='trb'+(isArch?' arch':'');
+  document.getElementById('trb-arch').setAttribute('aria-pressed', isArch);
   document.getElementById('trb-supp').className='trb'+(r==='SUPPLIER'?' supp':'');
-  document.getElementById('arch-fields').className='frow subf'+(r==='ARCHITECT'?'':' hidden');
+  document.getElementById('trb-supp').setAttribute('aria-pressed', r==='SUPPLIER');
+  document.getElementById('arch-fields').className='frow subf'+(isArch?'':' hidden');
   document.getElementById('supp-fields').className='frow subf'+(r==='SUPPLIER'?'':' hidden');
 }
 
