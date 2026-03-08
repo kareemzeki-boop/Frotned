@@ -2680,8 +2680,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 .sup-gc-tier-badge.standard  { background: rgba(255,255,255,0.12); color: rgba(200,220,205,0.7); }
 
 /* Blurred overlay for locked cards */
-.sup-gc-locked .sup-gc-preview img { filter: blur(8px) brightness(0.4); }
-.sup-gc-locked .sup-gc-body { filter: blur(5px); user-select: none; pointer-events: none; }
+.sup-gc-locked .sup-gc-preview img { filter: brightness(0.3) grayscale(1); }
+.sup-gc-locked .sup-gc-body { opacity: 0.25; user-select: none; pointer-events: none; }
+.sup-gc-locked { opacity: 0.55; cursor: default; }
+.sup-gc-locked:hover { transform: none !important; box-shadow: none !important; border-color: rgba(255,255,255,0.07) !important; }
+.sup-gc-locked:hover::before { opacity: 0 !important; }
 .sup-gc-lock-icon {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -5287,7 +5290,7 @@ const SUP_MAT_IMGS = {
   default: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=70',
 };
 
-function supGridCardHTML(s, blurred) {
+function supGridCardHTML(s, blurred, dimLocked) {
   const tierClass = s.tier === 'featured' ? 'featured' : s.tier === 'verified_pro' ? 'verified' : 'standard';
   const tierLabel = s.tier === 'featured' ? '⭐ Featured' : s.tier === 'verified_pro' ? '✓ Verified' : 'Listed';
   const isFeatured = s.tier === 'featured';
@@ -5301,7 +5304,7 @@ function supGridCardHTML(s, blurred) {
       <img src="${previewImg}" alt="${s.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="sup-gc-preview-emoji" style="display:none">${s.emoji}</div>
       <div class="sup-gc-tier-badge ${tierClass}">${tierLabel}</div>
-      ${blurred ? '<div class="sup-gc-lock-icon">🔒</div>' : ''}
+      ${(blurred && !dimLocked) ? '<div class="sup-gc-lock-icon">🔒</div>' : dimLocked ? '<div class="sup-gc-lock-icon" style="font-size:16px;color:rgba(255,255,255,0.2)">COMING SOON</div>' : ''}
     </div>`;
 
   const body = `
@@ -5319,12 +5322,16 @@ function supGridCardHTML(s, blurred) {
     </div>`;
 
   const clickAction = blurred ? '' : (s.phone ? `onclick="window.location.href='tel:${s.phone}'"` : '');
-  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${blurred ? ' sup-gc-locked' : ''}" ${clickAction}>${preview}${body}</div>`;
+  const isLockedClass = (blurred || dimLocked) ? ' sup-gc-locked' : '';
+  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${isLockedClass}" ${clickAction}>${preview}${body}</div>`;
 }
 
 function buildSuppliers() {
   const container = document.getElementById('sup-teaser');
-  container.innerHTML = SUPPLIERS.slice(0, 8).map(s => supGridCardHTML(s, true)).join('');
+  container.innerHTML = SUPPLIERS.slice(0, 8).map(s => {
+    const isLive = s.mats.some(m => m === 'GFRC' || m === 'GFRP');
+    return supGridCardHTML(s, true, !isLive /* dimLocked */);
+  }).join('');
   const gateWrap = document.querySelector('.sup-gate-wrap');
   gateWrap.style.minHeight = '520px';
 }
@@ -5632,7 +5639,10 @@ function cwUpdateSupplierSection() {
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
     realGrid.className = 'sup-grid-wrap';
-    realGrid.innerHTML = SUPPLIERS.map(s => supGridCardHTML(s, false)).join('');
+    realGrid.innerHTML = SUPPLIERS.map(s => {
+      const isLive = s.mats.some(m => m === 'GFRC' || m === 'GFRP');
+      return supGridCardHTML(s, !isLive);
+    }).join('');
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
