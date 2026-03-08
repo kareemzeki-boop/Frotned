@@ -2036,7 +2036,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 .mat-card-locked.jiggling {
   animation: mat-jiggle 0.55s cubic-bezier(0.36,0.07,0.19,0.97);
 }
-
+*:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+}
 </style>
 </head>
 <body>
@@ -2478,7 +2481,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -2581,7 +2584,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fa-solid fa-search" style="margin-right:6px"></i>For Specifiers &amp; Architects</button>
@@ -3158,7 +3161,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -3167,7 +3170,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -3854,16 +3857,17 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<button class="mat-deck-arrow" onclick="deckPrev()" aria-label="Previous material" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:0;display:flex;align-items:center;justify-content:center">&#8593;</button>` +
+    keys.map((k,i) => `<button class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})" aria-label="Go to material ${i+1}" style="border:none;padding:0"></button>`).join('') +
+    `<button class="mat-deck-arrow" onclick="deckNext()" aria-label="Next material" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:0;display:flex;align-items:center;justify-content:center">&#8595;</button>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    const m = MATERIALS[key];
+    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})" role="button" tabindex="0" aria-label="View ${m.name} material">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
-      <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
+      <span class="mat-deck-item-name">${m.name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
     </div>`;
   }).join('');
@@ -4487,6 +4491,17 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCompare();
   buildWizard();
   buildSuppliers();
+
+  // Global accessibility listener for custom interactive elements
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const target = e.target.closest('[role="button"], [role="checkbox"]');
+      if (target && !['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'A'].includes(target.tagName)) {
+        e.preventDefault();
+        target.click();
+      }
+    }
+  });
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -5168,7 +5183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">Supplier Application</div>
         <div class="sap-subtitle">Complete all sections to activate your free listing &amp; verification</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sap-close" onclick="closeSupApply()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- Step indicator -->
