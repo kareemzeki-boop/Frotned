@@ -5350,6 +5350,17 @@ function closeSubModal() {
   document.getElementById('sub-modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
+function openSupApply() {
+  document.getElementById('sup-apply-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSupApply() {
+  document.getElementById('sup-apply-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function supApplyOutsideClick(e) {
+  if (e.target === document.getElementById('sup-apply-overlay')) closeSupApply();
+}
 
 function checkCloseSubModal(e) {
   if (e.target === document.getElementById('sub-modal-overlay')) closeSubModal();
