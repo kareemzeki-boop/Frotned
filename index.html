@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --bg: #0b110d;
@@ -2938,6 +2939,19 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <thead><tr id="compare-thead"></tr></thead>
         <tbody id="compare-tbody"></tbody>
       </table>
+    </div>
+    <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+      <button onclick="exportComparePDF()" id="pdf-export-btn" style="
+        display:inline-flex;align-items:center;gap:10px;
+        background:var(--accent);color:#0b110d;
+        border:none;border-radius:10px;
+        padding:13px 28px;
+        font-family:'Barlow Condensed',sans-serif;
+        font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+        cursor:pointer;transition:opacity 0.2s;
+      " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        <i class="fa-solid fa-file-arrow-down"></i> Export PDF Report
+      </button>
     </div>
   </div>
 </section>
@@ -6694,6 +6708,403 @@ async function sapSubmit() {
   }
   nextBtn.textContent = 'Submit Application →'
   nextBtn.disabled = false
+}
+
+/* ─── PDF EXPORT ─────────────────────────────────────────────────────────── */
+async function exportComparePDF() {
+  const btn = document.getElementById('pdf-export-btn');
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const pw = 210; // page width mm
+    const ph = 297; // page height mm
+    const ml = 15;  // margin left
+    const mr = 15;  // margin right
+    const cw = pw - ml - mr; // content width
+    let y = 0;
+
+    // ── COLOURS ──────────────────────────────────────────────────────────────
+    const BG      = [11, 17, 13];
+    const BG2     = [17, 26, 19];
+    const BG3     = [24, 35, 24];
+    const ACCENT  = [0, 229, 160];
+    const WHITE   = [255, 255, 255];
+    const MUTED   = [120, 140, 125];
+    const BORDER  = [0, 229, 160, 0.12];
+    const MAT_COLORS = {
+      GFRC: [0, 229, 160], GFRP: [96, 165, 250], Aluminum: [163, 163, 163],
+      Stone: [245, 158, 11], 'ACM-FR': [192, 132, 252], 'Fibre Cement': [251, 146, 60]
+    };
+
+    const rgb = (c) => { doc.setFillColor(c[0], c[1], c[2]); };
+    const stroke = (c) => { doc.setDrawColor(c[0], c[1], c[2]); };
+    const textCol = (c) => { doc.setTextColor(c[0], c[1], c[2]); };
+
+    // ── HELPER: filled rect ──────────────────────────────────────────────────
+    function fillRect(x, iy, w, h, col) {
+      doc.setFillColor(col[0], col[1], col[2]);
+      doc.rect(x, iy, w, h, 'F');
+    }
+
+    // ── HELPER: rounded rect ─────────────────────────────────────────────────
+    function roundRect(x, iy, w, h, r, col) {
+      doc.setFillColor(col[0], col[1], col[2]);
+      doc.roundedRect(x, iy, w, h, r, r, 'F');
+    }
+
+    // ── HELPER: score bar ────────────────────────────────────────────────────
+    function scoreBar(x, iy, w, h, pct, col) {
+      fillRect(x, iy, w, h, BG3);
+      const fillW = Math.max(2, (pct / 100) * w);
+      fillRect(x, iy, fillW, h, col);
+    }
+
+    // ── PAGE 1: COVER ────────────────────────────────────────────────────────
+    fillRect(0, 0, pw, ph, BG);
+
+    // Top accent bar
+    fillRect(0, 0, pw, 2, ACCENT);
+
+    // Logo area
+    y = 28;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(28);
+    textCol(ACCENT);
+    doc.text('CLADWISE', ml, y);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    textCol(MUTED);
+    doc.text('UAE', ml + doc.getTextWidth('CLADWISE') + 3, y - 0.5);
+
+    // Tagline
+    y += 7;
+    doc.setFontSize(9);
+    textCol(MUTED);
+    doc.text('Façade Material Intelligence · UAE Edition', ml, y);
+
+    // Divider line
+    y += 8;
+    doc.setDrawColor(ACCENT[0], ACCENT[1], ACCENT[2]);
+    doc.setLineWidth(0.3);
+    doc.line(ml, y, ml + 60, y);
+
+    // Report title
+    y += 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    textCol(WHITE);
+    doc.text('MATERIAL COMPARISON', ml, y);
+    y += 9;
+    doc.text('REPORT', ml, y);
+
+    // Subtitle
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    textCol(MUTED);
+    const matNames = selectedMats.join(' · ');
+    doc.text(matNames, ml, y);
+
+    // Date / metadata box
+    y += 18;
+    roundRect(ml, y, cw, 28, 3, BG2);
+    doc.setFontSize(8);
+    textCol(MUTED);
+    doc.text('REPORT GENERATED', ml + 8, y + 7);
+    doc.text('MATERIALS COMPARED', ml + 70, y + 7);
+    doc.text('DATA VERSION', ml + 140, y + 7);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    textCol(WHITE);
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    doc.text(dateStr, ml + 8, y + 17);
+    doc.text(String(selectedMats.length) + ' Materials', ml + 70, y + 17);
+    doc.text('Q1 2025', ml + 140, y + 17);
+
+    // Material colour chips
+    y += 40;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    textCol(MUTED);
+    doc.text('SELECTED MATERIALS', ml, y);
+    y += 6;
+
+    let chipX = ml;
+    selectedMats.forEach(key => {
+      const mat = MATERIALS[key];
+      const col = MAT_COLORS[key] || [100, 100, 100];
+      const label = mat.name;
+      const tw = doc.getTextWidth(label) + 12;
+      roundRect(chipX, y - 4, tw, 8, 2, BG3);
+      // accent left strip
+      fillRect(chipX, y - 4, 2.5, 8, col);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      textCol(col);
+      doc.text(label, chipX + 6, y + 0.5);
+      chipX += tw + 4;
+    });
+
+    // ── PAGE 1: OVERALL SCORE CARDS ──────────────────────────────────────────
+    y += 18;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    textCol(MUTED);
+    doc.text('OVERALL PERFORMANCE SCORES', ml, y);
+    y += 6;
+
+    const cardW = (cw - (selectedMats.length - 1) * 4) / selectedMats.length;
+    selectedMats.forEach((key, idx) => {
+      const mat = MATERIALS[key];
+      const col = MAT_COLORS[key] || [100, 100, 100];
+      const cx = ml + idx * (cardW + 4);
+
+      roundRect(cx, y, cardW, 32, 3, BG2);
+      // Top colour strip
+      fillRect(cx, y, cardW, 3, col);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      textCol(col);
+      doc.text(mat.name, cx + 5, y + 10);
+
+      doc.setFontSize(20);
+      textCol(WHITE);
+      doc.text(String(mat.overall), cx + 5, y + 23);
+
+      doc.setFontSize(8);
+      textCol(MUTED);
+      doc.text('/ 10', cx + 5 + doc.getTextWidth(String(mat.overall)) + 1, y + 23);
+    });
+
+    // ── PAGE 1: SCORE BARS SECTION ───────────────────────────────────────────
+    y += 42;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    textCol(MUTED);
+    doc.text('PERFORMANCE DIMENSIONS', ml, y);
+    y += 5;
+
+    const scoreKeys = [
+      { key: 'heat', label: 'Heat Performance' },
+      { key: 'fire', label: 'Fire Resistance' },
+      { key: 'weight', label: 'Lightweight Score' },
+      { key: 'cost', label: 'Cost Efficiency' },
+      { key: 'speed', label: 'Install Speed' },
+    ];
+
+    const barGroupH = 7;
+    const barH = 2.8;
+    const labelColW = 38;
+    const barAreaW = cw - labelColW;
+    const barW = (barAreaW - (selectedMats.length - 1) * 3) / selectedMats.length;
+
+    scoreKeys.forEach(sc => {
+      // Row background
+      roundRect(ml, y, cw, barGroupH + 4, 2, BG2);
+
+      // Label
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      textCol(MUTED);
+      doc.text(sc.label, ml + 4, y + 6);
+
+      // Bars per material
+      selectedMats.forEach((key, idx) => {
+        const mat = MATERIALS[key];
+        const col = MAT_COLORS[key] || [100, 100, 100];
+        const pct = mat.scores[sc.key] || 0;
+        const bx = ml + labelColW + idx * (barW + 3);
+        const by = y + 2.5;
+
+        scoreBar(bx, by, barW, barH, pct, col);
+
+        // Percentage label
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        textCol([col[0], col[1], col[2]]);
+        doc.text(pct + '%', bx + (barW / 2) - 3, by + barH + 2.5);
+      });
+
+      y += barGroupH + 6;
+    });
+
+    // ── PAGE 2 ───────────────────────────────────────────────────────────────
+    doc.addPage();
+    fillRect(0, 0, pw, ph, BG);
+    fillRect(0, 0, pw, 2, ACCENT);
+
+    y = 18;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    textCol(ACCENT);
+    doc.text('TECHNICAL SPECIFICATIONS', ml, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    textCol(MUTED);
+    doc.text('Side-by-side technical data for UAE façade specification', ml, y + 5);
+
+    y += 14;
+
+    // Table header
+    const colW = cw / (selectedMats.length + 1);
+    fillRect(ml, y, cw, 8, BG3);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    textCol(MUTED);
+    doc.text('PROPERTY', ml + 3, y + 5.5);
+
+    selectedMats.forEach((key, idx) => {
+      const col = MAT_COLORS[key] || [100, 100, 100];
+      textCol(col);
+      doc.text(key.toUpperCase(), ml + colW + idx * colW + 3, y + 5.5);
+    });
+    y += 8;
+
+    // Table rows
+    const tableRows = [
+      { label: 'Full Name',      fn: m => m.full || '—' },
+      { label: 'Price (AED/m²)', fn: m => m.priceRange || '—' },
+      { label: 'Weight',         fn: m => m.specs?.['Weight']?.val || '—' },
+      { label: 'Fire Rating',    fn: m => m.specs?.['Fire Rating']?.val || '—' },
+      { label: 'Service Life',   fn: m => m.specs?.['Service Life']?.val || '—' },
+      { label: 'Lead Time',      fn: m => m.specs?.['Lead Time']?.val || '—' },
+      { label: 'Maintenance',    fn: m => m.specs?.['Maintenance']?.val || '—' },
+      { label: 'Install Method', fn: m => m.specs?.['Installation Method']?.val || '—' },
+      { label: 'GCC Suitability',fn: m => m.specs?.['GCC Suitability']?.val || '—' },
+      { label: 'Surface Finish', fn: m => m.specs?.['Surface Finish']?.val || '—' },
+    ];
+
+    tableRows.forEach((row, ri) => {
+      const rowBg = ri % 2 === 0 ? BG : BG2;
+      fillRect(ml, y, cw, 7.5, rowBg);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      textCol(MUTED);
+      doc.text(row.label, ml + 3, y + 5);
+
+      selectedMats.forEach((key, idx) => {
+        const mat = MATERIALS[key];
+        const val = row.fn(mat);
+        doc.setFont('helvetica', 'bold');
+        textCol(WHITE);
+        // Truncate long values
+        const truncated = val.length > 22 ? val.substring(0, 21) + '…' : val;
+        doc.text(truncated, ml + colW + idx * colW + 3, y + 5);
+      });
+      y += 7.5;
+    });
+
+    // ── PAGE 2: COMPLIANCE ───────────────────────────────────────────────────
+    y += 10;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    textCol(MUTED);
+    doc.text('UAE COMPLIANCE STATUS', ml, y);
+    y += 6;
+
+    const compRows = [
+      { label: 'Dubai Civil Defence',  key: 'Dubai Civil Defence' },
+      { label: 'UAE Fire Code 2017',   key: 'UAE Fire Code 2017' },
+      { label: 'Estidama Pearl',        key: 'Estidama Pearl Rating' },
+      { label: 'LEED Compatibility',   key: 'LEED Compatibility' },
+    ];
+
+    compRows.forEach((cr, ri) => {
+      const rowBg = ri % 2 === 0 ? BG : BG2;
+      fillRect(ml, y, cw, 8, rowBg);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      textCol(MUTED);
+      doc.text(cr.label, ml + 3, y + 5.5);
+
+      selectedMats.forEach((key, idx) => {
+        const mat = MATERIALS[key];
+        const val = (mat.compliance?.[cr.key] || 'unknown').toLowerCase();
+        let col, label;
+        if (val === 'yes')         { col = [0, 229, 160];   label = '✓ Compliant'; }
+        else if (val === 'no')     { col = [239, 68, 68];   label = '✗ Non-Compliant'; }
+        else if (val === 'partial'){ col = [245, 158, 11];  label = '⚠ Conditional'; }
+        else                       { col = [120, 140, 125]; label = '— Unknown'; }
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.5);
+        textCol(col);
+        doc.text(label, ml + colW + idx * colW + 3, y + 5.5);
+      });
+      y += 8;
+    });
+
+    // ── PAGE 2: KEY STRENGTHS ────────────────────────────────────────────────
+    y += 10;
+    if (y > 230) { doc.addPage(); fillRect(0, 0, pw, ph, BG); fillRect(0, 0, pw, 2, ACCENT); y = 18; }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    textCol(MUTED);
+    doc.text('MATERIAL STRENGTHS', ml, y);
+    y += 6;
+
+    const cardH2 = 36;
+    selectedMats.forEach((key, idx) => {
+      const mat = MATERIALS[key];
+      const col = MAT_COLORS[key] || [100, 100, 100];
+      const cx = ml + idx * (cardW + 4);
+
+      roundRect(cx, y, cardW, cardH2, 3, BG2);
+      fillRect(cx, y, cardW, 3, col);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      textCol(col);
+      doc.text(mat.name, cx + 5, y + 10);
+
+      const tags = (mat.tags || []).slice(0, 4);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      textCol(MUTED);
+      tags.forEach((tag, ti) => {
+        doc.text('· ' + tag, cx + 5, y + 17 + ti * 5);
+      });
+    });
+
+    y += cardH2 + 10;
+
+    // ── FOOTER ON ALL PAGES ──────────────────────────────────────────────────
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p);
+      fillRect(0, ph - 12, pw, 12, BG2);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      textCol(MUTED);
+      doc.text('CladWise UAE · Façade Material Intelligence · cladwise.ae', ml, ph - 4.5);
+      doc.text('This report is generated for specification guidance only. Verify all data with suppliers before procurement.', ml, ph - 1.5);
+      doc.setFont('helvetica', 'bold');
+      textCol(ACCENT);
+      doc.text(`Page ${p} of ${totalPages}`, pw - mr - 18, ph - 4.5);
+    }
+
+    // ── SAVE ─────────────────────────────────────────────────────────────────
+    const filename = `CladWise_Comparison_${selectedMats.join('_')}_${dateStr.replace(/ /g,'_')}.pdf`;
+    doc.save(filename);
+
+  } catch(err) {
+    showToast('PDF generation failed: ' + err.message);
+    console.error(err);
+  }
+
+  btn.innerHTML = '<i class="fa-solid fa-file-arrow-down"></i> Export PDF Report';
+  btn.disabled = false;
 }
 </script>
 
