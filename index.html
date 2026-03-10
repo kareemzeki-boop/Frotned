@@ -3175,7 +3175,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <button onclick="runSpecAnalyser()" id="spec-submit-btn" style="width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px 24px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px">
           <i class="fa-solid fa-microscope"></i> ANALYSE MY PROJECT
         </button>
-        <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">🔒 Premium feature · Login required · Powered by CladWise AI</div>
+        <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">⚡ Free for all users · Login required · Powered by CladWise AI</div>
 
       </div>
 
@@ -3612,8 +3612,35 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
   <div class="footer-inner">
     <div class="footer-brand">CladWise UAE</div>
-    <p class="footer-sub">Facade material intelligence for architects, specifiers & developers across the UAE. Data updated Q1 2025.</p>
-    <p class="footer-sub" style="margin-top:8px">Dubai · Ajman · Abu Dhabi · Sharjah · RAK</p>
+    <p class="footer-sub">Façade material intelligence for architects, specifiers & developers across the UAE. Data updated Q1 2025.</p>
+    <p class="footer-sub" style="margin-top:6px">Dubai · Abu Dhabi · Sharjah · Ajman · RAK</p>
+
+    <!-- Legitimacy row -->
+    <div style="margin-top:28px;display:flex;flex-wrap:wrap;justify-content:center;gap:24px;align-items:center">
+      <a href="mailto:kareem@cladwise.ae" style="color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+        <i class="fa-solid fa-envelope" style="font-size:11px"></i> kareem@cladwise.ae
+      </a>
+      <span style="color:var(--border);font-size:12px">|</span>
+      <a href="https://wa.me/971000000000" style="color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+        <i class="fa-brands fa-whatsapp" style="font-size:12px"></i> WhatsApp
+      </a>
+      <span style="color:var(--border);font-size:12px">|</span>
+      <span style="color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px">
+        <i class="fa-solid fa-location-dot" style="font-size:11px"></i> Dubai, UAE
+      </span>
+      <span style="color:var(--border);font-size:12px">|</span>
+      <a href="https://linkedin.com/company/cladwise" target="_blank" style="color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">
+        <i class="fa-brands fa-linkedin" style="font-size:12px"></i> LinkedIn
+      </a>
+    </div>
+
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,229,160,0.07);display:flex;flex-wrap:wrap;justify-content:center;gap:16px">
+      <span style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">© 2025 CladWise UAE</span>
+      <span style="color:var(--muted);font-size:11px">·</span>
+      <span style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">cladwise.ae</span>
+      <span style="color:var(--muted);font-size:11px">·</span>
+      <span style="color:var(--muted);font-size:11px;font-family:'DM Mono',monospace">All data for guidance only — verify with suppliers before procurement</span>
+    </div>
   </div>
 </footer>
 
@@ -5850,19 +5877,6 @@ function handleSpecFile(input) {
 async function runSpecAnalyser() {
   const token = localStorage.getItem('cw_token');
   if (!token) { openAuthModal('login'); showToast('Please login to use the Spec Analyser'); return; }
-
-  try {
-    const statusRes = await cwFetch('GET', '/payments/status');
-    if (!statusRes.isPremium) {
-      document.getElementById('analyser-form').style.display = 'none';
-      document.getElementById('spec-paywall').style.display = 'block';
-      return;
-    }
-  } catch(e) {
-    document.getElementById('analyser-form').style.display = 'none';
-    document.getElementById('spec-paywall').style.display = 'block';
-    return;
-  }
 
   const projectType = document.getElementById('spec-project-type').value;
   const location = document.getElementById('spec-location').value;
