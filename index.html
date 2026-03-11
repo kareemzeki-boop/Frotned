@@ -2944,17 +2944,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
       <button onclick="exportComparePDF()" id="pdf-export-btn" style="
         display:inline-flex;align-items:center;gap:10px;
-        background:var(--bg2);color:var(--text);
-        border:1px solid rgba(0,229,160,0.25);border-radius:10px;
-        padding:13px 28px;
-        font-family:'Barlow Condensed',sans-serif;
-        font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-        cursor:pointer;transition:opacity 0.2s;
-      " onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
-        <i class="fa-solid fa-file-arrow-down"></i> Comparison PDF
-      </button>
-      <button onclick="exportAdvisoryPDF()" id="advisory-export-btn" style="
-        display:inline-flex;align-items:center;gap:10px;
         background:var(--accent);color:#0b110d;
         border:none;border-radius:10px;
         padding:13px 28px;
@@ -2962,7 +2951,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
         cursor:pointer;transition:opacity 0.2s;
       " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-        <i class="fa-solid fa-file-shield"></i> Advisory Report
+        <i class="fa-solid fa-file-arrow-down"></i> Export PDF Report
       </button>
     </div>
   </div>
@@ -5152,8 +5141,11 @@ function renderWizResults() {
         </div>`;
       }).join('')}
     </div>
-    <div style="text-align:center;margin-top:28px">
+    <div style="text-align:center;margin-top:28px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
       <button onclick="resetWizard()" class="btn-outline" style="font-size:13px">Retake Wizard</button>
+      <button onclick="exportAdvisoryFromWizard()" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b110d;border:none;border-radius:10px;padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        <i class="fa-solid fa-file-shield"></i> Generate Advisory Report
+      </button>
     </div>`;
 }
 
@@ -5905,7 +5897,12 @@ function renderSpecResults(report, meta) {
         <div style="font-weight:700;font-size:16px">${meta.projectType} · ${meta.location}</div>
         <div style="font-size:12px;color:var(--muted)">${meta.height} · Budget ${meta.budget}</div>
       </div>
-      <button onclick="downloadSpecReport()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:'DM Mono',monospace">⬇ Download Report</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onclick="downloadSpecReport()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:12px;font-family:'DM Mono',monospace">⬇ Download Report</button>
+        <button id="spec-advisory-btn" onclick="exportAdvisoryFromSpec(['GFRC','GFRP','Aluminum'])" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b110d;border:none;border-radius:8px;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <i class="fa-solid fa-file-shield"></i> Advisory Report
+        </button>
+      </div>
     </div>
     <div style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:var(--text)" id="spec-report-content">${formatSpecReport(report)}</div>
     <div style="margin-top:20px;padding:14px;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);border-radius:8px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">
@@ -7143,17 +7140,42 @@ async function exportComparePDF() {
 
 
 /* ─── MATERIAL ADVISORY REPORT ──────────────────────────────────────────── */
-async function exportAdvisoryPDF() {
-  const btn = document.getElementById('advisory-export-btn');
-  if (selectedMats.length < 1) { showToast('Select at least 1 material first'); return; }
 
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Report...';
-  btn.disabled = true;
+// Called from wizard results
+async function exportAdvisoryFromWizard() {
+  const btn = document.querySelector('[onclick="exportAdvisoryFromWizard()"]');
+  // Build material list from wizard scores (top 3 ranked)
+  const scores = { GFRC: 0, GFRP: 0, Aluminum: 0, ACM: 0, Stone: 0 };
+  WIZARD_STEPS.forEach((step, si) => {
+    const ans = wizAnswers[si];
+    if (ans === undefined) return;
+    const opt = step.opts[ans];
+    Object.entries(opt.scores || {}).forEach(([crit, pts]) => {
+      Object.entries(MAT_WEIGHTS).forEach(([mat, wts]) => {
+        scores[mat] += pts * (wts[crit] || 0);
+      });
+    });
+  });
+  const mats = Object.entries(scores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=> k === 'ACM' ? 'ACM-FR' : k).filter(k => MATERIALS[k]);
+  await exportAdvisoryPDF(mats, btn);
+}
+
+// Called from spec analyser results
+async function exportAdvisoryFromSpec(mats) {
+  const btn = document.getElementById('spec-advisory-btn');
+  await exportAdvisoryPDF(mats, btn);
+}
+
+async function exportAdvisoryPDF(mats, btn) {
+  if (!mats || mats.length < 1) { showToast('No materials to report on'); return; }
+
+  const origLabel = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Report...'; btn.disabled = true; }
 
   try {
     // ── 1. Fetch AI compliance data for each material ──────────────────────
     const matDataArr = [];
-    for (const key of selectedMats) {
+    for (const key of mats) {
       const mat = MATERIALS[key];
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Analysing ${mat.name}...`;
 
@@ -7331,7 +7353,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
       { label: 'REPORT REF.',    val: refNo },
       { label: 'DATE',           val: dateStr },
       { label: 'STANDARD',       val: 'Law No. 3 of 2026' },
-      { label: 'MATERIALS',      val: selectedMats.length + ' assessed' },
+      { label: 'MATERIALS',      val: mats.length + ' assessed' },
     ];
     const metaW = CW / metaCols.length;
     metaCols.forEach((m, i) => {
@@ -7358,7 +7380,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
     doc.text('MATERIALS ASSESSED IN THIS REPORT', ML, y); y += 5;
 
     let chipX = ML;
-    selectedMats.forEach(key => {
+    mats.forEach(key => {
       const col = MAT_COL[key] || [100,100,100];
       const label = MATERIALS[key].name;
       doc.setFontSize(7.5);
@@ -7668,7 +7690,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
     const tp = doc.internal.getNumberOfPages();
     for (let p = 1; p <= tp; p++) { doc.setPage(p); drawFooter(p, tp); }
 
-    const fname = 'CladWise_Advisory_' + selectedMats.join('_') + '_' + dateStr.replace(/ /g,'_') + '.pdf';
+    const fname = 'CladWise_Advisory_' + mats.join('_') + '_' + dateStr.replace(/ /g,'_') + '.pdf';
     doc.save(fname);
     showToast('Advisory Report downloaded ✓');
 
@@ -7677,8 +7699,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
     showToast('Report generation failed: ' + err.message);
   }
 
-  btn.innerHTML = '<i class="fa-solid fa-file-shield"></i> Advisory Report';
-  btn.disabled = false;
+  if (btn) { btn.innerHTML = origLabel; btn.disabled = false; }
 }
 
 </script>
