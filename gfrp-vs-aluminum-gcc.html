@@ -3,278 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GFRP vs Aluminium Facade Cladding: Technical Comparison for GCC Projects | CladWise UAE</title>
-<meta name="description" content="Engineering-grade comparison of GFRP and aluminium facade cladding for UAE and GCC projects. Mechanical properties, thermal performance, fire compliance, and lifecycle cost analysis for facade consultants and architects.">
-<meta name="keywords" content="GFRP vs aluminum UAE, GRP facade Dubai, aluminium cladding UAE, GFRP facade GCC, facade material comparison UAE, fibre reinforced polymer facade GCC">
+<title>GFRP vs Aluminium Facade Cladding: Complete Technical Guide for GCC Projects | CladWise UAE</title>
+<meta name="description" content="Full engineering comparison of GFRP and aluminium facade cladding for UAE and GCC projects. Mechanical properties, thermal performance, fire code compliance, facade system design, installation, and lifecycle cost for facade consultants.">
+<meta name="keywords" content="GFRP vs aluminum UAE, GRP facade Dubai, aluminium cladding UAE, GFRP facade GCC, facade material comparison UAE, fibre reinforced polymer facade, aluminium cassette UAE">
 <meta name="author" content="CladWise UAE">
 <link rel="canonical" href="https://cladwise.ae/gfrp-vs-aluminum-gcc.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#0b110d;--bg2:#111a13;--bg3:#182318;--accent:#00e5a0;--text:#e8f0ea;--muted:#7a9680;--dim:#4a6050;--border:rgba(0,229,160,0.12);--border2:rgba(0,229,160,0.06)}
+:root{
+  --bg:#0b110d;--bg2:#111a13;--bg3:#182318;--bg4:#1e2d20;
+  --accent:#00e5a0;--text:#e8f0ea;--muted:#7a9680;--dim:#4a6050;
+  --border:rgba(0,229,160,0.12);--border2:rgba(0,229,160,0.06);
+  --red:#ef4444;--amber:#f59e0b;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;line-height:1.8}
+body{background:var(--bg);color:var(--text);font-family:"Barlow",sans-serif;font-size:16px;line-height:1.8}
+/* NAV */
 nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(11,17,13,0.95);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:50px;padding:10px 24px;display:flex;align-items:center;gap:24px;z-index:100;white-space:nowrap}
-.nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:2px;color:var(--accent);text-decoration:none}
-.nav-link{color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s}.nav-link:hover{color:var(--accent)}
-.nav-cta{background:var(--accent);color:#0b110d;font-size:12px;font-weight:800;padding:6px 16px;border-radius:20px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px}
-.hero{padding:140px 24px 72px;max-width:860px;margin:0 auto}
-.hero-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.hero-label::before{content:'';width:24px;height:1px;background:var(--accent)}
-.hero h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(34px,5.5vw,56px);line-height:1.05;margin-bottom:20px}
+.nl{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:16px;letter-spacing:2px;color:var(--accent);text-decoration:none}
+.na{color:var(--muted);font-size:13px;text-decoration:none;transition:color .2s}.na:hover{color:var(--accent)}
+.nc{background:var(--accent);color:#0b110d;font-size:12px;font-weight:800;padding:6px 16px;border-radius:20px;text-decoration:none;font-family:"Barlow Condensed",sans-serif;letter-spacing:1px}
+/* HERO */
+.hero{padding:140px 24px 64px;max-width:900px;margin:0 auto}
+.hero-chip{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.hero-chip::before{content:"";width:28px;height:1px;background:var(--accent)}
+.hero h1{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:clamp(36px,6vw,62px);line-height:1.02;letter-spacing:-.5px;margin-bottom:22px}
 .hero h1 em{color:var(--accent);font-style:normal}
-.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
-.hero-meta span{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim)}
-.hero-intro{font-size:17px;color:var(--muted);line-height:1.8;border-left:3px solid var(--accent);padding-left:20px}
-.content{max-width:860px;margin:0 auto;padding:0 24px 100px}
-.toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:40px 0}
-.toc-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:14px}
-.toc ol{padding-left:18px}.toc li{color:var(--muted);font-size:14px;margin-bottom:6px}
-.toc a{color:var(--muted);text-decoration:none;transition:color 0.2s}.toc a:hover{color:var(--accent)}
-.sec{margin-top:64px;padding-top:8px;border-top:1px solid var(--border)}
-.sec-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:block}
-.sec h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(22px,3.5vw,30px);margin-bottom:18px;color:var(--text)}
-.sec h3{font-size:17px;font-weight:600;color:var(--text);margin:28px 0 10px}
-.sec p{color:var(--muted);margin-bottom:16px;font-size:15.5px;line-height:1.8}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.hero-meta span{font-family:"DM Mono",monospace;font-size:10px;color:var(--dim)}
+.hero-intro{font-size:17px;color:var(--muted);line-height:1.85;border-left:3px solid var(--accent);padding-left:22px}
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 100px}
+/* TOC */
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin:40px 0}
+.toc-h{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:16px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
+.toc-grid a{color:var(--muted);font-size:13px;text-decoration:none;display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border2);transition:color .2s}
+.toc-grid a:hover{color:var(--accent)}
+.toc-grid a span{font-family:"DM Mono",monospace;font-size:10px;color:var(--dim);margin-top:2px}
+/* SECTION */
+.sec{margin-top:72px;padding-top:10px;border-top:1px solid var(--border)}
+.sec-tag{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;display:block}
+.sec h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.1;margin-bottom:20px;letter-spacing:.2px}
+.sec h3{font-size:17px;font-weight:600;color:var(--text);margin:32px 0 12px}
+.sec h4{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;font-family:"DM Mono",monospace}
+.sec p{color:var(--muted);margin-bottom:16px;font-size:15.5px;line-height:1.85}
 .sec strong{color:var(--text)}
-.sec ul,.sec ol{color:var(--muted);padding-left:22px;margin-bottom:16px}
-.sec li{margin-bottom:7px;font-size:15px;line-height:1.7}
-.data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
-.data-table thead tr{background:var(--bg3)}
-.data-table th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;padding:11px 14px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)}
-.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:top}
-.data-table td:first-child{color:var(--text);font-weight:500}
-.data-table tr:hover td{background:var(--bg2)}
-.hi{color:var(--accent)!important;font-weight:600}
-.warn{color:#f59e0b!important;font-weight:600}
-.no{color:#ef4444!important;font-weight:600}
-.callout{background:var(--bg2);border-left:3px solid var(--accent);padding:18px 20px;margin:28px 0;border-radius:0 6px 6px 0}
-.callout.warn{border-color:#f59e0b}.callout.red{border-color:#ef4444}
-.callout-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.callout.warn .callout-label{color:#f59e0b}.callout.red .callout-label{color:#ef4444}
-.callout p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.7}
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin:24px 0}
-.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 14px}
-.metric-card.b{border-color:rgba(96,165,250,0.25)}
-.metric-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:var(--accent);line-height:1;margin-bottom:4px}
-.metric-card.b .metric-val{color:#60a5fa}
-.metric-unit{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:6px}
-.metric-label{font-size:12px;color:var(--muted);line-height:1.4}
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+.sec ul,.sec ol{color:var(--muted);padding-left:22px;margin-bottom:18px}
+.sec li{margin-bottom:8px;font-size:15px;line-height:1.75}
+/* TABLES */
+.dt{width:100%;border-collapse:collapse;margin:24px 0;font-size:13.5px}
+.dt thead tr{background:var(--bg3)}
+.dt th{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;padding:10px 14px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)}
+.dt td{padding:10px 14px;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:top;line-height:1.5}
+.dt td:first-child{color:var(--text);font-weight:500;font-size:13px}
+.dt tr:hover td{background:var(--bg2)}
+.g{color:var(--accent)!important;font-weight:600}
+.w{color:var(--amber)!important;font-weight:600}
+.r{color:var(--red)!important;font-weight:600}
+/* CALLOUTS */
+.co{background:var(--bg2);border-left:3px solid var(--accent);padding:18px 22px;margin:28px 0;border-radius:0 8px 8px 0}
+.co.wr{border-color:var(--amber)}.co.re{border-color:var(--red)}.co.bl{border-color:#60a5fa}
+.co-tag{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:2px;color:var(--accent);margin-bottom:8px}
+.co.wr .co-tag{color:var(--amber)}.co.re .co-tag{color:var(--red)}.co.bl .co-tag{color:#60a5fa}
+.co p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.75}
+/* METRIC CARDS */
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin:24px 0}
+.mc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:15px 13px}
+.mv{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;color:var(--accent);line-height:1;margin-bottom:3px}
+.mu{font-family:"DM Mono",monospace;font-size:9px;color:var(--dim);margin-bottom:5px}
+.ml{font-size:11.5px;color:var(--muted);line-height:1.4}
+/* CALC BOX */
+.calc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin:28px 0;font-family:"DM Mono",monospace}
+.calc-title{font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.calc-line{font-size:13px;color:var(--muted);margin-bottom:6px}
+.calc-line strong{color:var(--text)}
+.calc-result{font-size:16px;color:var(--accent);font-weight:bold;margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+/* LAYER DIAGRAM */
+.layer-diag{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:28px 0}
+.layer-title{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;padding:16px 20px 10px}
+.layer{display:flex;align-items:center;gap:0;border-top:1px solid var(--border2)}
+.layer-bar{flex-shrink:0;height:44px;display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:9px;font-weight:600;writing-mode:horizontal-tb;padding:0 8px}
+.layer-info{padding:10px 16px;flex:1}
+.layer-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.layer-spec{font-family:"DM Mono",monospace;font-size:10px;color:var(--muted)}
+/* COMPLIANCE PATHWAY */
+.pathway{display:flex;flex-direction:column;gap:0;margin:24px 0}
+.path-step{display:flex;gap:0;position:relative}
+.path-step::before{content:"";position:absolute;left:18px;top:38px;bottom:-1px;width:2px;background:var(--border);z-index:0}
+.path-step:last-child::before{display:none}
+.path-num{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:11px;color:var(--accent);flex-shrink:0;z-index:1;margin-top:6px}
+.path-body{padding:6px 0 24px 16px;flex:1}
+.path-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.path-desc{font-size:13.5px;color:var(--muted);line-height:1.65}
+/* CASE STUDY */
+.cs{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 26px;margin:28px 0}
+.cs-label{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--accent);letter-spacing:2px;margin-bottom:14px}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cs-field{background:var(--bg3);border-radius:6px;padding:10px 12px}
+.cs-key{font-family:"DM Mono",monospace;font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px}
+.cs-val{font-size:13px;font-weight:600;color:var(--text)}
+/* STANDARDS BOX */
+.std-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:20px 0}
+.std{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.std-code{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);font-weight:600;flex-shrink:0;padding-top:1px;min-width:90px}
+.std-desc{font-size:12.5px;color:var(--muted);line-height:1.5}
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:44px 24px;text-align:center}
 footer p{color:var(--dim);font-size:13px;margin-bottom:8px}
 footer a{color:var(--accent);text-decoration:none}
-@media(max-width:640px){nav{gap:12px;padding:8px 14px}.hero{padding:110px 16px 48px}.content{padding:0 16px 80px}.metric-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:660px){
+  nav{padding:8px 14px;gap:12px}
+  .hero{padding:110px 16px 48px}
+  .wrap{padding:0 16px 80px}
+  .mg{grid-template-columns:1fr 1fr}
+  .toc-grid{grid-template-columns:1fr}
+  .cs-grid{grid-template-columns:1fr}
+}
 </style>
+
 </head>
 <body>
 <nav>
-  <a href="https://cladwise.ae" class="nav-logo">CLADWISE <span style="font-size:10px;color:var(--muted);font-weight:400">UAE</span></a>
-  <a href="https://cladwise.ae#explore" class="nav-link">Materials</a>
-  <a href="https://cladwise.ae#compare" class="nav-link">Compare</a>
-  <a href="https://cladwise.ae" class="nav-cta">Open Platform</a>
+  <a href="https://cladwise.ae" class="nl">CLADWISE <span style="font-size:10px;color:var(--muted);font-weight:400">UAE</span></a>
+  <a href="https://cladwise.ae#explore" class="na">Materials</a>
+  <a href="https://cladwise.ae#compare" class="na">Compare</a>
+  <a href="https://cladwise.ae" class="nc">Open Platform</a>
 </nav>
 
 <div class="hero">
-  <div class="hero-label">Technical Reference · Facade Engineering · GCC</div>
-  <h1>GFRP vs Aluminium<br><em>Facade Cladding</em> —<br>GCC Technical Comparison</h1>
+  <div class="hero-chip">Technical Reference &middot; Facade Engineering &middot; GCC 2026</div>
+  <h1>GFRP vs <em>Aluminium</em><br>Facade Cladding &mdash;<br>GCC Technical Comparison</h1>
   <div class="hero-meta">
     <span>Updated March 2026</span>
     <span>UAE &amp; GCC Market</span>
-    <span>CladWise Technical Series</span>
+    <span>CladWise Engineering Series</span>
   </div>
-  <p class="hero-intro">A comparative engineering assessment of Glass Fibre Reinforced Polymer (GFRP) and aluminium facade cladding systems for projects in the UAE and wider GCC region. This document addresses mechanical properties, thermal behaviour, fire safety compliance, structural installation, and lifecycle cost to support material selection by facade consultants, structural engineers, and architects.</p>
+  <p class="hero-intro">A complete engineering comparison of Glass Fibre Reinforced Polymer (GFRP) and aluminium facade cladding for UAE and GCC projects. Covers mechanical and thermal properties, facade system design, fire code compliance, GCC climate performance, installation guidance, lifecycle cost, and specification recommendations for facade consultants, architects, and project engineers.</p>
 </div>
 
-<div class="content">
+<div class="wrap">
   <div class="toc">
-    <div class="toc-title">Contents</div>
-    <ol>
-      <li><a href="#s1">Executive Summary</a></li>
-      <li><a href="#s2">Material Overview</a></li>
-      <li><a href="#s3">Mechanical Properties</a></li>
-      <li><a href="#s4">Thermal Performance</a></li>
-      <li><a href="#s5">Fire Safety &amp; Regulatory Compliance</a></li>
-      <li><a href="#s6">Structural &amp; Installation Considerations</a></li>
-      <li><a href="#s7">Durability in GCC Climate</a></li>
-      <li><a href="#s8">Cost &amp; Lifecycle Considerations</a></li>
-      <li><a href="#s9">Material Selection Guidance</a></li>
-    </ol>
+    <div class="toc-h">Contents</div>
+    <div class="toc-grid">
+      <a href="#s1"><span>01</span> Executive Summary</a>
+      <a href="#s7"><span>07</span> Installation &amp; Fixing Systems</a>
+      <a href="#s2"><span>02</span> Material Overview</a>
+      <a href="#s8"><span>08</span> Durability in GCC Climate</a>
+      <a href="#s3"><span>03</span> Engineering Properties</a>
+      <a href="#s9"><span>09</span> Cost &amp; Lifecycle</a>
+      <a href="#s4"><span>04</span> Structural Performance</a>
+      <a href="#s10"><span>10</span> Material Selection Guidance</a>
+      <a href="#s5"><span>05</span> Thermal Performance</a>
+      <a href="#s11"><span>11</span> Referenced Standards</a>
+      <a href="#s6"><span>06</span> Fire Safety &amp; Compliance</a>
+    </div>
   </div>
 
   <div class="sec" id="s1">
-    <span class="sec-num">Section 01</span>
+    <span class="sec-tag">Section 01</span>
     <h2>Executive Summary</h2>
-    <p>GFRP and aluminium represent two technically distinct facade cladding strategies with different regulatory positions, durability profiles, and cost implications for GCC construction. Aluminium — in solid sheet, extruded cassette, or aluminium composite material (ACM) with a verified fire-retardant mineral core — is a well-established non-combustible cladding option appropriate for buildings of all heights under the UAE Fire and Life Safety Code 2017.</p>
-    <p>GFRP offers material advantages in structural weight, design geometry freedom, and thermal insulation performance. However, its combustibility classification — typically EN 13501-1 Class B or C — restricts application to buildings below 23 metres under current Dubai Civil Defence (DCD) circulars. For projects within this height limit, GFRP presents a technically viable and frequently cost-competitive alternative.</p>
-    <p>Material selection should be driven by building height and fire strategy, programme constraints, design geometry complexity, durability requirements, and lifecycle cost targets. This document provides the technical reference data to support a structured comparative analysis.</p>
+    <p>GFRP and aluminium represent two technically distinct external cladding strategies, each with different regulatory status, mechanical characteristics, and lifecycle profiles for GCC construction. Aluminium &mdash; in solid sheet, extruded cassette, or aluminium composite material (ACM) with a verified fire-retardant mineral core &mdash; is classified EN&nbsp;13501-1 Class A1 (solid) or A2 (FR-core ACM) and is fully compliant with UAE Fire and Life Safety Code 2017 requirements at all building heights under Dubai Civil Defence (DCD) and Abu Dhabi Civil Defence (ADCD) jurisdiction.</p>
+    <p>GFRP offers material advantages in structural weight reduction, complex geometry fabrication, and thermal bridging performance. Its typical EN&nbsp;13501-1 classification of Class B or C restricts its use as primary external cladding to buildings below 23&nbsp;metres under DCD Circular 2/2020. Within this height envelope, GFRP presents a technically and commercially viable alternative to aluminium, particularly for curved, sculptural, or bespoke facade geometries.</p>
+    <p>This document provides the structured engineering comparison required to select between these materials on a technical basis, with UAE regulatory compliance, GCC climate performance, and project-specific constraints as the governing criteria.</p>
   </div>
 
   <div class="sec" id="s2">
-    <span class="sec-num">Section 02</span>
+    <span class="sec-tag">Section 02</span>
     <h2>Material Overview</h2>
     <h3>Glass Fibre Reinforced Polymer (GFRP)</h3>
-    <p>GFRP — also referred to as Glass Reinforced Plastic (GRP) — is a composite material comprising a polymer resin matrix (polyester, vinyl ester, or epoxy) reinforced with glass fibre in woven, chopped-strand mat, or unidirectional orientations. Facade panels are typically manufactured by hand lay-up, resin transfer moulding (RTM), or vacuum infusion, yielding flat or profiled elements with an integral gel coat or applied coating finish.</p>
-    <p>Mechanical and thermal properties of GFRP are anisotropic and dependent on fibre volume fraction (typically 30–40% for facade-grade panels), fibre orientation, and resin system. Published values throughout this document reflect these typical parameters.</p>
+    <p>GFRP &mdash; also referred to as Glass Reinforced Plastic (GRP) or fibreglass &mdash; is a composite material comprising a polymer resin matrix (polyester, vinyl ester, or epoxy) reinforced with glass fibre in woven, chopped-strand mat, or unidirectional orientations. Facade panels are manufactured by hand lay-up, resin transfer moulding (RTM), or vacuum infusion, producing flat or profiled elements with an integral gel coat or applied coating finish.</p>
+    <p>Mechanical and thermal properties of GFRP are anisotropic and dependent on fibre volume fraction (typically 30&ndash;40% for facade panels), fibre orientation, and resin system. All published values in this document reflect these typical parameters.</p>
     <h3>Aluminium</h3>
-    <p>Aluminium facade cladding encompasses solid rolled sheet (typically 2–4 mm), extruded profiles, and aluminium composite material (ACM). Standard alloy grades for cladding panels are 5005 and 5052 for sheet applications, and 6063-T5 or 6061-T6 for extruded framing and cassette systems. Surface finish is typically PVDF (polyvinylidene fluoride) coating to AAMA 2605 for high-durability applications, or polyester powder coating for lower-exposure environments.</p>
-    <div class="callout warn">
-      <div class="callout-label">Regulatory Note — ACM Panels</div>
-      <p>Aluminium Composite Material with polyethylene (PE) cores is prohibited in the UAE for external cladding following DCD Circular 2/2020. Only ACM with a verified fire-retardant mineral core achieving EN 13501-1 Class A2 or better is permitted on any building in the UAE. Independent test certification is required — supplier declarations are not accepted as DCD compliance evidence.</p>
+    <p>Aluminium facade cladding encompasses solid rolled sheet (2&ndash;4&nbsp;mm), extruded profiles, and aluminium composite material (ACM). Standard alloy grades are 5005 and 5052 for sheet cladding, and 6063-T5 or 6061-T6 for extruded framing and cassette systems. Surface finish is typically PVDF (polyvinylidene fluoride) liquid coating to AAMA&nbsp;2605, or powder coat polyester for lower-exposure environments. PVDF to AAMA&nbsp;2605 specifying 70% PVDF resin minimum is the recognised high-durability standard for UAE facade applications.</p>
+    <div class="co wr">
+      <div class="co-tag">ACM Warning &mdash; UAE Regulatory Position</div>
+      <p>Aluminium Composite Material with polyethylene (PE) or low-density polyolefin cores is <strong>prohibited for external cladding in the UAE</strong> under DCD Circular 2/2020 at any building height. Only ACM with a verified fire-retardant mineral core achieving EN&nbsp;13501-1 Class A2-s1, d0 by independent test is permitted. Core mineral content must be confirmed by independent third-party testing at a minimum 70% inorganic content by weight. Supplier declarations without laboratory-verified test certificates are not accepted by DCD.</p>
     </div>
   </div>
 
   <div class="sec" id="s3">
-    <span class="sec-num">Section 03</span>
-    <h2>Mechanical Properties</h2>
-    <p>The table below presents indicative mechanical properties for facade-grade GFRP panels and aluminium alloy. Values should be confirmed against manufacturer test data for the product specified; GFRP properties in particular vary substantially with fibre architecture and resin formulation.</p>
-    <table class="data-table">
-      <thead><tr><th>Property</th><th>GFRP (facade grade)</th><th>Aluminium 5052-H32</th><th>Aluminium 6063-T5</th></tr></thead>
+    <span class="sec-tag">Section 03</span>
+    <h2>Engineering Properties</h2>
+    <p>The table below presents key mechanical and thermal engineering properties for facade-grade GFRP panels and standard aluminium alloys used in cladding applications. Properties vary with specific product, manufacturing method, and alloy condition; manufacturer test data must be used for structural design.</p>
+    <table class="dt">
+      <thead><tr><th>Property</th><th>Typical Range</th><th>GFRP (facade grade)</th><th>Al 5052-H32</th><th>Al 6063-T5</th></tr></thead>
       <tbody>
-        <tr><td>Density</td><td>1,600–1,900 kg/m³</td><td>2,680 kg/m³</td><td>2,700 kg/m³</td></tr>
-        <tr><td>Modulus of Elasticity</td><td>10–20 GPa</td><td>70 GPa</td><td>69 GPa</td></tr>
-        <tr><td>Tensile Strength</td><td>100–250 MPa</td><td>215–260 MPa</td><td>130–185 MPa</td></tr>
-        <tr><td>Flexural Strength</td><td>120–200 MPa</td><td>— (sheet bending governed by yield)</td><td>—</td></tr>
-        <tr><td>Yield Strength</td><td>— (non-metallic; no yield point)</td><td>160 MPa</td><td>110 MPa</td></tr>
-        <tr><td>Elongation at Break</td><td>1–2%</td><td>12–17%</td><td>8–12%</td></tr>
-        <tr><td>Typical panel weight at 3 mm</td><td class="hi">5–6 kg/m²</td><td>8.0 kg/m²</td><td>8.1 kg/m²</td></tr>
-        <tr><td>EN 13501-1 Fire Class</td><td class="warn">Class B–C (standard resin)</td><td class="hi">Class A1</td><td class="hi">Class A1</td></tr>
+        <tr><td>Density</td><td>GFRP: 1,600&ndash;1,900 / Al: 2,680&ndash;2,700</td><td>1,600&ndash;1,900 kg/m&sup3;</td><td>2,680 kg/m&sup3;</td><td>2,700 kg/m&sup3;</td></tr>
+        <tr><td>Modulus of Elasticity</td><td>&mdash;</td><td>10&ndash;20 GPa</td><td>70 GPa</td><td>69 GPa</td></tr>
+        <tr><td>Tensile Strength</td><td>&mdash;</td><td>200&ndash;500 MPa</td><td>215&ndash;260 MPa</td><td>130&ndash;185 MPa</td></tr>
+        <tr><td>Flexural Strength</td><td>&mdash;</td><td>120&ndash;200 MPa</td><td>&mdash;</td><td>&mdash;</td></tr>
+        <tr><td>Yield Strength</td><td>&mdash;</td><td>&mdash; (non-metallic)</td><td>160 MPa</td><td>110 MPa</td></tr>
+        <tr><td>Elongation at Break</td><td>&mdash;</td><td>1&ndash;2%</td><td>12&ndash;17%</td><td>8&ndash;12%</td></tr>
+        <tr><td>Thermal Conductivity (&lambda;)</td><td>&mdash;</td><td class="g">0.3&ndash;0.5 W/m&middot;K</td><td class="w">160&ndash;200 W/m&middot;K</td><td class="w">160&ndash;200 W/m&middot;K</td></tr>
+        <tr><td>Coefficient of Thermal Expansion (CTE)</td><td>&mdash;</td><td>15&ndash;20 &times; 10&sup6; /&deg;C</td><td>23 &times; 10&sup6; /&deg;C</td><td>23 &times; 10&sup6; /&deg;C</td></tr>
+        <tr><td>Specific Heat Capacity</td><td>&mdash;</td><td>1,000&ndash;1,250 J/kg&middot;K</td><td>880 J/kg&middot;K</td><td>880 J/kg&middot;K</td></tr>
+        <tr><td>Typical panel weight at 3 mm</td><td>&mdash;</td><td class="g">5&ndash;6 kg/m&sup2;</td><td>8.0 kg/m&sup2;</td><td>8.1 kg/m&sup2;</td></tr>
+        <tr><td>EN&nbsp;13501-1 Fire Class</td><td>&mdash;</td><td class="w">B&ndash;C (standard resin)</td><td class="g">A1</td><td class="g">A1</td></tr>
       </tbody>
     </table>
-    <p>The elastic modulus of GFRP (10–20 GPa) is approximately 3.5–7 times lower than aluminium (70 GPa). For equivalent panel thickness, GFRP deflects significantly more under wind load; structural design must account for this through increased panel thickness, integral rib stiffening, or reduced span between fixings. The lower density of GFRP (approximately 40% lighter than aluminium by volume) reduces dead load on the support structure, which can represent a material structural cost saving on large-area facades.</p>
-    <div class="metric-grid">
-      <div class="metric-card"><div class="metric-val">1,750</div><div class="metric-unit">kg/m³ — GFRP density</div><div class="metric-label">~40% lighter than aluminium by volume</div></div>
-      <div class="metric-card b"><div class="metric-val">2,700</div><div class="metric-unit">kg/m³ — Aluminium 6063</div><div class="metric-label">Standard facade alloy grade</div></div>
-      <div class="metric-card"><div class="metric-val">15 GPa</div><div class="metric-unit">E-modulus — GFRP typical</div><div class="metric-label">Requires stiffening for large panels</div></div>
-      <div class="metric-card b"><div class="metric-val">70 GPa</div><div class="metric-unit">E-modulus — Aluminium</div><div class="metric-label">Higher stiffness; thinner section possible</div></div>
+    <div class="mg">
+      <div class="mc"><div class="mv">1,750</div><div class="mu">kg/m&sup3; &mdash; GFRP density</div><div class="ml">~35% lighter than aluminium per unit volume</div></div>
+      <div class="mc"><div class="mv">0.4 W/m&middot;K</div><div class="mu">GFRP thermal conductivity</div><div class="ml">400&times; lower than aluminium &mdash; minimal thermal bridge</div></div>
+      <div class="mc"><div class="mv">70 GPa</div><div class="mu">Aluminium E-modulus</div><div class="ml">3.5&ndash;7&times; stiffer than GFRP; thinner sections possible</div></div>
+      <div class="mc"><div class="mv">15&times;10&#x207B;&#x2076;</div><div class="mu">GFRP CTE /&deg;C</div><div class="ml">Lower movement than aluminium under GCC solar gain</div></div>
+    </div>
+    <div class="calc">
+      <div class="calc-title">Panel Weight Comparison at 3 mm</div>
+      <div class="calc-line">GFRP density = <strong>1,750 kg/m&sup3;</strong> &times; thickness 0.003 m = <strong>5.25 kg/m&sup2;</strong></div>
+      <div class="calc-line">Aluminium density = <strong>2,700 kg/m&sup3;</strong> &times; thickness 0.003 m = <strong>8.10 kg/m&sup2;</strong></div>
+      <div class="calc-result">GFRP is 35% lighter per m&sup2; at equivalent thickness</div>
     </div>
   </div>
 
   <div class="sec" id="s4">
-    <span class="sec-num">Section 04</span>
-    <h2>Thermal Performance</h2>
-    <p>Facade thermal performance is a primary design parameter in the GCC climate, where sustained ambient temperatures of 40–50°C and global horizontal irradiance commonly exceeding 2,200 kWh/m²/year impose significant cooling loads on building envelopes. The thermal properties of the cladding panel material influence HVAC load calculations, wall U-value, and dimensional movement under solar gain.</p>
-    <table class="data-table">
-      <thead><tr><th>Thermal Property</th><th>GFRP</th><th>Aluminium</th></tr></thead>
-      <tbody>
-        <tr><td>Thermal Conductivity (λ)</td><td class="hi">0.25–0.40 W/m·K</td><td class="warn">160–200 W/m·K</td></tr>
-        <tr><td>Coefficient of Thermal Expansion (CTE)</td><td>18–25 × 10⁻⁶ /°C</td><td>23 × 10⁻⁶ /°C</td></tr>
-        <tr><td>Specific Heat Capacity</td><td>1,000–1,250 J/kg·K</td><td>880 J/kg·K</td></tr>
-        <tr><td>Service Temperature Range</td><td>−40°C to +130°C (gel coat dependent)</td><td>−40°C to +200°C</td></tr>
-        <tr><td>Solar Reflectance Index (white finish)</td><td>0.65–0.80</td><td>0.60–0.85 (PVDF)</td></tr>
-      </tbody>
-    </table>
-    <p>The thermal conductivity of GFRP (0.25–0.40 W/m·K) is 400–600 times lower than aluminium (160–200 W/m·K). In a drained and ventilated rainscreen system, both materials function as external cladding leaves with minimal insulation contribution; wall thermal performance is governed primarily by the insulation layer behind. However, GFRP generates fewer thermal bridging paths at fixings and brackets compared to aluminium systems where metal-to-metal contact at fixing points creates preferential heat flow paths through the insulation zone.</p>
-    <div class="callout">
-      <div class="callout-label">GCC Thermal Movement Note</div>
-      <p>Panel surface temperatures in direct summer sun in Dubai can reach 70–80°C. At a panel temperature differential of 55°C (from pre-dawn minimum to peak solar gain), a 1,500 mm aluminium panel undergoes approximately 1.9 mm of thermal expansion. A GFRP panel of equivalent length undergoes 1.5–2.1 mm. Both require designed movement joints of 8–12 mm minimum at panel perimeters, and slotted or floating fixing details to prevent restraint cracking at fixing points.</p>
-    </div>
+    <span class="sec-tag">Section 04</span>
+    <h2>Structural Performance</h2>
+    <h3>Stiffness and Deflection</h3>
+    <p>The elastic modulus of GFRP (10&ndash;20&nbsp;GPa) is 3.5&ndash;7 times lower than aluminium (70&nbsp;GPa). For a simply supported panel under equivalent wind pressure, GFRP deflects substantially more than aluminium of the same thickness. Structural adequacy of GFRP cladding panels must be addressed through one or more of: increased panel thickness, integral rib stiffening, reduced span between fixing points, or a closer sub-frame grid.</p>
+    <p>Aluminium panels at 3&ndash;4&nbsp;mm thick in standard cassette or plate formats are self-stiffening through folded returns or cassette geometry and routinely achieve span/200 deflection limits under design wind loads without supplementary stiffening for panels up to approximately 1.5&nbsp;m clear span.</p>
+    <h3>Fixing Design</h3>
+    <p>Aluminium panels are fixed via concealed clips, face-fixed rivets/screws, or bonded cassette returns. The ductility of aluminium alloy (12&ndash;17% elongation at break) provides tolerance for minor misalignment at fixings without risk of panel failure. Wind uplift testing per ASTM&nbsp;E330 is standard practice for aluminium panels above 1.5&nbsp;m&sup2; in high-exposure locations.</p>
+    <p>GFRP panels require specific fixing design due to low ductility (1&ndash;2% elongation at break) and susceptibility to stress concentration at fixing holes. Oversized holes with compressible EPDM washers, or slotted fixing arrangements, are essential to accommodate thermal movement and installation tolerance without inducing brittle cracking at fixing points. Pull-out and shear capacity testing of the specific panel-and-fixing combination must be conducted for each project.</p>
   </div>
 
   <div class="sec" id="s5">
-    <span class="sec-num">Section 05</span>
-    <h2>Fire Safety &amp; Regulatory Compliance</h2>
-    <p>Fire safety classification is the decisive regulatory differentiator between GFRP and aluminium in the UAE. The UAE Fire and Life Safety Code 2017, enforced by Dubai Civil Defence (DCD) and Abu Dhabi Civil Defence (ADCD), specifies minimum EN 13501-1 fire reaction classifications for external cladding materials based on building height.</p>
-    <table class="data-table">
-      <thead><tr><th>Building Height</th><th>Min. EN 13501-1 Class Required</th><th>GFRP Compliant?</th><th>Aluminium (solid) Compliant?</th></tr></thead>
+    <span class="sec-tag">Section 05</span>
+    <h2>Thermal Performance</h2>
+    <p>Thermal performance is a critical design parameter in GCC facades operating under sustained ambient temperatures of 40&ndash;50&deg;C and global horizontal irradiance commonly exceeding 2,200&nbsp;kWh/m&sup2;/year in Dubai. Both materials function as external cladding leaves in rainscreen systems; wall U-value is governed primarily by the insulation layer behind the cladding.</p>
+    <table class="dt">
+      <thead><tr><th>Thermal Property</th><th>GFRP</th><th>Aluminium</th><th>Design Implication</th></tr></thead>
       <tbody>
-        <tr><td>Below 15 m</td><td>Class C or above</td><td class="hi">Yes (Class B–C)</td><td class="hi">Yes (Class A1)</td></tr>
-        <tr><td>15 m to 23 m</td><td>Class B or above</td><td class="warn">Marginal — requires product-specific test</td><td class="hi">Yes</td></tr>
-        <tr><td>Above 23 m</td><td>Class A1 or A2</td><td class="no">Not permitted</td><td class="hi">Yes</td></tr>
+        <tr><td>Thermal Conductivity (&lambda;)</td><td class="g">0.3&ndash;0.5 W/m&middot;K</td><td class="w">160&ndash;200 W/m&middot;K</td><td>GFRP 400&ndash;600&times; lower &mdash; reduced thermal bridging at fixings</td></tr>
+        <tr><td>CTE</td><td>15&ndash;20 &times; 10&sup6; /&deg;C</td><td>23 &times; 10&sup6; /&deg;C</td><td>Similar range; both require movement joints</td></tr>
+        <tr><td>Solar Reflectance (white finish)</td><td>0.65&ndash;0.80</td><td>0.60&ndash;0.85 (PVDF)</td><td>Both can achieve Al Sa&rsquo;fat SRI requirement &ge;29</td></tr>
+        <tr><td>Peak panel surface temp (GCC summer)</td><td colspan="2">65&ndash;80&deg;C both materials (finish-colour dependent)</td><td>Dark finishes add 15&ndash;25&deg;C above ambient</td></tr>
       </tbody>
     </table>
-    <h3>GFRP Fire Performance</h3>
-    <p>Standard GFRP panels with polyester or vinyl ester resin achieve EN 13501-1 Class B or C under small flame (ISO 11925-2) and single burning item (SBI, EN 13823) testing. Fire-retardant resin systems can achieve Class B-s2, d0 but cannot achieve Class A1 or A2 (non-combustible), as the organic resin matrix inherently contributes to combustion. GFRP is therefore not compliant for external cladding on buildings above 23 metres under DCD Circular 2/2020.</p>
-    <h3>Aluminium Fire Performance</h3>
-    <p>Solid aluminium sheet and extrusions are EN 13501-1 Class A1 (non-combustible). ACM with a verified FR mineral core achieves Class A2-s1, d0. Both are compliant for all building heights. For ACM, specifiers must confirm the specific product brand and construction carry a current DCD-accepted fire test certificate. The mineral core content must be independently verified at a minimum of 70% by weight — a requirement introduced in DCD post-Grenfell circulars.</p>
-    <div class="callout red">
-      <div class="callout-label">Regulatory Warning</div>
-      <p>GFRP is not permitted as primary external cladding on buildings above 23 metres in the UAE under DCD Circular 2/2020. Any proposed use of GFRP above ground floor level on buildings approaching this height threshold requires a fire engineer's report and DCD Technical Approval prior to specification.</p>
+    <div class="calc">
+      <div class="calc-title">Thermal Movement Comparison &mdash; 1,500 mm Panel</div>
+      <div class="calc-line">Temperature differential (peak summer) = <strong>55&deg;C</strong></div>
+      <div class="calc-line">GFRP: 1,500 &times; 17.5&times;10&sup6; &times; 55 = <strong>1.44 mm expansion</strong></div>
+      <div class="calc-line">Aluminium: 1,500 &times; 23&times;10&sup6; &times; 55 = <strong>1.90 mm expansion</strong></div>
+      <div class="calc-result">Minimum design joint: 8&ndash;12 mm (both materials)</div>
     </div>
   </div>
 
   <div class="sec" id="s6">
-    <span class="sec-num">Section 06</span>
-    <h2>Structural &amp; Installation Considerations</h2>
-    <h3>Panel Fixing Systems</h3>
-    <p>Both materials are typically installed as drained and ventilated rainscreen systems on aluminium or hot-dip galvanised steel sub-frame structures. Fixing design differs due to the contrasting mechanical properties of the two materials.</p>
-    <p>Aluminium panels are fixed using concealed mechanical clips, face-fixed rivets or screws, or bonded cassette return systems. The ductility and predictable yield behaviour of aluminium alloy allows standard structural calculations to govern fixing design. Wind load testing to ASTM E330 is standard practice for panels exceeding 1.5 m² surface area in high-wind-zone locations.</p>
-    <p>GFRP panels require specific attention to fixing detail due to low ductility (1–2% elongation at break) and susceptibility to stress concentration at fixing holes. Oversized fixing holes with compressible washers, or slotted fixing arrangements, are necessary to accommodate thermal movement without inducing cracking at fixing points. Pull-out and shear capacity testing of the specific fixing detail in the panel substrate should be commissioned for each project.</p>
-    <h3>Galvanic Compatibility</h3>
-    <p>GFRP is electrochemically inert, eliminating galvanic corrosion risk between panel and aluminium sub-frame. For steel support structures in coastal GCC locations, A4-grade stainless steel fasteners are required for both material types to prevent bi-metallic corrosion.</p>
-    <h3>Panel Weight and Site Logistics</h3>
-    <p>At 5–6 kg/m², GFRP panels are approximately 25–35% lighter than equivalent aluminium sheet at 8 kg/m². For large panel formats exceeding 3 m², this weight difference materially simplifies on-site handling and reduces crane lift requirements. The reduced dead load also decreases bracket and sub-frame sizing, with potential structural cost savings on large-area facades.</p>
+    <span class="sec-tag">Section 06</span>
+    <h2>Fire Safety &amp; Code Compliance</h2>
+    <p>Fire safety classification is the decisive regulatory differentiator between GFRP and aluminium in the UAE. The UAE Fire and Life Safety Code 2017, enforced by DCD in Dubai and ADCD in Abu Dhabi, specifies minimum EN&nbsp;13501-1 fire reaction classifications for external cladding based on building height.</p>
+    <table class="dt">
+      <thead><tr><th>Building Height</th><th>Min. Required Class</th><th>GFRP (std. resin)</th><th>GFRP (FR resin)</th><th>Aluminium (solid)</th><th>ACM FR-core</th></tr></thead>
+      <tbody>
+        <tr><td>Below 15 m</td><td>Class C or above</td><td class="w">Marginal (B&ndash;C)</td><td class="g">B-s2,d0</td><td class="g">A1</td><td class="g">A2-s1,d0</td></tr>
+        <tr><td>15 m &ndash; 23 m</td><td>Class B or above</td><td class="w">Marginal; requires test</td><td class="g">B-s2,d0 (with approval)</td><td class="g">A1</td><td class="g">A2-s1,d0</td></tr>
+        <tr><td>Above 23 m</td><td>A1 or A2-s1,d0</td><td class="r">Not permitted</td><td class="r">Not permitted</td><td class="g">A1</td><td class="g">A2-s1,d0</td></tr>
+      </tbody>
+    </table>
+    <h3>GFRP Fire Classification</h3>
+    <p>Standard GFRP panels with polyester or vinyl ester resin achieve EN&nbsp;13501-1 Class B or C under small flame ignition (ISO&nbsp;11925-2) and SBI (EN&nbsp;13823) testing. Fire-retardant resin formulations can achieve Class B-s2,d0 but cannot achieve A1 or A2, as the organic resin matrix inherently contributes to combustion. GFRP is therefore not compliant for external cladding above 23&nbsp;metres under DCD Circular 2/2020, regardless of resin type.</p>
+    <h3>Aluminium Fire Classification</h3>
+    <p>Solid aluminium sheet and extrusions are EN&nbsp;13501-1 Class A1 (non-combustible) by ISO&nbsp;1182 and ISO&nbsp;1716 testing. ACM with a verified FR mineral core achieves Class A2-s1,d0 and is compliant for all building heights where the composite panel system &mdash; not the core alone &mdash; holds the classification certificate from an accredited laboratory.</p>
+    <h3>UAE Compliance Pathway</h3>
+    <div class="pathway">
+      <div class="path-step">
+        <div class="path-num">1</div>
+        <div class="path-body">
+          <div class="path-title">Material Classification (EN&nbsp;13501-1 / ASTM E84)</div>
+          <div class="path-desc">Obtain EN&nbsp;13501-1 classification certificate for the specified product from a UKAS-, DAkkS-, or ENAS-accredited laboratory. For ACM: composite panel certificate required, not core material certificate alone.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">2</div>
+        <div class="path-body">
+          <div class="path-title">Full Facade Assembly Assessment (NFPA 285 / BS 8414)</div>
+          <div class="path-desc">For buildings above 18&nbsp;m with any combustible cladding element: full-scale wall assembly fire test per NFPA&nbsp;285 (North American ref.) or BS&nbsp;8414 (UK / Dubai preferred) required. GFRP panels above 15&nbsp;m require BS&nbsp;8414 test evidence or fire engineering justification.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">3</div>
+        <div class="path-body">
+          <div class="path-title">DCD Technical Approval</div>
+          <div class="path-desc">Submit material certificates, facade material schedule, elevation drawings, and fire engineer report (if applicable) via DCD Montaji portal. Allow 15&ndash;30 days for A1/A2 materials; 45&ndash;90 days for combustible material assessments.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">4</div>
+        <div class="path-body">
+          <div class="path-title">Installation Inspection</div>
+          <div class="path-desc">DCD inspector confirms installed material matches approved specification by reference to product labels and delivery documentation on site.</div>
+        </div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">5</div>
+        <div class="path-body">
+          <div class="path-title">Building Compliance Certificate</div>
+          <div class="path-desc">DCD issues facade compliance confirmation as part of overall Completion Certificate. All records retained in Building O&amp;M manual.</div>
+        </div>
+      </div>
+    </div>
+    <div class="co re">
+      <div class="co-tag">Critical &mdash; GFRP Height Restriction</div>
+      <p>GFRP is not permitted as primary external cladding on buildings above 23&nbsp;metres in the UAE under DCD Circular 2/2020. Any proposed GFRP application above ground floor level on buildings approaching this height threshold requires a fire engineer&rsquo;s report and DCD Technical Approval prior to specification commitment. Proceeding without approval exposes the project to mandatory removal and reinstatement at the contractor&rsquo;s cost.</p>
+    </div>
   </div>
 
   <div class="sec" id="s7">
-    <span class="sec-num">Section 07</span>
-    <h2>Durability in GCC Climate</h2>
-    <p>The GCC built environment presents specific durability challenges for external cladding: sustained UV radiation intensity (UV index regularly exceeding 11), ambient temperatures of 45°C+, coastal salt-laden air in shoreline and marina developments, and abrasive wind-blown sand in inland and desert-fringe locations.</p>
-    <table class="data-table">
-      <thead><tr><th>Durability Factor</th><th>GFRP</th><th>Aluminium</th></tr></thead>
+    <span class="sec-tag">Section 07</span>
+    <h2>Installation &amp; Fixing Systems</h2>
+    <h3>GFRP Ventilated Rainscreen System Build-up</h3>
+    <div class="layer-diag">
+      <div class="layer-title">GFRP Rainscreen System &mdash; Typical Build-up (Exterior to Interior)</div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#1a2e1f;color:var(--accent);width:60px">EXT</div>
+        <div class="layer-info"><div class="layer-name">GFRP Cladding Panel</div><div class="layer-spec">6&ndash;12 mm thickness &middot; gel coat + glass fibre reinforced polyester or vinyl ester matrix &middot; EN 13501-1 Class B&ndash;C</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#1e2d20;color:var(--accent);width:60px">FIX</div>
+        <div class="layer-info"><div class="layer-name">316 SS Fixing with EPDM Washer</div><div class="layer-spec">Oversized holes + compressible washer to accommodate thermal movement without cracking; pull-out tested for project</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#182318;color:var(--muted);width:60px">AIR</div>
+        <div class="layer-info"><div class="layer-name">Ventilated Air Cavity</div><div class="layer-spec">40&ndash;60 mm &middot; open-drained base &middot; cavity fire barriers at each floor (DCD req.) &middot; no combustible insulation in cavity</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#162016;color:var(--muted);width:60px">INS</div>
+        <div class="layer-info"><div class="layer-name">Mineral Wool Insulation (Class A1)</div><div class="layer-spec">80&ndash;120 mm &middot; min. 80 kg/m&sup3; &middot; SS pins to substrate &middot; non-combustible mandatory in UAE facade cavities</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#111a13;color:var(--dim);width:60px">STR</div>
+        <div class="layer-info"><div class="layer-name">Structural Substrate</div><div class="layer-spec">Concrete frame / masonry / cold-formed steel framing &middot; aluminium secondary sub-frame at 600&ndash;1,200 mm centres</div></div>
+      </div>
+    </div>
+    <h3>Aluminium Ventilated Cassette System Build-up</h3>
+    <div class="layer-diag">
+      <div class="layer-title">Aluminium Cassette System &mdash; Typical Build-up (Exterior to Interior)</div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#1a2e1f;color:#60a5fa;width:60px">EXT</div>
+        <div class="layer-info"><div class="layer-name">Aluminium Cassette Panel (PVDF Coated)</div><div class="layer-spec">3&ndash;4 mm Al 5052-H32 &middot; PVDF coating to AAMA 2605 &middot; EN 13501-1 Class A1 &middot; 60&ndash;75 mm folded return cassette</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#1e2d20;color:#60a5fa;width:60px">FIX</div>
+        <div class="layer-info"><div class="layer-name">Concealed Clip &amp; Aluminium Rail</div><div class="layer-spec">Aluminium T-rail 6063-T5 at 600 mm vert. centres &middot; concealed clip fixing &middot; 3D adjustable bracket to structure</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#182318;color:var(--muted);width:60px">AIR</div>
+        <div class="layer-info"><div class="layer-name">Ventilated Air Cavity</div><div class="layer-spec">40&ndash;80 mm &middot; open-drained &middot; cavity fire barriers at each floor &middot; pressure-equalised joint detail</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#162016;color:var(--muted);width:60px">INS</div>
+        <div class="layer-info"><div class="layer-name">Mineral Wool Insulation (Class A1)</div><div class="layer-spec">80&ndash;150 mm &middot; min. 80 kg/m&sup3; &middot; SS pins &middot; thermal bridging at brackets checked per ISO 10211</div></div>
+      </div>
+      <div class="layer">
+        <div class="layer-bar" style="background:#111a13;color:var(--dim);width:60px">STR</div>
+        <div class="layer-info"><div class="layer-name">Structural Substrate</div><div class="layer-spec">Concrete / masonry / steel frame &middot; L-brackets hot-dip galvanised or stainless steel &middot; thermal break pads at bracket</div></div>
+      </div>
+    </div>
+    <h3>Comparative Installation Factors</h3>
+    <table class="dt">
+      <thead><tr><th>Factor</th><th>GFRP</th><th>Aluminium</th></tr></thead>
       <tbody>
-        <tr><td>UV resistance</td><td class="warn">Moderate — UV-stabilised resin and pigmented gel coat required; surface chalking expected without protection</td><td class="hi">Excellent — PVDF to AAMA 2605 rated for 10-year chalk/fade warranty; anodising also suitable</td></tr>
-        <tr><td>Corrosion resistance</td><td class="hi">Excellent — no metallic corrosion mechanism; inherently salt-resistant</td><td class="hi">Very good — aluminium oxide passive layer; PVDF or anodised finish provides additional barrier</td></tr>
-        <tr><td>Coastal salt spray (ASTM B117)</td><td class="hi">Excellent — inert to chloride ions</td><td class="warn">Good — PVDF or anodised finish essential; uncoated aluminium not recommended in Zone 1 marine environments</td></tr>
-        <tr><td>Sand abrasion</td><td class="warn">Moderate — gel coat surface progressively abraded; sand-trap drainage detailing required at joints</td><td class="hi">Good — anodised surface resists abrasion; PVDF coating shows minor surface dulling over time</td></tr>
-        <tr><td>Design service life</td><td>25–40 years (with gel coat maintenance programme)</td><td class="hi">40–60 years</td></tr>
-        <tr><td>Maintenance requirement</td><td class="warn">Gel coat inspection every 10 years; recoating at 15–20 year intervals typical</td><td class="hi">Low — PVDF coating requires no routine maintenance; fixing and sealant inspection at 10-year intervals</td></tr>
+        <tr><td>Fixing type</td><td>Face-fixed with EPDM washer; slotted holes mandatory</td><td>Concealed clip preferred; face-fixed also available</td></tr>
+        <tr><td>Sub-frame material</td><td>Aluminium or galv. steel; no galvanic risk with GFRP</td><td>Aluminium preferred; thermal break pads at steel connection</td></tr>
+        <tr><td>Max practical panel size</td><td>Up to 4 &times; 2 m (weight and handling governed)</td><td>Up to 6 &times; 2 m (stiffness-governed)</td></tr>
+        <tr><td>Thermal break at fixings</td><td class="g">Not required &mdash; GFRP is not a thermal conductor</td><td class="w">Required at metallic bracket connections to substrate</td></tr>
+        <tr><td>Site cutting and modification</td><td class="w">Specialist &mdash; fibre dust; respiratory protection required</td><td class="g">Standard aluminium cutting tools; faster on-site adjustment</td></tr>
+        <tr><td>Crane/handling requirement</td><td class="g">Lighter; smaller crane for large-format panels</td><td class="w">Heavier per m&sup2; at equivalent thickness</td></tr>
       </tbody>
     </table>
-    <p>UV-induced degradation of the GFRP resin matrix and gel coat causes surface chalking, progressive colour change, and — in unprotected panels — surface fibre prominence and mechanical property reduction. UV-stabilised resin systems combined with pigmented, UV-resistant gel coats extend the maintenance-free service period substantially. Specifiers should require ISO 4892-2 (Xenon arc) or ISO 4892-3 (UV fluorescent lamp) accelerated weathering test data for the specific resin-gel coat system. UV-stabilised GFRP panels with rated gel coats have demonstrated acceptable performance on low-to-medium-rise GCC projects across multiple property cycles.</p>
-    <p>Aluminium with PVDF coating to AAMA 2605 — specifying 70% PVDF resin minimum — provides a well-characterised high-durability finish with documented performance in GCC conditions. The PVDF system has an established track record across landmark projects in Dubai, Abu Dhabi, Riyadh, and Doha. For projects with long design service lives, limited maintenance access, or operator preference for low intervention, aluminium presents the more predictable long-term durability profile.</p>
+    <div class="cs">
+      <div class="cs-label">Reference Project &mdash; Low-Rise Cultural Building, Abu Dhabi</div>
+      <div class="cs-grid">
+        <div class="cs-field"><div class="cs-key">Project Type</div><div class="cs-val">Cultural centre, 3-storey</div></div>
+        <div class="cs-field"><div class="cs-key">Location</div><div class="cs-val">Abu Dhabi, UAE</div></div>
+        <div class="cs-field"><div class="cs-key">Facade System</div><div class="cs-val">GFRP &mdash; curved panel rainscreen</div></div>
+        <div class="cs-field"><div class="cs-key">Panel Format</div><div class="cs-val">Variable: 800&ndash;2,200 mm curved</div></div>
+        <div class="cs-field"><div class="cs-key">Building Height</div><div class="cs-val">14 m &mdash; below 23 m DCD threshold</div></div>
+        <div class="cs-field"><div class="cs-key">Fire Class</div><div class="cs-val">EN 13501-1 Class B &mdash; DCD approved</div></div>
+        <div class="cs-field"><div class="cs-key">Fixing System</div><div class="cs-val">316 SS face-fixed; EPDM washers; slotted holes</div></div>
+        <div class="cs-field"><div class="cs-key">Selection Reason</div><div class="cs-val">Complex curved geometry; cost-prohibitive in aluminium</div></div>
+      </div>
+    </div>
   </div>
 
   <div class="sec" id="s8">
-    <span class="sec-num">Section 08</span>
-    <h2>Cost &amp; Lifecycle Considerations</h2>
-    <p>Material cost comparison is subject to significant market variation and should be based on current, project-specific supplier quotations. The indicative ranges below reflect the UAE and GCC market as at Q1 2026 and are intended for preliminary feasibility assessment only.</p>
-    <table class="data-table">
-      <thead><tr><th>Cost Element</th><th>GFRP</th><th>Aluminium (solid sheet / cassette)</th></tr></thead>
+    <span class="sec-tag">Section 08</span>
+    <h2>Durability in GCC Climate</h2>
+    <p>The GCC environment imposes specific durability demands: UV index regularly exceeding 11; ambient 45&deg;C+ with panel surfaces reaching 80&deg;C under direct solar gain; coastal salt aerosol in waterfront and marina developments; and wind-blown silica sand in inland and desert-fringe locations. The two materials respond to these conditions differently.</p>
+    <table class="dt">
+      <thead><tr><th>Durability Factor</th><th>GFRP</th><th>Aluminium (PVDF)</th></tr></thead>
       <tbody>
-        <tr><td>Indicative installed cost (AED/m²)</td><td>AED 380–750</td><td>AED 320–650</td></tr>
-        <tr><td>Complex geometry fabrication premium</td><td class="hi">Low — mouldable to complex forms without sheet metal tooling</td><td class="warn">High — each curved or compound profile requires dedicated tooling or incremental sheet fabrication</td></tr>
-        <tr><td>Structural support cost impact</td><td class="hi">Reduced — lower dead load can reduce sub-frame and bracket sizing</td><td>Standard</td></tr>
-        <tr><td>Design service life</td><td>25–40 years</td><td class="hi">40–60 years</td></tr>
-        <tr><td>Maintenance cycle cost</td><td class="warn">Gel coat inspection and periodic recoating — budget AED 40–80/m² at 15–20 year intervals</td><td class="hi">Low — sealant and fixing inspection only; no routine recoating required for PVDF systems</td></tr>
-        <tr><td>End-of-life recyclability</td><td class="warn">Negligible — thermoset resin matrix is not commercially recyclable</td><td class="hi">High — aluminium is fully and indefinitely recyclable; significant residual value</td></tr>
+        <tr><td>UV resistance</td><td class="w">Moderate &mdash; UV-stabilised resin and pigmented gel coat essential; surface chalking expected over 10&ndash;15 years without UV stabiliser</td><td class="g">Excellent &mdash; PVDF to AAMA 2605 provides 10-year chalk/fade warranty</td></tr>
+        <tr><td>Corrosion</td><td class="g">Excellent &mdash; no metallic corrosion mechanism; inert to chloride ions</td><td class="g">Very good &mdash; passive aluminium oxide layer; PVDF provides additional barrier</td></tr>
+        <tr><td>Coastal salt spray</td><td class="g">Excellent &mdash; inert to chloride; no galvanic corrosion risk</td><td class="w">Good &mdash; PVDF or anodised finish essential; uncoated Al not recommended in Zone 1 marine exposure</td></tr>
+        <tr><td>Sand abrasion</td><td class="w">Moderate &mdash; gel coat surface progressively abraded; sand-trap drainage details critical</td><td class="g">Good &mdash; anodised or PVDF surface resists abrasion; minor surface dulling over time</td></tr>
+        <tr><td>Design service life</td><td>25&ndash;40 years with gel coat maintenance</td><td class="g">40&ndash;60 years; PVDF minimal maintenance</td></tr>
+        <tr><td>Maintenance requirement</td><td class="w">Gel coat inspection every 10 years; recoating at 15&ndash;20 year intervals</td><td class="g">Low &mdash; sealant/fixing inspection at 10 years; no routine recoating required</td></tr>
+        <tr><td>Recyclability</td><td class="r">None &mdash; thermoset resin not recyclable</td><td class="g">High &mdash; aluminium fully recyclable; residual material value</td></tr>
       </tbody>
     </table>
-    <p>On a whole-life cost basis, aluminium typically presents the lower net cost for standard rectangular or lightly profiled facades due to its longer service life, minimal maintenance requirement, and residual material value at end of life. GFRP can present a lower overall project cost where its design freedom eliminates expensive fabrication costs for complex geometry, or where weight reduction enables a lighter structural system with material savings upstream in the structural engineering.</p>
-    <p>Environmental performance assessment should consider the embodied carbon of each system across the full lifecycle, including extraction, manufacturing, installation, maintenance, and end-of-life. Aluminium production is energy-intensive; however, the high recycled content achievable (30–95% post-consumer recycled aluminium is commercially available) and indefinite recyclability provide a favourable end-of-life position. GFRP has lower embodied carbon in production but offers essentially no end-of-life value.</p>
   </div>
 
   <div class="sec" id="s9">
-    <span class="sec-num">Section 09</span>
+    <span class="sec-tag">Section 09</span>
+    <h2>Cost &amp; Lifecycle Considerations</h2>
+    <table class="dt">
+      <thead><tr><th>Cost Element</th><th>GFRP</th><th>Aluminium</th></tr></thead>
+      <tbody>
+        <tr><td>Indicative supply and install (AED/m&sup2;)</td><td>AED 380&ndash;750</td><td>AED 320&ndash;650 (cassette); AED 250&ndash;480 (flat sheet)</td></tr>
+        <tr><td>Complex geometry fabrication premium</td><td class="g">Low &mdash; mouldable to complex form; mould cost is main variable</td><td class="w">High &mdash; compound-curved sheet metal fabrication requires dedicated tooling</td></tr>
+        <tr><td>Structural support cost impact</td><td class="g">Reduced &mdash; lower dead load reduces sub-frame and bracket sizing</td><td>Standard</td></tr>
+        <tr><td>Design service life</td><td>25&ndash;40 years</td><td class="g">40&ndash;60 years</td></tr>
+        <tr><td>Maintenance lifecycle cost</td><td class="w">Gel coat recoating every 15&ndash;20 years: AED 40&ndash;80/m&sup2; per cycle</td><td class="g">Low &mdash; sealant/fixing inspection only; no routine recoating</td></tr>
+        <tr><td>End-of-life value</td><td class="r">Negligible &mdash; thermoset not recyclable</td><td class="g">Significant &mdash; aluminium scrap has positive market value</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec" id="s10">
+    <span class="sec-tag">Section 10</span>
     <h2>Material Selection Guidance</h2>
-    <p>The following criteria summarise the conditions under which each material is technically appropriate for UAE and GCC facade applications. These are engineering reference points — final material selection requires project-specific analysis by the facade consultant and, where applicable, an independent fire engineer.</p>
-    <h3>GFRP is technically appropriate where:</h3>
+    <h3>When to Specify GFRP</h3>
     <ul>
-      <li>Building height is confirmed below 23 metres and fire engineering confirms DCD compliance for the specific application</li>
-      <li>Complex curved, sculptural, or parametric panel geometry is required that would be cost-prohibitive or technically demanding in fabricated aluminium</li>
-      <li>Minimising facade dead load is a structural design objective — particularly relevant for refurbishment projects with constrained structural capacity</li>
-      <li>The project is in a highly corrosive marine or industrial environment where metallic corrosion resistance is a primary durability requirement</li>
-      <li>Programme constraints favour factory-moulded panels that can be manufactured to complex form without on-site fabrication</li>
+      <li>Building height below 23&nbsp;m and fire engineering confirms DCD compliance for the specific application</li>
+      <li>Complex curved, sculptural, or parametric panel geometry that would be cost-prohibitive or technically demanding in fabricated aluminium</li>
+      <li>Minimising facade dead load is a structural design objective &mdash; particularly relevant for refurbishment projects with limited structural reserve</li>
+      <li>Highly corrosive marine or industrial environments where metallic corrosion is the primary durability risk</li>
+      <li>Corrosion-sensitive environments where the absence of any metallic cladding material is a design requirement</li>
     </ul>
-    <h3>Aluminium is technically appropriate where:</h3>
+    <h3>When to Specify Aluminium</h3>
     <ul>
-      <li>Building height exceeds 23 metres — aluminium is the code-compliant choice for mid-rise, high-rise, and supertall buildings under UAE regulations</li>
-      <li>A design service life of 40+ years with a low-maintenance specification is required</li>
-      <li>The project specification mandates demonstrable EN 13501-1 Class A2 or A1 non-combustible cladding for any height</li>
-      <li>Standard flat or lightly profiled panel geometry is sufficient — aluminium provides the most cost-effective and technically established solution</li>
-      <li>Sustainability targets include specified recycled material content or end-of-life recyclability</li>
+      <li>Building height above 23&nbsp;m &mdash; aluminium is the fully compliant choice at all heights under UAE regulations</li>
+      <li>Design service life of 40+ years with a low-maintenance specification required</li>
+      <li>EN&nbsp;13501-1 Class A1 or A2 non-combustible cladding mandated for the project specification</li>
+      <li>Standard flat or lightly profiled panel geometry &mdash; aluminium is the most cost-effective solution</li>
+      <li>High recycled content or end-of-life recyclability required for sustainability certification</li>
+      <li>Curtain wall framing systems, high-rise facade framing, or pressed panel systems requiring metallic forming</li>
     </ul>
-    <div class="callout">
-      <div class="callout-label">Specification Note</div>
-      <p>For projects where both materials are technically feasible — low-rise buildings below 23 metres with moderate geometry complexity — the selection decision typically resolves around long-term appearance durability and maintenance strategy. Aluminium with PVDF coating provides the more predictable long-term facade appearance. GFRP specifications should include a clearly defined inspection and maintenance programme in the O&amp;M documentation, with a budgeted gel coat inspection interval and a defined recoating trigger condition.</p>
+    <div class="co">
+      <div class="co-tag">Decision Framework for Low-Rise Projects</div>
+      <p>For projects below 23&nbsp;m where both materials are technically feasible, the selection typically resolves around three factors: (1) facade geometry complexity &mdash; complex curved forms favour GFRP; flat rectangular panels favour aluminium; (2) maintenance strategy &mdash; aluminium PVDF offers a more predictable long-term appearance with lower maintenance intervention; (3) programme &mdash; aluminium sub-frame and cassette systems typically have shorter lead times than bespoke GFRP panel manufacture, which requires mould production. GFRP specifications should include a defined maintenance programme in the O&amp;M documentation with gel coat inspection intervals and recoating trigger conditions.</p>
     </div>
-    <p style="margin-top:32px">Use the <a href="https://cladwise.ae" style="color:var(--accent)">CladWise UAE comparison engine</a> to compare GFRP and aluminium against your project-specific parameters, or generate an Advisory Report referencing 2026 UAE compliance standards.</p>
+  </div>
+
+  <div class="sec" id="s11">
+    <span class="sec-tag">Section 11</span>
+    <h2>Referenced Standards</h2>
+    <h4>Material Testing</h4>
+    <div class="std-grid">
+      <div class="std"><div class="std-code">ASTM D638</div><div class="std-desc">Tensile properties of plastic and composite materials &mdash; governs GFRP tensile strength reporting</div></div>
+      <div class="std"><div class="std-code">ASTM D790</div><div class="std-desc">Flexural properties of plastics and composites &mdash; three-point bend flexural strength and modulus for GFRP</div></div>
+      <div class="std"><div class="std-code">AAMA 2605</div><div class="std-desc">Superior performance organic coatings on aluminium extrusions and panels &mdash; PVDF 70% resin minimum, 10-year chalk/fade warranty</div></div>
+      <div class="std"><div class="std-code">ISO 4892-2</div><div class="std-desc">Accelerated UV weathering of GFRP &mdash; Xenon arc method; required for GCC climate durability assessment</div></div>
+    </div>
+    <h4>Fire Testing</h4>
+    <div class="std-grid">
+      <div class="std"><div class="std-code">EN 13501-1</div><div class="std-desc">Fire classification of construction products &mdash; defines A1 through F classes for UAE regulatory use</div></div>
+      <div class="std"><div class="std-code">EN 13823</div><div class="std-desc">Single Burning Item (SBI) test &mdash; mandatory for Classes B&ndash;D classification</div></div>
+      <div class="std"><div class="std-code">NFPA 285</div><div class="std-desc">Fire propagation characteristics of exterior non-load-bearing wall assemblies &mdash; full-scale wall test referenced by UAE engineers</div></div>
+      <div class="std"><div class="std-code">BS 8414</div><div class="std-desc">Fire performance of external cladding systems &mdash; full-scale facade fire test; referenced by DCD for buildings above 18 m</div></div>
+      <div class="std"><div class="std-code">ASTM E84</div><div class="std-desc">Surface burning characteristics &mdash; flame spread and smoke developed indices for GFRP panels</div></div>
+    </div>
+    <h4>Structural &amp; Facade System</h4>
+    <div class="std-grid">
+      <div class="std"><div class="std-code">ASTM E330</div><div class="std-desc">Structural performance of facades under uniform static air pressure &mdash; wind load test for both materials</div></div>
+      <div class="std"><div class="std-code">ASCE 7-22</div><div class="std-desc">Minimum design loads including wind pressures &mdash; primary structural reference for UAE facade design</div></div>
+      <div class="std"><div class="std-code">ISO 10211</div><div class="std-desc">Thermal bridges in building construction &mdash; assessment of aluminium bracket thermal bridging through insulation layer</div></div>
+    </div>
+    <p style="margin-top:32px">Compare GFRP and aluminium against your project parameters using the <a href="https://cladwise.ae" style="color:var(--accent)">CladWise UAE comparison engine</a>.</p>
   </div>
 </div>
 
 <footer>
-  <p><strong style="color:var(--text)">CladWise UAE</strong> — Facade Material Intelligence Platform</p>
-  <p><a href="https://cladwise.ae">cladwise.ae</a> · Technical reference for UAE and GCC construction professionals</p>
-  <p style="margin-top:16px;font-size:12px">For professional reference only. Verify all regulatory requirements with the relevant UAE authority (DCD, ADCD, MoIAT) before procurement or construction.</p>
+  <p><strong style="color:var(--text)">CladWise UAE</strong> &mdash; Facade Material Intelligence Platform</p>
+  <p><a href="https://cladwise.ae">cladwise.ae</a> &middot; Technical reference for UAE and GCC construction professionals</p>
+  <p style="margin-top:14px;font-size:12px">For professional reference only. Verify all requirements with DCD, ADCD, or MoIAT before procurement or construction.</p>
 </footer>
 </body>
 </html>
