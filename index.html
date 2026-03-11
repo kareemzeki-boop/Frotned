@@ -2775,7 +2775,8 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <a href="#compare">Compare</a>
       <a href="#wizard">Advisor</a>
       <a href="#suppliers">Suppliers</a>
-      <a href="#standards">Standards</a>
+      <a href="u-value-calculator.html">U-Value</a>
+      <a href="cost-estimator.html">Cost Calc</a>
     </div>
 
     <!-- Right group -->
@@ -2809,7 +2810,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <a href="#compare"  onclick="closeMobileMenu()">Compare</a>
   <a href="#wizard"   onclick="closeMobileMenu()">Advisor</a>
   <a href="#suppliers" onclick="closeMobileMenu()">Suppliers</a>
-  <a href="#standards" onclick="closeMobileMenu()">Standards</a>
   <a href="u-value-calculator.html">U-Value Calc</a>
   <a href="cost-estimator.html">Cost Estimator</a>
   <div class="mob-drawer-auth">
@@ -5549,7 +5549,7 @@ function cwUpdateNav() {
 
 // ── NAV SCROLL SPY ───────────────────────────────────────────────────────────
 (function() {
-  const sections = ['home','explore','compare','wizard','suppliers','standards'];
+  const sections = ['home','explore','compare','wizard','suppliers'];
   function updateActive() {
     const scrollY = window.scrollY + 100;
     let current = sections[0];
