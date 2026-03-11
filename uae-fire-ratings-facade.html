@@ -3,467 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UAE Facade Fire Ratings &amp; Cladding Compliance: Technical Guide 2026 | CladWise UAE</title>
-<meta name="description" content="Complete technical guide to UAE facade fire ratings and cladding compliance 2026. EN 13501-1 classification, DCD requirements, UAE Fire Code 2017, DCD Circular 2/2020, NFPA 285, BS 8414, and material compliance positions for architects and facade consultants.">
-<meta name="keywords" content="UAE facade fire rating, DCD cladding compliance Dubai, EN 13501-1 UAE, UAE fire code facade, cladding fire classification UAE, DCD circular 2020, NFPA 285 UAE, BS 8414 Dubai">
+<title>UAE Facade Fire Ratings &amp; Compliance: Technical Guide | CladWise UAE</title>
+<meta name="description" content="Technical guide to UAE facade fire ratings and cladding compliance. EN 13501-1 classifications, DCD requirements, UAE Fire Code 2017, DCD Circular 2/2020, and material-specific compliance for architects and facade consultants.">
+<meta name="keywords" content="UAE facade fire rating, DCD cladding compliance Dubai, EN 13501-1 UAE, UAE fire code facade, cladding fire classification UAE, DCD circular 2020 cladding">
 <meta name="author" content="CladWise UAE">
 <link rel="canonical" href="https://cladwise.ae/uae-fire-ratings-facade.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
-:root{
-  --bg:#0b110d;--bg2:#111a13;--bg3:#182318;--bg4:#1e2d20;
-  --accent:#00e5a0;--text:#e8f0ea;--muted:#7a9680;--dim:#4a6050;
-  --border:rgba(0,229,160,0.12);--border2:rgba(0,229,160,0.06);
-  --red:#ef4444;--amber:#f59e0b;
-}
+:root{--bg:#0b110d;--bg2:#111a13;--bg3:#182318;--accent:#00e5a0;--text:#e8f0ea;--muted:#7a9680;--dim:#4a6050;--border:rgba(0,229,160,0.12);--border2:rgba(0,229,160,0.06)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:"Barlow",sans-serif;font-size:16px;line-height:1.8}
-/* NAV */
 nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(11,17,13,0.95);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:50px;padding:10px 24px;display:flex;align-items:center;gap:24px;z-index:100;white-space:nowrap}
-.nl{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:16px;letter-spacing:2px;color:var(--accent);text-decoration:none}
-.na{color:var(--muted);font-size:13px;text-decoration:none;transition:color .2s}.na:hover{color:var(--accent)}
-.nc{background:var(--accent);color:#0b110d;font-size:12px;font-weight:800;padding:6px 16px;border-radius:20px;text-decoration:none;font-family:"Barlow Condensed",sans-serif;letter-spacing:1px}
-/* HERO */
-.hero{padding:140px 24px 64px;max-width:900px;margin:0 auto}
-.hero-chip{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.hero-chip::before{content:"";width:28px;height:1px;background:var(--accent)}
-.hero h1{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:clamp(36px,6vw,62px);line-height:1.02;letter-spacing:-.5px;margin-bottom:22px}
+.nav-logo{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:16px;letter-spacing:2px;color:var(--accent);text-decoration:none}
+.nav-link{color:var(--muted);font-size:13px;text-decoration:none;transition:color 0.2s}.nav-link:hover{color:var(--accent)}
+.nav-cta{background:var(--accent);color:#0b110d;font-size:12px;font-weight:800;padding:6px 16px;border-radius:20px;text-decoration:none;font-family:"Barlow Condensed",sans-serif;letter-spacing:1px}
+.hero{padding:140px 24px 72px;max-width:860px;margin:0 auto}
+.hero-label{font-family:"DM Mono",monospace;font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.hero-label::before{content:"";width:24px;height:1px;background:var(--accent)}
+.hero h1{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:clamp(34px,5.5vw,56px);line-height:1.05;margin-bottom:20px}
 .hero h1 em{color:var(--accent);font-style:normal}
-.hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:28px}
-.hero-meta span{font-family:"DM Mono",monospace;font-size:10px;color:var(--dim)}
-.hero-intro{font-size:17px;color:var(--muted);line-height:1.85;border-left:3px solid var(--accent);padding-left:22px}
-/* LAYOUT */
-.wrap{max-width:900px;margin:0 auto;padding:0 24px 100px}
-/* TOC */
-.toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin:40px 0}
-.toc-h{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:16px}
-.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
-.toc-grid a{color:var(--muted);font-size:13px;text-decoration:none;display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border2);transition:color .2s}
-.toc-grid a:hover{color:var(--accent)}
-.toc-grid a span{font-family:"DM Mono",monospace;font-size:10px;color:var(--dim);margin-top:2px}
-/* SECTION */
-.sec{margin-top:72px;padding-top:10px;border-top:1px solid var(--border)}
-.sec-tag{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;display:block}
-.sec h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.1;margin-bottom:20px;letter-spacing:.2px}
-.sec h3{font-size:17px;font-weight:600;color:var(--text);margin:32px 0 12px}
-.sec h4{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;font-family:"DM Mono",monospace}
-.sec p{color:var(--muted);margin-bottom:16px;font-size:15.5px;line-height:1.85}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+.hero-meta span{font-family:"DM Mono",monospace;font-size:11px;color:var(--dim)}
+.hero-intro{font-size:17px;color:var(--muted);line-height:1.8;border-left:3px solid var(--accent);padding-left:20px}
+.content{max-width:860px;margin:0 auto;padding:0 24px 100px}
+.toc{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:40px 0}
+.toc-title{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:14px}
+.toc ol{padding-left:18px}.toc li{color:var(--muted);font-size:14px;margin-bottom:6px}
+.toc a{color:var(--muted);text-decoration:none}.toc a:hover{color:var(--accent)}
+.sec{margin-top:64px;padding-top:8px;border-top:1px solid var(--border)}
+.sec-num{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;display:block}
+.sec h2{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:clamp(22px,3.5vw,30px);margin-bottom:18px;color:var(--text)}
+.sec h3{font-size:17px;font-weight:600;color:var(--text);margin:28px 0 10px}
+.sec p{color:var(--muted);margin-bottom:16px;font-size:15.5px;line-height:1.8}
 .sec strong{color:var(--text)}
-.sec ul,.sec ol{color:var(--muted);padding-left:22px;margin-bottom:18px}
-.sec li{margin-bottom:8px;font-size:15px;line-height:1.75}
-/* TABLES */
-.dt{width:100%;border-collapse:collapse;margin:24px 0;font-size:13.5px}
-.dt thead tr{background:var(--bg3)}
-.dt th{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;padding:10px 14px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)}
-.dt td{padding:10px 14px;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:top;line-height:1.5}
-.dt td:first-child{color:var(--text);font-weight:500;font-size:13px}
-.dt tr:hover td{background:var(--bg2)}
-.g{color:var(--accent)!important;font-weight:600}
-.w{color:var(--amber)!important;font-weight:600}
-.r{color:var(--red)!important;font-weight:600}
-/* CALLOUTS */
-.co{background:var(--bg2);border-left:3px solid var(--accent);padding:18px 22px;margin:28px 0;border-radius:0 8px 8px 0}
-.co.wr{border-color:var(--amber)}.co.re{border-color:var(--red)}.co.bl{border-color:#60a5fa}
-.co-tag{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:2px;color:var(--accent);margin-bottom:8px}
-.co.wr .co-tag{color:var(--amber)}.co.re .co-tag{color:var(--red)}.co.bl .co-tag{color:#60a5fa}
-.co p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.75}
-/* METRIC CARDS */
-.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin:24px 0}
-.mc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:15px 13px}
-.mv{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;color:var(--accent);line-height:1;margin-bottom:3px}
-.mu{font-family:"DM Mono",monospace;font-size:9px;color:var(--dim);margin-bottom:5px}
-.ml{font-size:11.5px;color:var(--muted);line-height:1.4}
-/* CALC BOX */
-.calc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin:28px 0;font-family:"DM Mono",monospace}
-.calc-title{font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
-.calc-line{font-size:13px;color:var(--muted);margin-bottom:6px}
-.calc-line strong{color:var(--text)}
-.calc-result{font-size:16px;color:var(--accent);font-weight:bold;margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
-/* LAYER DIAGRAM */
-.layer-diag{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:28px 0}
-.layer-title{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;padding:16px 20px 10px}
-.layer{display:flex;align-items:center;gap:0;border-top:1px solid var(--border2)}
-.layer-bar{flex-shrink:0;height:44px;display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:9px;font-weight:600;writing-mode:horizontal-tb;padding:0 8px}
-.layer-info{padding:10px 16px;flex:1}
-.layer-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
-.layer-spec{font-family:"DM Mono",monospace;font-size:10px;color:var(--muted)}
-/* COMPLIANCE PATHWAY */
-.pathway{display:flex;flex-direction:column;gap:0;margin:24px 0}
-.path-step{display:flex;gap:0;position:relative}
-.path-step::before{content:"";position:absolute;left:18px;top:38px;bottom:-1px;width:2px;background:var(--border);z-index:0}
-.path-step:last-child::before{display:none}
-.path-num{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:11px;color:var(--accent);flex-shrink:0;z-index:1;margin-top:6px}
-.path-body{padding:6px 0 24px 16px;flex:1}
-.path-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-.path-desc{font-size:13.5px;color:var(--muted);line-height:1.65}
-/* CASE STUDY */
-.cs{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 26px;margin:28px 0}
-.cs-label{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--accent);letter-spacing:2px;margin-bottom:14px}
-.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.cs-field{background:var(--bg3);border-radius:6px;padding:10px 12px}
-.cs-key{font-family:"DM Mono",monospace;font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px}
-.cs-val{font-size:13px;font-weight:600;color:var(--text)}
-/* STANDARDS BOX */
-.std-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:20px 0}
-.std{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
-.std-code{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);font-weight:600;flex-shrink:0;padding-top:1px;min-width:90px}
-.std-desc{font-size:12.5px;color:var(--muted);line-height:1.5}
-/* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:44px 24px;text-align:center}
+.sec ul,.sec ol{color:var(--muted);padding-left:22px;margin-bottom:16px}
+.sec li{margin-bottom:7px;font-size:15px;line-height:1.7}
+.data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
+.data-table thead tr{background:var(--bg3)}
+.data-table th{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:1px;padding:11px 14px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)}
+.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--muted);vertical-align:top}
+.data-table td:first-child{color:var(--text);font-weight:500}
+.data-table tr:hover td{background:var(--bg2)}
+.hi{color:var(--accent)!important;font-weight:600}.warn{color:#f59e0b!important;font-weight:600}.no{color:#ef4444!important;font-weight:600}
+.callout{background:var(--bg2);border-left:3px solid var(--accent);padding:18px 20px;margin:28px 0;border-radius:0 6px 6px 0}
+.callout.warn{border-color:#f59e0b}.callout.red{border-color:#ef4444}
+.callout-label{font-family:"DM Mono",monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:8px}
+.callout.warn .callout-label{color:#f59e0b}.callout.red .callout-label{color:#ef4444}
+.callout p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.7}
+.class-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:24px 0}
+.class-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.class-tag{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;margin-bottom:4px}
+.class-card.a1 .class-tag{color:var(--accent)}
+.class-card.a2 .class-tag{color:#34d399}
+.class-card.b .class-tag{color:#fbbf24}
+.class-card.c .class-tag{color:#f97316}
+.class-card.d .class-tag{color:#ef4444}
+.class-label{font-size:12px;color:var(--muted);line-height:1.4}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 24px;text-align:center}
 footer p{color:var(--dim);font-size:13px;margin-bottom:8px}
 footer a{color:var(--accent);text-decoration:none}
-@media(max-width:660px){
-  nav{padding:8px 14px;gap:12px}
-  .hero{padding:110px 16px 48px}
-  .wrap{padding:0 16px 80px}
-  .mg{grid-template-columns:1fr 1fr}
-  .toc-grid{grid-template-columns:1fr}
-  .cs-grid{grid-template-columns:1fr}
-}
-</style>
-
-.class-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:24px 0}
-.cc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
-.cc-tag{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:24px;margin-bottom:5px}
-.cc.a1 .cc-tag{color:var(--accent)}
-.cc.a2 .cc-tag{color:#34d399}
-.cc.b .cc-tag{color:#fbbf24}
-.cc.c .cc-tag{color:#f97316}
-.cc.de .cc-tag{color:var(--red)}
-.cc-lbl{font-size:11.5px;color:var(--muted);line-height:1.45}
+@media(max-width:640px){nav{gap:12px;padding:8px 14px}.hero{padding:110px 16px 48px}.content{padding:0 16px 80px}.class-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="https://cladwise.ae" class="nl">CLADWISE <span style="font-size:10px;color:var(--muted);font-weight:400">UAE</span></a>
-  <a href="https://cladwise.ae#explore" class="na">Materials</a>
-  <a href="https://cladwise.ae#compare" class="na">Compare</a>
-  <a href="https://cladwise.ae" class="nc">Open Platform</a>
+  <a href="https://cladwise.ae" class="nav-logo">CLADWISE <span style="font-size:10px;color:var(--muted);font-weight:400">UAE</span></a>
+  <a href="https://cladwise.ae#explore" class="nav-link">Materials</a>
+  <a href="https://cladwise.ae#compare" class="nav-link">Compare</a>
+  <a href="https://cladwise.ae" class="nav-cta">Open Platform</a>
 </nav>
 
 <div class="hero">
-  <div class="hero-chip">Technical Reference &middot; Fire Engineering &middot; UAE Regulatory 2026</div>
-  <h1>UAE Facade <em>Fire Ratings</em><br>&amp; Cladding Compliance<br>Technical Guide</h1>
+  <div class="hero-label">Technical Reference &middot; Fire Engineering &middot; UAE</div>
+  <h1>UAE Facade<br><em>Fire Ratings</em> &amp;<br>Cladding Compliance</h1>
   <div class="hero-meta">
     <span>Updated March 2026</span>
-    <span>UAE Regulatory Framework</span>
-    <span>CladWise Engineering Series</span>
+    <span>UAE &amp; GCC Regulatory</span>
+    <span>CladWise Technical Series</span>
   </div>
-  <p class="hero-intro">A complete technical reference to facade fire classification and cladding compliance under UAE regulations. Covers the EN 13501-1 classification system, UAE Fire and Life Safety Code 2017, Dubai Civil Defence requirements, DCD Circular 2/2020, full-scale fire testing (NFPA 285 and BS 8414), the UAE compliance pathway, and material-specific compliance positions for all principal cladding materials used in UAE construction.</p>
+  <p class="hero-intro">A technical reference guide to facade fire classification and cladding compliance requirements under UAE regulations. Covers the EN 13501-1 classification system, the UAE Fire and Life Safety Code 2017, Dubai Civil Defence and Abu Dhabi Civil Defence requirements, DCD Circular 2/2020, and compliance positions for principal cladding materials used in UAE construction.</p>
 </div>
 
-<div class="wrap">
+<div class="content">
   <div class="toc">
-    <div class="toc-h">Contents</div>
-    <div class="toc-grid">
-      <a href="#s1"><span>01</span> Regulatory Framework</a>
-      <a href="#s7"><span>07</span> Testing &amp; Certification Requirements</a>
-      <a href="#s2"><span>02</span> EN 13501-1 Classification System</a>
-      <a href="#s8"><span>08</span> DCD Technical Approval Process</a>
-      <a href="#s3"><span>03</span> UAE Height-Based Requirements</a>
-      <a href="#s9"><span>09</span> Sustainability Regulations Interface</a>
-      <a href="#s4"><span>04</span> DCD Circular 2/2020</a>
-      <a href="#s10"><span>10</span> Material Selection Guidance</a>
-      <a href="#s5"><span>05</span> Material Compliance Positions</a>
-      <a href="#s11"><span>11</span> Referenced Standards</a>
-      <a href="#s6"><span>06</span> Full-Scale Fire Testing</a>
-    </div>
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#s1">Regulatory Framework Overview</a></li>
+      <li><a href="#s2">EN 13501-1 Fire Classification System</a></li>
+      <li><a href="#s3">UAE Height-Based Requirements</a></li>
+      <li><a href="#s4">DCD Circular 2/2020 &mdash; ACM and PE Core Prohibition</a></li>
+      <li><a href="#s5">Material-Specific Compliance Positions</a></li>
+      <li><a href="#s6">Testing and Certification Requirements</a></li>
+      <li><a href="#s7">DCD Technical Approval Process</a></li>
+      <li><a href="#s8">Sustainability Regulations and Fire Interface</a></li>
+      <li><a href="#s9">Specifier Compliance Checklist</a></li>
+    </ol>
   </div>
 
   <div class="sec" id="s1">
-    <span class="sec-tag">Section 01</span>
+    <span class="sec-num">Section 01</span>
     <h2>Regulatory Framework Overview</h2>
-    <p>Fire safety requirements for external facade cladding in the UAE are governed by a layered regulatory structure comprising national legislation, emirate-level civil defence authority requirements, and referenced international standards. The principal instruments are:</p>
+    <p>Fire safety requirements for external facade cladding in the UAE are governed by a layered regulatory structure comprising national legislation, emirate-level civil defence authority requirements, and referenced international standards. The primary instruments are:</p>
     <ul>
-      <li><strong>UAE Fire and Life Safety Code 2017</strong> &mdash; the national framework standard governing fire safety in all buildings. Adopted across all emirates and enforced by the relevant civil defence authority in each jurisdiction. References EN&nbsp;13501-1 as the product fire classification standard for external cladding.</li>
-      <li><strong>Dubai Civil Defence (DCD)</strong> &mdash; the fire safety enforcement authority in Dubai. Issues technical circulars, processes Technical Approval applications, and conducts site inspections. DCD circulars supersede general Code provisions where more stringent requirements are introduced.</li>
-      <li><strong>Abu Dhabi Civil Defence (ADCD)</strong> &mdash; equivalent authority in Abu Dhabi. Requirements broadly aligned with DCD but administered independently; projects in Abu Dhabi must comply with ADCD, not DCD.</li>
-      <li><strong>Trakhees (EHS)</strong> &mdash; civil defence authority for JAFZA, Palm Jumeirah, and other Dubai free zone developments. Applies DCD standards with additional project-specific requirements.</li>
-      <li><strong>MoIAT Law No.&nbsp;3 of 2026</strong> &mdash; from 2026, mandates ECAS (Emirates Conformity Assessment Scheme) certification for specified construction products, including facade cladding materials, entering the UAE market. Non-certified products cannot be legally imported or sold in the UAE from the implementation date.</li>
+      <li><strong>UAE Fire and Life Safety Code 2017</strong> &mdash; the national framework standard governing fire safety in buildings. Adopted across all emirates and enforced by the relevant civil defence authority in each jurisdiction.</li>
+      <li><strong>Dubai Civil Defence (DCD)</strong> &mdash; the fire safety enforcement authority in Dubai. Issues technical circulars, processes Technical Approval applications, and conducts inspections. DCD circulars supersede general Code provisions where they introduce more stringent requirements.</li>
+      <li><strong>Abu Dhabi Civil Defence (ADCD)</strong> &mdash; the equivalent authority in Abu Dhabi. Requirements are broadly aligned with DCD but are administered independently; projects in Abu Dhabi must comply with ADCD, not DCD.</li>
+      <li><strong>Trakhees (EHS)</strong> &mdash; the civil defence authority for JAFZA, Palm Jumeirah, and other Dubai free zone developments. Applies DCD standards with additional project-specific requirements.</li>
+      <li><strong>MoIAT Law No. 3 of 2026</strong> &mdash; the Ministry of Industry and Advanced Technology mandatory standards framework, which from 2026 requires ECAS (Emirates Conformity Assessment Scheme) certification for specified construction products, including facade cladding materials entering the UAE market.</li>
     </ul>
+    <p>The EN 13501-1 standard (Fire Classification of Construction Products and Building Elements) is the reference classification system adopted by the UAE Fire and Life Safety Code 2017 for external cladding fire reaction classification. All cladding materials must be classified to EN 13501-1 by an accredited laboratory and the classification certificate submitted as part of the DCD or ADCD Technical Approval package.</p>
   </div>
 
   <div class="sec" id="s2">
-    <span class="sec-tag">Section 02</span>
+    <span class="sec-num">Section 02</span>
     <h2>EN 13501-1 Fire Classification System</h2>
-    <p>EN&nbsp;13501-1 classifies the fire reaction performance of construction products based on ignitability, heat release rate, flame spread velocity, smoke production, and flaming droplet generation. The classification is determined by mandatory test methods: ISO&nbsp;11925-2 (small flame ignition), EN&nbsp;13823 (Single Burning Item, SBI), and for Class A1, ISO&nbsp;1182 (non-combustibility furnace) and ISO&nbsp;1716 (gross heat of combustion).</p>
+    <p>EN 13501-1 classifies the fire reaction performance of construction products on the basis of small flame ignition resistance, heat release rate, flame spread, and smoke production. The classification is determined by two mandatory test methods: ISO 11925-2 (small flame exposure &mdash; ignitability of building products) and EN 13823 (single burning item, SBI &mdash; heat and smoke release). Class A1 materials are assessed by EN ISO 1182 (non-combustibility) and EN ISO 1716 (gross heat of combustion) without SBI testing.</p>
     <div class="class-grid">
-      <div class="cc a1"><div class="cc-tag">A1</div><div class="cc-lbl">Non-combustible. No contribution to fire at any stage. Required for UAE high-rise cladding.</div></div>
-      <div class="cc a2"><div class="cc-tag">A2</div><div class="cc-lbl">Negligible combustibility contribution. Permitted for UAE external cladding at all heights with s1,d0 sub-class.</div></div>
-      <div class="cc b"><div class="cc-tag">B</div><div class="cc-lbl">Very limited combustibility. Permitted below 23 m in UAE with DCD Technical Approval.</div></div>
-      <div class="cc c"><div class="cc-tag">C</div><div class="cc-lbl">Limited combustibility. Seldom accepted by DCD for primary external cladding at any height.</div></div>
-      <div class="cc de"><div class="cc-tag">D&ndash;F</div><div class="cc-lbl">Combustible or unclassified. Not permitted for external cladding on any UAE building.</div></div>
+      <div class="class-card a1"><div class="class-tag">A1</div><div class="class-label">Non-combustible. No contribution to fire in any stage. Required for high-rise cladding.</div></div>
+      <div class="class-card a2"><div class="class-tag">A2</div><div class="class-label">Negligible contribution to fire. Permitted for cladding on all UAE building heights when tested as composite system.</div></div>
+      <div class="class-card b"><div class="class-tag">B</div><div class="class-label">Very limited combustibility. Permitted for cladding below 23 m in UAE subject to DCD approval.</div></div>
+      <div class="class-card c"><div class="class-tag">C</div><div class="class-label">Limited combustibility. Permitted below 15 m for non-primary cladding elements only. Rarely accepted by DCD.</div></div>
+      <div class="class-card d"><div class="class-tag">D&ndash;F</div><div class="class-label">Combustible or unclassified. Not permitted for external cladding on any UAE building.</div></div>
     </div>
     <h3>Smoke and Droplet Sub-classifications</h3>
-    <p>EN&nbsp;13501-1 includes mandatory sub-classifications for smoke production and flaming droplet generation. DCD requires Class s1 or s2 smoke production and Class d0 (no flaming droplets) for all external cladding materials at or above Class A2. A compliant high-rise cladding classification is expressed as, for example, <strong>A2-s1, d0</strong>.</p>
-    <table class="dt">
-      <thead><tr><th>Code</th><th>Smoke (s)</th><th>Droplets (d)</th><th>UAE Acceptability</th></tr></thead>
+    <p>The EN 13501-1 classification includes mandatory sub-classifications for smoke production (s1, s2, s3) and flaming droplet or particle production (d0, d1, d2). For UAE external cladding applications, DCD requires smoke production class s1 or s2 and droplet class d0 for all materials at or above Class A2. A full classification designation for a compliant external cladding material is therefore expressed as, for example, <strong>A2-s1, d0</strong>.</p>
+    <table class="data-table">
+      <thead><tr><th>Sub-classification</th><th>Smoke (s)</th><th>Droplets (d)</th></tr></thead>
       <tbody>
-        <tr><td>s1 / d0</td><td>Low smoke production rate</td><td>No flaming droplets</td><td class="g">Required for A2&ndash;B at all heights</td></tr>
-        <tr><td>s2 / d1</td><td>Medium smoke production</td><td>Droplets cease within 10 s</td><td class="w">Accepted for Class B at &lt;23 m</td></tr>
-        <tr><td>s3 / d2</td><td>High smoke; no limit</td><td>Flaming droplets beyond 10 s</td><td class="r">Not accepted for any UAE external cladding</td></tr>
+        <tr><td>s1 / d0</td><td>Low smoke production; smoke growth rate limited</td><td>No flaming droplets or particles produced</td></tr>
+        <tr><td>s2 / d1</td><td>Medium smoke production</td><td>Flaming droplets or particles produced for no more than 10 seconds</td></tr>
+        <tr><td>s3 / d2</td><td>High smoke production &mdash; no limit</td><td>Flaming droplets or particles produced beyond 10 seconds &mdash; not acceptable for UAE cladding</td></tr>
       </tbody>
     </table>
-    <div class="co wr">
-      <div class="co-tag">Classification Scope &mdash; Composite Systems</div>
-      <p>EN&nbsp;13501-1 classification applies to the cladding material or composite system <strong>as tested</strong>. For ACM panels, the classification must cover the complete panel construction &mdash; aluminium skin, core, and any interlayer &mdash; as manufactured and installed. Test data for the core material alone is not a valid substitute for a composite panel certificate. This requirement has been enforced by DCD following identification of non-compliant products with core-only certificates in the market.</p>
+    <div class="callout warn">
+      <div class="callout-label">Classification Scope</div>
+      <p>EN 13501-1 classification applies to the cladding material or composite system as tested &mdash; not to individual components in isolation. Where an ACM panel comprises an aluminium skin and a mineral FR core, the classification must be obtained for the complete panel construction as manufactured and installed. Test data for the core material alone, or for the aluminium facing alone, is not a valid substitute for a composite system certificate.</p>
     </div>
   </div>
 
   <div class="sec" id="s3">
-    <span class="sec-tag">Section 03</span>
+    <span class="sec-num">Section 03</span>
     <h2>UAE Height-Based Requirements</h2>
-    <p>The UAE Fire and Life Safety Code 2017 and DCD enforcement circulars establish minimum EN&nbsp;13501-1 classifications for external cladding based on building height above grade. The following requirements apply across Dubai under DCD jurisdiction; ADCD applies equivalent standards in Abu Dhabi.</p>
-    <table class="dt">
-      <thead><tr><th>Building Height</th><th>Minimum Classification Required</th><th>DCD Enforcement Practice</th></tr></thead>
+    <p>The UAE Fire and Life Safety Code 2017 and DCD enforcement circulars establish minimum EN 13501-1 fire classification requirements for external cladding based on building height above grade. The following requirements apply across all Dubai developments under DCD jurisdiction; ADCD applies equivalent requirements in Abu Dhabi.</p>
+    <table class="data-table">
+      <thead><tr><th>Building Height (above grade)</th><th>Minimum Required Classification</th><th>Applicable Test Standard</th></tr></thead>
       <tbody>
-        <tr><td>Above 23 m (all primary cladding)</td><td class="g">A1 or A2-s1,d0 (mandatory)</td><td class="g">Non-combustible cladding only; no case-by-case combustible exceptions above this height</td></tr>
-        <tr><td>15 m &ndash; 23 m</td><td class="w">Class B-s1,d0 minimum; A2 strongly preferred</td><td class="w">Combustible cladding processed case-by-case; fire engineering report required; BS 8414 test often required</td></tr>
-        <tr><td>Below 15 m &mdash; primary cladding</td><td class="w">Class B-s2,d1 minimum</td><td class="w">DCD Technical Approval still required; A2 strongly preferred even at low height</td></tr>
-        <tr><td>All heights &mdash; cavity insulation</td><td class="g">A1 or A2 (non-combustible)</td><td class="r">EPS, XPS, PIR in facade cavities prohibited without full-scale system test evidence</td></tr>
-        <tr><td>All heights &mdash; fixings and sub-frames</td><td class="g">Non-combustible metal (steel, aluminium)</td><td class="g">Polymer fixings not permitted in primary facade fixing systems</td></tr>
+        <tr><td>Any height &mdash; primary cladding system</td><td class="hi">A1 or A2-s1, d0 (DCD preferred)</td><td>EN ISO 1182, EN ISO 1716, EN 13823, ISO 11925-2</td></tr>
+        <tr><td>Above 23 m</td><td class="hi">A1 or A2-s1, d0 (mandatory)</td><td>EN 13823 (SBI) + EN ISO 1716</td></tr>
+        <tr><td>15 m to 23 m</td><td class="warn">Class B-s1, d0 minimum; A2 strongly preferred</td><td>EN 13823 + ISO 11925-2</td></tr>
+        <tr><td>Below 15 m</td><td class="warn">Class C-s2, d1 minimum for non-primary secondary cladding elements only</td><td>EN 13823 + ISO 11925-2</td></tr>
+        <tr><td>All heights &mdash; insulation systems behind cladding</td><td class="hi">Class A1 or A2 (non-combustible cavity insulation)</td><td>EN ISO 1182</td></tr>
+        <tr><td>All heights &mdash; fixings, brackets, subframes</td><td>Steel or aluminium (Class A1); no combustible fixings</td><td>&mdash;</td></tr>
       </tbody>
     </table>
-    <div class="co re">
-      <div class="co-tag">DCD Engineering Practice Post-2020</div>
-      <p>Since DCD Circular 2/2020, DCD engineering practice has applied an effective requirement of Class A2 or better for all primary external cladding at all building heights in Dubai, regardless of the height thresholds in the Code. Combustible cladding materials (Class B&ndash;F) are processed on a case-by-case basis requiring a full fire engineering assessment, BS&nbsp;8414 full-scale test evidence, and DCD Technical Approval. Specifiers should treat A2 minimum as the design baseline for all Dubai projects unless the fire engineer has completed a DCD pre-consultation confirming a lower classification is acceptable for the specific project.</p>
+    <div class="callout red">
+      <div class="callout-label">Critical Requirement</div>
+      <p>DCD engineering practice since 2020 has applied an effective requirement of Class A2 or better for all primary external cladding at all building heights, regardless of the Code height thresholds. Combustible cladding materials (Class B&ndash;F) are processed on a case-by-case basis requiring a full fire engineering assessment and DCD Technical Approval. Specifiers should design to A2 minimum as the baseline unless the project fire engineer advises otherwise based on a completed DCD pre-consultation.</p>
     </div>
   </div>
 
   <div class="sec" id="s4">
-    <span class="sec-tag">Section 04</span>
-    <h2>DCD Circular 2/2020 &mdash; Combustible Cladding</h2>
-    <p>Following the 2017 Grenfell Tower fire and a series of high-rise fires in the UAE involving PE-core aluminium composite cladding, Dubai Civil Defence issued Circular 2/2020 establishing specific prohibition and control measures for combustible cladding materials.</p>
-    <h3>Key Provisions</h3>
+    <span class="sec-num">Section 04</span>
+    <h2>DCD Circular 2/2020 &mdash; ACM and Combustible Cladding</h2>
+    <p>Following the 2017 Grenfell Tower fire in London and a series of high-rise fires in the UAE involving combustible aluminium composite cladding with polyethylene (PE) cores, Dubai Civil Defence issued Circular 2/2020 establishing specific prohibition and control measures for combustible cladding materials on existing and new UAE buildings.</p>
+    <h3>Key provisions of DCD Circular 2/2020:</h3>
     <ul>
-      <li><strong>PE-core ACM prohibited:</strong> ACM with polyethylene or low-density polyolefin cores is prohibited for external cladding on all new UAE construction at any height. Existing buildings with PE-core ACM above 18&nbsp;m are subject to mandatory remediation.</li>
-      <li><strong>FR mineral core ACM:</strong> Permitted only where the composite panel achieves EN&nbsp;13501-1 Class A2-s1,d0 or better by independent laboratory test of the complete panel system. Minimum 70% inorganic content in the core by weight, verified by third-party testing.</li>
-      <li><strong>Existing buildings:</strong> Owners of buildings above 18&nbsp;m with combustible facade cladding must engage a DCD-approved fire engineer to assess remediation requirements. A phased remediation programme applies.</li>
-      <li><strong>Technical Approval mandatory:</strong> All new cladding material specifications must be submitted to DCD for Technical Approval before installation begins. No exception for buildings below 23&nbsp;m.</li>
+      <li><strong>PE-core ACM prohibition:</strong> Aluminium Composite Material with polyethylene or low-density polyolefin cores is prohibited for external cladding on all new construction in Dubai, regardless of building height. Existing buildings with PE-core ACM are subject to mandatory remediation programmes.</li>
+      <li><strong>FR mineral core ACM:</strong> ACM panels with a verified fire-retardant mineral core containing a minimum 70% inorganic content by weight are permitted where the composite panel system achieves EN 13501-1 Class A2-s1, d0 or better by independent test. Core composition must be verifiable from the material safety data sheet and third-party certification.</li>
+      <li><strong>Combustible cladding on existing buildings:</strong> Owners of buildings above 18 metres with combustible facade cladding are required to engage a DCD-approved fire engineer to assess remediation requirements. The circular established a phased remediation timeline.</li>
+      <li><strong>Technical Approval requirement:</strong> All new cladding material specifications must be submitted to DCD for Technical Approval before installation commences. Submissions include EN 13501-1 test certificates, material data sheets, fire engineering assessment where applicable, and a declaration of conformity from the installer.</li>
     </ul>
-    <h3>ACM Product Verification Requirements</h3>
-    <p>The prohibition on PE-core ACM has generated a market of products claiming FR-core compliance. For any ACM product, specifiers must require all of the following:</p>
-    <ul>
-      <li>EN&nbsp;13501-1 composite panel test certificate from UKAS-, DAkkS-, or COFRAC-accredited laboratory covering the specific product reference (facing alloy, core brand, adhesive layer, and overall panel dimensions)</li>
-      <li>Core material data sheet confirming inorganic content by weight with independent laboratory verification</li>
-      <li>DCD product acceptance letter specific to the product reference number &mdash; generic class-of-product letters are not accepted</li>
-      <li>Factory production control (FPC) certificate confirming ongoing production consistency with the tested sample</li>
-    </ul>
+    <div class="callout warn">
+      <div class="callout-label">ACM Verification Requirement</div>
+      <p>The prohibition of PE-core ACM has generated a market of products claiming FR-core compliance without adequate independent verification. Specifiers must require the following for any ACM product: (1) EN 13501-1 composite panel test certificate from a UKAS or DAkkS-accredited laboratory; (2) core material data sheet confirming inorganic content by weight with third-party verification; (3) DCD-issued or DCD-accepted product acceptance letter specific to the product reference, not a generic material type. Generic certificates covering a class of products are not acceptable for DCD submission.</p>
+    </div>
   </div>
 
   <div class="sec" id="s5">
-    <span class="sec-tag">Section 05</span>
+    <span class="sec-num">Section 05</span>
     <h2>Material-Specific Compliance Positions</h2>
-    <table class="dt">
+    <p>The following table summarises the UAE regulatory compliance position for principal facade cladding materials as at March 2026. All classifications are subject to product-specific test evidence; specifiers must confirm the compliance position of the specific product with the supplier prior to specification.</p>
+    <table class="data-table">
       <thead><tr><th>Cladding Material</th><th>EN 13501-1 Class</th><th>UAE Height Limit</th><th>DCD Compliance Status</th></tr></thead>
       <tbody>
-        <tr><td>GFRC (Glass Fibre Reinforced Concrete)</td><td class="g">A1</td><td class="g">No restriction</td><td class="g">Fully compliant; preferred for high-rise</td></tr>
-        <tr><td>Natural Stone (granite, limestone, marble)</td><td class="g">A1</td><td class="g">No restriction</td><td class="g">Fully compliant</td></tr>
-        <tr><td>Aluminium (solid sheet, extrusion)</td><td class="g">A1</td><td class="g">No restriction</td><td class="g">Fully compliant</td></tr>
-        <tr><td>Fibre Cement (EN 12467 Category A)</td><td class="g">A2-s1,d0</td><td class="g">No restriction</td><td class="g">Compliant with ECAS certification; EN 12467 Cat. A required</td></tr>
-        <tr><td>ACM &mdash; FR mineral core (verified A2)</td><td class="g">A2-s1,d0</td><td class="g">No restriction</td><td class="g">Compliant with product-specific DCD acceptance letter</td></tr>
-        <tr><td>GFRP &mdash; fire-retardant resin</td><td class="w">B-s2,d0 (typical)</td><td class="w">Below 23 m only</td><td class="w">Requires DCD Technical Approval and fire engineer report; BS 8414 test often required above 15 m</td></tr>
-        <tr><td>GFRP &mdash; standard resin</td><td class="w">C or D</td><td class="r">Below 15 m; DCD unlikely to approve</td><td class="r">Not accepted on standard basis; case-by-case fire engineering required</td></tr>
-        <tr><td>ACM &mdash; PE core</td><td class="r">D or E</td><td class="r">Prohibited at all heights</td><td class="r">Prohibited &mdash; DCD Circular 2/2020</td></tr>
-        <tr><td>Untreated timber cladding</td><td class="r">D or E</td><td class="r">Not permitted for primary cladding</td><td class="r">Not accepted; FR-treated timber assessed case by case below 10 m only</td></tr>
-        <tr><td>EPS/XPS/PIR insulation in cavity</td><td class="r">E or F</td><td class="r">Prohibited in facade cavity</td><td class="r">All facade cavity insulation must be Class A1 or A2 (mineral or glass wool)</td></div></td></tr>
+        <tr><td>GFRC (Glass Fibre Reinforced Concrete)</td><td class="hi">A1</td><td class="hi">No restriction</td><td class="hi">Fully compliant &mdash; preferred for high-rise</td></tr>
+        <tr><td>Natural Stone (granite, limestone, marble)</td><td class="hi">A1</td><td class="hi">No restriction</td><td class="hi">Fully compliant</td></tr>
+        <tr><td>Aluminium (solid sheet, extrusion)</td><td class="hi">A1</td><td class="hi">No restriction</td><td class="hi">Fully compliant</td></tr>
+        <tr><td>ACM &mdash; FR mineral core (verified A2)</td><td class="hi">A2-s1, d0</td><td class="hi">No restriction</td><td class="hi">Compliant with product-specific DCD acceptance</td></tr>
+        <tr><td>Fibre Cement (EN 12467 Category A)</td><td class="hi">A2</td><td class="hi">No restriction</td><td class="hi">Compliant with ECAS certification</td></tr>
+        <tr><td>GFRP (fire-retardant resin)</td><td class="warn">B-s2, d0</td><td class="warn">Below 23 m only</td><td class="warn">Requires DCD Technical Approval and fire engineer report</td></tr>
+        <tr><td>GFRP (standard resin)</td><td class="warn">C or D</td><td class="no">Below 15 m; DCD approval unlikely</td><td class="no">Not accepted on standard basis; fire engineering required</td></tr>
+        <tr><td>ACM &mdash; PE core</td><td class="no">D or E</td><td class="no">Prohibited</td><td class="no">Prohibited under DCD Circular 2/2020</td></tr>
+        <tr><td>Timber cladding (untreated)</td><td class="no">D or E</td><td class="no">Not permitted for primary external cladding</td><td class="no">Not accepted; fire-retardant treated timber assessed case by case below 10 m</td></tr>
+        <tr><td>EPS / XPS insulation in cavity</td><td class="no">E or F</td><td class="no">Prohibited in facade cavity</td><td class="no">Prohibited; all cavity insulation must be Class A1 or A2 (mineral wool, glass wool)</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="sec" id="s6">
-    <span class="sec-tag">Section 06</span>
-    <h2>Full-Scale Fire Testing</h2>
-    <p>Product-level EN&nbsp;13501-1 classification tests assess material properties in isolation. For buildings above 18&nbsp;metres, or where combustible materials are incorporated into the facade assembly, DCD requires evidence from full-scale facade fire tests demonstrating that the complete wall assembly &mdash; including insulation, sub-frame, cavity geometry, and fire barriers &mdash; does not support fire propagation across the facade surface.</p>
-    <h3>NFPA 285 &mdash; Facade Fire Propagation</h3>
-    <p>NFPA&nbsp;285 (Standard Fire Test Method for Evaluation of Fire Propagation Characteristics of Exterior Non-Load-Bearing Wall Assemblies) is the principal North American test for full facade wall assembly fire propagation. It evaluates the complete wall system, not just the cladding panel, with a two-storey test specimen exposed to a window fire source. NFPA&nbsp;285 is referenced by some UAE projects and is widely recognised by DCD as evidence of system-level fire safety, though BS&nbsp;8414 is more commonly required for Dubai projects.</p>
-    <h3>BS 8414 &mdash; Full-Scale Facade Fire Test</h3>
-    <p>BS&nbsp;8414 (Fire Performance of External Cladding Systems) is the UK large-scale facade fire test method, comprising a two-storey corner facade specimen exposed to a controlled fire source at ground level. It is the test most frequently requested by DCD for buildings above 15&ndash;18&nbsp;metres where the facade assembly includes combustible elements or novel configurations. Pass/fail criteria are defined in BRE BR&nbsp;135, which classifies performance against spread of flame and heat flux thresholds at upper storeys.</p>
-    <h3>System-Level Compliance Pathway</h3>
-    <div class="layer-diag">
-      <div class="layer-title">Facade Fire Compliance Build-up &mdash; Elements That Must All Be Addressed</div>
-      <div class="layer">
-        <div class="layer-bar" style="background:#1a2e1f;color:var(--accent);width:60px">MAT</div>
-        <div class="layer-info"><div class="layer-name">Cladding Panel Material</div><div class="layer-spec">EN 13501-1 classification certificate &mdash; A1, A2, or B as applicable to building height</div></div>
-      </div>
-      <div class="layer">
-        <div class="layer-bar" style="background:#1e2d20;color:var(--accent);width:60px">INS</div>
-        <div class="layer-info"><div class="layer-name">Cavity Insulation</div><div class="layer-spec">Must be Class A1 or A2 non-combustible (mineral wool / glass wool) &mdash; no EPS, XPS, PIR</div></div>
-      </div>
-      <div class="layer">
-        <div class="layer-bar" style="background:#182318;color:var(--muted);width:60px">BAR</div>
-        <div class="layer-info"><div class="layer-name">Cavity Fire Barriers</div><div class="layer-spec">Required at each floor level in ventilated cavity &mdash; mineral wool or intumescent type &mdash; DCD mandatory</div></div>
-      </div>
-      <div class="layer">
-        <div class="layer-bar" style="background:#162016;color:var(--muted);width:60px">SYS</div>
-        <div class="layer-info"><div class="layer-name">Full Assembly Test (BS 8414 / NFPA 285)</div><div class="layer-spec">Required for buildings &gt;15&ndash;18 m with combustible elements; non-combustible A1/A2 systems exempt</div></div>
-      </div>
-      <div class="layer">
-        <div class="layer-bar" style="background:#111a13;color:var(--dim);width:60px">DCD</div>
-        <div class="layer-info"><div class="layer-name">DCD Technical Approval</div><div class="layer-spec">All documentation compiled and submitted via Montaji portal &mdash; approval required before material ordering</div></div>
-      </div>
-    </div>
-    <div class="co bl">
-      <div class="co-tag">When Full-Scale Testing Is Required</div>
-      <p>Full-scale BS&nbsp;8414 or NFPA&nbsp;285 test evidence is required by DCD for: (1) any building above 18&nbsp;m where the facade assembly includes Class B or lower cladding materials; (2) novel facade configurations or materials without established DCD approval history; (3) buildings above 60&nbsp;m regardless of material class, where DCD may require independent fire engineering peer review. Non-combustible A1/A2 systems with non-combustible insulation and DCD-standard cavity fire barriers do not require full-scale testing for standard building heights.</p>
+    <span class="sec-num">Section 06</span>
+    <h2>Testing and Certification Requirements</h2>
+    <p>DCD requires that cladding material fire classification certificates originate from accredited laboratories. The following accreditation bodies are accepted for UAE regulatory purposes:</p>
+    <ul>
+      <li><strong>UKAS</strong> (United Kingdom Accreditation Service) &mdash; UK national accreditation body</li>
+      <li><strong>DAkkS</strong> (Deutsche Akkreditierungsstelle) &mdash; German national accreditation body</li>
+      <li><strong>COFRAC</strong> (Comite Francais d&rsquo;Accreditation) &mdash; French national accreditation body</li>
+      <li><strong>Emirates National Accreditation System (ENAS)</strong> &mdash; UAE national accreditation body; growing acceptance for UAE-based laboratory testing</li>
+    </ul>
+    <p>Test certificates must specify the exact product reference, dimensions, configuration (including core and facing specifications for composite products), the EN 13501-1 classification achieved, the date of test, and the accreditation body under which the testing laboratory operated. Expired or out-of-scope certificates are not accepted; DCD typically requires certificates issued within 5 years of the Technical Approval submission date.</p>
+    <h3>ECAS Certification (MoIAT Law No. 3 of 2026)</h3>
+    <p>From 2026, facade cladding products imported into or manufactured in the UAE and covered by Emirates Conformity Assessment Scheme (ECAS) product scope are required to carry a UAE conformity mark (ECAS stamp and registration number). ECAS certification for cladding materials is administered through MoIAT-registered conformity assessment bodies and requires submission of product technical documentation, factory production control (FPC) audit, and in some categories, type testing at an ENAS-accredited laboratory. Specifiers should confirm ECAS registration status with suppliers for all cladding materials on projects commencing procurement after Q2 2026.</p>
+    <div class="callout">
+      <div class="callout-label">Documentation Checklist</div>
+      <p>For each cladding material proposed for DCD submission, assemble: (1) EN 13501-1 test certificate from accepted accredited laboratory, valid and product-specific; (2) Material data sheet with composition, density, and dimensions matching the tested configuration; (3) ECAS conformity certificate where required under MoIAT scope; (4) Declaration of Performance (DoP) from the manufacturer; (5) Fire engineering assessment if the material classification is below A2 or the installation detail requires engineering justification.</p>
     </div>
   </div>
 
   <div class="sec" id="s7">
-    <span class="sec-tag">Section 07</span>
-    <h2>Testing &amp; Certification Requirements</h2>
-    <p>DCD requires fire classification certificates from recognised accredited laboratories. Accepted accreditation bodies for UAE submissions are:</p>
+    <span class="sec-num">Section 07</span>
+    <h2>DCD Technical Approval Process</h2>
+    <p>All facade cladding specifications in Dubai must be submitted to DCD for Technical Approval before material installation begins on site. The Technical Approval process applies to both new construction and renovation projects affecting the external envelope. The process is administered through the DCD online portal (Montaji) for registered contractors and consultants.</p>
+    <h3>Standard submission requirements:</h3>
     <ul>
-      <li><strong>UKAS</strong> (United Kingdom Accreditation Service)</li>
-      <li><strong>DAkkS</strong> (Deutsche Akkreditierungsstelle &mdash; Germany)</li>
-      <li><strong>COFRAC</strong> (Comite Francais d&rsquo;Accreditation &mdash; France)</li>
-      <li><strong>ENAS</strong> (Emirates National Accreditation System &mdash; UAE; growing acceptance for UAE laboratory testing)</li>
+      <li>Facade material schedule identifying all cladding products by manufacturer, product reference, and specification</li>
+      <li>EN 13501-1 fire classification certificates for each product</li>
+      <li>Material data sheets and product brochures</li>
+      <li>Facade elevation drawings indicating material zones and areas</li>
+      <li>Details of fixing systems, sub-frame materials, and cavity insulation</li>
+      <li>For ACM products: core composition certification and DCD-accepted product approval letter</li>
+      <li>Fire engineer&rsquo;s report where required (combustible materials, complex systems, or buildings above 60 m)</li>
     </ul>
-    <p>Test certificates must specify: exact product reference and description; test configuration matching the as-installed condition; EN&nbsp;13501-1 classification including smoke and droplet sub-class; test date; issuing laboratory name and accreditation number. DCD typically requires certificates issued within 5 years of the Technical Approval submission date.</p>
-    <h3>ECAS Certification (MoIAT Law No.&nbsp;3 of 2026)</h3>
-    <p>From Q2 2026, facade cladding products within the ECAS product scope require a UAE conformity mark (ECAS registration number and conformity stamp) as a condition of sale and installation in the UAE. ECAS registration requires: product technical documentation submission; factory production control (FPC) audit; and in some categories, type testing at an ENAS-accredited laboratory. Specifiers must confirm ECAS registration status with suppliers for all cladding materials on projects commencing procurement after the implementation date.</p>
-    <div class="co">
-      <div class="co-tag">Documentation Assembly Checklist</div>
-      <p>For each cladding material proposed for DCD submission: (1) EN&nbsp;13501-1 test certificate &mdash; valid, product-specific, accredited laboratory; (2) Material data sheet with composition and dimensions matching tested configuration; (3) ECAS conformity certificate where required under MoIAT scope; (4) Declaration of Performance (DoP) from manufacturer; (5) BS&nbsp;8414 or NFPA&nbsp;285 system test report if required; (6) Fire engineer&rsquo;s assessment report if material classification is below A2 or building is above 60&nbsp;m.</p>
+    <h3>Technical Approval timing:</h3>
+    <p>Standard DCD Technical Approval for straightforward, fully non-combustible facade specifications typically processes within 15&ndash;30 working days. Complex submissions involving combustible elements, non-standard configurations, or novel materials may require 45&ndash;90 working days. Projects with facades above 100 metres are subject to extended review and may require an independent fire engineering peer review commissioned by DCD.</p>
+    <div class="callout warn">
+      <div class="callout-label">Programme Risk</div>
+      <p>DCD Technical Approval should be factored into the facade package programme from the outset. Facade material changes after DCD approval require re-submission. Where the specified material changes after initial approval &mdash; due to supply chain issues, cost substitution, or contractor-proposed alternatives &mdash; the revised material must obtain independent DCD approval before installation. Unapproved material installation is a criminal offence in Dubai and can result in mandatory removal and reinstatement at the contractor&rsquo;s cost.</p>
     </div>
   </div>
 
   <div class="sec" id="s8">
-    <span class="sec-tag">Section 08</span>
-    <h2>DCD Technical Approval Process</h2>
-    <p>All facade cladding specifications in Dubai require DCD Technical Approval before material installation. The process applies to new construction and renovation projects affecting the external envelope, administered through the DCD Montaji portal.</p>
-    <div class="pathway">
-      <div class="path-step">
-        <div class="path-num">1</div>
-        <div class="path-body">
-          <div class="path-title">Material Classification (EN 13501-1 / ASTM E84)</div>
-          <div class="path-desc">Obtain EN&nbsp;13501-1 classification certificate for each cladding product from an accepted accredited laboratory. Confirm the certificate covers the exact product configuration as specified.</div>
-        </div>
-      </div>
-      <div class="path-step">
-        <div class="path-num">2</div>
-        <div class="path-body">
-          <div class="path-title">Full Facade Assembly Testing (NFPA 285 or BS 8414)</div>
-          <div class="path-desc">Where required by building height or material classification: assemble BS&nbsp;8414 or NFPA&nbsp;285 test evidence for the complete wall assembly system (cladding + insulation + cavity + barriers). Non-combustible A1/A2 systems are typically exempt.</div>
-        </div>
-      </div>
-      <div class="path-step">
-        <div class="path-num">3</div>
-        <div class="path-body">
-          <div class="path-title">DCD Technical Approval Submission</div>
-          <div class="path-desc">Submit via Montaji: facade material schedule, EN&nbsp;13501-1 certificates, material data sheets, ECAS certificates, facade elevation drawings with material zones, fire engineer report (if applicable). Allow 15&ndash;30 working days for A1/A2 submissions; 45&ndash;90 days for complex or combustible cladding assessments.</div>
-        </div>
-      </div>
-      <div class="path-step">
-        <div class="path-num">4</div>
-        <div class="path-body">
-          <div class="path-title">Installation Inspection</div>
-          <div class="path-desc">DCD inspector confirms installed material matches the approved specification. Product labels and delivery certificates must be retained on site during installation. Unapproved material installation is a criminal offence in Dubai.</div>
-        </div>
-      </div>
-      <div class="path-step">
-        <div class="path-num">5</div>
-        <div class="path-body">
-          <div class="path-title">Building Compliance Certification</div>
-          <div class="path-desc">DCD issues facade compliance confirmation as part of the overall building Completion Certificate. All approved certificates and documentation retained permanently in the Building O&amp;M manual.</div>
-        </div>
-      </div>
-    </div>
-    <div class="co wr">
-      <div class="co-tag">Programme Risk Warning</div>
-      <p>DCD Technical Approval must be obtained before facade materials are ordered. Material changes after initial DCD approval require re-submission. Facade material changes due to supply chain substitution, cost engineering, or contractor-proposed alternatives require independent DCD approval before installation. Failure to do so results in mandatory removal and reinstatement at the contractor&rsquo;s cost. The facade package programme should include a minimum 30-day DCD approval allowance for standard A1/A2 specifications from the point of complete submission.</p>
-    </div>
-  </div>
-
-  <div class="sec" id="s9">
-    <span class="sec-tag">Section 09</span>
-    <h2>Sustainability Regulations &amp; Fire Interface</h2>
-    <p>Al Sa&rsquo;fat (Dubai) and Estidama Pearl (Abu Dhabi) sustainability regulations introduce requirements that interact with fire compliance decisions. The primary interface points are:</p>
-    <h3>Al Sa&rsquo;fat &mdash; Solar Reflectance Index (SRI)</h3>
-    <p>Al Sa&rsquo;fat mandates minimum SRI values for external cladding (typically SRI &ge;29) to reduce solar heat gain and urban heat island contribution. The SRI requirement is determined by finish colour, not base material, and is compatible with all A1/A2-rated materials. Specifiers must confirm that the proposed finish colour achieves the required SRI &mdash; dark integral pigments in GFRC or dark PVDF colours on aluminium can reduce SRI below the threshold.</p>
-    <h3>Estidama Pearl &mdash; Material Credits</h3>
-    <p>Estidama Pearl 2 (mandatory for Abu Dhabi government projects) awards credits for materials with low embodied carbon, recycled content, and low VOC emissions. Non-combustible cladding materials (A1 by classification) are inorganic and inherently zero-VOC from the installed panel. GFRC with GGBS or fly ash content, and aluminium with high recycled content, provide the most favourable combined fire-sustainability profile.</p>
-    <table class="dt">
-      <thead><tr><th>Material</th><th>Al Sa&rsquo;fat SRI</th><th>Estidama Recycled Content</th><th>Low VOC</th><th>Fire Class</th></tr></thead>
+    <span class="sec-num">Section 08</span>
+    <h2>Sustainability Regulations and Fire Interface</h2>
+    <p>Sustainability building regulations in Dubai and Abu Dhabi introduce requirements that occasionally interact with fire compliance. The key regulatory instruments are Al Sa&rsquo;fat (Dubai Green Building Regulation) and the Abu Dhabi Estidama Pearl Rating System.</p>
+    <h3>Al Sa&rsquo;fat (Dubai)</h3>
+    <p>Al Sa&rsquo;fat mandates minimum Solar Reflectance Index (SRI) values for external cladding on buildings above a threshold floor area. The SRI requirement encourages light-coloured or reflective cladding finishes to reduce urban heat island effect and building cooling loads. SRI values of 29 or above are typically required for compliance. This requirement is compatible with all standard facade cladding materials; the SRI is determined by the surface finish (colour, texture, coating) rather than the base material. However, specifiers should verify that the proposed finish colour achieves the required SRI, as darker integral pigments or coatings can reduce SRI below the threshold.</p>
+    <h3>Estidama Pearl (Abu Dhabi)</h3>
+    <p>Estidama Pearl 2 certification (mandatory for government-funded projects in Abu Dhabi) awards credits for facade materials with low embodied carbon, verified recycled content, and low VOC emissions. Cladding materials with EN 13501-1 Class A1 classification are generally aligned with Estidama requirements, as they are by definition inorganic and emit no combustion products. GFRC, natural stone, and solid aluminium are the most straightforward materials from a combined fire-sustainability compliance perspective.</p>
+    <table class="data-table">
+      <thead><tr><th>Material</th><th>Al Sa&rsquo;fat SRI</th><th>Estidama Recycled Content</th><th>Low VOC</th><th>A2 or better fire class</th></tr></thead>
       <tbody>
-        <tr><td>GFRC (white/light pigment)</td><td class="g">Compliant (SRI &gt;50 typical)</td><td class="w">Low (cement-based)</td><td class="g">Yes</td><td class="g">A1</td></tr>
-        <tr><td>Aluminium PVDF (light colour)</td><td class="g">Compliant (SRI 60&ndash;85)</td><td class="g">Up to 95% recycled available</td><td class="g">Yes</td><td class="g">A1</td></tr>
-        <tr><td>ACM FR-core (light colour)</td><td class="g">Compliant</td><td class="w">Moderate; verify with supplier</td><td class="g">Yes</td><td class="g">A2</td></tr>
-        <tr><td>Fibre Cement (light finish)</td><td class="g">Compliant</td><td class="w">Low to moderate</td><td class="g">Yes</td><td class="g">A2</td></tr>
-        <tr><td>GFRP</td><td class="w">Variable &mdash; gel coat colour dependent</td><td class="r">Not recyclable</td><td class="w">Minor VOC from resin cure</td><td class="w">B&ndash;C only</td></tr>
+        <tr><td>GFRC (white / light pigment)</td><td class="hi">Compliant (SRI &gt; 50)</td><td class="warn">Low &mdash; cement-based</td><td class="hi">Yes</td><td class="hi">A1</td></tr>
+        <tr><td>Aluminium (PVDF, light colour)</td><td class="hi">Compliant (SRI 60&ndash;85)</td><td class="hi">Up to 95% recycled content available</td><td class="hi">Yes (PVDF)</td><td class="hi">A1</td></tr>
+        <tr><td>ACM &mdash; FR core (light colour)</td><td class="hi">Compliant</td><td class="warn">Moderate &mdash; limited recycled content data</td><td class="hi">Yes</td><td class="hi">A2</td></tr>
+        <tr><td>Fibre Cement (light finish)</td><td class="hi">Compliant</td><td class="warn">Low to moderate</td><td class="hi">Yes</td><td class="hi">A2</td></tr>
+        <tr><td>GFRP</td><td class="warn">Variable &mdash; gel coat colour dependent</td><td class="no">Not recyclable</td><td class="warn">Some VOC from resin cure (manufacturing)</td><td class="warn">B&ndash;C only</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="sec" id="s10">
-    <span class="sec-tag">Section 10</span>
-    <h2>Material Selection Guidance &amp; Specifier Checklist</h2>
-    <h3>At Material Selection Stage</h3>
+  <div class="sec" id="s9">
+    <span class="sec-num">Section 09</span>
+    <h2>Specifier Compliance Checklist</h2>
+    <p>The following checklist consolidates the key compliance actions for facade cladding specifications on UAE projects. It is intended as a practical reference for architects and facade consultants preparing specifications and DCD Technical Approval submissions.</p>
+    <h3>At material selection stage:</h3>
     <ul>
-      <li>Confirm building height and identify the minimum EN&nbsp;13501-1 classification required under UAE Fire Code 2017 and current DCD practice (default to A2 minimum)</li>
-      <li>Verify proposed cladding material achieves this classification by independent test, not by extrapolation from similar products</li>
-      <li>Confirm test certificate is product-specific, from an accepted accredited laboratory, and within the 5-year DCD acceptance window</li>
-      <li>For ACM: verify FR mineral core &mdash; composite panel certificate, minimum 70% inorganic content, DCD product acceptance letter</li>
-      <li>Confirm cavity insulation is Class A1 or A2 (mineral or glass wool); exclude EPS, XPS, PIR from the facade cavity</li>
-      <li>Confirm ECAS registration status for all cladding products under MoIAT Law No.&nbsp;3 of 2026</li>
+      <li>Confirm building height above grade and identify the applicable minimum EN 13501-1 classification requirement</li>
+      <li>Verify that the proposed cladding material achieves this classification by independent test, not by extrapolation from similar products</li>
+      <li>Confirm the test certificate is product-specific, issued by an ENAS-, UKAS-, DAkkS-, or COFRAC-accredited laboratory, and within the 5-year acceptance window</li>
+      <li>For ACM products: verify FR mineral core classification, minimum 70% inorganic content, and DCD-accepted product approval letter</li>
+      <li>Confirm cavity insulation material is EN 13501-1 Class A1 or A2 (mineral wool or glass wool); exclude all EPS, XPS, and PIR from the facade cavity</li>
+      <li>Confirm ECAS registration status for all cladding products under MoIAT Law No. 3 of 2026 scope</li>
     </ul>
-    <h3>At Specification and Tender Stage</h3>
+    <h3>At specification and tender stage:</h3>
     <ul>
-      <li>Include fire classification certificate requirements explicitly in the cladding specification &mdash; define the minimum classification, the test standard, and the acceptable accreditation body</li>
-      <li>Specify that alternative or substituted materials must achieve equivalent EN&nbsp;13501-1 classification and obtain independent DCD Technical Approval before use</li>
+      <li>Include fire classification certificate requirements explicitly in the cladding specification section</li>
+      <li>Specify that alternative or substituted materials must achieve equivalent EN 13501-1 classification and obtain independent DCD Technical Approval before use</li>
       <li>Require contractor to submit DCD Technical Approval evidence before ordering cladding materials</li>
-      <li>Identify whether BS&nbsp;8414 or NFPA&nbsp;285 full assembly test evidence is required for the project</li>
+      <li>Identify buildings requiring a fire engineer&rsquo;s report: above 23 m with any combustible cladding element; above 60 m for complex facade systems; high-rise buildings with mixed-material facades</li>
     </ul>
-    <h3>When to Specify Each Material (Fire Compliance Basis)</h3>
+    <h3>At Technical Approval submission:</h3>
     <ul>
-      <li><strong>GFRC / Natural Stone / Solid Aluminium:</strong> All building heights without restriction &mdash; the lowest-risk compliance path for any UAE project</li>
-      <li><strong>ACM FR-core:</strong> All heights where the composite panel carries a DCD-accepted A2 certificate &mdash; verify product-by-product</li>
-      <li><strong>Fibre Cement (EN 12467 Cat. A):</strong> All heights where ECAS certification is confirmed</li>
-      <li><strong>GFRP:</strong> Below 23&nbsp;m only, with fire engineer&rsquo;s report and DCD Technical Approval; BS&nbsp;8414 evidence required above 15&nbsp;m</li>
-      <li><strong>Any combustible material:</strong> Requires fire engineering assessment, full-scale test evidence, and DCD pre-consultation before specification commitment</li>
+      <li>Compile complete material schedule with product references, classifications, and certificate copies</li>
+      <li>Include facade elevation drawings with material zone identification</li>
+      <li>Submit sub-frame and fixing materials schedule confirming non-combustible fixing system</li>
+      <li>Allow 30&ndash;90 working days for DCD processing depending on complexity</li>
+      <li>Retain all approved documentation on project record for the building&rsquo;s operational life</li>
     </ul>
-  </div>
-
-  <div class="sec" id="s11">
-    <span class="sec-tag">Section 11</span>
-    <h2>Referenced Standards</h2>
-    <h4>Fire Classification &amp; Material Testing</h4>
-    <div class="std-grid">
-      <div class="std"><div class="std-code">EN 13501-1</div><div class="std-desc">Fire classification of construction products and building elements &mdash; reaction to fire; defines A1&ndash;F classes</div></div>
-      <div class="std"><div class="std-code">EN 13823 (SBI)</div><div class="std-desc">Single Burning Item test &mdash; heat and smoke release; mandatory for Classes B&ndash;D</div></div>
-      <div class="std"><div class="std-code">EN ISO 1182</div><div class="std-desc">Non-combustibility furnace test &mdash; mandatory for Class A1 classification</div></div>
-      <div class="std"><div class="std-code">EN ISO 1716</div><div class="std-desc">Gross heat of combustion &mdash; mandatory for A1; supplementary for A2</div></div>
-      <div class="std"><div class="std-code">ISO 11925-2</div><div class="std-desc">Small flame ignitability test &mdash; mandatory for Classes B&ndash;E</div></div>
-      <div class="std"><div class="std-code">ASTM E84</div><div class="std-desc">Surface burning characteristics (flame spread and smoke developed index) &mdash; referenced for GFRP panels</div></div>
+    <div class="callout">
+      <div class="callout-label">Reference Tool</div>
+      <p>The CladWise UAE platform includes compliance status data for principal cladding materials under UAE Fire Code 2017, DCD Circular 2/2020, Estidama Pearl, and Al Sa&rsquo;fat regulations. Use the comparison engine to assess the compliance position of materials under consideration before specifying, and generate a formal Advisory Report for inclusion in DCD submission packages.</p>
     </div>
-    <h4>Full-Scale Facade Fire Tests</h4>
-    <div class="std-grid">
-      <div class="std"><div class="std-code">NFPA 285</div><div class="std-desc">Fire propagation test for exterior non-load-bearing wall assemblies &mdash; two-storey facade specimen with window fire source</div></div>
-      <div class="std"><div class="std-code">BS 8414-1 / -2</div><div class="std-desc">Fire performance of external cladding systems &mdash; full-scale corner specimen test; DCD-preferred full assembly test</div></div>
-      <div class="std"><div class="std-code">BRE BR 135</div><div class="std-desc">Fire performance of facades and cladding &mdash; pass/fail criteria for BS 8414 test results</div></div>
-    </div>
-    <h4>Structural &amp; System Performance</h4>
-    <div class="std-grid">
-      <div class="std"><div class="std-code">ASTM E330</div><div class="std-desc">Structural performance of facades under uniform static air pressure &mdash; wind load testing</div></div>
-      <div class="std"><div class="std-code">EN 12467</div><div class="std-desc">Fibre cement flat sheets &mdash; Category A classification required for UAE compliance</div></div>
-      <div class="std"><div class="std-code">AAMA 2605</div><div class="std-desc">Superior performance organic coatings on aluminium &mdash; PVDF 70% resin; required for UAE high-durability facade applications</div></div>
-    </div>
-    <h4>Regulatory Documents</h4>
-    <div class="std-grid">
-      <div class="std"><div class="std-code">UAE Fire Code 2017</div><div class="std-desc">UAE Fire and Life Safety Code &mdash; national framework standard for fire safety; references EN 13501-1 for cladding classification</div></div>
-      <div class="std"><div class="std-code">DCD Circular 2/2020</div><div class="std-desc">Dubai Civil Defence &mdash; prohibition of PE-core ACM; FR mineral core requirements; Technical Approval process</div></div>
-      <div class="std"><div class="std-code">MoIAT Law No.3/2026</div><div class="std-desc">ECAS mandatory product certification &mdash; applies to facade cladding products from Q2 2026</div></div>
-    </div>
-    <p style="margin-top:32px">Use the <a href="https://cladwise.ae" style="color:var(--accent)">CladWise UAE compliance tools</a> to verify material fire classification, generate Advisory Reports for DCD submission packages, and compare facade options against 2026 UAE regulatory standards.</p>
+    <p style="margin-top:32px">Access the <a href="https://cladwise.ae" style="color:var(--accent)">CladWise UAE compliance checking tools</a> to verify material classification, generate Advisory Reports, and compare facade options against 2026 UAE regulatory requirements.</p>
   </div>
 </div>
 
 <footer>
   <p><strong style="color:var(--text)">CladWise UAE</strong> &mdash; Facade Material Intelligence Platform</p>
   <p><a href="https://cladwise.ae">cladwise.ae</a> &middot; Technical reference for UAE and GCC construction professionals</p>
-  <p style="margin-top:14px;font-size:12px">For professional reference only. Verify all requirements directly with DCD, ADCD, or MoIAT before procurement or construction.</p>
+  <p style="margin-top:16px;font-size:12px">For professional reference only. All regulatory requirements should be verified directly with DCD, ADCD, or MoIAT before procurement or construction.</p>
 </footer>
 </body>
 </html>
