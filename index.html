@@ -27,6 +27,10 @@
   --green-dark: #0d1a10;
   --green-mid: #1e3322;
 }
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
@@ -3155,7 +3159,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="auth-close" aria-label="Close authentication modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -3258,7 +3262,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sub-modal-close" aria-label="Close subscription modal" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fa-solid fa-search" style="margin-right:6px"></i>For Specifiers &amp; Architects</button>
@@ -3862,7 +3866,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" aria-label="Close modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -3871,7 +3875,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lightbox-close" aria-label="Close lightbox" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -4570,14 +4574,14 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous material" onclick="deckPrev()">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" role="button" tabindex="0" aria-label="Go to material ${i+1}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next material" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    return `<div class="mat-deck-item${i===0?' active':''}" role="button" tabindex="0" aria-label="Select ${MATERIALS[key].name}" data-i="${i}" onclick="deckGo(${i})">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
       <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
@@ -4995,7 +4999,7 @@ function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
   controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" role="button" tabindex="0" aria-label="Toggle ${key} in comparison" onclick="toggleMat('${key}')">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
     </div>`).join('');
@@ -5969,6 +5973,16 @@ function downloadSpecReport() {
   if (overlay) observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
 })();
 
+// ── GLOBAL KEYBOARD ACCESSIBILITY FOR CUSTOM BUTTONS ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const el = document.activeElement;
+    if (el && el.getAttribute('role') === 'button') {
+      e.preventDefault();
+      el.click();
+    }
+  }
+});
 
 /* ── PRE-REGISTER FUNCTIONS ─────────────────────────────────────────── */
 function preRegisterMaterial(materialName, el) {
@@ -6027,7 +6041,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">Supplier Application</div>
         <div class="sap-subtitle">Complete all sections to activate your free listing &amp; verification</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sap-close" aria-label="Close application modal" onclick="closeSupApply()"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- Step indicator -->
