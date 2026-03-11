@@ -7223,17 +7223,13 @@ Return ONLY valid JSON (no markdown, no backticks) with this exact structure:
 
 verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documentation"`;
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/advisory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
+        body: JSON.stringify({ prompt })
       });
       const data = await res.json();
-      const raw = data.content?.[0]?.text || '{}';
+      const raw = data.text || '{}';
       let parsed;
       try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
       catch(e) { parsed = { verdict: 'Pending Documentation', verdict_notes: 'Unable to parse AI response.', regulatory: {moiat:'N/A',standard_refs:[],status:'Unknown'}, technical:{fire_code:'N/A',ecas:'N/A',fire_class:'N/A',height_limit:'N/A'}, sustainability:{alsafat:'N/A',estidama:'N/A',voc:'N/A',recycled_content:'N/A',rating:'N/A'}, quality:{coc_requirement:'N/A',qr_code:'N/A',traceability:'N/A'}, key_risks:[], specifier_actions:[] }; }
