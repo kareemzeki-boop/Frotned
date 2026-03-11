@@ -7230,9 +7230,31 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
       });
       const data = await res.json();
       const raw = data.text || '{}';
+      console.log('[Advisory] Raw AI response for', key, ':', raw);
       let parsed;
-      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
-      catch(e) { parsed = { verdict: 'Pending Documentation', verdict_notes: 'Unable to parse AI response.', regulatory: {moiat:'N/A',standard_refs:[],status:'Unknown'}, technical:{fire_code:'N/A',ecas:'N/A',fire_class:'N/A',height_limit:'N/A'}, sustainability:{alsafat:'N/A',estidama:'N/A',voc:'N/A',recycled_content:'N/A',rating:'N/A'}, quality:{coc_requirement:'N/A',qr_code:'N/A',traceability:'N/A'}, key_risks:[], specifier_actions:[] }; }
+      try {
+        // Strip markdown fences aggressively
+        let clean = raw.trim();
+        clean = clean.replace(/^```json\s*/i, '').replace(/\s*```$/,'');
+        clean = clean.replace(/^```\s*/,'').replace(/\s*```$/,'');
+        // Find first { to last }
+        const start = clean.indexOf('{');
+        const end = clean.lastIndexOf('}');
+        if (start !== -1 && end !== -1) clean = clean.slice(start, end + 1);
+        parsed = JSON.parse(clean);
+        console.log('[Advisory] Parsed OK for', key);
+      } catch(e) {
+        console.error('[Advisory] JSON parse failed for', key, e, 'raw:', raw);
+        parsed = {
+          verdict: 'Pending Documentation',
+          verdict_notes: 'AI response could not be parsed. Check console for raw output.',
+          regulatory: { moiat: raw.slice(0,200), standard_refs: [], status: 'Unknown' },
+          technical: { fire_code: 'See raw response in console', ecas: '—', fire_class: '—', height_limit: '—' },
+          sustainability: { alsafat: '—', estidama: '—', voc: '—', recycled_content: '—', rating: '—' },
+          quality: { coc_requirement: '—', qr_code: 'Required', traceability: '—' },
+          key_risks: [], specifier_actions: []
+        };
+      }
       matDataArr.push({ key, mat, ai: parsed });
     }
 
@@ -7500,12 +7522,18 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
       y += 20;
 
       // ── Section helper ───────────────────────────────────────────────────
-      function secHead(label, icon) {
+      function secHead(label, tag) {
         if (y > SAFE_B - 30) { doc.addPage(); newPage(); y = 16; }
         R(ML, y, CW, 7, C.bg3);
         R(ML, y, 3, 7, col);
-        doc.setFont('helvetica','bold'); doc.setFontSize(7.5); tc(col);
-        doc.text(icon + '  ' + label, ML+7, y+5);
+        // Tag badge
+        const tagW = doc.getTextWidth(tag) + 4;
+        RR(ML+6, y+1.2, tagW, 4.5, 1, col);
+        doc.setFont('helvetica','bold'); doc.setFontSize(5.5); tc(C.bg);
+        doc.text(tag, ML+8, y+4.5);
+        // Label
+        doc.setFontSize(7.5); tc(col);
+        doc.text(label, ML + 6 + tagW + 4, y+5);
         y += 10;
       }
 
@@ -7531,7 +7559,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
       }
 
       // ── 1. REGULATORY FRAMEWORK ──────────────────────────────────────────
-      secHead('REGULATORY FRAMEWORK', '§');
+      secHead('REGULATORY FRAMEWORK', '[REG]');
       paraField('MoIAT Assessment & Law No. 3 of 2026:', ai.regulatory?.moiat);
       y += 2;
       if (ai.regulatory?.standard_refs?.length) {
@@ -7548,7 +7576,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
 
       // ── 2. TECHNICAL COMPLIANCE ──────────────────────────────────────────
       y += 4;
-      secHead('TECHNICAL COMPLIANCE', '⚙');
+      secHead('TECHNICAL COMPLIANCE', '[TECH]');
       paraField('UAE Fire & Life Safety Code 2017:', ai.technical?.fire_code);
       y += 2;
       paraField('ECAS / EQM Certification:', ai.technical?.ecas);
@@ -7558,7 +7586,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
 
       // ── 3. SUSTAINABILITY ────────────────────────────────────────────────
       y += 4;
-      secHead('SUSTAINABILITY STATUS', '🌿');
+      secHead('SUSTAINABILITY STATUS', '[ESG]');
       paraField('Al Sa\'fat (Dubai Green Building):', ai.sustainability?.alsafat);
       y += 2;
       paraField('Estidama Pearl Rating (Abu Dhabi):', ai.sustainability?.estidama);
@@ -7569,7 +7597,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
 
       // ── 4. QUALITY & TRACEABILITY ────────────────────────────────────────
       y += 4;
-      secHead('QUALITY & TRACEABILITY', '🔍');
+      secHead('QUALITY & TRACEABILITY', '[QA]');
       paraField('Certificate of Conformity (CoC):', ai.quality?.coc_requirement);
       y += 2;
       fieldRow('Product QR Code', ai.quality?.qr_code || 'Required');
@@ -7577,7 +7605,7 @@ verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documen
 
       // ── 5. RISKS & SPECIFIER ACTIONS ────────────────────────────────────
       y += 4;
-      secHead('KEY RISKS & SPECIFIER ACTIONS', '⚡');
+      secHead('KEY RISKS & SPECIFIER ACTIONS', '[RISK]');
 
       if (ai.key_risks?.length) {
         doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
