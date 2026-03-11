@@ -2941,8 +2941,19 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <tbody id="compare-tbody"></tbody>
       </table>
     </div>
-    <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+    <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
       <button onclick="exportComparePDF()" id="pdf-export-btn" style="
+        display:inline-flex;align-items:center;gap:10px;
+        background:var(--bg2);color:var(--text);
+        border:1px solid rgba(0,229,160,0.25);border-radius:10px;
+        padding:13px 28px;
+        font-family:'Barlow Condensed',sans-serif;
+        font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+        cursor:pointer;transition:opacity 0.2s;
+      " onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+        <i class="fa-solid fa-file-arrow-down"></i> Comparison PDF
+      </button>
+      <button onclick="exportAdvisoryPDF()" id="advisory-export-btn" style="
         display:inline-flex;align-items:center;gap:10px;
         background:var(--accent);color:#0b110d;
         border:none;border-radius:10px;
@@ -2951,7 +2962,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
         cursor:pointer;transition:opacity 0.2s;
       " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-        <i class="fa-solid fa-file-arrow-down"></i> Export PDF Report
+        <i class="fa-solid fa-file-shield"></i> Advisory Report
       </button>
     </div>
   </div>
@@ -7127,6 +7138,546 @@ async function exportComparePDF() {
   }
 
   btn.innerHTML = '<i class="fa-solid fa-file-arrow-down"></i> Export PDF Report';
+  btn.disabled = false;
+}
+
+
+/* ─── MATERIAL ADVISORY REPORT ──────────────────────────────────────────── */
+async function exportAdvisoryPDF() {
+  const btn = document.getElementById('advisory-export-btn');
+  if (selectedMats.length < 1) { showToast('Select at least 1 material first'); return; }
+
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Report...';
+  btn.disabled = true;
+
+  try {
+    // ── 1. Fetch AI compliance data for each material ──────────────────────
+    const matDataArr = [];
+    for (const key of selectedMats) {
+      const mat = MATERIALS[key];
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Analysing ${mat.name}...`;
+
+      const prompt = `You are a UAE building materials compliance expert. Generate a formal Material Advisory & Compliance Report entry for "${mat.name} (${mat.full || key})" following 2026 UAE standards.
+
+Material context:
+- Fire Rating: ${mat.specs?.['Fire Rating']?.val || 'N/A'}
+- Weight: ${mat.specs?.['Weight']?.val || 'N/A'}
+- Price: ${mat.priceRange || 'N/A'} AED/m²
+- Service Life: ${mat.specs?.['Service Life']?.val || 'N/A'}
+- Dubai Civil Defence: ${mat.compliance?.['Dubai Civil Defence'] || 'unknown'}
+- UAE Fire Code 2017: ${mat.compliance?.['UAE Fire Code 2017'] || 'unknown'}
+- Estidama Pearl: ${mat.compliance?.['Estidama Pearl Rating'] || 'unknown'}
+
+Return ONLY valid JSON (no markdown, no backticks) with this exact structure:
+{
+  "regulatory": {
+    "moiat": "2-sentence assessment of MoIAT mandatory standards compliance and Law No. 3 of 2026 requirements for this material",
+    "standard_refs": ["UAE.S GSO 14001", "ISO 9001:2015"],
+    "status": "Compliant"
+  },
+  "technical": {
+    "fire_code": "2-sentence validation against UAE Fire and Life Safety Code 2017 for this material",
+    "ecas": "1-sentence ECAS/EQM certification requirement note",
+    "fire_class": "A1 / A2 / B / C",
+    "height_limit": "Unrestricted / Below 15m / Below 60m"
+  },
+  "sustainability": {
+    "alsafat": "2-sentence Al Sa'fat Dubai Green Building evaluation",
+    "estidama": "2-sentence Estidama Pearl Rating evaluation for Abu Dhabi projects",
+    "voc": "Low / Medium / High",
+    "recycled_content": "Percentage or description",
+    "rating": "Recommended / Acceptable / Not Recommended"
+  },
+  "quality": {
+    "coc_requirement": "1-sentence Certificate of Conformity requirement",
+    "qr_code": "Required / Recommended",
+    "traceability": "1-sentence traceability note per 2026 UAE circular requirements"
+  },
+  "verdict": "Compliant",
+  "verdict_notes": "1-sentence summary of overall compliance status",
+  "key_risks": ["risk 1", "risk 2"],
+  "specifier_actions": ["action 1", "action 2", "action 3"]
+}
+
+verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documentation"`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      const raw = data.content?.[0]?.text || '{}';
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch(e) { parsed = { verdict: 'Pending Documentation', verdict_notes: 'Unable to parse AI response.', regulatory: {moiat:'N/A',standard_refs:[],status:'Unknown'}, technical:{fire_code:'N/A',ecas:'N/A',fire_class:'N/A',height_limit:'N/A'}, sustainability:{alsafat:'N/A',estidama:'N/A',voc:'N/A',recycled_content:'N/A',rating:'N/A'}, quality:{coc_requirement:'N/A',qr_code:'N/A',traceability:'N/A'}, key_risks:[], specifier_actions:[] }; }
+      matDataArr.push({ key, mat, ai: parsed });
+    }
+
+    // ── 2. Build PDF ───────────────────────────────────────────────────────
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Building PDF...';
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const PW = 210, PH = 297, ML = 16, MR = 16, CW = PW - ML - MR;
+    const FOOTER_H = 9;
+    const SAFE_B = PH - FOOTER_H - 4;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    const refNo = 'CW-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random()*9000)+1000);
+
+    const C = {
+      bg:[8,14,10], bg2:[14,22,16], bg3:[20,32,22],
+      acc:[0,229,160], white:[255,255,255], muted:[130,155,135],
+      dim:[60,80,65], red:[210,70,70], amber:[210,155,40], blue:[80,140,220]
+    };
+    const MAT_COL = {
+      GFRC:[0,229,160], GFRP:[96,165,250], Aluminum:[163,163,163],
+      Stone:[220,160,50], 'ACM-FR':[192,132,252], 'Fibre Cement':[220,120,60]
+    };
+
+    const fc = c => doc.setFillColor(c[0],c[1],c[2]);
+    const tc = c => doc.setTextColor(c[0],c[1],c[2]);
+    const dc = c => doc.setDrawColor(c[0],c[1],c[2]);
+    const R  = (x,y,w,h,col) => { fc(col); doc.rect(x,y,w,h,'F'); };
+    const RR = (x,y,w,h,r,col) => { fc(col); doc.roundedRect(x,y,w,h,r,r,'F'); };
+    const L  = (x1,y1,x2,y2,col,lw=0.2) => { dc(col); doc.setLineWidth(lw); doc.line(x1,y1,x2,y2); };
+
+    function safeT(txt, x, y, maxW, size) {
+      txt = String(txt || '—');
+      if (size) doc.setFontSize(size);
+      const fs = doc.getFontSize();
+      let w = doc.getTextWidth(txt);
+      if (maxW && w > maxW) {
+        while (txt.length > 2 && doc.getTextWidth(txt+'…') > maxW) txt = txt.slice(0,-1);
+        txt += '…';
+      }
+      doc.text(txt, x, y);
+    }
+
+    // Wrapped text — returns new y
+    function wrappedText(txt, x, y, maxW, size, color, font='normal') {
+      doc.setFont('helvetica', font);
+      if (size) doc.setFontSize(size);
+      if (color) tc(color);
+      const lines = doc.splitTextToSize(String(txt || ''), maxW);
+      const lh = (doc.getFontSize() * 0.35279) + 1.2;
+      lines.forEach(line => { doc.text(line, x, y); y += lh; });
+      return y;
+    }
+
+    function drawFooter(pn, total) {
+      R(0, PH - FOOTER_H, PW, FOOTER_H, C.bg2);
+      L(0, PH - FOOTER_H, PW, PH - FOOTER_H, C.dim, 0.15);
+      doc.setFont('helvetica','normal'); doc.setFontSize(5.5); tc(C.dim);
+      doc.text(`Generated by cladwise.ae  ·  Report Ref: ${refNo}  ·  ${dateStr}  ·  For professional guidance only — verify all data with suppliers and relevant UAE authorities before procurement.`, ML, PH - 3);
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
+      const pl = `${pn} / ${total}`;
+      doc.text(pl, PW - MR - doc.getTextWidth(pl), PH - 3);
+    }
+
+    function newPage(bg) {
+      R(0, 0, PW, PH, bg || C.bg);
+      R(0, 0, PW, 1.8, C.acc);
+    }
+
+    function verdictColor(v) {
+      if (v === 'Compliant') return C.acc;
+      if (v === 'Non-Compliant') return C.red;
+      return C.amber;
+    }
+
+    // ── PAGE 1: COVER ──────────────────────────────────────────────────────
+    newPage();
+    let y = 18;
+
+    // Logo
+    doc.setFont('helvetica','bold'); doc.setFontSize(24); tc(C.acc);
+    doc.text('CLADWISE', ML, y);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); tc(C.muted);
+    doc.text('UAE', ML + doc.getTextWidth('CLADWISE') + 2.5, y - 0.5);
+    doc.setFontSize(6.5); tc(C.dim);
+    doc.text('cladwise.ae', PW - MR - doc.getTextWidth('cladwise.ae'), y);
+
+    y += 5; L(ML, y, ML+CW, y, C.dim, 0.15); y += 14;
+
+    // Report type badge
+    RR(ML, y, 62, 7, 2, C.bg3);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.acc);
+    doc.text('MATERIAL ADVISORY REPORT', ML + 4, y + 4.8);
+    y += 13;
+
+    // Main title
+    doc.setFont('helvetica','bold'); doc.setFontSize(30); tc(C.white);
+    doc.text('MATERIAL', ML, y + 11);
+    doc.setFontSize(30); tc(C.acc);
+    doc.text('ADVISORY &', ML, y + 22);
+    doc.setFontSize(22); tc(C.white);
+    doc.text('COMPLIANCE REPORT', ML, y + 33);
+    y += 44;
+
+    // Subtitle
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); tc(C.muted);
+    doc.text('Formal Material Assessment · 2026 UAE Standards · Prepared by CladWise UAE', ML, y);
+    y += 16;
+
+    // Meta grid
+    RR(ML, y, CW, 26, 3, C.bg2);
+    const metaCols = [
+      { label: 'REPORT REF.',    val: refNo },
+      { label: 'DATE',           val: dateStr },
+      { label: 'STANDARD',       val: 'Law No. 3 of 2026' },
+      { label: 'MATERIALS',      val: selectedMats.length + ' assessed' },
+    ];
+    const metaW = CW / metaCols.length;
+    metaCols.forEach((m, i) => {
+      const mx = ML + i * metaW + 6;
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
+      doc.text(m.label, mx, y + 7);
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.white);
+      safeT(m.val, mx, y + 15, metaW - 8);
+    });
+    y += 36;
+
+    // Regulatory reference box
+    RR(ML, y, CW, 20, 2, [14,22,16]);
+    R(ML, y, 3, 20, C.acc);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.acc);
+    doc.text('REGULATORY FRAMEWORK APPLIED', ML+8, y+6);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); tc(C.muted);
+    doc.text('UAE Fire and Life Safety Code 2017  ·  Law No. 3 of 2026 (MoIAT)  ·  ECAS/EQM Certification', ML+8, y+12);
+    doc.text('Al Sa\'fat Dubai Green Building Regulations  ·  Abu Dhabi Estidama Pearl Rating System', ML+8, y+18);
+    y += 30;
+
+    // Material chips
+    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.dim);
+    doc.text('MATERIALS ASSESSED IN THIS REPORT', ML, y); y += 5;
+
+    let chipX = ML;
+    selectedMats.forEach(key => {
+      const col = MAT_COL[key] || [100,100,100];
+      const label = MATERIALS[key].name;
+      doc.setFontSize(7.5);
+      const tw = doc.getTextWidth(label) + 14;
+      RR(chipX, y-4, tw, 7.5, 2, C.bg3);
+      R(chipX, y-4, 3, 7.5, col);
+      doc.setFont('helvetica','bold'); tc(col);
+      doc.text(label, chipX+6, y+1.5);
+      chipX += tw + 3;
+    });
+    y += 16;
+
+    // Disclaimer
+    R(ML, y, CW, 14, C.bg3);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.dim);
+    y = wrappedText('DISCLAIMER: This report is generated by CladWise AI using UAE regulatory data current as of 2026. It is provided for professional specification guidance only and does not constitute formal engineering, legal, or regulatory certification advice. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) before procurement or construction.', ML+5, y+5, CW-10, 6.5, C.dim);
+
+    // ── PAGE 2: TABLE OF CONTENTS ──────────────────────────────────────────
+    doc.addPage(); newPage(); y = 20;
+
+    doc.setFont('helvetica','bold'); doc.setFontSize(16); tc(C.white);
+    doc.text('TABLE OF CONTENTS', ML, y); y += 4;
+    L(ML, y, ML+CW, y, C.dim, 0.2); y += 10;
+
+    // TOC entries
+    const tocEntries = [
+      { num:'01', title:'Regulatory Framework Overview', sub:'MoIAT Standards · Law No. 3 of 2026', page: 3 },
+      ...matDataArr.map((md, i) => ({
+        num: String(i+2).padStart(2,'0'),
+        title: `Material Data Sheet — ${md.mat.name}`,
+        sub: md.mat.full || md.key,
+        page: 3 + i
+      })),
+      { num: String(matDataArr.length+2).padStart(2,'0'), title:'Compliance Summary Matrix', sub:'All materials · Side-by-side verdict', page: 3 + matDataArr.length }
+    ];
+
+    tocEntries.forEach((entry, i) => {
+      const rowBg = i % 2 === 0 ? C.bg2 : C.bg;
+      R(ML, y, CW, 10, rowBg);
+      // Number
+      RR(ML+2, y+1.5, 8, 7, 1, C.bg3);
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
+      doc.text(entry.num, ML+3.5, y+6.5);
+      // Title
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.white);
+      safeT(entry.title, ML+14, y+5.5, CW-40);
+      // Sub
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
+      safeT(entry.sub, ML+14, y+9, CW-40);
+      // Page
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.muted);
+      const pl = 'p.' + entry.page;
+      doc.text(pl, PW-MR-doc.getTextWidth(pl)-2, y+6.5);
+      y += 10;
+    });
+
+    y += 10;
+
+    // Quick verdict summary on TOC page
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.acc);
+    doc.text('COMPLIANCE VERDICT SUMMARY', ML, y); y += 3;
+    L(ML, y, ML+CW, y, C.dim, 0.15); y += 6;
+
+    matDataArr.forEach(md => {
+      const col = verdictColor(md.ai.verdict);
+      RR(ML, y, CW, 9, 2, C.bg2);
+      R(ML, y, 3, 9, col);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); tc(C.white);
+      safeT(md.mat.name, ML+8, y+6, 60);
+      doc.setFontSize(7); tc(col);
+      safeT(md.ai.verdict || 'Pending Documentation', ML+75, y+6, 70);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
+      safeT(md.ai.verdict_notes || '', ML+150, y+6, CW-140);
+      y += 10;
+    });
+
+    // ── PAGES 3+: MATERIAL DATA SHEETS ─────────────────────────────────────
+    for (const md of matDataArr) {
+      doc.addPage(); newPage(); y = 16;
+      const col = MAT_COL[md.key] || [100,100,100];
+      const ai = md.ai;
+
+      // ── Material header bar ──────────────────────────────────────────────
+      R(ML, y, CW, 22, C.bg2);
+      R(ML, y, 4, 22, col);
+
+      // Verdict badge (top right)
+      const vc = verdictColor(ai.verdict);
+      RR(PW-MR-42, y+3, 40, 8, 2, [vc[0]*0.15+C.bg[0]*0.85|0, vc[1]*0.15+C.bg[1]*0.85|0, vc[2]*0.15+C.bg[2]*0.85|0]);
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(vc);
+      const vLabel = ai.verdict || 'Pending Documentation';
+      doc.text(vLabel, PW-MR-40, y+8.5);
+
+      doc.setFont('helvetica','bold'); doc.setFontSize(14); tc(C.white);
+      safeT(md.mat.name, ML+9, y+10, CW-60);
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); tc(C.muted);
+      safeT(md.mat.full || md.key, ML+9, y+17, CW-60);
+      y += 28;
+
+      // ── Quick specs strip ────────────────────────────────────────────────
+      const qspecs = [
+        { l:'FIRE CLASS',   v: ai.technical?.fire_class || md.specs?.['Fire Rating']?.val || '—' },
+        { l:'HEIGHT LIMIT', v: ai.technical?.height_limit || '—' },
+        { l:'PRICE/m²',     v: md.mat.priceRange || '—' },
+        { l:'SERVICE LIFE', v: md.mat.specs?.['Service Life']?.val || '—' },
+        { l:'VOC LEVEL',    v: ai.sustainability?.voc || '—' },
+        { l:'VERDICT',      v: ai.verdict || '—' },
+      ];
+      const qw = CW / qspecs.length;
+      R(ML, y, CW, 14, C.bg3);
+      qspecs.forEach((qs, qi) => {
+        const qx = ML + qi * qw;
+        if (qi > 0) L(qx, y+2, qx, y+12, C.dim, 0.1);
+        doc.setFont('helvetica','normal'); doc.setFontSize(5.5); tc(C.dim);
+        doc.text(qs.l, qx+3, y+5.5);
+        doc.setFont('helvetica','bold'); doc.setFontSize(7);
+        const isVerdict = qs.l === 'VERDICT';
+        tc(isVerdict ? verdictColor(qs.v) : C.white);
+        safeT(qs.v, qx+3, y+11, qw-5);
+      });
+      y += 20;
+
+      // ── Section helper ───────────────────────────────────────────────────
+      function secHead(label, icon) {
+        if (y > SAFE_B - 30) { doc.addPage(); newPage(); y = 16; }
+        R(ML, y, CW, 7, C.bg3);
+        R(ML, y, 3, 7, col);
+        doc.setFont('helvetica','bold'); doc.setFontSize(7.5); tc(col);
+        doc.text(icon + '  ' + label, ML+7, y+5);
+        y += 10;
+      }
+
+      function fieldRow(label, value, fullWidth) {
+        if (y > SAFE_B - 10) { doc.addPage(); newPage(); y = 16; }
+        const FH = 7;
+        R(ML, y, CW, FH, C.bg2);
+        doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
+        doc.text(label, ML+3, y+4.5);
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.white);
+        const vx = fullWidth ? ML+3 : ML+55;
+        const vw = fullWidth ? CW-6 : CW-57;
+        safeT(value || '—', vx, y+4.5, vw);
+        y += FH + 0.5;
+      }
+
+      function paraField(label, text) {
+        if (y > SAFE_B - 24) { doc.addPage(); newPage(); y = 16; }
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
+        doc.text(label, ML, y); y += 3;
+        doc.setFont('helvetica','normal'); doc.setFontSize(7); tc(C.white);
+        y = wrappedText(text || 'No data available.', ML, y, CW, 7, C.white) + 2;
+      }
+
+      // ── 1. REGULATORY FRAMEWORK ──────────────────────────────────────────
+      secHead('REGULATORY FRAMEWORK', '§');
+      paraField('MoIAT Assessment & Law No. 3 of 2026:', ai.regulatory?.moiat);
+      y += 2;
+      if (ai.regulatory?.standard_refs?.length) {
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
+        doc.text('Applicable Standards:', ML, y); y += 3;
+        ai.regulatory.standard_refs.forEach(ref => {
+          R(ML, y, CW, 5.5, C.bg2);
+          doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
+          doc.text('·  ' + ref, ML+4, y+4); y += 5.5;
+        });
+        y += 2;
+      }
+      fieldRow('MoIAT Status', ai.regulatory?.status || '—');
+
+      // ── 2. TECHNICAL COMPLIANCE ──────────────────────────────────────────
+      y += 4;
+      secHead('TECHNICAL COMPLIANCE', '⚙');
+      paraField('UAE Fire & Life Safety Code 2017:', ai.technical?.fire_code);
+      y += 2;
+      paraField('ECAS / EQM Certification:', ai.technical?.ecas);
+      y += 2;
+      fieldRow('EN 13501-1 Fire Class', ai.technical?.fire_class || '—');
+      fieldRow('DCD Height Suitability', ai.technical?.height_limit || '—');
+
+      // ── 3. SUSTAINABILITY ────────────────────────────────────────────────
+      y += 4;
+      secHead('SUSTAINABILITY STATUS', '🌿');
+      paraField('Al Sa\'fat (Dubai Green Building):', ai.sustainability?.alsafat);
+      y += 2;
+      paraField('Estidama Pearl Rating (Abu Dhabi):', ai.sustainability?.estidama);
+      y += 2;
+      fieldRow('VOC Level', ai.sustainability?.voc || '—');
+      fieldRow('Recycled Content', ai.sustainability?.recycled_content || '—');
+      fieldRow('Sustainability Rating', ai.sustainability?.rating || '—');
+
+      // ── 4. QUALITY & TRACEABILITY ────────────────────────────────────────
+      y += 4;
+      secHead('QUALITY & TRACEABILITY', '🔍');
+      paraField('Certificate of Conformity (CoC):', ai.quality?.coc_requirement);
+      y += 2;
+      fieldRow('Product QR Code', ai.quality?.qr_code || 'Required');
+      fieldRow('2026 Circular Traceability', ai.quality?.traceability || '—');
+
+      // ── 5. RISKS & SPECIFIER ACTIONS ────────────────────────────────────
+      y += 4;
+      secHead('KEY RISKS & SPECIFIER ACTIONS', '⚡');
+
+      if (ai.key_risks?.length) {
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
+        doc.text('Key Risks:', ML, y); y += 3;
+        ai.key_risks.forEach(risk => {
+          if (y > SAFE_B - 8) { doc.addPage(); newPage(); y = 16; }
+          R(ML, y, CW, 6, [vc[0]*0.08+C.bg[0]*0.92|0, vc[1]*0.08+C.bg[1]*0.92|0, vc[2]*0.08+C.bg[2]*0.92|0]);
+          R(ML, y, 2.5, 6, C.red);
+          doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
+          safeT('·  ' + risk, ML+6, y+4, CW-8);
+          y += 6.5;
+        });
+        y += 3;
+      }
+
+      if (ai.specifier_actions?.length) {
+        if (y > SAFE_B - 12) { doc.addPage(); newPage(); y = 16; }
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
+        doc.text('Required Specifier Actions:', ML, y); y += 3;
+        ai.specifier_actions.forEach((action, ai2) => {
+          if (y > SAFE_B - 8) { doc.addPage(); newPage(); y = 16; }
+          R(ML, y, CW, 6, C.bg2);
+          R(ML, y, 2.5, 6, C.acc);
+          doc.setFont('helvetica','bold'); doc.setFontSize(6); tc(C.acc);
+          doc.text(String(ai2+1), ML+5, y+4.2);
+          doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
+          safeT(action, ML+10, y+4.2, CW-12);
+          y += 6.5;
+        });
+        y += 3;
+      }
+
+      // ── Verdict box ──────────────────────────────────────────────────────
+      if (y > SAFE_B - 20) { doc.addPage(); newPage(); y = 16; }
+      const vc2 = verdictColor(ai.verdict);
+      y += 4;
+      RR(ML, y, CW, 18, 3, C.bg2);
+      R(ML, y, 4, 18, vc2);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.muted);
+      doc.text('COMPLIANCE VERDICT', ML+10, y+6);
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); tc(vc2);
+      doc.text(ai.verdict || 'Pending Documentation', ML+10, y+14);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
+      safeT(ai.verdict_notes || '', ML + 80, y+10, CW - 90);
+      y += 24;
+    }
+
+    // ── FINAL PAGE: COMPLIANCE MATRIX ─────────────────────────────────────
+    doc.addPage(); newPage(); y = 16;
+    doc.setFont('helvetica','bold'); doc.setFontSize(14); tc(C.white);
+    doc.text('COMPLIANCE SUMMARY MATRIX', ML, y); y += 4;
+    L(ML, y, ML+CW, y, C.dim, 0.2); y += 8;
+
+    const matrixCols = ['Material', 'Fire Class', 'DCD', 'UAE Fire Code', 'Estidama', 'Al Sa\'fat', 'ECAS/CoC', 'VERDICT'];
+    const matrixW = CW / matrixCols.length;
+
+    // Header
+    R(ML, y, CW, 8, C.bg3);
+    matrixCols.forEach((col2, ci) => {
+      if (ci > 0) L(ML + ci * matrixW, y+1, ML + ci * matrixW, y+7, C.dim, 0.1);
+      doc.setFont('helvetica','bold'); doc.setFontSize(5.5); tc(C.acc);
+      safeT(col2.toUpperCase(), ML + ci * matrixW + 2, y+5.5, matrixW-3);
+    });
+    y += 8;
+
+    matDataArr.forEach((md, ri) => {
+      const rowBg = ri % 2 === 0 ? C.bg : C.bg2;
+      R(ML, y, CW, 10, rowBg);
+      const ai = md.ai;
+      const verdCol = verdictColor(ai.verdict);
+      const complianceVal = (val) => {
+        const v = (val||'').toLowerCase();
+        if (v==='yes'||v==='compliant') return {t:'✓', c:C.acc};
+        if (v==='no'||v==='non-compliant') return {t:'✗', c:C.red};
+        return {t:'⚠', c:C.amber};
+      };
+      const cells = [
+        { t: md.mat.name,   c: MAT_COL[md.key]||C.white, bold:true },
+        { t: ai.technical?.fire_class||'—', c: C.white },
+        complianceVal(md.mat.compliance?.['Dubai Civil Defence']),
+        complianceVal(md.mat.compliance?.['UAE Fire Code 2017']),
+        complianceVal(md.mat.compliance?.['Estidama Pearl Rating']),
+        { t: ai.sustainability?.rating||'—', c: C.muted },
+        { t: ai.quality?.qr_code||'Req.', c: C.muted },
+        { t: ai.verdict||'—', c: verdCol, bold:true },
+      ];
+      cells.forEach((cell, ci) => {
+        if (ci > 0) L(ML + ci * matrixW, y+1, ML + ci * matrixW, y+9, C.dim, 0.1);
+        doc.setFont('helvetica', cell.bold ? 'bold' : 'normal');
+        doc.setFontSize(6.5); tc(cell.c||C.white);
+        safeT(cell.t, ML + ci * matrixW + 2, y+6.5, matrixW-3);
+      });
+      y += 10;
+    });
+
+    y += 12;
+    // Closing note
+    R(ML, y, CW, 18, C.bg2);
+    R(ML, y, 3, 18, C.acc);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.acc);
+    doc.text('IMPORTANT NOTICE', ML+8, y+6);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.muted);
+    y = wrappedText('This report references 2026 UAE regulatory standards including Law No. 3 of 2026 (MoIAT), UAE Fire and Life Safety Code 2017, Al Sa\'fat Dubai Green Building Regulations, and the Abu Dhabi Estidama Pearl Rating System. All compliance verdicts are AI-generated guidance based on material technical data and should be verified with the relevant authority prior to formal submission. CladWise UAE accepts no liability for decisions made solely on the basis of this report.', ML+8, y+12, CW-12, 6.5, C.muted);
+
+    // ── Footers on all pages ───────────────────────────────────────────────
+    const tp = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= tp; p++) { doc.setPage(p); drawFooter(p, tp); }
+
+    const fname = 'CladWise_Advisory_' + selectedMats.join('_') + '_' + dateStr.replace(/ /g,'_') + '.pdf';
+    doc.save(fname);
+    showToast('Advisory Report downloaded ✓');
+
+  } catch(err) {
+    console.error(err);
+    showToast('Report generation failed: ' + err.message);
+  }
+
+  btn.innerHTML = '<i class="fa-solid fa-file-shield"></i> Advisory Report';
   btn.disabled = false;
 }
 
