@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CladWise UAE — Façade Material Intelligence for UAE Architects</title>
+<meta name="description" content="CladWise is the UAE's first façade material intelligence platform. Compare GFRC, GFRP, Aluminum and more. Built for architects and specifiers across Dubai, Abu Dhabi and the GCC.">
+<link rel="canonical" href="https://cladwise.ae/launch.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0b110d;
+  --bg2: #111a13;
+  --bg3: #182318;
+  --accent: #00e5a0;
+  --text: #e8f0ea;
+  --muted: #7a9680;
+  --border: rgba(0,229,160,0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── GLOW ── */
+.glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── WRAPPER ── */
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 720px; margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 40px 0 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 20px; letter-spacing: 3px;
+  color: var(--accent); text-decoration: none;
+}
+.logo span { color: var(--muted); font-size: 13px; font-weight: 400; letter-spacing: 1px; margin-left: 8px; font-family: 'DM Mono', monospace; }
+.enter-btn {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); text-decoration: none; letter-spacing: 1px;
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 7px 16px; transition: all 0.2s;
+}
+.enter-btn:hover { color: var(--accent); border-color: rgba(0,229,160,0.4); }
+
+/* ── HERO ── */
+.hero {
+  padding: 100px 0 60px;
+  text-align: center;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--accent); letter-spacing: 2px; text-transform: uppercase;
+  border: 1px solid rgba(0,229,160,0.25); border-radius: 20px;
+  padding: 6px 16px; margin-bottom: 36px;
+}
+.hero-tag::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(48px, 10vw, 88px);
+  line-height: 0.95; letter-spacing: -1px;
+  margin-bottom: 28px;
+}
+.hero h1 .line1 { display: block; color: var(--text); }
+.hero h1 .line2 { display: block; color: var(--accent); }
+.hero h1 .line3 { display: block; color: var(--muted); font-weight: 400; font-size: clamp(28px, 5vw, 48px); margin-top: 8px; }
+
+.hero-desc {
+  font-size: 17px; color: var(--muted); font-weight: 300;
+  line-height: 1.8; max-width: 480px; margin: 0 auto 48px;
+}
+.hero-desc strong { color: var(--text); font-weight: 500; }
+
+/* ── EMAIL FORM ── */
+.email-form {
+  display: flex; gap: 0; max-width: 440px; margin: 0 auto 16px;
+  border: 1px solid rgba(0,229,160,0.3); border-radius: 12px;
+  overflow: hidden; background: var(--bg2);
+  transition: border-color 0.2s;
+}
+.email-form:focus-within { border-color: var(--accent); }
+.email-form input {
+  flex: 1; background: transparent; border: none; outline: none;
+  padding: 14px 18px; color: var(--text);
+  font-family: 'Barlow', sans-serif; font-size: 14px;
+}
+.email-form input::placeholder { color: var(--muted); }
+.email-form button {
+  background: var(--accent); color: #0b110d; border: none;
+  padding: 14px 22px; cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 13px; letter-spacing: 1px;
+  transition: opacity 0.2s; white-space: nowrap;
+}
+.email-form button:hover { opacity: 0.85; }
+.form-note {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); text-align: center;
+}
+.success-msg {
+  display: none; text-align: center;
+  font-family: 'DM Mono', monospace; font-size: 13px;
+  color: var(--accent); padding: 14px;
+  border: 1px solid rgba(0,229,160,0.3); border-radius: 12px;
+  max-width: 440px; margin: 0 auto;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 56px 0 40px;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.divider span {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; white-space: nowrap;
+}
+
+/* ── GUIDE CARDS ── */
+.guides-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+  text-align: center; margin-bottom: 20px;
+}
+.guides-grid {
+  display: grid; grid-template-columns: 1fr;
+  gap: 12px; margin-bottom: 56px;
+}
+.guide-card {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 24px;
+  text-decoration: none; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.guide-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); opacity: 0;
+  transition: opacity 0.2s;
+}
+.guide-card:hover { border-color: rgba(0,229,160,0.3); transform: translateX(4px); }
+.guide-card:hover::before { opacity: 1; }
+.guide-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--bg3); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+  font-size: 18px;
+}
+.guide-body { flex: 1; }
+.guide-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--accent); letter-spacing: 1px; margin-bottom: 4px;
+}
+.guide-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 17px; color: var(--text);
+  line-height: 1.25;
+}
+.guide-arrow {
+  color: var(--muted); font-size: 14px; flex-shrink: 0;
+  transition: transform 0.2s, color 0.2s;
+}
+.guide-card:hover .guide-arrow { transform: translateX(4px); color: var(--accent); }
+
+/* ── APP CTA ── */
+.app-cta {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 40px 32px;
+  text-align: center; margin-bottom: 60px;
+  position: relative; overflow: hidden;
+}
+.app-cta::before {
+  content: ''; position: absolute;
+  top: -60px; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%);
+}
+.app-cta-label {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--accent); letter-spacing: 2px; margin-bottom: 12px;
+}
+.app-cta h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 32px; margin-bottom: 10px;
+}
+.app-cta p {
+  color: var(--muted); font-size: 14px; margin-bottom: 28px;
+  line-height: 1.7; max-width: 380px; margin-left: auto; margin-right: auto;
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--accent); color: #0b110d;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 15px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 15px 36px;
+  border-radius: 12px; text-decoration: none;
+  transition: opacity 0.2s; margin-bottom: 28px;
+}
+.cta-btn:hover { opacity: 0.85; }
+
+/* ── FEATURES ROW ── */
+.features {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 20px 32px; margin-top: 4px;
+}
+.feature {
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+}
+.feature i { color: var(--accent); font-size: 11px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0; text-align: center;
+  margin-bottom: 24px;
+}
+footer p {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); line-height: 2;
+}
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 500px) {
+  .hero { padding: 80px 0 48px; }
+  .email-form { flex-direction: column; border-radius: 12px; }
+  .email-form button { border-radius: 0 0 10px 10px; }
+  .app-cta { padding: 32px 20px; }
+  header { flex-direction: column; gap: 16px; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <a href="https://cladwise.ae" class="logo">CLADWISE <span>UAE</span></a>
+    <a href="https://cladwise.ae" class="enter-btn">Enter App →</a>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Now Live · Dubai, UAE</div>
+    <h1>
+      <span class="line1">Façade Material</span>
+      <span class="line2">Intelligence</span>
+      <span class="line3">Built for UAE Architects</span>
+    </h1>
+    <p class="hero-desc">
+      Stop guessing which cladding material fits your project.
+      CladWise gives UAE architects <strong>instant access to verified technical data</strong>,
+      fire compliance checks, and direct supplier connections —
+      all in one place.
+    </p>
+
+    <!-- EMAIL CAPTURE -->
+    <div class="email-form" id="form-wrap">
+      <input type="email" id="email-input" placeholder="your@email.com" />
+      <button onclick="submitEmail()">GET EARLY ACCESS</button>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <i class="fa-solid fa-circle-check"></i> &nbsp;You're on the list — we'll be in touch.
+    </div>
+    <p class="form-note" style="margin-top:10px">Join architects already using CladWise across the UAE</p>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider"><span>TECHNICAL GUIDES</span></div>
+
+  <!-- GUIDE CARDS -->
+  <p class="guides-label">Free Resources for UAE Architects</p>
+  <div class="guides-grid">
+
+    <a href="gfrc-uae-guide.html" class="guide-card">
+      <div class="guide-icon">🏗️</div>
+      <div class="guide-body">
+        <div class="guide-tag">TECHNICAL GUIDE · GFRC</div>
+        <div class="guide-title">GFRC in the UAE: What Every Architect Needs to Know</div>
+      </div>
+      <i class="fa-solid fa-arrow-right guide-arrow"></i>
+    </a>
+
+    <a href="gfrp-vs-aluminum-gcc.html" class="guide-card">
+      <div class="guide-icon">⚖️</div>
+      <div class="guide-body">
+        <div class="guide-tag">COMPARISON · GCC CLIMATE</div>
+        <div class="guide-title">GFRP vs Aluminum Façades: A GCC Climate Comparison</div>
+      </div>
+      <i class="fa-solid fa-arrow-right guide-arrow"></i>
+    </a>
+
+    <a href="uae-fire-ratings-facade.html" class="guide-card">
+      <div class="guide-icon">🛡️</div>
+      <div class="guide-body">
+        <div class="guide-tag">COMPLIANCE GUIDE · DCD</div>
+        <div class="guide-title">UAE Civil Defence Fire Ratings: Which Façade Materials Qualify</div>
+      </div>
+      <i class="fa-solid fa-arrow-right guide-arrow"></i>
+    </a>
+
+  </div>
+
+  <!-- APP CTA -->
+  <div class="app-cta">
+    <div class="app-cta-label">THE PLATFORM</div>
+    <h3>The App is Live Now</h3>
+    <p>Compare materials, check compliance, run the AI advisor, and connect with verified UAE suppliers — free to use today.</p>
+    <a href="https://cladwise.ae" class="cta-btn">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      Open CladWise
+    </a>
+    <div class="features">
+      <div class="feature"><i class="fa-solid fa-check"></i> Material Comparison</div>
+      <div class="feature"><i class="fa-solid fa-check"></i> DCD Compliance Check</div>
+      <div class="feature"><i class="fa-solid fa-check"></i> AI Spec Advisor</div>
+      <div class="feature"><i class="fa-solid fa-check"></i> Verified Suppliers</div>
+      <div class="feature"><i class="fa-solid fa-check"></i> PDF Export</div>
+      <div class="feature"><i class="fa-solid fa-check"></i> Free to Use</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      <a href="https://cladwise.ae">cladwise.ae</a> &nbsp;·&nbsp;
+      <a href="mailto:kareem@cladwise.ae">kareem@cladwise.ae</a> &nbsp;·&nbsp;
+      <a href="https://wa.me/971501281207"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a> &nbsp;·&nbsp;
+      Dubai, UAE
+    </p>
+    <p style="margin-top:6px">© 2025 CladWise UAE · Façade Material Intelligence</p>
+  </footer>
+
+</div>
+
+<script>
+function submitEmail() {
+  const email = document.getElementById('email-input').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('email-input').style.borderBottom = '1px solid #ef4444';
+    return;
+  }
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('success-msg').style.display = 'block';
+
+  // Send to backend
+  fetch('https://backend-cladwise-production.up.railway.app/api/waitlist', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, source: 'launch-page' })
+  }).catch(() => {}); // silent fail — email already captured in UI
+}
+
+// Allow Enter key
+document.getElementById('email-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitEmail();
+});
+</script>
+
+</body>
+</html>
