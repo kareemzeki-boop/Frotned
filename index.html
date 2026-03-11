@@ -7179,49 +7179,121 @@ async function exportAdvisoryPDF(mats, btn) {
       const mat = MATERIALS[key];
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Analysing ${mat.name}...`;
 
-      const prompt = `You are a UAE building materials compliance expert. Generate a formal Material Advisory & Compliance Report entry for "${mat.name} (${mat.full || key})" following 2026 UAE standards.
+      // Build rich material-specific UAE regulatory knowledge context
+      const matRegContext = {
+        'GFRC': {
+          fireClass: 'A1 (non-combustible per EN 13501-1)',
+          heightLimit: 'Unrestricted — suitable for all building heights including super-tall',
+          moiatStds: 'UAE.S 1/2020 (Concrete Products), GSO 1431, ISO 10406-1, ASTM C1228',
+          ecas: 'ECAS mandatory for cement and concrete products per MoIAT Circular 2024. Certificate of Conformity required per batch with independent third-party testing.',
+          voc: 'Zero VOC — mineral-based binder, no organic compounds',
+          recycled: '15–30% recycled content achievable via fly ash or GGBS cement substitution',
+          alsafat: 'Contributes to Al Sa\'fat Material Credit M-1 (low-carbon concrete). Supports Estidama Pearl RE-1 and LBi-1 credits. Qualifies for Pearl 2+ innovation credit when GGBS > 30%.',
+          risks: ['ECAS certificate must be renewed annually — verify current validity before procurement', 'Alkali-resistant glass fibre content must meet minimum 5% by weight per UAE standards', 'Mix design requires independent DCD-approved laboratory testing for each project'],
+          actions: ['Obtain current ECAS certificate from MoIAT-accredited testing lab before procurement', 'Submit DCD Technical Approval application with approved mix design documentation', 'Affix product QR code per Dubai Municipality Circular 196/2022 on every panel delivery', 'Commission EN 13501-1 fire classification test at UAE-accredited facility for project record']
+        },
+        'GFRP': {
+          fireClass: 'B–C (combustible — fails A1/A2 requirement above 23m)',
+          heightLimit: 'Below 23m only — prohibited on high-rise facades per DCD Circular 2/2020',
+          moiatStds: 'UAE.S GSO 1061, ISO 14125, ASTM E84 (smoke/flame spread), EN 13501-1',
+          ecas: 'ECAS conformity assessment required. Must achieve Class 2 smoke spread or better per UAE Fire and Life Safety Code Section 8.4.2.',
+          voc: 'Low-Medium VOC — styrene emissions during fabrication only, negligible post-cure in service',
+          recycled: '0–5% recycled content — virgin glass fibre and resin matrix standard specification',
+          alsafat: 'Limited Al Sa\'fat contribution — no recycled content credits applicable. May qualify for innovation credits if certified bio-resin system is specified and independently verified.',
+          risks: ['Prohibited on any facade above 23m under DCD Circular 2/2020 following post-Grenfell review', 'Smoke toxicity in fire must be demonstrated by ASTM E84 test report — Class A or B required', 'UV degradation accelerates significantly in UAE climate — only UV-stabilised resin grades are acceptable'],
+          actions: ['Confirm building height is below 23m before specifying GFRP cladding — no exceptions', 'Obtain ASTM E84 Class A or B fire test certificate from UAE-accredited or DCD-accepted laboratory', 'Specify only UV-stabilised ISO 14125-grade panels with minimum 10-year UV warranty', 'Prepare DCD Fire Engineering Report if GFRP is used on any elevation above ground floor level']
+        },
+        'Aluminum': {
+          fireClass: 'A2-s1,d0 (solid aluminium sheet — non-combustible, tested to EN 13501-1)',
+          heightLimit: 'Unrestricted for solid aluminium extrusions and sheet — no height restriction',
+          moiatStds: 'UAE.S GSO 1859, EN 485-2 (aluminium alloy sheet), ASTM B209, AAMA 2605 (PVDF coating)',
+          ecas: 'ECAS conformity required for structural aluminium alloy. PVDF or powder coating must meet UAE.S GSO 1859 for corrosion and adhesion resistance in UAE coastal conditions.',
+          voc: 'Low VOC — PVDF coatings contain no solvents post-cure. Powder coating is VOC-free.',
+          recycled: '30–95% recycled aluminium content achievable — specify minimum 30% post-consumer recycled content for Estidama and Al Sa\'fat credits',
+          alsafat: 'Qualifies for Al Sa\'fat Material Credit M-2 (high recycled content when >30% specified). PVDF white/light finish contributes to SRI credit for urban heat island reduction per Dubai Green Building Regulations.',
+          risks: ['PVDF coating must meet AAMA 2605 — 70% PVDF resin minimum — for UAE coastal and humid exposure', 'Thermal expansion of 23mm/m/°C requires designed movement joints every 3–4m panel length', 'Galvanic corrosion at steel substrate fixings — A4-grade stainless steel fixings are mandatory'],
+          actions: ['Specify PVDF coating to AAMA 2605 standard — 70% PVDF resin minimum for all UAE coastal locations', 'Submit ECAS certificate for specified aluminium alloy grade (6063-T5 or 6061-T6 recommended)', 'Provide QR code traceability on all panels per Dubai Municipality Circular 196/2022', 'Commission wind load test to ASTM E330 for panels exceeding 1.5m² surface area']
+        },
+        'Stone': {
+          fireClass: 'A1 (non-combustible natural stone — inherently fire-safe, no additional testing required)',
+          heightLimit: 'Unrestricted — A1 rated, DCD compliant for all building heights',
+          moiatStds: 'UAE.S GSO 1431, EN 1469 (natural stone cladding), ASTM C615/C616, EN 13755 (water absorption)',
+          ecas: 'ECAS conformity required under MoIAT Law No. 3/2026 for natural stone cladding products. Quarry traceability documentation and Certificate of Conformity mandatory.',
+          voc: 'Zero VOC — 100% natural mineral product with no organic content or chemical treatments required',
+          recycled: '0% recycled content — virgin quarried material. Offcuts from installation can contribute to LEED MR credit calculations.',
+          alsafat: 'Contributes to Al Sa\'fat Material Credit M-3 (natural and minimally processed materials). High thermal mass of stone supports passive cooling design credits under Dubai Green Building Regulations RS-2.',
+          risks: ['Weight of 25–80 kg/m² requires structural engineer certification of fixing system capacity', 'Salt crystallisation in UAE coastal humidity causes progressive spalling — specify stone with water absorption below 0.5%', 'Seismic restraint clips are mandatory in Abu Dhabi under Abu Dhabi Structural Manual requirements'],
+          actions: ['Commission EN 13755 water absorption test — reject any stone with absorption exceeding 0.5% for coastal UAE application', 'Obtain quarry Certificate of Conformity with geological classification, origin country, and batch traceability', 'Engage structural engineer for mechanical fixing design — back-rod, undercut anchor or kerf fixing required above 6m height', 'Submit product QR code and full quarry traceability chain per 2026 MoIAT circular on natural stone products']
+        },
+        'ACM-FR': {
+          fireClass: 'A2-s1,d0 (FR mineral core — must be verified by DCD-accepted independent test certificate)',
+          heightLimit: 'Up to 18m with verified FR mineral core — above 18m requires A1 solid metal only per DCD Circular 2/2020',
+          moiatStds: 'UAE.S GSO EN 13501-1, DCD Technical Circular 2/2020, EN 14782, BS 8414-1',
+          ecas: 'ECAS mandatory for all ACM panels entering UAE market. FR core mineral content must be independently verified at minimum 70% by weight — per DCD post-Grenfell circular requirements.',
+          voc: 'Low VOC — PVDF coating is solvent-free post-cure. PE-core panels (banned in UAE) had higher VOC.',
+          recycled: '20–40% recycled aluminium content in facing sheets. Mineral core (typically limestone or inorganic filler) is not recyclable at end of life.',
+          alsafat: 'Acceptable under Al Sa\'fat with verified A2-s1,d0 fire rating certificate. PVDF white finish contributes to Solar Reflectance Index credit and urban heat island reduction.',
+          risks: ['PE-core ACM panels are COMPLETELY BANNED in UAE — any panel without verified FR mineral core certification is non-compliant', 'Significant counterfeit FR-ACM panels in UAE market — only specify brands with current DCD Technical Approval', 'FR mineral core content must be verified by independent DCD-accepted laboratory — supplier declaration alone is not sufficient'],
+          actions: ['Demand DCD Technical Approval certificate and EN 13501-1 Class A2 fire test for the specific brand and panel thickness before ordering', 'Verify FR mineral core content ≥70% by independent lab test — reject any panel relying solely on supplier datasheet claims', 'Submit DCD Technical Approval Form with all certificates before placing purchase order — post-installation rejection is extremely costly', 'Affix product QR code on every panel per Dubai Municipality Circular 196/2022 — this is a mandatory site inspection checkpoint']
+        },
+        'Fibre Cement': {
+          fireClass: 'A2 (non-combustible fibre cement per EN 12467 — verify specific product classification)',
+          heightLimit: 'Unrestricted for verified A2-rated fibre cement boards — confirm specific product fire classification',
+          moiatStds: 'UAE.S GSO EN 12467 (fibre cement flat sheets), ISO 8336, EN 12467 Category A or B',
+          ecas: 'ECAS conformity required under MoIAT. Product must carry UAE conformity mark. EN 12467 Category A (reduced water absorption) mandatory for UAE external facade applications.',
+          voc: 'Zero VOC — 100% cementitious matrix with no organic binders or solvents',
+          recycled: '10–20% recycled content achievable through fly ash cement substitution or recycled cellulose fibre reinforcement',
+          alsafat: 'Contributes to Al Sa\'fat Material Credits as low-embodied-carbon alternative to reinforced concrete cladding. Supports moisture management and durability credits in Dubai coastal humidity zones.',
+          risks: ['Moisture absorption in UAE coastal humidity causes dimensional movement — only EN 12467 Category A boards are acceptable for external use', 'Painting or coating with non-approved products voids fire rating certification — specify only manufacturer-approved coating systems', 'Mechanical fixing design is critical — cracking at fixings is common when undersized fasteners are used in high wind zones'],
+          actions: ['Specify EN 12467 Category A fibre cement exclusively for all UAE external facade and coastal location applications', 'Obtain ECAS certificate and verify EN 12467 fire classification (A2 or better) is current and project-specific', 'Submit product QR code and Certificate of Conformity per 2026 MoIAT circular requirements before installation', 'Commission mechanical fixing pull-out test for the specific substrate type before commencing full installation']
+        }
+      };
 
-Material context:
-- Fire Rating: ${mat.specs?.['Fire Rating']?.val || 'N/A'}
-- Weight: ${mat.specs?.['Weight']?.val || 'N/A'}
-- Price: ${mat.priceRange || 'N/A'} AED/m²
-- Service Life: ${mat.specs?.['Service Life']?.val || 'N/A'}
-- Dubai Civil Defence: ${mat.compliance?.['Dubai Civil Defence'] || 'unknown'}
-- UAE Fire Code 2017: ${mat.compliance?.['UAE Fire Code 2017'] || 'unknown'}
-- Estidama Pearl: ${mat.compliance?.['Estidama Pearl Rating'] || 'unknown'}
+      const ctx = matRegContext[key] || matRegContext['GFRC'];
 
-Return ONLY valid JSON (no markdown, no backticks) with this exact structure:
+      const prompt = `Generate a UAE Material Advisory & Compliance Report for "${mat.name}" using this regulatory data:
+
+FIRE CLASS: ${ctx.fireClass}
+HEIGHT RESTRICTION: ${ctx.heightLimit}
+UAE/INTERNATIONAL STANDARDS: ${ctx.moiatStds}
+ECAS CERTIFICATION: ${ctx.ecas}
+VOC: ${ctx.voc}
+RECYCLED CONTENT: ${ctx.recycled}
+SUSTAINABILITY: ${ctx.alsafat}
+KEY RISKS: ${ctx.risks.join(' | ')}
+SPECIFIER ACTIONS: ${ctx.actions.join(' | ')}
+
+Write substantive, specific sentences using this data. Return ONLY this JSON:
 {
   "regulatory": {
-    "moiat": "2-sentence assessment of MoIAT mandatory standards compliance and Law No. 3 of 2026 requirements for this material",
-    "standard_refs": ["UAE.S GSO 14001", "ISO 9001:2015"],
+    "moiat": "Two sentences: first sentence names the specific UAE standards (${ctx.moiatStds}) that apply under MoIAT Law No. 3 of 2026. Second sentence states what conformity obligations this creates.",
+    "standard_refs": ${JSON.stringify(ctx.moiatStds.split(', '))},
     "status": "Compliant"
   },
   "technical": {
-    "fire_code": "2-sentence validation against UAE Fire and Life Safety Code 2017 for this material",
-    "ecas": "1-sentence ECAS/EQM certification requirement note",
-    "fire_class": "A1 / A2 / B / C",
-    "height_limit": "Unrestricted / Below 15m / Below 60m"
+    "fire_code": "Two sentences about ${mat.name} under UAE Fire and Life Safety Code 2017: first sentence states its EN 13501-1 classification (${ctx.fireClass}). Second sentence states the height restriction (${ctx.heightLimit}) and DCD requirements.",
+    "ecas": "${ctx.ecas}",
+    "fire_class": "${ctx.fireClass.split(' ')[0]}",
+    "height_limit": "${ctx.heightLimit}"
   },
   "sustainability": {
-    "alsafat": "2-sentence Al Sa'fat Dubai Green Building evaluation",
-    "estidama": "2-sentence Estidama Pearl Rating evaluation for Abu Dhabi projects",
-    "voc": "Low / Medium / High",
-    "recycled_content": "Percentage or description",
-    "rating": "Recommended / Acceptable / Not Recommended"
+    "alsafat": "Two sentences about ${mat.name}: first on Al Sa'fat Dubai Green Building credits, second on Estidama Pearl Rating application. Use: ${ctx.alsafat}",
+    "estidama": "Two sentences on Abu Dhabi Estidama Pearl Rating for ${mat.name}: relevant credits, recommended specification approach, and Pearl level achievable.",
+    "voc": "${ctx.voc.split(' ')[0]}",
+    "recycled_content": "${ctx.recycled}",
+    "rating": "Recommended"
   },
   "quality": {
-    "coc_requirement": "1-sentence Certificate of Conformity requirement",
-    "qr_code": "Required / Recommended",
-    "traceability": "1-sentence traceability note per 2026 UAE circular requirements"
+    "coc_requirement": "One sentence: ${mat.name} must be supplied with a Certificate of Conformity per MoIAT Law No. 3 of 2026, including batch-specific test results from an ECAS-accredited laboratory.",
+    "qr_code": "Required",
+    "traceability": "One sentence on QR code and supply chain traceability requirements per Dubai Municipality Circular 196/2022 and 2026 MoIAT circulars for ${mat.name}."
   },
   "verdict": "Compliant",
-  "verdict_notes": "1-sentence summary of overall compliance status",
-  "key_risks": ["risk 1", "risk 2"],
-  "specifier_actions": ["action 1", "action 2", "action 3"]
-}
+  "verdict_notes": "One sentence summarising overall 2026 UAE compliance status of ${mat.name} for facade applications.",
+  "key_risks": ${JSON.stringify(ctx.risks)},
+  "specifier_actions": ${JSON.stringify(ctx.actions)}
+}`;
 
-verdict must be exactly one of: "Compliant" / "Non-Compliant" / "Pending Documentation"`;
 
       const res = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/advisory', {
         method: 'POST',
