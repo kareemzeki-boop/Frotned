@@ -4690,6 +4690,8 @@ function buildDeck() {
 
   stack.addEventListener('mousedown', function(e) {
     if (e.button !== 0) return;
+    // Don't intercept clicks on buttons/links inside cards
+    if (e.target.closest('button, a')) return;
     mouseStartY = e.clientY;
     mouseDragging = true;
     e.preventDefault();
