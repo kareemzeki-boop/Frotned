@@ -7873,8 +7873,8 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   const L = 12; // bracket arm length in px
   const PAD = 5; // padding outside element bounds
 
-  // Elements to track for bracket hover
-  const BRACKET_SEL = 'a, button, [onclick], .nav-cta, .card-btn, .mat-card, .compare-btn, .supplier-card, .btn-primary, .btn-secondary, .tab-btn, .nav-cta, input[type="submit"]';
+  // Bracket hover — excluded from 3D carousel to prevent layout thrash
+  const BRACKET_SEL = 'a:not(#mat-stack *), button:not(#mat-stack *), .nav-cta:not(#mat-stack *), .compare-btn, .btn-primary, .btn-secondary, .tab-btn, input[type="submit"]';
 
   let bracketTarget = null;
   let rafBracket = null;
@@ -7915,22 +7915,22 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   }
 
   function onMouseMove(e) {
+    // Never trigger inside the 3D carousel — causes layout thrash on preserve-3d
+    if (e.target.closest('#mat-stack')) {
+      if (bracketTarget) hideBrackets();
+      return;
+    }
     const el = e.target.closest(BRACKET_SEL);
     if (el && el !== bracketTarget) {
       bracketTarget = el;
       cancelAnimationFrame(rafBracket);
       rafBracket = requestAnimationFrame(() => {
-        showBrackets(bracketTarget.getBoundingClientRect());
+        if (bracketTarget) showBrackets(bracketTarget.getBoundingClientRect());
       });
     } else if (!el && bracketTarget) {
       hideBrackets();
-    } else if (el === bracketTarget && bracketTarget) {
-      // update position on scroll/resize
-      cancelAnimationFrame(rafBracket);
-      rafBracket = requestAnimationFrame(() => {
-        if (bracketTarget) showBrackets(bracketTarget.getBoundingClientRect());
-      });
     }
+    // Removed continuous same-target update — was forcing 3D relayout every frame
   }
 
   document.addEventListener('mousemove', onMouseMove);
