@@ -248,8 +248,9 @@ section{padding:100px 0}
   position: relative;
   margin-top: 48px;
   display: flex;
-  gap: 64px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
 }
 
 /* ── STACK CONTAINER ──────────────────────────────────────────────── */
@@ -257,10 +258,10 @@ section{padding:100px 0}
 .mat-stack {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  max-width: 860px;
   flex-shrink: 0;
-  height: 460px;
-  perspective: 1200px;
+  height: 340px;
+  perspective: 900px;
   perspective-origin: 50% 50%;
 }
 
@@ -275,20 +276,19 @@ section{padding:100px 0}
 /* ── EACH CARD ─────────────────────────────────────────────────────── */
 .mat-card {
   position: absolute;
-  width: 580px;
-  height: 380px;
+  width: 420px;
+  height: 280px;
   left: 50%;
   top: 50%;
-  margin-left: -290px;
-  margin-top: -190px;
-  border-radius: 20px;
+  margin-left: -210px;
+  margin-top: -140px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: row;
   background: #131f14;
   border: 1px solid rgba(255,255,255,0.07);
-  transform-origin: center center;
   transition:
     box-shadow 0.4s ease,
     filter 0.4s ease,
@@ -296,54 +296,51 @@ section{padding:100px 0}
   will-change: transform, opacity;
   user-select: none;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Active front card */
 .mat-card[data-pos="0"] {
-  opacity: 1;
-  filter: brightness(1);
-  z-index: 10;
+  opacity: 1 !important;
+  filter: brightness(1) !important;
+  pointer-events: auto !important;
   box-shadow:
-    0 32px 64px rgba(0,0,0,0.7),
-    0 8px 24px rgba(0,0,0,0.4),
+    0 24px 56px rgba(0,0,0,0.7),
+    0 6px 18px rgba(0,0,0,0.4),
     0 0 0 1px rgba(0,229,160,0.22),
     inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .mat-card[data-pos="0"]:hover {
   box-shadow:
-    0 40px 80px rgba(0,0,0,0.75),
+    0 32px 64px rgba(0,0,0,0.75),
     0 0 0 2px rgba(0,229,160,0.35),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
-/* Side cards */
+/* Visible side cards — JS sets inline opacity/filter/pointer-events */
 .mat-card[data-pos="1"],
-.mat-card[data-pos="2"],
-.mat-card[data-pos="3"],
-.mat-card[data-pos="4"],
 .mat-card[data-pos="5"] {
-  opacity: 0.55;
-  filter: brightness(0.65);
   cursor: pointer;
 }
-.mat-card[data-pos="1"]:hover,
-.mat-card[data-pos="5"]:hover,
-.mat-card[data-pos="4"]:hover,
-.mat-card[data-pos="3"]:hover {
-  opacity: 0.8;
-  filter: brightness(0.9);
-  box-shadow: 0 0 0 1px rgba(0,229,160,0.3);
+
+/* Hidden back cards — always invisible, never interactive */
+.mat-card[data-pos="2"],
+.mat-card[data-pos="3"],
+.mat-card[data-pos="4"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  filter: brightness(0) !important;
 }
 
 
 /* ── IMAGE HALF ────────────────────────────────────────────────────── */
 .mat-card-img {
-  width: 46%;
+  width: 44%;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
   background: #0b110d;
-  border-radius: 20px 0 0 20px;
+  border-radius: 16px 0 0 16px;
 }
 .mat-card-img img {
   width: 100%; height: 100%;
@@ -365,53 +362,53 @@ section{padding:100px 0}
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 28px 28px 22px 24px;
+  padding: 18px 18px 14px 16px;
   min-width: 0;
   position: relative;
 }
 .mat-card-ref {
   font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 3px;
+  font-size: 7px;
+  letter-spacing: 2.5px;
   color: rgba(0,229,160,0.45);
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 .mat-card-name {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 38px;
+  font-size: 28px;
   font-weight: 900;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   line-height: 0.95;
   color: var(--text);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 .mat-card-full {
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
+  font-size: 8px;
   color: var(--muted);
   letter-spacing: 0.5px;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 .mat-card-tagline {
-  font-size: 11px;
+  font-size: 10px;
   color: rgba(200,220,205,0.45);
-  line-height: 1.6;
-  margin-bottom: 16px;
+  line-height: 1.5;
+  margin-bottom: 8px;
   flex: 1;
 }
 .mat-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: 3px;
+  margin-bottom: 8px;
 }
 .tag {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.08);
-  padding: 2px 7px;
-  font-size: 8px;
+  padding: 1px 6px;
+  font-size: 7px;
   color: rgba(200,220,205,0.3);
   font-family: 'DM Mono', monospace;
   letter-spacing: 1px;
@@ -422,16 +419,16 @@ section{padding:100px 0}
 /* ── SCORE BADGE (top-right of content) ───────────────────────────── */
 .mat-card-score-box {
   position: absolute;
-  top: 22px; right: 24px;
+  top: 14px; right: 14px;
   border: 1px solid rgba(0,229,160,0.2);
-  padding: 7px 12px;
+  padding: 5px 9px;
   text-align: center;
   background: rgba(0,229,160,0.04);
-  border-radius: 6px;
+  border-radius: 5px;
 }
 .mat-card-score-num {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 30px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--accent);
   line-height: 1;
@@ -439,8 +436,8 @@ section{padding:100px 0}
 }
 .mat-card-score-lbl {
   font-family: 'DM Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 2px;
+  font-size: 6px;
+  letter-spacing: 1.5px;
   color: rgba(0,229,160,0.4);
   text-transform: uppercase;
   display: block;
@@ -451,27 +448,27 @@ section{padding:100px 0}
 .mat-card-scores {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 12px;
+  padding-top: 8px;
 }
-.score-item { display: flex; align-items: center; gap: 8px; }
+.score-item { display: flex; align-items: center; gap: 6px; }
 .score-item-lbl {
   font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 2px;
+  font-size: 7px;
+  letter-spacing: 1.5px;
   color: rgba(200,220,205,0.28);
   text-transform: uppercase;
-  width: 44px;
+  width: 38px;
   flex-shrink: 0;
 }
 .score-bar-wrap { flex: 1; height: 2px; background: rgba(255,255,255,0.05); }
 .score-bar { height: 2px; background: var(--accent); opacity: 0.65; transition: width 0.6s ease; }
 .score-val {
   font-family: 'DM Mono', monospace;
-  font-size: 8px;
+  font-size: 7px;
   color: rgba(0,229,160,0.45);
-  width: 26px;
+  width: 22px;
   text-align: right;
   flex-shrink: 0;
 }
@@ -480,17 +477,17 @@ section{padding:100px 0}
 .mat-card-open-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 5px;
+  margin-top: 8px;
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: 8px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--accent);
   background: rgba(0,229,160,0.07);
   border: 1px solid rgba(0,229,160,0.22);
-  padding: 7px 14px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   align-self: flex-start;
@@ -2056,7 +2053,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .hero-inner     { padding: 0 28px; gap: 56px; }
   h1              { font-size: 80px; }
   .section-title  { font-size: 54px; }
-  .mat-stack      { width: 680px; }
+  .mat-deck-outer { gap: 32px; }
   .mat-deck-outer { gap: 40px; }
 }
 
@@ -2087,14 +2084,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .section-title  { font-size: 48px; }
 
   /* MATERIAL DECK */
-  .mat-deck-outer   { flex-direction: column; align-items: stretch; gap: 0; }
-  .mat-stack        { width: 100%; height: 360px; }
-  .mat-card         { flex-direction: column; }
-  .mat-card-img     { width: 100%; height: 200px; }
-  .mat-card-content { padding: 20px; }
-  .mat-card-name    { font-size: 32px; }
-  .mat-card-scores  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .mat-deck-sidebar { flex-direction: row; flex-wrap: wrap; padding-top: 20px; border-left: none; border-top: 1px solid rgba(0,229,160,0.1); padding-top: 16px; }
+  .mat-deck-outer   { gap: 24px; }
+  .mat-stack        { height: 320px; }
+  .mat-deck-sidebar { flex-direction: row; flex-wrap: wrap; border-left: none; border-top: 1px solid rgba(0,229,160,0.1); padding-top: 12px; }
   .mat-deck-item    { flex: 1 1 calc(33% - 6px); }
 
   /* COMPARE */
@@ -2173,19 +2165,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .section-desc  { font-size: 13px; }
 
   /* MATERIAL DECK */
-  .mat-deck-outer  { flex-direction: column; gap: 0; }
-  .mat-stack       { width: 100%; height: 300px; }
-  .mat-card        { flex-direction: column; }
-  .mat-card-img    { width: 100%; height: 160px; }
-  .mat-card-content { padding: 14px 16px; }
-  .mat-card-name   { font-size: 24px; }
+  .mat-deck-outer  { gap: 20px; }
+  .mat-stack       { height: 280px; }
   .mat-card-full   { display: none; }
-  .mat-card-tagline { font-size: 11px; }
-  .mat-card-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .score-item-lbl  { font-size: 8px; }
-  .mat-card-score-box { top: 10px; right: 10px; padding: 6px 10px; }
-  .mat-card-score-num { font-size: 22px; }
-  .mat-card-open-btn  { font-size: 10px; padding: 7px 14px; margin-top: 8px; }
+  .mat-deck-sidebar { flex-direction: row; flex-wrap: wrap; border-left: none; border-top: 1px solid rgba(0,229,160,0.1); padding-top: 10px; }
+  .mat-deck-item   { flex: 1 1 calc(33% - 6px); }
   .mat-deck-sidebar { flex-direction: row; flex-wrap: wrap; padding-top: 14px; border-left: none; border-top: 1px solid rgba(0,229,160,0.08); }
   .mat-deck-item    { flex: 1 1 calc(50% - 6px); font-size: 11px; padding: 7px 10px; }
   .mat-deck-item-name { font-size: 11px; }
@@ -4532,7 +4516,7 @@ function buildDeck() {
   const sidebar = document.getElementById('mat-deck-sidebar');
   let current = 0;
   const N = 6; // total cards
-  const RADIUS = 560; // 3D circle radius in px
+  const RADIUS = 380; // 3D circle radius in px
   const DEG = 360 / N; // degrees between cards
 
   // Build cards — render all, assign data-pos
@@ -4618,11 +4602,17 @@ function buildDeck() {
     cards.forEach((card, idx) => {
       const pos = (idx - current + N) % N;
       card.dataset.pos = pos;
-      const hidden = (pos >= 2 && pos <= N - 2);
-      card.style.opacity       = hidden ? '0' : pos === 0 ? '1' : '0.55';
-      card.style.filter        = hidden ? 'brightness(0)' : pos === 0 ? 'brightness(1)' : 'brightness(0.65)';
-      card.style.pointerEvents = hidden ? 'none' : 'auto';
-      card.style.zIndex        = pos === 0 ? '10' : pos === 1 || pos === N-1 ? '5' : '0';
+      // Side cards (pos 1 = right, pos N-1 = left): set inline so hover CSS can override
+      if (pos === 1 || pos === N - 1) {
+        card.style.opacity       = '0.5';
+        card.style.filter        = 'brightness(0.6)';
+        card.style.pointerEvents = 'auto';
+      } else {
+        // pos 0 (front) and pos 2-4 (hidden): clear inline so CSS data-pos rules take over
+        card.style.opacity       = '';
+        card.style.filter        = '';
+        card.style.pointerEvents = '';
+      }
     });
     nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => d.classList.toggle('active', i === current));
     sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => item.classList.toggle('active', i === current));
