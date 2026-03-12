@@ -4562,7 +4562,7 @@ function buildDeck() {
         <div class="mat-card-tagline">${m.tagline||''}</div>
         <div class="mat-card-tags">${(m.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
         <div class="mat-card-scores">${scores}</div>
-        ${live ? `<button class="mat-card-open-btn" onclick="openModal('${key}')">Open Full Spec →</button>` : ''}
+        ${live ? `<button class="mat-card-open-btn" onclick="event.stopPropagation();openExplorer('${key}')">Explore →</button>` : ''}
         <div class="mat-card-score-box">
           <span class="mat-card-score-num">${live ? m.overall : '—'}</span>
           <span class="mat-card-score-lbl">Score</span>
@@ -7931,6 +7931,418 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   document.addEventListener('mouseleave', () => { mx = -999; draw(); });
   resize();
 })();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MATERIAL EXPLORER MODAL
+═══════════════════════════════════════════════════════════ -->
+<style>
+/* ── EXPLORER OVERLAY ─────────────────────────────────────── */
+#mat-explorer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 500;
+  backdrop-filter: blur(12px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#mat-explorer-overlay.open { display: block; }
+
+#mat-explorer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+  min-height: 100vh;
+}
+
+/* ── HEADER ───────────────────────────────────────────────── */
+.exp-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+.exp-header-left { flex: 1; min-width: 0; }
+.exp-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.exp-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.exp-intro {
+  font-size: 14px;
+  color: rgba(200,220,205,0.6);
+  line-height: 1.7;
+  max-width: 560px;
+}
+.exp-close {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.exp-close:hover { background: rgba(0,229,160,0.1); color: var(--accent); }
+
+/* ── HERO IMAGE ───────────────────────────────────────────── */
+.exp-hero {
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 48px;
+  position: relative;
+}
+.exp-hero img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.75);
+}
+.exp-hero-label {
+  position: absolute;
+  bottom: 16px; left: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+/* ── SECTION LABEL ────────────────────────────────────────── */
+.exp-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: rgba(0,229,160,0.4);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.exp-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* ── VARIANT GRID ─────────────────────────────────────────── */
+.exp-variants {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.exp-variant {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.exp-variant:hover {
+  border-color: rgba(0,229,160,0.3);
+  transform: translateY(-2px);
+}
+.exp-variant-img {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+.exp-variant-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8);
+  transition: transform 0.4s ease, filter 0.3s;
+}
+.exp-variant:hover .exp-variant-img img {
+  transform: scale(1.05);
+  filter: brightness(0.95);
+}
+.exp-variant-tag {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: rgba(0,229,160,0.15);
+  border: 1px solid rgba(0,229,160,0.3);
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.exp-variant-body {
+  padding: 16px 18px 18px;
+}
+.exp-variant-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.exp-variant-desc {
+  font-size: 12px;
+  color: rgba(200,220,205,0.45);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.exp-variant-thumbs {
+  display: flex;
+  gap: 6px;
+}
+.exp-variant-thumb {
+  width: 44px; height: 32px;
+  border-radius: 4px;
+  overflow: hidden;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.exp-variant-thumb:hover { opacity: 1; }
+.exp-variant-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── LIGHTBOX ─────────────────────────────────────────────── */
+#exp-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 600;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#exp-lightbox.open { display: flex; }
+#exp-lb-img {
+  max-width: 90vw;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.exp-lb-caption {
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.4);
+}
+.exp-lb-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  font-size: 28px;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.exp-lb-close:hover { color: var(--accent); }
+.exp-lb-nav {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+.exp-lb-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted);
+  padding: 8px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+.exp-lb-btn:hover { background: rgba(0,229,160,0.1); color: var(--accent); }
+
+/* ── FOOTER CTA ───────────────────────────────────────────── */
+.exp-footer {
+  display: flex;
+  gap: 12px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.exp-footer-btn {
+  padding: 12px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.exp-footer-primary {
+  background: var(--accent);
+  color: #0b110d;
+  border: none;
+  font-weight: 700;
+}
+.exp-footer-primary:hover { background: #00ffb3; }
+.exp-footer-secondary {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.exp-footer-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  #mat-explorer { padding: 24px 18px 60px; }
+  .exp-title { font-size: 48px; }
+  .exp-hero { height: 200px; margin-bottom: 32px; }
+  .exp-variants { grid-template-columns: 1fr; gap: 14px; }
+  .exp-variant-img { height: 160px; }
+}
+</style>
+
+<!-- Explorer overlay -->
+<div id="mat-explorer-overlay" onclick="expOverlayClick(event)">
+  <div id="mat-explorer">
+    <div class="exp-header">
+      <div class="exp-header-left">
+        <div class="exp-eyebrow" id="exp-eyebrow"></div>
+        <div class="exp-title" id="exp-title"></div>
+        <div class="exp-intro" id="exp-intro"></div>
+      </div>
+      <div class="exp-close" onclick="closeExplorer()">✕</div>
+    </div>
+    <div class="exp-hero" id="exp-hero">
+      <img id="exp-hero-img" src="" alt="">
+      <div class="exp-hero-label" id="exp-hero-label"></div>
+    </div>
+    <div class="exp-section-label">Finish Variants & Applications</div>
+    <div class="exp-variants" id="exp-variants"></div>
+    <div class="exp-footer">
+      <button class="exp-footer-btn exp-footer-primary" id="exp-spec-btn" onclick="">Full Technical Spec →</button>
+      <button class="exp-footer-btn exp-footer-secondary" onclick="closeExplorer()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="exp-lightbox" onclick="closeLightbox()">
+  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+  <img id="exp-lb-img" src="" alt="">
+  <div class="exp-lb-caption" id="exp-lb-caption"></div>
+  <div class="exp-lb-nav">
+    <button class="exp-lb-btn" onclick="event.stopPropagation();lbNav(-1)">← Prev</button>
+    <button class="exp-lb-btn" onclick="event.stopPropagation();lbNav(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+// ── MATERIAL INTRO COPY ────────────────────────────────────────────────────────
+const MAT_INTRO = {
+  GFRC: 'Glass Fibre Reinforced Concrete is the UAE\'s most specified facade material — combining the monumental presence of concrete with a weight reduced by up to 75%. From smooth minimalist panels to intricate 3D parametric geometries, GFRC gives architects total creative freedom while meeting the most stringent fire and structural codes.',
+  GFRP: 'Glass Fibre Reinforced Polymer unlocks geometries impossible in any other facade material — sweeping curves, double-curved surfaces, and complex free-form shapes, all at a fraction of the weight of concrete or metal. The go-to choice for landmark cultural buildings, hospitality, and airport terminals across the GCC.',
+  Aluminum: 'Aluminium cladding dominates the UAE commercial and residential market for good reason: unlimited colour options, industry-leading UAE UV and salt resistance, fast installation, and a 40+ year service life with virtually no maintenance. From PVDF solid colours to mirror-finish panels, it defines the Gulf skyline.',
+  Stone: 'Natural stone carries the authority of permanence. Limestone, travertine, sandstone and granite have clad the UAE\'s most prestigious hotels, government buildings, and cultural institutions for decades. Each panel is unique, quarried and cut to project-specific profiles — an unmistakable signal of quality and longevity.',
+  ACM: 'Aluminium Composite Material with fire-retardant cores is the high-performance, cost-efficient choice for commercial facades across the UAE. ACM-FR panels achieve strong shadow lines, sharp reveals, and bold colour impact — while meeting Dubai Civil Defence fire regulations for buildings of all heights.',
+  FibreCement: 'Fibre cement boards deliver a clean, contemporary aesthetic at highly competitive cost. Factory-painted, wood-look, textured or stone-look finishes give architects a versatile palette for residential, hospitality and mixed-use facades — with no timber maintenance, excellent UV stability, and rapid panel installation.',
+};
+
+// ── LIGHTBOX STATE ─────────────────────────────────────────────────────────────
+let lbImages = [];
+let lbIdx = 0;
+
+function openLightbox(images, startIdx) {
+  lbImages = images;
+  lbIdx = startIdx;
+  renderLightbox();
+  document.getElementById('exp-lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('exp-lightbox').classList.remove('open');
+}
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + lbImages.length) % lbImages.length;
+  renderLightbox();
+}
+function renderLightbox() {
+  const img = lbImages[lbIdx];
+  document.getElementById('exp-lb-img').src = img.src;
+  document.getElementById('exp-lb-caption').textContent = img.caption || '';
+}
+
+// ── EXPLORER ──────────────────────────────────────────────────────────────────
+function openExplorer(key) {
+  const m = MATERIALS[key];
+  const imgs = MATERIAL_IMAGES[key];
+  if (!m || !imgs) return;
+
+  document.getElementById('exp-eyebrow').textContent = (m.full || key) + ' · UAE FAÇADE SYSTEM';
+  document.getElementById('exp-title').textContent = m.name;
+  document.getElementById('exp-intro').textContent = MAT_INTRO[key] || m.tagline || '';
+  document.getElementById('exp-hero-img').src = imgs.hero;
+  document.getElementById('exp-hero-label').textContent = imgs.heroCredit || '';
+  document.getElementById('exp-spec-btn').onclick = function() { closeExplorer(); openModal(key); };
+
+  // Render variants
+  const container = document.getElementById('exp-variants');
+  container.innerHTML = (imgs.variants || []).map((v, vi) => {
+    const allImgs = imgs.variants.flatMap(x => x.images);
+    const thumbs = v.images.slice(0,3).map((img, ti) => {
+      const globalIdx = allImgs.findIndex(x => x.src === img.src);
+      return `<div class="exp-variant-thumb" onclick="event.stopPropagation();openLightbox(${JSON.stringify(allImgs).replace(/"/g,'&quot;')},${globalIdx >= 0 ? globalIdx : 0})">
+        <img src="${img.src}" alt="${img.caption||''}" loading="lazy">
+      </div>`;
+    }).join('');
+
+    return `<div class="exp-variant" onclick="openLightbox(${JSON.stringify(v.images).replace(/"/g,'&quot;')},0)">
+      <div class="exp-variant-img">
+        <img src="${v.images[0]?.src||''}" alt="${v.name}" loading="lazy" onerror="this.parentElement.style.background='#1a2a1e'">
+        ${v.tag ? `<div class="exp-variant-tag">${v.tag}</div>` : ''}
+      </div>
+      <div class="exp-variant-body">
+        <div class="exp-variant-name">${v.name}</div>
+        <div class="exp-variant-desc">${v.desc||''}</div>
+        <div class="exp-variant-thumbs">${thumbs}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('mat-explorer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Scroll to top of explorer
+  document.getElementById('mat-explorer-overlay').scrollTop = 0;
+}
+
+function closeExplorer() {
+  document.getElementById('mat-explorer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function expOverlayClick(e) {
+  if (e.target === document.getElementById('mat-explorer-overlay')) closeExplorer();
+}
 </script>
 </body>
 </html>
