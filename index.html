@@ -4089,19 +4089,20 @@ const MATERIALS = {
 // ─── IMAGE DATA ──────────────────────────────────────────────────────────────
 // All images sourced from Unsplash (unsplash.com). Free for use under Unsplash License.
 const IMG = (id, w=800, h=500) => `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&q=80`;
+const PIX = (id, w=800, h=500) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}&h=${h}&fit=crop`;
 const MATERIAL_IMAGES = {
   FibreCement: {
-    hero: IMG('1558618666-fcd25c85cd64'),
-    heroCredit: 'Fibre cement facade panels, modern residential',
+    hero: PIX(2835037),
+    heroCredit: 'Contemporary fibre cement cladding, modern residential facade',
     variants: [
       {
         name: 'Smooth / Painted',
         desc: 'Factory-painted smooth boards — clean contemporary look',
         tag: 'Most popular',
         images: [
-          { src: IMG('1558618666-fcd25c85cd64'), caption: 'Smooth fibre cement, contemporary mid-rise, Dubai' },
-          { src: IMG('1486325212027-8081e485255e'), caption: 'White smooth boards, villa compound, Abu Dhabi' },
-          { src: IMG('1545324418-cc1a3fa10c00'), caption: 'Grey painted fibre cement, commercial office' },
+          { src: PIX(2835037), caption: 'Smooth fibre cement, contemporary mid-rise facade' },
+          { src: PIX(1115804), caption: 'White smooth boards, modern residential compound' },
+          { src: PIX(2996953), caption: 'Grey painted fibre cement, commercial office building' },
         ]
       },
       {
@@ -4109,9 +4110,9 @@ const MATERIAL_IMAGES = {
         desc: 'Embossed grain texture — natural wood aesthetic without maintenance',
         tag: 'Residential favourite',
         images: [
-          { src: IMG('1487958449943-2429e8be8625'), caption: 'Woodgrain fibre cement, luxury villa, Palm Jumeirah' },
-          { src: IMG('1464082354059-27db6ce50048'), caption: 'Cedar-look boards, boutique hotel facade' },
-          { src: IMG('1497366216548-37526070297c'), caption: 'Dark wood-look panels, retail podium' },
+          { src: PIX(2555719), caption: 'Woodgrain fibre cement, luxury villa facade' },
+          { src: PIX(2117638), caption: 'Cedar-look boards, boutique residential tower' },
+          { src: PIX(1078850), caption: 'Dark wood-look panels, premium retail podium' },
         ]
       },
       {
@@ -4119,25 +4120,25 @@ const MATERIAL_IMAGES = {
         desc: 'Raked and embossed surfaces for depth and character',
         tag: 'High visual interest',
         images: [
-          { src: IMG('1518780664697-55e3ad937233'), caption: 'Stone-look fibre cement, heritage-zone building' },
-          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Raked texture boards, hospitality facade' },
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Horizontal textured boards, mid-rise residential' },
+          { src: PIX(2611152), caption: 'Stone-look fibre cement, contemporary building' },
+          { src: PIX(1537572), caption: 'Raked texture boards, hospitality facade' },
+          { src: PIX(1579119), caption: 'Horizontal textured boards, mid-rise residential' },
         ]
       },
     ]
   },
   GFRC: {
-    hero: IMG('1510798831971-661eb04b3739'),
-    heroCredit: 'Brutalist concrete facade, Europe',
+    hero: PIX(2098427),
+    heroCredit: 'GFRC textured concrete panel facade, modern architecture',
     variants: [
       {
         name: 'Smooth Finish',
         desc: 'Polished flat concrete surface — sharp, minimal aesthetic',
         tag: 'Most popular in UAE',
         images: [
-          { src: IMG('1580587771525-78b9dba3b914'), caption: 'Smooth GFRC facade panel — commercial tower, Dubai' },
-          { src: IMG('1504307651254-35680f356dfd'), caption: 'Off-form smooth finish, clean horizontal joints' },
-          { src: IMG('1565117165093-e52aacd43e94'), caption: 'White smooth GFRC — luxury residential compound' },
+          { src: PIX(2098427), caption: 'Smooth GFRC facade panel — commercial tower, Dubai' },
+          { src: PIX(14070660), caption: 'Off-form smooth finish, clean horizontal joints' },
+          { src: PIX(1010657), caption: 'White smooth GFRC — luxury residential compound' },
         ]
       },
       {
@@ -4145,9 +4146,9 @@ const MATERIAL_IMAGES = {
         desc: 'Exposed form-liner or sand-blasted surface for depth and shadow',
         tag: 'High visual interest',
         images: [
-          { src: IMG('1510798831971-661eb04b3739'), caption: 'Board-mark textured GFRC, landmark hotel facade' },
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Deep ribbed texture, dramatic shadow play' },
-          { src: IMG('1486325212027-8081e485255e'), caption: 'Angular textured panels, cultural centre' },
+          { src: PIX(30332202), caption: 'Board-mark textured GFRC, landmark hotel facade' },
+          { src: PIX(1105766), caption: 'Deep ribbed texture, dramatic shadow play' },
+          { src: PIX(1108099), caption: 'Angular textured panels, cultural centre' },
         ]
       },
       {
@@ -4155,9 +4156,9 @@ const MATERIAL_IMAGES = {
         desc: 'Cast GFRC mimicking limestone, travertine or granite at a fraction of the weight',
         tag: 'Cost of GFRC • Look of stone',
         images: [
-          { src: IMG('1518780664697-55e3ad937233'), caption: 'GFRC limestone-look panels — hotel podium, Abu Dhabi' },
-          { src: IMG('1487958449943-2429e8be8625'), caption: 'Travertine-pattern GFRC, villa compound, Ajman' },
-          { src: IMG('1603232644140-bb47da511b92'), caption: 'Sandstone-look GFRC, heritage-inspired mid-rise' },
+          { src: PIX(1573593), caption: 'GFRC limestone-look panels — hotel podium, Abu Dhabi' },
+          { src: PIX(68147), caption: 'Travertine-pattern GFRC, villa compound, Ajman' },
+          { src: PIX(1212693), caption: 'Sandstone-look GFRC, heritage-inspired mid-rise' },
         ]
       },
       {
@@ -4165,25 +4166,25 @@ const MATERIAL_IMAGES = {
         desc: 'Complex sculptural panels cast from CNC-routed moulds — no two panels identical',
         tag: 'Landmark projects only',
         images: [
-          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Parametric GFRC screen, Expo-era pavilion' },
-          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Undulating 3D GFRC shell, cultural museum' },
-          { src: IMG('1488972685288-c3fd157d7c7a'), caption: 'Geometric screen facade, mashrabiya-inspired GFRC' },
+          { src: PIX(28881037), caption: 'Parametric GFRC screen, Expo-era pavilion' },
+          { src: PIX(11673950), caption: 'Undulating 3D GFRC shell, cultural museum' },
+          { src: PIX(10339602), caption: 'Geometric screen facade, mashrabiya-inspired GFRC' },
         ]
       },
     ]
   },
   GFRP: {
-    hero: IMG('1480714378408-67cf0d13bc1b'),
-    heroCredit: 'Curved GFRP facade, contemporary tower',
+    hero: PIX(28881037),
+    heroCredit: 'Curved GFRP facade, organic parametric building',
     variants: [
       {
         name: 'Flat Panel Systems',
         desc: 'Lightweight flat sheets — fastest install, ideal for retrofits',
         tag: 'Fastest programme',
         images: [
-          { src: IMG('1525438160292-a4a860951216'), caption: 'Flat GFRP panels, commercial office tower' },
-          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'Large-format GFRP cladding, industrial campus' },
-          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'White GFRP panels, clean facade rhythm' },
+          { src: PIX(17556520), caption: 'Flat GFRP panels, commercial office tower' },
+          { src: PIX(10339602), caption: 'Large-format GFRP cladding, industrial campus' },
+          { src: PIX(18169300), caption: 'White GFRP panels, clean facade rhythm' },
         ]
       },
       {
@@ -4191,9 +4192,9 @@ const MATERIAL_IMAGES = {
         desc: 'Single-curve panels wrapping corners or circular towers — lightweight advantage shines',
         tag: 'Impossible in aluminum',
         images: [
-          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Curved GFRP wrapping cylindrical tower' },
-          { src: IMG('1489514354504-1653aa90e34e'), caption: 'Barrel-vault GFRP canopy, retail district' },
-          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Double-curve GFRP soffit, airport terminal' },
+          { src: PIX(28881037), caption: 'Curved GFRP wrapping cylindrical tower' },
+          { src: PIX(11673950), caption: 'Barrel-vault GFRP canopy, retail district' },
+          { src: PIX(19309651), caption: 'Double-curve GFRP soffit, airport terminal' },
         ]
       },
       {
@@ -4201,9 +4202,9 @@ const MATERIAL_IMAGES = {
         desc: 'Double-curved, free-form geometry achievable only through composite layup',
         tag: 'Maximum design freedom',
         images: [
-          { src: IMG('1486325212027-8081e485255e'), caption: 'Sculptural GFRP shell, theatre building' },
-          { src: IMG('1488972685288-c3fd157d7c7a'), caption: 'Organic wave form, cultural pavilion' },
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Free-form GFRP facade, landmark hospitality' },
+          { src: PIX(534220), caption: 'Sculptural GFRP shell, theatre building' },
+          { src: PIX(210617), caption: 'Organic wave form, cultural pavilion' },
+          { src: PIX(2402235), caption: 'Free-form GFRP facade, landmark hospitality' },
         ]
       },
       {
@@ -4211,25 +4212,25 @@ const MATERIAL_IMAGES = {
         desc: 'Laser-cut or moulded perforations for solar shading — replaces traditional mashrabiya',
         tag: 'Solar shading + aesthetics',
         images: [
-          { src: IMG('1567449303183-ae0d6ed1498f'), caption: 'GFRP perforated screen reducing solar gain, Dubai' },
-          { src: IMG('1504307651254-35680f356dfd'), caption: 'Geometric GFRP solar screen, residential tower' },
-          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Mashrabiya-pattern GFRP, heritage quarter' },
+          { src: PIX(31375721), caption: 'GFRP perforated screen reducing solar gain, Dubai' },
+          { src: PIX(1843717), caption: 'Geometric GFRP solar screen, residential tower' },
+          { src: PIX(2117638), caption: 'Mashrabiya-pattern GFRP, heritage quarter' },
         ]
       },
     ]
   },
   Aluminum: {
-    hero: IMG('1509741399-3e9ab8f33fd5'),
-    heroCredit: 'Aluminum composite facade, commercial district',
+    hero: PIX(10797598),
+    heroCredit: 'Vertical aluminium cladding panels, contemporary facade system',
     variants: [
       {
         name: 'PVDF Solid Colour',
         desc: 'RAL / NCS colour-matched PVDF coated panels — most common UAE spec',
         tag: 'Unlimited colours',
         images: [
-          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'White PVDF aluminum, corporate HQ Abu Dhabi' },
-          { src: IMG('1525438160292-a4a860951216'), caption: 'Champagne PVDF aluminum, luxury residential tower' },
-          { src: IMG('1587174486073-ae5a5cff23aa'), caption: 'Bold red PVDF accent panels, retail podium Dubai' },
+          { src: PIX(10797598), caption: 'White PVDF aluminum, corporate HQ Abu Dhabi' },
+          { src: PIX(17556520), caption: 'Champagne PVDF aluminum, luxury residential tower' },
+          { src: PIX(1910234), caption: 'Bold aluminum accent panels, retail podium Dubai' },
         ]
       },
       {
@@ -4237,9 +4238,9 @@ const MATERIAL_IMAGES = {
         desc: 'Electrochemical anodising gives deep metallic tones with superior UV longevity',
         tag: 'Best UAE UV resistance',
         images: [
-          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Anodised silver aluminum, government building' },
-          { src: IMG('1582407947304-fd86f28320c7'), caption: 'Bronze anodised panels, premium mixed-use' },
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Dark charcoal anodised, contemporary villa' },
+          { src: PIX(31375721), caption: 'Anodised silver aluminum, government building' },
+          { src: PIX(1078850), caption: 'Bronze anodised panels, premium mixed-use' },
+          { src: PIX(2117638), caption: 'Dark charcoal anodised, contemporary villa' },
         ]
       },
       {
@@ -4247,9 +4248,9 @@ const MATERIAL_IMAGES = {
         desc: 'Polished or metallic finish reflecting sky and surroundings — iconic in Gulf skylines',
         tag: 'Iconic skyline material',
         images: [
-          { src: IMG('1486325212027-8081e485255e'), caption: 'Mirror aluminum, high-rise tower core' },
-          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Reflective facade, financial district Dubai' },
-          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Brushed metallic panels, luxury hotel exterior' },
+          { src: PIX(1366913), caption: 'Mirror aluminum, high-rise tower core' },
+          { src: PIX(2859169), caption: 'Reflective facade, financial district Dubai' },
+          { src: PIX(1105766), caption: 'Brushed metallic panels, luxury hotel exterior' },
         ]
       },
       {
@@ -4257,25 +4258,25 @@ const MATERIAL_IMAGES = {
         desc: 'Digital sublimation printing on aluminium — warmth of timber, none of the maintenance',
         tag: 'No timber maintenance',
         images: [
-          { src: IMG('1504307651254-35680f356dfd'), caption: 'Wood-effect aluminum, F&B podium, JBR' },
-          { src: IMG('1510798831971-661eb04b3739'), caption: 'Dark oak-print aluminum, villa compound' },
-          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Teak-look panels, waterfront development' },
+          { src: PIX(2835037), caption: 'Wood-effect aluminum, F&B podium, JBR' },
+          { src: PIX(2555719), caption: 'Dark oak-print aluminum, villa compound' },
+          { src: PIX(2996953), caption: 'Teak-look panels, waterfront development' },
         ]
       },
     ]
   },
   Stone: {
-    hero: IMG('1487958449943-2429e8be8625'),
-    heroCredit: 'Natural stone cladding, luxury facade',
+    hero: PIX(1573593),
+    heroCredit: 'Natural stone cladding facade, luxury building exterior',
     variants: [
       {
         name: 'Limestone',
         desc: 'Warm beige tones — the dominant stone of UAE and Gulf region heritage buildings',
         tag: 'UAE heritage material',
         images: [
-          { src: IMG('1518780664697-55e3ad937233'), caption: 'Honed limestone facade, hotel podium Abu Dhabi' },
-          { src: IMG('1487958449943-2429e8be8625'), caption: 'Polished limestone cladding, luxury residential' },
-          { src: IMG('1603232644140-bb47da511b92'), caption: 'Bush-hammered limestone, cultural institution' },
+          { src: PIX(1573593), caption: 'Honed limestone facade, hotel podium Abu Dhabi' },
+          { src: PIX(1579119), caption: 'Polished limestone cladding, luxury residential' },
+          { src: PIX(68147), caption: 'Bush-hammered limestone, cultural institution' },
         ]
       },
       {
@@ -4283,9 +4284,9 @@ const MATERIAL_IMAGES = {
         desc: 'Distinctive porous texture, warm ivory tones — popular for premium hotel facades',
         tag: 'Premium hotel favourite',
         images: [
-          { src: IMG('1504307651254-35680f356dfd'), caption: 'Filled & honed travertine, 5-star hotel exterior' },
-          { src: IMG('1565117165093-e52aacd43e94'), caption: 'Unfilled travertine, authentic raw texture' },
-          { src: IMG('1510798831971-661eb04b3739'), caption: 'Travertine pool facade, luxury resort' },
+          { src: PIX(1212693), caption: 'Filled & honed travertine, 5-star hotel exterior' },
+          { src: PIX(1537572), caption: 'Unfilled travertine, authentic raw texture' },
+          { src: PIX(2611152), caption: 'Travertine pool facade, luxury resort' },
         ]
       },
       {
@@ -4293,9 +4294,9 @@ const MATERIAL_IMAGES = {
         desc: 'Ochre and terracotta tones — locally resonant, excellent thermal performance',
         tag: 'Best thermal mass',
         images: [
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Local UAE sandstone, heritage-district building' },
-          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Ashlar sandstone coursing, government building' },
-          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Random-bond sandstone, boutique hotel RAK' },
+          { src: PIX(1657972), caption: 'Local UAE sandstone, heritage-district building' },
+          { src: PIX(3030268), caption: 'Ashlar sandstone coursing, government building' },
+          { src: PIX(7143883), caption: 'Random-bond sandstone, boutique hotel RAK' },
         ]
       },
       {
@@ -4303,61 +4304,60 @@ const MATERIAL_IMAGES = {
         desc: 'Hardest and densest natural stone — near-zero porosity, ideal for coastal UAE environments',
         tag: 'Coastal: best choice',
         images: [
-          { src: IMG('1525438160292-a4a860951216'), caption: 'Polished black granite, financial tower base' },
-          { src: IMG('1486325212027-8081e485255e'), caption: 'Flamed grey granite, podium facade' },
-          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Bush-hammered red granite, civic building' },
+          { src: PIX(1005685), caption: 'Polished black granite, financial tower base' },
+          { src: PIX(1040895), caption: 'Flamed grey granite, podium facade' },
+          { src: PIX(1438831), caption: 'Bush-hammered red granite, civic building' },
         ]
       },
     ]
   },
   ACM: {
-    hero: IMG('1464822759023-fed622ff2c3b'),
-    heroCredit: 'ACM-FR clad commercial tower, Gulf region',
+    hero: PIX(10339602),
+    heroCredit: 'ACM-FR composite panel facade, commercial tower',
     variants: [
       {
         name: 'Standard White / Off-White',
         desc: 'Classic reflective white PVDF — keeps surface temperatures lower in UAE sun',
         tag: 'Coolest surface temp',
         images: [
-          { src: IMG('1525438160292-a4a860951216'), caption: 'Pure white ACM-FR, office campus Dubai' },
-          { src: IMG('1504307651254-35680f356dfd'), caption: 'Cream off-white cladding, hospital facade' },
-          { src: IMG('1565117165093-e52aacd43e94'), caption: 'White ACM-FR with shadow reveals, residential tower' },
+          { src: PIX(19309651), caption: 'Pure white ACM-FR, office campus Dubai' },
+          { src: PIX(18169300), caption: 'Cream off-white cladding, hospital facade' },
+          { src: PIX(17556520), caption: 'White ACM-FR with shadow reveals, residential tower' },
         ]
       },
       {
-        name: 'Metallic Silver / Champagne',
-        desc: 'Pearlescent PVDF finishes that shift tone with sunlight — premium corporate look',
-        tag: 'Premium corporate',
+        name: 'Metallic / Brushed',
+        desc: 'Silver and gold metallic faces — reflective without the cost of mirror aluminum',
+        tag: 'Value metallic',
         images: [
-          { src: IMG('1509741399-3e9ab8f33fd5'), caption: 'Metallic silver ACM-FR, HQ tower DIFC' },
-          { src: IMG('1582407947304-fd86f28320c7'), caption: 'Champagne metallic panels, mixed-use podium' },
-          { src: IMG('1464822759023-fed622ff2c3b'), caption: 'Brushed silver ACM, tech campus Ajman' },
+          { src: PIX(31375721), caption: 'Brushed silver ACM-FR, corporate office' },
+          { src: PIX(10797598), caption: 'Gold metallic ACM, retail anchor building' },
+          { src: PIX(1910234), caption: 'Champagne metallic, mixed-use podium' },
         ]
       },
       {
-        name: 'Bold Colour PVDF',
-        desc: 'Full-saturation colour with PVDF 25-year Gulf-climate fade guarantee',
-        tag: '25yr fade guarantee',
+        name: 'Bold Colour',
+        desc: 'Any RAL colour PVDF coated — bold primary colours for landmark retail or civic buildings',
+        tag: 'Maximum colour impact',
         images: [
-          { src: IMG('1587174486073-ae5a5cff23aa'), caption: 'Deep blue ACM-FR, residential landmark Sharjah' },
-          { src: IMG('1477959858617-67f85cf4f1df'), caption: 'Forest green panels, eco-certified building' },
-          { src: IMG('1480714378408-67cf0d13bc1b'), caption: 'Terracotta PVDF ACM-FR, resort development RAK' },
+          { src: PIX(2402235), caption: 'Bold red ACM-FR, landmark retail anchor' },
+          { src: PIX(1843717), caption: 'Cobalt blue ACM, civic/cultural building' },
+          { src: PIX(1366913), caption: 'Deep green ACM-FR, hospitality building' },
         ]
       },
       {
-        name: 'Large-Format Reveals',
-        desc: 'Oversized panels with deep shadow reveals — achieves monolithic stone-like quality',
-        tag: 'Architectural precision',
+        name: 'Reveal-Joint Systems',
+        desc: 'Deep reveal joints giving strong horizontal or vertical shadow lines',
+        tag: 'Strongest shadow lines',
         images: [
-          { src: IMG('1486325212027-8081e485255e'), caption: 'Large-format panel grid, government tower' },
-          { src: IMG('1449157291145-7efd050a4d0e'), caption: 'Reveal-jointed ACM-FR, luxury apartment facade' },
-          { src: IMG('1510798831971-661eb04b3739'), caption: 'Dark ACM-FR deep reveals, urban commercial block' },
+          { src: PIX(10339602), caption: 'Reveal-jointed ACM-FR, commercial tower Dubai' },
+          { src: PIX(2859169), caption: 'Horizontal reveals, luxury apartment facade' },
+          { src: PIX(804715), caption: 'Dark ACM-FR deep reveals, urban commercial block' },
         ]
       },
     ]
   },
 };
-
 const COMPARE_ROWS = [
   { key: 'full', label: 'Full Name' },
   { key: 'priceRange', label: 'Price Range (AED/m²)' },
