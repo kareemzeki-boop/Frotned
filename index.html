@@ -7834,7 +7834,8 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   </svg>
 </div>
 <style>
-  * { cursor: none !important; }
+  *:not(#mat-stack):not(#mat-stack *) { cursor: none !important; }
+  #mat-stack, #mat-stack * { cursor: auto !important; }
 </style>
 <script>
 (function() {
