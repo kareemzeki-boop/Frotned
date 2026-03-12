@@ -255,15 +255,22 @@ section{padding:100px 0}
 /* ── STACK CONTAINER ──────────────────────────────────────────────── */
 .mat-stack {
   position: relative;
-  width: 680px;
+  width: 880px;
   flex-shrink: 0;
   height: 440px;
+  /* clip side-peeking cards */
+  overflow: hidden;
+  border-radius: 24px;
 }
 
-/* ── EACH STACKED CARD ────────────────────────────────────────────── */
+/* ── EACH CARD ─────────────────────────────────────────────────────── */
 .mat-card {
   position: absolute;
-  inset: 0;
+  /* card is 65% of stack width, centred */
+  width: 65%;
+  left: 50%;
+  top: 0; bottom: 0;
+  transform: translateX(-50%) scale(1);
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -280,50 +287,66 @@ section{padding:100px 0}
   user-select: none;
 }
 
-/* back-cards peek stack */
-.mat-card[data-pos="1"] {
-  transform: translateY(-14px) scale(0.97);
-  opacity: 0.7;
-  background: #1a2e1c;
-  border-color: rgba(255,255,255,0.05);
-  z-index: 2;
-}
-.mat-card[data-pos="2"] {
-  transform: translateY(-26px) scale(0.94);
-  opacity: 0.45;
-  background: #20371f;
-  border-color: rgba(255,255,255,0.04);
-  z-index: 1;
-}
-.mat-card[data-pos="3"] {
-  transform: translateY(-36px) scale(0.91);
-  opacity: 0.22;
-  background: #243e22;
-  border-color: rgba(255,255,255,0.03);
-  z-index: 0;
-}
-.mat-card[data-pos="4"],
-.mat-card[data-pos="5"] {
-  transform: translateY(-42px) scale(0.89);
-  opacity: 0;
-  z-index: 0;
-}
-/* active front card */
+/* ── HORIZONTAL POSITIONS ──────────────────────────────────────────── */
+
+/* Active centre card */
 .mat-card[data-pos="0"] {
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) scale(1);
   opacity: 1;
   z-index: 10;
   box-shadow:
     0 32px 64px rgba(0,0,0,0.7),
     0 8px 24px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,229,160,0.15),
+    0 0 0 1px rgba(0,229,160,0.18),
     inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .mat-card[data-pos="0"]:hover {
   box-shadow:
     0 40px 80px rgba(0,0,0,0.75),
-    0 0 0 1px rgba(0,229,160,0.22),
+    0 0 0 1px rgba(0,229,160,0.28),
     inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Right peek card (next) */
+.mat-card[data-pos="1"] {
+  transform: translateX(calc(-50% + 58%)) scale(0.87);
+  opacity: 0.5;
+  z-index: 5;
+  filter: brightness(0.7);
+  cursor: pointer;
+}
+.mat-card[data-pos="1"]:hover {
+  transform: translateX(calc(-50% + 58%)) scale(0.91);
+  opacity: 0.75;
+  filter: brightness(0.9);
+  box-shadow: 0 0 0 1px rgba(0,229,160,0.2);
+}
+
+/* Left peek card (prev = last in array wraps around) */
+.mat-card[data-pos="5"],
+.mat-card[data-pos="4"],
+.mat-card[data-pos="3"] {
+  transform: translateX(calc(-50% - 58%)) scale(0.87);
+  opacity: 0.5;
+  z-index: 5;
+  filter: brightness(0.7);
+  cursor: pointer;
+}
+.mat-card[data-pos="5"]:hover,
+.mat-card[data-pos="4"]:hover,
+.mat-card[data-pos="3"]:hover {
+  transform: translateX(calc(-50% - 58%)) scale(0.91);
+  opacity: 0.75;
+  filter: brightness(0.9);
+  box-shadow: 0 0 0 1px rgba(0,229,160,0.2);
+}
+
+/* Far cards — hidden off-screen */
+.mat-card[data-pos="2"] {
+  transform: translateX(calc(-50% + 120%)) scale(0.8);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* ── IMAGE HALF ────────────────────────────────────────────────────── */
@@ -2046,7 +2069,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   .hero-inner     { padding: 0 28px; gap: 56px; }
   h1              { font-size: 80px; }
   .section-title  { font-size: 54px; }
-  .mat-stack      { width: 520px; }
+  .mat-stack      { width: 680px; }
   .mat-deck-outer { gap: 40px; }
 }
 
@@ -4570,9 +4593,9 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
+    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8592;</div>` +
     keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" onclick="deckNext()">&#8594;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
@@ -4624,7 +4647,7 @@ function buildDeck() {
     // Snap next card just off screen in the incoming direction (no transition)
     if (nextCard) {
       nextCard.style.transition = 'none';
-      nextCard.style.transform  = `translateY(${dir * 100}%) scale(0.96)`;
+      nextCard.style.transform  = `translateX(calc(-50% + ${dir * 120}%)) scale(0.87)`;
       nextCard.style.opacity    = '0';
       nextCard.style.zIndex     = '9';
       // Force reflow
@@ -4634,7 +4657,7 @@ function buildDeck() {
     // Fly out current front card
     if (prevFront) {
       prevFront.style.transition = 'transform 0.48s cubic-bezier(0.4,0,0.6,1), opacity 0.48s ease';
-      prevFront.style.transform  = `translateY(${-dir * 100}%) scale(0.96)`;
+      prevFront.style.transform  = `translateX(calc(-50% + ${-dir * 120}%)) scale(0.87)`;
       prevFront.style.opacity    = '0';
     }
 
@@ -4642,7 +4665,7 @@ function buildDeck() {
     if (nextCard) {
       requestAnimationFrame(() => {
         nextCard.style.transition = 'transform 0.52s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease';
-        nextCard.style.transform  = 'translateY(0) scale(1)';
+        nextCard.style.transform  = 'translateX(-50%) scale(1)';
         nextCard.style.opacity    = '1';
         nextCard.style.zIndex     = '10';
       });
@@ -4664,32 +4687,32 @@ function buildDeck() {
   window.deckNext = function() { deckGo(current + 1, 1);  };
   window.deckPrev = function() { deckGo(current - 1, -1); };
 
-  // ── SWIPE UP / DOWN + MOUSE WHEEL ────────────────────────────────
-  let touchStartY = 0;
-  let mouseStartY = 0;
+  // ── SWIPE LEFT / RIGHT + MOUSE DRAG + WHEEL ───────────────────────
+  let touchStartX = 0;
+  let mouseStartX = 0;
   let mouseDragging = false;
 
   stack.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
   }, { passive: true });
 
   stack.addEventListener('touchend', function(e) {
-    const dy = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) dx > 0 ? deckNext() : deckPrev();
   }, { passive: true });
 
   stack.addEventListener('mousedown', function(e) {
     if (e.button !== 0) return;
-    mouseStartY = e.clientY;
+    mouseStartX = e.clientX;
     mouseDragging = true;
     e.preventDefault();
   });
 
   window.addEventListener('mouseup', function(e) {
     if (!mouseDragging) return;
-    const dy = mouseStartY - e.clientY;
+    const dx = mouseStartX - e.clientX;
     mouseDragging = false;
-    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
+    if (Math.abs(dx) > 40) dx > 0 ? deckNext() : deckPrev();
   });
 
   stack.addEventListener('wheel', function(e) {
@@ -4697,6 +4720,15 @@ function buildDeck() {
     if (animating) return;
     e.deltaY > 0 ? deckNext() : deckPrev();
   }, { passive: false });
+
+  // ── CLICK SIDE CARDS TO NAVIGATE ─────────────────────────────────
+  stack.addEventListener('click', function(e) {
+    const card = e.target.closest('.mat-card');
+    if (!card) return;
+    const pos = parseInt(card.dataset.pos);
+    if (pos === 1)       { deckNext(); return; }
+    if (pos >= 3)        { deckPrev(); return; }
+  });
 
   // ── JIGGLE ON LOCKED CARD CLICK ──────────────────────────────────
   stack.addEventListener('click', function(e) {
