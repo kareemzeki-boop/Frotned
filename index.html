@@ -253,24 +253,34 @@ section{padding:100px 0}
 }
 
 /* ── STACK CONTAINER ──────────────────────────────────────────────── */
+/* ── 3D CAROUSEL WRAPPER ───────────────────────────────────────────── */
 .mat-stack {
   position: relative;
-  width: 880px;
+  width: 100%;
+  max-width: 960px;
   flex-shrink: 0;
-  height: 440px;
-  /* clip side-peeking cards */
-  overflow: hidden;
-  border-radius: 24px;
+  height: 460px;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+/* ── CAROUSEL RING ─────────────────────────────────────────────────── */
+#mat-ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── EACH CARD ─────────────────────────────────────────────────────── */
 .mat-card {
   position: absolute;
-  /* card is 65% of stack width, centred */
-  width: 65%;
+  width: 580px;
+  height: 380px;
   left: 50%;
-  top: 0; bottom: 0;
-  transform: translateX(-50%) scale(1);
+  top: 50%;
+  margin-left: -290px;
+  margin-top: -190px;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -280,74 +290,51 @@ section{padding:100px 0}
   border: 1px solid rgba(255,255,255,0.07);
   transform-origin: center center;
   transition:
-    transform 0.52s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.4s ease,
+    filter 0.4s ease,
     opacity 0.4s ease;
   will-change: transform, opacity;
   user-select: none;
+  backface-visibility: hidden;
 }
 
-/* ── HORIZONTAL POSITIONS ──────────────────────────────────────────── */
-
-/* Active centre card */
+/* Active front card */
 .mat-card[data-pos="0"] {
-  transform: translateX(-50%) scale(1);
   opacity: 1;
+  filter: brightness(1);
   z-index: 10;
   box-shadow:
     0 32px 64px rgba(0,0,0,0.7),
     0 8px 24px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,229,160,0.18),
+    0 0 0 1px rgba(0,229,160,0.22),
     inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .mat-card[data-pos="0"]:hover {
   box-shadow:
     0 40px 80px rgba(0,0,0,0.75),
-    0 0 0 1px rgba(0,229,160,0.28),
+    0 0 0 2px rgba(0,229,160,0.35),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
-/* Right peek card (next) */
-.mat-card[data-pos="1"] {
-  transform: translateX(calc(-50% + 58%)) scale(0.87);
-  opacity: 0.5;
-  z-index: 5;
-  filter: brightness(0.7);
-  cursor: pointer;
-}
-.mat-card[data-pos="1"]:hover {
-  transform: translateX(calc(-50% + 58%)) scale(0.91);
-  opacity: 0.75;
-  filter: brightness(0.9);
-  box-shadow: 0 0 0 1px rgba(0,229,160,0.2);
-}
-
-/* Left peek card (prev = last in array wraps around) */
-.mat-card[data-pos="5"],
+/* Side cards */
+.mat-card[data-pos="1"],
+.mat-card[data-pos="2"],
+.mat-card[data-pos="3"],
 .mat-card[data-pos="4"],
-.mat-card[data-pos="3"] {
-  transform: translateX(calc(-50% - 58%)) scale(0.87);
-  opacity: 0.5;
-  z-index: 5;
-  filter: brightness(0.7);
+.mat-card[data-pos="5"] {
+  opacity: 0.55;
+  filter: brightness(0.65);
   cursor: pointer;
 }
+.mat-card[data-pos="1"]:hover,
 .mat-card[data-pos="5"]:hover,
 .mat-card[data-pos="4"]:hover,
 .mat-card[data-pos="3"]:hover {
-  transform: translateX(calc(-50% - 58%)) scale(0.91);
-  opacity: 0.75;
+  opacity: 0.8;
   filter: brightness(0.9);
-  box-shadow: 0 0 0 1px rgba(0,229,160,0.2);
+  box-shadow: 0 0 0 1px rgba(0,229,160,0.3);
 }
 
-/* Far cards — hidden off-screen */
-.mat-card[data-pos="2"] {
-  transform: translateX(calc(-50% + 120%)) scale(0.8);
-  opacity: 0;
-  z-index: 0;
-  pointer-events: none;
-}
 
 /* ── IMAGE HALF ────────────────────────────────────────────────────── */
 .mat-card-img {
@@ -2941,7 +2928,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="mat-deck-outer">
       <!-- STACKED CARDS -->
       <div>
-        <div class="mat-stack" id="mat-stack"></div>
+        <div class="mat-stack" id="mat-stack"><div id="mat-ring"></div></div>
         <div style="text-align:center;margin-top:10px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(200,220,205,0.2);text-transform:uppercase">Scroll or drag to navigate</div>
         <div class="mat-deck-nav" id="mat-deck-nav"></div>
       </div>
@@ -4539,10 +4526,14 @@ function buildDeck() {
   const COLORS = { GFRC:'#00e5a0',GFRP:'#60a5fa',Aluminum:'#a3a3a3',Stone:'#f59e0b',ACM:'#c084fc',FibreCement:'#fb923c' };
 
   const keys = Object.keys(MATERIALS);
-  const stack = document.getElementById('mat-stack');
+  const stack = document.getElementById('mat-ring');
+  const stackOuter = document.getElementById('mat-stack');
   const nav   = document.getElementById('mat-deck-nav');
   const sidebar = document.getElementById('mat-deck-sidebar');
   let current = 0;
+  const N = 6; // total cards
+  const RADIUS = 560; // 3D circle radius in px
+  const DEG = 360 / N; // degrees between cards
 
   // Build cards — render all, assign data-pos
   keys.forEach((key, idx) => {
@@ -4607,131 +4598,82 @@ function buildDeck() {
     </div>`;
   }).join('');
 
-  // Position cards
-  function positionCards() {
+  // Position ca  // ── 3D RING ROTATION ─────────────────────────────────────────────
+  let ringAngle = 0;
+
+  function placeCardsOnRing() {
     const cards = stack.querySelectorAll('.mat-card');
     cards.forEach((card, idx) => {
-      const pos = (idx - current + keys.length) % keys.length;
-      card.dataset.pos = pos < 4 ? pos : 4;
-      card.style.zIndex = pos === 0 ? 10 : Math.max(0, 4 - pos);
-      card.style.pointerEvents = pos === 0 ? 'auto' : 'none';
-    });
-
-    // Update dots
-    nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === current);
-    });
-    // Update sidebar
-    sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => {
-      item.classList.toggle('active', i === current);
+      const cardAngle = idx * DEG;
+      card.style.transform = `rotateY(${cardAngle}deg) translateZ(${RADIUS}px)`;
+      const pos = (idx - current + N) % N;
+      card.dataset.pos = pos;
     });
   }
 
-  let animating = false;
-
-  window.deckGo = function(idx, dir) {
-    if (animating) return;
-    const prev = current;
-    current = ((idx % keys.length) + keys.length) % keys.length;
-    if (prev === current) return;
-
-    // Determine roll direction: dir=1 means swipe up (next), dir=-1 means swipe down (prev)
-    if (dir === undefined) dir = (current > prev || (prev === keys.length-1 && current === 0)) ? 1 : -1;
-
+  function rotateRing() {
+    ringAngle = -current * DEG;
+    stack.style.transform = `rotateY(${ringAngle}deg)`;
     const cards = stack.querySelectorAll('.mat-card');
-    const prevFront = stack.querySelector('.mat-card[data-pos="0"]');
-    const nextCard  = Array.from(cards).find(c => parseInt(c.dataset.idx) === current);
-
-    animating = true;
-
-    // Snap next card just off screen in the incoming direction (no transition)
-    if (nextCard) {
-      nextCard.style.transition = 'none';
-      nextCard.style.transform  = `translateX(calc(-50% + ${dir * 120}%)) scale(0.87)`;
-      nextCard.style.opacity    = '0';
-      nextCard.style.zIndex     = '9';
-      // Force reflow
-      nextCard.offsetHeight;
-    }
-
-    // Fly out current front card
-    if (prevFront) {
-      prevFront.style.transition = 'transform 0.48s cubic-bezier(0.4,0,0.6,1), opacity 0.48s ease';
-      prevFront.style.transform  = `translateX(calc(-50% + ${-dir * 120}%)) scale(0.87)`;
-      prevFront.style.opacity    = '0';
-    }
-
-    // Roll in next card
-    if (nextCard) {
-      requestAnimationFrame(() => {
-        nextCard.style.transition = 'transform 0.52s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease';
-        nextCard.style.transform  = 'translateX(-50%) scale(1)';
-        nextCard.style.opacity    = '1';
-        nextCard.style.zIndex     = '10';
-      });
-    }
-
-    setTimeout(() => {
-      // Clean inline styles, let CSS data-pos take over
-      if (prevFront)  { prevFront.style.cssText  = ''; }
-      if (nextCard)   { nextCard.style.cssText    = ''; }
-      positionCards();
-      animating = false;
-    }, 540);
-
-    // Update dots + sidebar immediately
+    cards.forEach((card, idx) => {
+      const pos = (idx - current + N) % N;
+      card.dataset.pos = pos;
+      const hidden = (pos >= 2 && pos <= N - 2);
+      card.style.opacity       = hidden ? '0' : pos === 0 ? '1' : '0.55';
+      card.style.filter        = hidden ? 'brightness(0)' : pos === 0 ? 'brightness(1)' : 'brightness(0.65)';
+      card.style.pointerEvents = hidden ? 'none' : 'auto';
+      card.style.zIndex        = pos === 0 ? '10' : pos === 1 || pos === N-1 ? '5' : '0';
+    });
     nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => d.classList.toggle('active', i === current));
     sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => item.classList.toggle('active', i === current));
+  }
+
+  window.deckGo = function(idx) {
+    const prev = current;
+    current = ((idx % N) + N) % N;
+    if (prev === current) return;
+    rotateRing();
   };
 
-  window.deckNext = function() { deckGo(current + 1, 1);  };
-  window.deckPrev = function() { deckGo(current - 1, -1); };
+  window.deckNext = function() { deckGo(current + 1); };
+  window.deckPrev = function() { deckGo(current - 1); };
 
-  // ── SWIPE LEFT / RIGHT + MOUSE DRAG + WHEEL ───────────────────────
-  let touchStartX = 0;
-  let mouseStartX = 0;
-  let mouseDragging = false;
+  // ── SWIPE + DRAG + WHEEL ─────────────────────────────────────────
+  let touchStartX = 0, mouseStartX = 0, mouseDragging = false;
 
-  stack.addEventListener('touchstart', function(e) {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-
-  stack.addEventListener('touchend', function(e) {
+  stackOuter.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  stackOuter.addEventListener('touchend', e => {
     const dx = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(dx) > 40) dx > 0 ? deckNext() : deckPrev();
   }, { passive: true });
 
-  stack.addEventListener('mousedown', function(e) {
+  stackOuter.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
-    mouseStartX = e.clientX;
-    mouseDragging = true;
-    e.preventDefault();
+    mouseStartX = e.clientX; mouseDragging = true; e.preventDefault();
   });
-
-  window.addEventListener('mouseup', function(e) {
+  window.addEventListener('mouseup', e => {
     if (!mouseDragging) return;
     const dx = mouseStartX - e.clientX;
     mouseDragging = false;
     if (Math.abs(dx) > 40) dx > 0 ? deckNext() : deckPrev();
   });
 
-  stack.addEventListener('wheel', function(e) {
+  stackOuter.addEventListener('wheel', e => {
     e.preventDefault();
-    if (animating) return;
     e.deltaY > 0 ? deckNext() : deckPrev();
   }, { passive: false });
 
   // ── CLICK SIDE CARDS TO NAVIGATE ─────────────────────────────────
-  stack.addEventListener('click', function(e) {
+  stack.addEventListener('click', e => {
     const card = e.target.closest('.mat-card');
     if (!card) return;
     const pos = parseInt(card.dataset.pos);
-    if (pos === 1)       { deckNext(); return; }
-    if (pos >= 3)        { deckPrev(); return; }
+    if (pos === 1)     { deckNext(); return; }
+    if (pos === N - 1) { deckPrev(); return; }
   });
 
   // ── JIGGLE ON LOCKED CARD CLICK ──────────────────────────────────
-  stack.addEventListener('click', function(e) {
+  stack.addEventListener('click', e => {
     const locked = e.target.closest('.mat-card-locked[data-pos="0"]');
     if (!locked || e.target.closest('.mat-card-cs-btn')) return;
     if (locked.classList.contains('jiggling')) return;
@@ -4739,7 +4681,9 @@ function buildDeck() {
     locked.addEventListener('animationend', () => locked.classList.remove('jiggling'), { once: true });
   });
 
-  positionCards();
+  // Init
+  placeCardsOnRing();
+  rotateRing();
 }
 
 function switchCardHero(key, vi) {
