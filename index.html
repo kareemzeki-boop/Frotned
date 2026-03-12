@@ -30,6 +30,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+:focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
@@ -3149,7 +3150,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close login modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -3252,7 +3253,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close subscription modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fa-solid fa-search" style="margin-right:6px"></i>For Specifiers &amp; Architects</button>
@@ -3613,7 +3614,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="cfg-row">
           <span class="cfg-lbl tok-lbl">JWT</span>
           <span class="tok-val" id="tok-display">no token — log in first</span>
-          <button class="tok-clr" onclick="apiClearToken()">✕</button>
+          <button class="tok-clr" onclick="apiClearToken()" aria-label="Clear API token">✕</button>
         </div>
       </div>
     </div>
@@ -3856,7 +3857,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close material details modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -3865,7 +3866,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close image lightbox"><i class="fa-solid fa-xmark"></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -4568,14 +4569,14 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8592;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8594;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous material" onclick="deckPrev()">&#8592;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" tabindex="0" role="button" aria-label="Go to material ${i+1}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next material" onclick="deckNext()">&#8594;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" tabindex="0" role="button" aria-label="Select material ${MATERIALS[key].name}" onclick="deckGo(${i})">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
       <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
@@ -4945,6 +4946,12 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  // Global Enter/Space for role="button"
+  if (e.target instanceof Element && e.target.getAttribute('role') === 'button' && (e.key === 'Enter' || e.key === ' ')) {
+    e.preventDefault();
+    e.target.click();
+  }
+
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
@@ -5177,11 +5184,11 @@ function buildCarousel(container, data, blurred) {
       </div>
     </div>
     <div class="sup-carousel-nav">
-      <button class="sup-carousel-btn" id="sup-prev">&#8592;</button>
+      <button class="sup-carousel-btn" id="sup-prev" aria-label="Previous supplier">&#8592;</button>
       <div class="sup-carousel-dots" id="sup-dots">
         ${data.map((_, i) => `<div class="sup-carousel-dot${i===0?' active':''}" data-i="${i}"></div>`).join('')}
       </div>
-      <button class="sup-carousel-btn" id="sup-next">&#8594;</button>
+      <button class="sup-carousel-btn" id="sup-next" aria-label="Next supplier">&#8594;</button>
     </div>
     <div class="sup-carousel-hint">Drag or use arrows to rotate</div>`;
 
@@ -5292,7 +5299,9 @@ function supGridCardHTML(s, blurred, dimLocked) {
 
   const clickAction = blurred ? '' : (s.phone ? `onclick="window.location.href='tel:${s.phone}'"` : '');
   const isLockedClass = (blurred || dimLocked) ? ' sup-gc-locked' : '';
-  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${isLockedClass}" ${clickAction}>${preview}${body}</div>`;
+  const ariaLabel = (blurred || dimLocked) ? `aria-label="Locked supplier listing"` : `aria-label="Call supplier ${s.name}"`;
+  const tabIndex = (blurred || dimLocked) ? '' : 'tabindex="0" role="button"';
+  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${isLockedClass}" ${ariaLabel} ${tabIndex} ${clickAction}>${preview}${body}</div>`;
 }
 
 function buildSuppliers() {
@@ -6001,7 +6010,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">Supplier Application</div>
         <div class="sap-subtitle">Complete all sections to activate your free listing &amp; verification</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="sap-close" onclick="closeSupApply()" aria-label="Close supplier application modal"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- Step indicator -->

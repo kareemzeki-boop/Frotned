@@ -1,0 +1,3 @@
+## 2025-05-14 - [Keyboard Parity for Custom UI Elements]
+**Learning:** In projects with heavy use of inline styles and custom `role="button"` elements, standard focus indicators are often suppressed, and keyboard interaction (Enter/Space) is not native. Global `:focus-visible` with `!important` and a delegated `keydown` listener are necessary to bridge the accessibility gap without refactoring the entire component architecture.
+**Action:** When auditing legacy or high-style projects, immediately check for suppressed focus rings and non-semantic buttons; implement global CSS overrides and JS event mapping early to ensure parity.
