@@ -5521,12 +5521,10 @@ function supGridCardHTML(s, blurred, dimLocked) {
     s.address ? `<a class="sup-gc-detail-row" href="https://maps.google.com/?q=${encodeURIComponent(s.address)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">📍</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Location</span><span class="sup-gc-detail-value">${s.address}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
   ].filter(Boolean).join('');
 
-  // Footer right: toggle for non-locked, claim button for standard, nothing for locked
+  // Footer right: toggle for all non-locked cards
   const footerRight = isLocked
     ? ''
-    : s.tier === 'standard'
-      ? `<button class="sup-gc-claim" onclick="event.stopPropagation();openSubModal('list')">Claim listing →</button>`
-      : `<div class="sup-gc-toggle" onclick="event.stopPropagation();this.classList.toggle('active')"><div class="sup-gc-toggle-handle"></div></div>`;
+    : `<div class="sup-gc-toggle" onclick="event.stopPropagation();this.classList.toggle('active')"><div class="sup-gc-toggle-handle"></div></div>`;
 
   const clickAction = isLocked ? '' : `onclick="openSupProfile(${idx})"`;
   const lockedClass = isLocked ? ' sup-gc-locked' : '';
