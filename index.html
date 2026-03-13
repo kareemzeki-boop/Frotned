@@ -5314,7 +5314,7 @@ function supGridCardHTML(s, blurred, dimLocked) {
       </div>
     </div>`;
 
-  const clickAction = blurred ? '' : (s.phone ? `onclick="window.location.href='tel:${s.phone}'"` : '');
+  const clickAction = blurred ? '' : `onclick="openSupProfile(${SUPPLIERS.indexOf(s)})"`;
   const isLockedClass = (blurred || dimLocked) ? ' sup-gc-locked' : '';
   return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${isLockedClass}" ${clickAction}>${preview}${body}</div>`;
 }
@@ -8203,6 +8203,167 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 }
 </style>
 
+<style>
+/* ── SUPPLIER PROFILE OVERLAY ─────────────────────────────────────────── */
+#sp-overlay {
+  position: fixed; inset: 0; z-index: 700;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px 16px; overflow-y: auto;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+#sp-overlay.open { opacity: 1; pointer-events: all; }
+
+#sp-box {
+  background: #111a13; border: 1px solid rgba(0,229,160,0.15);
+  border-radius: 20px; width: 100%; max-width: 860px;
+  overflow: hidden; position: relative;
+  transform: translateY(20px);
+  transition: transform 0.25s ease;
+}
+#sp-overlay.open #sp-box { transform: translateY(0); }
+
+.sp-hero {
+  height: 220px; position: relative; overflow: hidden;
+  background: #0b110d;
+}
+.sp-hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+.sp-hero-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, #111a13 100%);
+}
+.sp-hero-top {
+  position: absolute; top: 16px; left: 20px; right: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sp-close {
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+  color: #fff; border-radius: 50%; width: 36px; height: 36px;
+  cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.sp-close:hover { background: rgba(255,255,255,0.1); }
+.sp-tier-pill {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 20px;
+}
+.sp-tier-pill.featured { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.sp-tier-pill.verified { background: rgba(0,229,160,0.1); color: #00e5a0; border: 1px solid rgba(0,229,160,0.25); }
+.sp-tier-pill.standard { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+
+.sp-identity {
+  padding: 0 28px 24px; margin-top: -48px; position: relative; z-index: 1;
+}
+.sp-logo-wrap {
+  width: 64px; height: 64px; border-radius: 14px;
+  background: #1a2a1e; border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 12px;
+}
+.sp-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 26px; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.sp-fullname { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.sp-tagline { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 12px; }
+.sp-mats { display: flex; flex-wrap: wrap; gap: 6px; }
+.sp-mat-tag {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 4px;
+  background: rgba(0,229,160,0.08); color: var(--accent); border: 1px solid rgba(0,229,160,0.2);
+}
+
+.sp-body { padding: 0 28px 32px; }
+
+/* Tabs */
+.sp-tabs { display: flex; gap: 2px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 0; }
+.sp-tab {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 8px 14px; cursor: pointer;
+  color: rgba(255,255,255,0.35); background: none; border: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.sp-tab:hover { color: rgba(255,255,255,0.7); }
+.sp-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.sp-panel { display: none; }
+.sp-panel.active { display: block; }
+
+/* Section label */
+.sp-sec-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+}
+
+/* Overview grid */
+.sp-overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.sp-info-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; }
+.sp-info-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 4px; }
+.sp-info-val { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+.sp-about { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 20px; }
+
+/* Photos strip */
+.sp-photos { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 24px; }
+.sp-photos img { height: 100px; border-radius: 8px; flex-shrink: 0; object-fit: cover; border: 1px solid rgba(255,255,255,0.06); }
+
+/* Licences / certs rows */
+.sp-list-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 13px; color: rgba(255,255,255,0.7);
+}
+.sp-list-item:last-child { border-bottom: none; }
+.sp-list-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex-shrink: 0; }
+.sp-list-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.sp-empty { font-size: 12px; color: rgba(255,255,255,0.25); font-family: 'DM Mono', monospace; padding: 16px 0; }
+
+/* Projects */
+.sp-project-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 14px; margin-bottom: 10px;
+}
+.sp-project-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: #fff; text-transform: uppercase; margin-bottom: 4px; }
+.sp-project-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.5px; }
+
+/* Documents */
+.sp-doc-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; margin-bottom: 8px;
+}
+.sp-doc-name { font-size: 13px; color: rgba(255,255,255,0.7); }
+.sp-doc-type { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 2px; letter-spacing: 0.5px; }
+.sp-doc-dl {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--accent); background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2); border-radius: 6px; padding: 5px 10px;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background 0.15s;
+}
+.sp-doc-dl:hover { background: rgba(0,229,160,0.15); }
+
+/* Contact */
+.sp-contact-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sp-contact-row:last-child { border-bottom: none; }
+.sp-contact-icon { width: 34px; height: 34px; border-radius: 8px; background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.15); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 13px; flex-shrink: 0; }
+.sp-contact-label { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+.sp-contact-val { font-size: 13px; color: rgba(255,255,255,0.8); }
+.sp-contact-val a { color: var(--accent); text-decoration: none; }
+.sp-contact-val a:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .sp-identity { padding: 0 16px 20px; }
+  .sp-body { padding: 0 16px 24px; }
+  .sp-overview-grid { grid-template-columns: 1fr; }
+  .sp-name { font-size: 20px; }
+  #sp-overlay { padding: 12px 8px; }
+}
+</style>
+
 <!-- Explorer overlay -->
 <div id="mat-explorer-overlay" onclick="expOverlayClick(event)">
   <div id="mat-explorer">
@@ -8323,6 +8484,206 @@ function closeExplorer() {
 function expOverlayClick(e) {
   if (e.target === document.getElementById('mat-explorer-overlay')) closeExplorer();
 }
+
+// ── SUPPLIER PROFILE ────────────────────────────────────────────────────────
+function openSupProfile(idx) {
+  const s = SUPPLIERS[idx];
+  if (!s) return;
+
+  // Hero
+  const heroImg = (s.photos && s.photos[0]) || SUP_MAT_IMGS[s.mats[0]] || SUP_MAT_IMGS.default;
+  document.getElementById('sp-hero-img').src = heroImg;
+
+  // Tier pill
+  const pill = document.getElementById('sp-tier-pill');
+  const tierLabel = s.tier === 'featured' ? '⭐ Featured' : s.tier === 'verified_pro' ? '✓ Verified Pro' : 'Listed';
+  pill.textContent = tierLabel;
+  pill.className = 'sp-tier-pill ' + (s.tier === 'featured' ? 'featured' : s.tier === 'verified_pro' ? 'verified' : 'standard');
+
+  // Identity
+  document.getElementById('sp-logo').textContent = s.emoji || '🏭';
+  document.getElementById('sp-name').textContent = s.name;
+  document.getElementById('sp-fullname').textContent = s.fullName || '';
+  document.getElementById('sp-tagline').textContent = s.tagline || '';
+  document.getElementById('sp-mats').innerHTML = s.mats.map(m => `<span class="sp-mat-tag">${m}</span>`).join('');
+
+  // Overview
+  document.getElementById('sp-about').textContent = s.about || 'No description available.';
+
+  const infoItems = [
+    { label: 'Headquarters', val: s.location || '—' },
+    { label: 'Address', val: s.address || '—' },
+    { label: 'Established', val: s.established || '—' },
+    { label: 'Jurisdiction', val: s.jurisdiction || '—' },
+    { label: 'Annual Turnover', val: s.turnover || '—' },
+    { label: 'Licence No.', val: s.licenceNo || '—' },
+  ].filter(i => i.val && i.val !== '—');
+
+  document.getElementById('sp-overview-grid').innerHTML = infoItems.map(i =>
+    `<div class="sp-info-item"><div class="sp-info-label">${i.label}</div><div class="sp-info-val">${i.val}</div></div>`
+  ).join('');
+
+  // Photos strip
+  const photosWrap = document.getElementById('sp-photos-wrap');
+  if (s.photos && s.photos.length > 1) {
+    photosWrap.innerHTML = `<div class="sp-photos">${s.photos.map(p =>
+      `<img src="${p}" alt="" onerror="this.style.display='none'">`
+    ).join('')}</div>`;
+  } else { photosWrap.innerHTML = ''; }
+
+  // Contributions
+  const contribWrap = document.getElementById('sp-contributions-wrap');
+  if (s.contributions && s.contributions.length) {
+    contribWrap.innerHTML = `<div class="sp-sec-label" style="margin-top:20px">Platform Contributions</div>` +
+      s.contributions.map(c => `<div class="sp-list-item"><div class="sp-list-dot"></div><div>${c}</div></div>`).join('');
+  } else { contribWrap.innerHTML = ''; }
+
+  // Licences
+  const licItems = [
+    ...(s.govLicences || []).map(l => ({ label: l, sub: 'Government Approval' })),
+    ...(s.municipalLicences || []).map(l => ({ label: l, sub: 'Municipality Approval' })),
+    ...(s.mfgLicences || []).map(l => ({ label: l, sub: 'Manufacturing Licence' })),
+  ];
+  if (s.licenceNo) licItems.unshift({ label: 'Licence No. ' + s.licenceNo, sub: 'Trade Licence' });
+  if (s.regNo) licItems.unshift({ label: 'Registration No. ' + s.regNo, sub: 'Company Registration' });
+  document.getElementById('sp-licences-list').innerHTML = licItems.length
+    ? licItems.map(l => `<div class="sp-list-item"><div class="sp-list-dot"></div><div><div>${l.label}</div><div class="sp-list-sub">${l.sub}</div></div></div>`).join('')
+    : `<div class="sp-empty">No licence data available.</div>`;
+
+  // Certificates
+  const certs = s.certificates || [];
+  document.getElementById('sp-certs-list').innerHTML = certs.length
+    ? certs.map(c => `<div class="sp-list-item"><div class="sp-list-dot"></div><div><div>${c.name || c}</div>${c.detail ? `<div class="sp-list-sub">${c.detail}</div>` : ''}</div></div>`).join('')
+    : `<div class="sp-empty">No certificate data available.</div>`;
+
+  // Projects
+  const projects = Array.isArray(s.projects) ? s.projects : [];
+  document.getElementById('sp-projects-list').innerHTML = projects.length
+    ? projects.map(p => {
+        if (typeof p === 'string') return `<div class="sp-project-card"><div class="sp-project-name">${p}</div></div>`;
+        return `<div class="sp-project-card">
+          <div class="sp-project-name">${p.name}</div>
+          <div class="sp-project-meta">${[p.location, p.material].filter(Boolean).join(' · ')}</div>
+        </div>`;
+      }).join('')
+    : `<div class="sp-empty">No projects listed yet.</div>`;
+
+  // Documents
+  const docs = s.documents || [];
+  document.getElementById('sp-docs-list').innerHTML = docs.length
+    ? docs.map(d => `<div class="sp-doc-row">
+        <div><div class="sp-doc-name">${d.name}</div><div class="sp-doc-type">${d.type || 'Document'}</div></div>
+        <a class="sp-doc-dl" href="${d.url}" target="_blank" download>↓ Download</a>
+      </div>`).join('')
+    : `<div class="sp-empty">No documents uploaded yet.</div>`;
+
+  // Contact
+  const contactRows = [];
+  if (s.phone) contactRows.push({ icon: 'fa-phone', label: 'Phone', val: `<a href="tel:${s.phone}">${s.phone}</a>` });
+  if (s.email) contactRows.push({ icon: 'fa-envelope', label: 'Email', val: `<a href="mailto:${s.email}">${s.email}</a>` });
+  if (s.website) contactRows.push({ icon: 'fa-globe', label: 'Website', val: `<a href="${s.website}" target="_blank">${s.website.replace(/^https?:\/\//, '')}</a>` });
+  if (s.address) contactRows.push({ icon: 'fa-location-dot', label: 'Address', val: s.address });
+  if (s.linkedin) contactRows.push({ icon: 'fa-linkedin', label: 'LinkedIn', val: `<a href="${s.linkedin}" target="_blank">View Company Profile</a>` });
+  document.getElementById('sp-contact-list').innerHTML = contactRows.length
+    ? contactRows.map(r => `<div class="sp-contact-row">
+        <div class="sp-contact-icon"><i class="fa-solid ${r.icon}"></i></div>
+        <div><div class="sp-contact-label">${r.label}</div><div class="sp-contact-val">${r.val}</div></div>
+      </div>`).join('')
+    : `<div class="sp-empty">No contact info available.</div>`;
+
+  // Reset to overview tab
+  spTab('overview', document.querySelector('.sp-tab'));
+
+  document.getElementById('sp-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSupProfile() {
+  document.getElementById('sp-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function spOverlayClick(e) {
+  if (e.target === document.getElementById('sp-overlay')) closeSupProfile();
+}
+
+function spTab(name, btn) {
+  document.querySelectorAll('.sp-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sp-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sp-panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
 </script>
+<!-- ── SUPPLIER PROFILE OVERLAY ─────────────────────────────────────────── -->
+<div id="sp-overlay" onclick="spOverlayClick(event)">
+  <div id="sp-box">
+    <div class="sp-hero" id="sp-hero">
+      <img id="sp-hero-img" src="" alt="">
+      <div class="sp-hero-gradient"></div>
+      <div class="sp-hero-top">
+        <span class="sp-tier-pill" id="sp-tier-pill"></span>
+        <button class="sp-close" onclick="closeSupProfile()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div class="sp-identity">
+      <div class="sp-logo-wrap" id="sp-logo"></div>
+      <div class="sp-name" id="sp-name"></div>
+      <div class="sp-fullname" id="sp-fullname"></div>
+      <div class="sp-tagline" id="sp-tagline"></div>
+      <div class="sp-mats" id="sp-mats"></div>
+    </div>
+
+    <div class="sp-body">
+      <div class="sp-tabs">
+        <button class="sp-tab active" onclick="spTab('overview',this)">Overview</button>
+        <button class="sp-tab" onclick="spTab('licences',this)">Licences</button>
+        <button class="sp-tab" onclick="spTab('certs',this)">Certificates</button>
+        <button class="sp-tab" onclick="spTab('projects',this)">Projects</button>
+        <button class="sp-tab" onclick="spTab('docs',this)">Documents</button>
+        <button class="sp-tab" onclick="spTab('contact',this)">Contact</button>
+      </div>
+
+      <!-- Overview -->
+      <div class="sp-panel active" id="sp-panel-overview">
+        <div class="sp-about" id="sp-about"></div>
+        <div class="sp-overview-grid" id="sp-overview-grid"></div>
+        <div id="sp-photos-wrap"></div>
+        <div id="sp-contributions-wrap"></div>
+      </div>
+
+      <!-- Licences -->
+      <div class="sp-panel" id="sp-panel-licences">
+        <div class="sp-sec-label">Government &amp; Municipality Approvals</div>
+        <div id="sp-licences-list"></div>
+      </div>
+
+      <!-- Certificates -->
+      <div class="sp-panel" id="sp-panel-certs">
+        <div class="sp-sec-label">ISO · Fire Ratings · Test Certificates</div>
+        <div id="sp-certs-list"></div>
+      </div>
+
+      <!-- Projects -->
+      <div class="sp-panel" id="sp-panel-projects">
+        <div class="sp-sec-label">Notable Projects</div>
+        <div id="sp-projects-list"></div>
+      </div>
+
+      <!-- Documents -->
+      <div class="sp-panel" id="sp-panel-docs">
+        <div class="sp-sec-label">Technical Documents</div>
+        <div id="sp-docs-list"></div>
+      </div>
+
+      <!-- Contact -->
+      <div class="sp-panel" id="sp-panel-contact">
+        <div class="sp-sec-label">Contact &amp; Links</div>
+        <div id="sp-contact-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
