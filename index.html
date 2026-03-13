@@ -2615,128 +2615,352 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 /* ══════════════════════════════════════════════════════════════════
    SUPPLIER DIRECTORY — UNHEAP-STYLE CARD GRID
 ══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   SUPPLIER GRID — LUMINOUS CARD
+═══════════════════════════════════════════════════════════ */
 .sup-grid-wrap {
   margin-top: 32px;
-  columns: 4;
-  column-gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
+@media (max-width: 1200px) { .sup-grid-wrap { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 900px)  { .sup-grid-wrap { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 540px)  { .sup-grid-wrap { grid-template-columns: 1fr; } }
+.sup-grid-wrap.teaser { grid-template-columns: repeat(4,1fr); }
+@media (max-width: 1200px) { .sup-grid-wrap.teaser { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 900px)  { .sup-grid-wrap.teaser { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 540px)  { .sup-grid-wrap.teaser { grid-template-columns: 1fr; } }
+
+/* ── CARD SHELL ── */
 .sup-grid-card {
-  break-inside: avoid;
-  background: #111a13;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 4px;
+  position: relative;
+  border-radius: 1.8rem;
+  background: linear-gradient(175deg, #182e12 0%, #0b1609 55%, #060d05 100%);
+  box-shadow: 0 0 0 1px rgba(42,90,26,0.27), 0 0 0 1px #1e3d14, 0 8px 40px #000a;
   overflow: hidden;
-  margin-bottom: 12px;
+  color: #fff;
+  transition: box-shadow 0.4s ease-in-out, translate 0.4s ease-out;
   cursor: pointer;
-  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
-  display: block;
-  position: relative;
 }
-.sup-grid-card:hover {
-  border-color: rgba(0,229,160,0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,160,0.12);
-}
+.sup-grid-card:hover { translate: 0 -4px; }
 
-/* Top accent stripe on hover */
+/* corner-clip glow ring */
 .sup-grid-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: #00e5a0;
-  opacity: 0; transition: opacity 0.18s;
-  z-index: 2;
+  content: "";
+  pointer-events: none;
+  position: absolute; inset: -1rem;
+  border-radius: 2.6rem;
+  box-shadow: inset 0 0 0 0.06rem rgba(74,138,48,0.13);
+  --ax: 4rem;
+  clip-path: polygon(
+    var(--ax) 0,0 0,0 var(--ax),var(--ax) var(--ax),
+    var(--ax) calc(100% - var(--ax)),0 calc(100% - var(--ax)),
+    0 100%,var(--ax) 100%,var(--ax) calc(100% - var(--ax)),
+    calc(100% - var(--ax)) calc(100% - var(--ax)),calc(100% - var(--ax)) 100%,
+    100% 100%,100% calc(100% - var(--ax)),calc(100% - var(--ax)) calc(100% - var(--ax)),
+    calc(100% - var(--ax)) var(--ax),100% var(--ax),100% 0,
+    calc(100% - var(--ax)) 0,calc(100% - var(--ax)) var(--ax),var(--ax) var(--ax)
+  );
+  transition: all 0.4s ease-in-out;
+  z-index: 20;
 }
-.sup-grid-card:hover::before { opacity: 1; }
 
-/* Preview area */
-.sup-gc-preview {
-  width: 100%;
-  aspect-ratio: 16/9;
-  overflow: hidden;
-  background: #0d1a0f;
+/* ── COVER PHOTO ── */
+.sup-gc-cover {
   position: relative;
-  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 7rem;
+  overflow: hidden;
+  border-radius: 1.8rem 1.8rem 0 0;
+  flex-shrink: 0;
 }
-.sup-gc-preview img {
+.sup-gc-cover img {
   width: 100%; height: 100%;
-  object-fit: cover;
-  filter: brightness(0.78) saturate(0.85);
-  transition: transform 0.5s ease, filter 0.3s;
+  object-fit: cover; object-position: center 55%;
+  display: block;
+  filter: brightness(0.72) saturate(0.7);
+  transition: filter 0.4s ease;
 }
-.sup-grid-card:hover .sup-gc-preview img {
-  transform: scale(1.06);
-  filter: brightness(0.92) saturate(1);
+.sup-grid-card:hover .sup-gc-cover img { filter: brightness(0.85) saturate(0.9); }
+.sup-gc-cover::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(6,14,5,0) 0%, rgba(6,14,5,0.1) 50%, rgba(8,18,6,0.72) 100%),
+    linear-gradient(to right, rgba(6,14,5,0.35) 0%, transparent 60%);
+  pointer-events: none;
 }
-.sup-gc-preview-emoji {
-  font-size: 40px; opacity: 0.25;
+.sup-gc-cover-fallback {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(45deg, rgba(30,60,18,.18) 0px, rgba(30,60,18,.18) 2px, transparent 2px, transparent 18px),
+    linear-gradient(160deg, #1c3d14 0%, #0f2209 50%, #091405 100%);
+  z-index: -1;
 }
-/* Tier badge on preview */
+
+/* ── LOGO AVATAR ── */
+.sup-gc-avatar {
+  position: absolute;
+  top: 5.5rem; left: 1rem;
+  z-index: 10;
+  width: 2rem; height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1e4018 0%, #0e2208 100%);
+  border: 2px solid #2a5a1a;
+  box-shadow: 0 0 0 1.5px #0b1609, 0 0 0 2.5px #3a7022, 0 3px 10px rgba(0,0,0,.65), inset 0 1px 2px rgba(100,200,50,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  transition: filter 0.45s ease-in-out, box-shadow 0.45s ease-in-out;
+}
+.sup-grid-card:has(.sup-gc-toggle.active) .sup-gc-avatar {
+  box-shadow: 0 0 0 2px #0b1609, 0 0 0 3.5px #62d836, 0 4px 22px rgba(60,210,20,.4), inset 0 1px 4px rgba(120,230,60,.35);
+  filter: brightness(1.35) saturate(1.3);
+}
+
+/* ── TIER BADGE ── */
 .sup-gc-tier-badge {
   position: absolute; top: 8px; right: 8px;
   font-family: 'DM Mono', monospace; font-size: 7px; letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 3px 7px; border-radius: 2px;
-  z-index: 2;
+  text-transform: uppercase; padding: 3px 7px; border-radius: 2px; z-index: 5;
 }
-.sup-gc-tier-badge.featured  { background: rgba(245,158,11,0.9);  color: #000; }
-.sup-gc-tier-badge.verified  { background: rgba(0,229,160,0.9);   color: #000; }
-.sup-gc-tier-badge.standard  { background: rgba(255,255,255,0.12); color: rgba(200,220,205,0.7); }
+.sup-gc-tier-badge.featured {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.1rem; height: 1.1rem; border-radius: 50%; padding: 0;
+  background: linear-gradient(135deg, #f5d060 0%, #e8a800 50%, #c47f00 100%);
+  box-shadow: 0 0 0 1.5px rgba(255,255,255,0.18), 0 2px 8px rgba(200,140,0,0.55);
+  font-size: 0; /* hide text, show check via pseudo */
+}
+.sup-gc-tier-badge.featured::after {
+  content: "";
+  display: block; width: 52%; height: 52%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpolyline points='2,6.5 5,9.5 10,3' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.sup-gc-tier-badge.verified { background: rgba(0,229,160,0.9); color: #000; }
+.sup-gc-tier-badge.standard { background: rgba(255,255,255,0.1); color: rgba(200,220,205,0.6); border: 1px solid rgba(255,255,255,0.1); }
 
-/* Blurred overlay for locked cards */
-.sup-gc-locked .sup-gc-preview img { filter: brightness(0.3) grayscale(1); }
-.sup-gc-locked .sup-gc-body { opacity: 0.25; user-select: none; pointer-events: none; }
-.sup-gc-locked { opacity: 0.55; cursor: default; }
-.sup-gc-locked:hover { transform: none !important; box-shadow: none !important; border-color: rgba(255,255,255,0.07) !important; }
-.sup-gc-locked:hover::before { opacity: 0 !important; }
+/* ── LOCK OVERLAY ── */
 .sup-gc-lock-icon {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: rgba(0,229,160,0.5);
-  z-index: 3;
+  font-size: 22px; color: rgba(0,229,160,0.5); z-index: 3;
 }
+.sup-gc-locked { opacity: 0.5; cursor: default; pointer-events: none; }
+.sup-gc-locked .sup-gc-cover img { filter: brightness(0.2) grayscale(1); }
 
-/* Card body */
-.sup-gc-body { padding: 14px 16px 12px; }
+/* ── CARD BODY ── */
+.sup-gc-body {
+  padding: 1.4rem 1rem 0;
+  position: relative; z-index: 5;
+}
+.sup-gc-name-row { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
 .sup-gc-name {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 0.3px; line-height: 1.05;
-  color: #e8f0ea; margin-bottom: 4px;
+  font-size: 1.05rem; font-weight: 900;
+  color: #c4d8b0; line-height: 1.2; text-transform: uppercase;
 }
 .sup-gc-tagline {
-  font-size: 11.5px; color: rgba(200,220,205,0.45);
-  line-height: 1.55; margin-bottom: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.54rem; color: rgba(110,170,70,.6);
+  line-height: 1.65; margin-top: 0.32rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(80,140,50,.16);
 }
-.sup-gc-mats {
-  display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
-}
+.sup-gc-mats { display: flex; gap: 0.38rem; flex-wrap: wrap; margin-top: 0.5rem; }
 .sup-gc-mat {
-  font-family: 'DM Mono', monospace; font-size: 8px;
-  letter-spacing: 1px; padding: 2px 7px; border-radius: 2px;
-  text-transform: uppercase;
-  background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
-  color: rgba(0,229,160,0.65);
+  padding: 0.2rem 0.52rem;
+  border: 1.5px solid rgba(100,160,70,.38);
+  border-radius: 0.28rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.48rem; font-weight: 700; letter-spacing: 0.08em;
+  color: #78b454; background: rgba(40,80,20,.3); text-transform: uppercase;
 }
 
-/* Footer row — like Unheap's author + category row */
+/* ── LIGHT LAYER ── */
+.sup-gc-light {
+  position: relative;
+  height: 1.3rem; width: 100%;
+  margin: 0.65rem 0 0;
+  transform-style: preserve-3d;
+  perspective: 400px;
+  z-index: 4; overflow: visible;
+}
+.sup-gc-light .slit {
+  position: absolute; left: 0; right: 0; top: 50%;
+  transform: translateY(-50%) rotateX(-76deg);
+  margin: 0 auto; width: 64%; height: 1.2rem;
+  background: #0d1a0b;
+  transition: background 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+}
+.sup-gc-light .lumen {
+  position: absolute; left: 0; top: 0;
+  width: 100%; height: 0;
+  pointer-events: none; opacity: 0; overflow: visible;
+  transition: opacity 0.45s ease-in-out;
+}
+.sup-gc-light .lumen .lm-min {
+  position: absolute; left: 0; right: 0; top: 0.5rem; margin: 0 auto;
+  width: 70%; height: 3rem;
+  background: linear-gradient(rgba(60,200,30,.85), rgba(60,200,30,0));
+  transform: rotateX(42deg); transform-origin: top center; opacity: 0.4;
+}
+.sup-gc-light .lumen .lm-mid {
+  position: absolute; left: 0; right: 0; top: 0.3rem; margin: 0 auto;
+  width: 74%; height: 10rem;
+  background: linear-gradient(rgba(40,180,20,.75), rgba(40,180,20,0));
+  transform: rotateX(42deg); transform-origin: top center;
+  filter: blur(1rem); opacity: 0.8; border-radius: 0 0 100% 100%;
+}
+.sup-gc-light .lumen .lm-hi {
+  position: absolute; left: 0; right: 0; top: 0.2rem; margin: 0 auto;
+  width: 50%; height: 8rem;
+  background: linear-gradient(rgba(100,230,50,.8), rgba(60,210,30,0));
+  transform: rotateX(-22deg); transform-origin: top center;
+  filter: blur(0.8rem); opacity: 0.6; border-radius: 0 0 100% 100%;
+}
+.sup-gc-light .darken {
+  position: absolute; left: 0; top: 0;
+  width: 100%; height: 0;
+  pointer-events: none; overflow: visible; opacity: 0.5;
+  transition: opacity 0.45s ease-in-out;
+}
+.sup-gc-light .darken > * { transition: opacity 0.45s ease-in-out; }
+.sup-gc-light .darken .dk-sl {
+  position: absolute; left: 0; right: 0; top: 2rem; margin: 0 auto;
+  width: 64%; height: 8rem;
+  background: linear-gradient(#0000, #000);
+  filter: blur(0.2rem); opacity: 0.1;
+  border-radius: 100% 100% 0 0; transform: rotateX(22deg); transform-origin: top center;
+}
+.sup-gc-light .darken .dk-ll {
+  position: absolute; left: 0; right: 0; top: 3rem; margin: 0 auto;
+  width: 62%; height: 8rem;
+  background: linear-gradient(#0000, #000a);
+  filter: blur(0.8rem); opacity: 0.4;
+  border-radius: 100% 100% 0 0; transform: rotateX(-22deg); transform-origin: top center;
+}
+.sup-gc-light .darken .dk-slt {
+  position: absolute; left: 18%; top: 0.4rem;
+  width: 0.5rem; height: 4rem;
+  background: linear-gradient(#0000, #0005); opacity: 0.6;
+  border-radius: 100% 100% 0 0; transform: skewY(-42deg); transform-origin: top;
+}
+.sup-gc-light .darken .dk-srt {
+  position: absolute; right: 18%; top: 0.4rem;
+  width: 0.5rem; height: 4rem;
+  background: linear-gradient(#0000, #0005); opacity: 0.6;
+  border-radius: 100% 100% 0 0; transform: skewY(42deg); transform-origin: top;
+}
+
+/* ── EXPANDED DETAILS ── */
+.sup-gc-details {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out;
+  padding: 0 1rem;
+  position: relative; z-index: 5;
+}
+.sup-gc-detail-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.32rem 0.4rem;
+  border-bottom: 1px solid rgba(80,140,50,.1);
+  border-radius: 0.4rem;
+  text-decoration: none; color: inherit;
+  transition: background 0.2s ease;
+}
+.sup-gc-detail-row:last-child { border-bottom: none; }
+.sup-gc-detail-row:hover { background: rgba(60,140,30,.12); }
+.sup-gc-detail-icon {
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: rgba(40,80,20,.45);
+  border: 1px solid rgba(80,150,40,.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 0.7rem;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.sup-gc-detail-row:hover .sup-gc-detail-icon {
+  background: rgba(50,110,25,.65);
+  box-shadow: 0 0 6px rgba(80,200,30,.2);
+}
+.sup-gc-detail-text { display: flex; flex-direction: column; gap: 0.06rem; min-width: 0; }
+.sup-gc-detail-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.38rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(100,160,60,.5);
+}
+.sup-gc-detail-value {
+  font-size: 0.52rem; color: #a8c890; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sup-gc-detail-chevron {
+  margin-left: auto; font-size: 0.5rem;
+  color: rgba(100,160,60,.35); flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.sup-gc-detail-row:hover .sup-gc-detail-chevron { color: rgba(120,200,60,.7); transform: translateX(2px); }
+
+/* ── FOOTER ── */
 .sup-gc-footer {
   display: flex; align-items: center; justify-content: space-between;
-  padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 0.65rem 1rem 0.9rem;
+  position: relative; z-index: 10;
 }
 .sup-gc-loc {
-  font-family: 'DM Mono', monospace; font-size: 8px;
-  color: rgba(200,220,205,0.3); letter-spacing: 1px;
-  display: flex; align-items: center; gap: 5px;
-  text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.3rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.48rem; letter-spacing: 0.1em;
+  color: #48682c; text-transform: uppercase;
 }
-.sup-gc-loc-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(0,229,160,0.4); flex-shrink: 0;
+.sup-gc-loc-dot { width: 0.36rem; height: 0.36rem; border-radius: 50%; background: #48682c; }
+
+/* ── TOGGLE ── */
+.sup-gc-toggle {
+  position: relative;
+  display: flex; align-items: center;
+  height: 0.85rem; width: 3.5rem;
+  border-radius: 0.28rem;
+  background: #060e06;
+  box-shadow: inset 0 0 0 1px #2a5a1a, inset 0 2px 4px #0006, 0 1px 3px #0005;
+  cursor: pointer; flex-shrink: 0; overflow: hidden;
+  transition: box-shadow 0.4s ease-in-out;
 }
-.sup-gc-arrow {
-  font-size: 11px; color: rgba(0,229,160,0.4);
-  transition: transform 0.15s, color 0.15s;
+.sup-gc-toggle .sup-gc-toggle-handle {
+  position: absolute; top: 0.1rem; bottom: 0.1rem; left: 0.1rem;
+  width: calc(50% - 0.1rem); border-radius: 0.18rem;
+  background: linear-gradient(160deg, #2a5a18, #1a3a10);
+  box-shadow: inset 0 1px 2px rgba(80,180,30,.25), inset 0 -1px 1px #0008, 0 1px 3px #0005;
+  transition: left 0.35s cubic-bezier(.4,0,.2,1), background 0.4s ease-in-out;
+  z-index: 1;
 }
-.sup-grid-card:hover .sup-gc-arrow { transform: translate(2px,-2px); color: #00e5a0; }
+.sup-gc-toggle.active .sup-gc-toggle-handle {
+  left: 50%;
+  background: linear-gradient(160deg, #3a7a20, #2a5a14);
+  box-shadow: inset 0 1px 4px rgba(120,230,50,.3), inset 0 -1px 1px rgba(0,0,0,.5), 0 0 4px rgba(80,200,30,.25);
+}
+
+/* ── ACTIVE (light on) state ── */
+.sup-grid-card:has(.sup-gc-toggle.active) {
+  box-shadow:
+    0 0 0 1px rgba(60,210,30,.22),
+    0 0 0 1px #1e3d14,
+    0 8px 48px #000b,
+    inset 0 1rem 0.1rem -1rem rgba(60,210,30,.6),
+    0 -0.5rem 0.8rem -0.5rem rgba(60,210,30,.3);
+}
+.sup-grid-card:has(.sup-gc-toggle.active) .slit {
+  background: #62d836;
+  box-shadow: 0 0 6px 1px #62d836, 0 0 20px 4px rgba(70,210,30,.4);
+}
+.sup-grid-card:has(.sup-gc-toggle.active) .lumen { opacity: 0.55; }
+.sup-grid-card:has(.sup-gc-toggle.active) .darken { opacity: 0.9; }
+.sup-grid-card:has(.sup-gc-toggle.active) .darken .dk-sl { opacity: 0.2; }
+.sup-grid-card:has(.sup-gc-toggle.active) .darken .dk-ll { opacity: 1; }
+.sup-grid-card:has(.sup-gc-toggle.active) .darken .dk-slt { opacity: 1; }
+.sup-grid-card:has(.sup-gc-toggle.active) .darken .dk-srt { opacity: 1; }
+.sup-grid-card:has(.sup-gc-toggle.active) .sup-gc-toggle {
+  box-shadow: inset 0 0 0 1px #4a8a2a, inset 0 2px 6px #0006, 0 0 8px rgba(70,200,30,.2);
+}
+.sup-grid-card:has(.sup-gc-toggle.active) .sup-gc-details { max-height: 14rem; opacity: 1; }
+
+/* Claim listing button (standard tier) */
 .sup-gc-claim {
   font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
   text-transform: uppercase; color: var(--amber); background: rgba(245,158,11,0.08);
@@ -2744,22 +2968,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   padding: 4px 9px; cursor: pointer; transition: background 0.15s;
 }
 .sup-gc-claim:hover { background: rgba(245,158,11,0.15); }
-
-/* Featured card — wider (span 2 in grid via different approach — CSS grid version) */
-.sup-grid-card.featured-card { border-color: rgba(245,158,11,0.2); }
-.sup-grid-card.featured-card:hover { border-color: rgba(245,158,11,0.5); }
-.sup-grid-card.featured-card::before { background: #f59e0b; }
-
-/* Responsive */
-@media (max-width: 1200px) { .sup-grid-wrap { columns: 3; } }
-@media (max-width: 900px)  { .sup-grid-wrap { columns: 2; } }
-@media (max-width: 540px)  { .sup-grid-wrap { columns: 1; } }
-
-/* Teaser grid (locked state — 2 rows visible, faded) */
-.sup-grid-wrap.teaser { columns: 4; position: relative; }
-@media (max-width: 1200px) { .sup-grid-wrap.teaser { columns: 3; } }
-@media (max-width: 900px)  { .sup-grid-wrap.teaser { columns: 2; } }
-@media (max-width: 540px)  { .sup-grid-wrap.teaser { columns: 1; } }
 
 </style>
 <script defer data-domain="cladwise.ae" src="https://plausible.io/js/script.js"></script>
@@ -5298,38 +5506,58 @@ const SUP_MAT_IMGS = {
 
 function supGridCardHTML(s, blurred, dimLocked) {
   const tierClass = s.tier === 'featured' ? 'featured' : s.tier === 'verified_pro' ? 'verified' : 'standard';
-  const tierLabel = s.tier === 'featured' ? '⭐ Featured' : s.tier === 'verified_pro' ? '✓ Verified' : 'Listed';
-  const isFeatured = s.tier === 'featured';
-  // pick preview image: supplier photo[0] > material default
+  const tierLabel = s.tier === 'featured' ? 'Featured' : s.tier === 'verified_pro' ? '✓ Verified' : 'Listed';
+  const isLocked  = blurred || dimLocked;
+  const idx       = SUPPLIERS.indexOf(s);
   const previewImg = (s.photos && s.photos[0]) || SUP_MAT_IMGS[s.mats[0]] || SUP_MAT_IMGS.default;
-  const mats = s.mats.map(m => `<span class="sup-gc-mat">${m}</span>`).join('');
-  const locCity = s.location.split(',').pop().trim();
+  const mats       = s.mats.map(m => `<span class="sup-gc-mat">${m}</span>`).join('');
+  const locCity    = s.location.split(',').pop().trim();
 
-  const preview = `
-    <div class="sup-gc-preview">
-      <img src="${previewImg}" alt="${s.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="sup-gc-preview-emoji" style="display:none">${s.emoji}</div>
-      <div class="sup-gc-tier-badge ${tierClass}">${tierLabel}</div>
-      ${(blurred && !dimLocked) ? '<div class="sup-gc-lock-icon">🔒</div>' : dimLocked ? '<div class="sup-gc-lock-icon" style="font-size:16px;color:rgba(255,255,255,0.2)">COMING SOON</div>' : ''}
-    </div>`;
+  // Detail rows — only built for non-locked cards
+  const detailRows = isLocked ? '' : [
+    s.phone   ? `<a class="sup-gc-detail-row" href="tel:${s.phone}" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">📞</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Call</span><span class="sup-gc-detail-value">${s.phone}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
+    s.email   ? `<a class="sup-gc-detail-row" href="mailto:${s.email}" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">✉️</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Email</span><span class="sup-gc-detail-value">${s.email}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
+    s.website ? `<a class="sup-gc-detail-row" href="${s.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">🌐</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Website</span><span class="sup-gc-detail-value">${s.website.replace(/^https?:\/\//,'')}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
+    s.address ? `<a class="sup-gc-detail-row" href="https://maps.google.com/?q=${encodeURIComponent(s.address)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">📍</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Location</span><span class="sup-gc-detail-value">${s.address}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
+  ].filter(Boolean).join('');
 
-  const body = `
+  // Footer right: toggle for non-locked, claim button for standard, nothing for locked
+  const footerRight = isLocked
+    ? ''
+    : s.tier === 'standard'
+      ? `<button class="sup-gc-claim" onclick="event.stopPropagation();openSubModal('list')">Claim listing →</button>`
+      : `<div class="sup-gc-toggle" onclick="event.stopPropagation();this.classList.toggle('active')"><div class="sup-gc-toggle-handle"></div></div>`;
+
+  const clickAction = isLocked ? '' : `onclick="openSupProfile(${idx})"`;
+  const lockedClass = isLocked ? ' sup-gc-locked' : '';
+  const lockOverlay = (blurred && !dimLocked) ? '<div class="sup-gc-lock-icon">🔒</div>' : dimLocked ? '<div class="sup-gc-lock-icon" style="font-size:14px;color:rgba(255,255,255,0.2)">COMING SOON</div>' : '';
+
+  return `<div class="sup-grid-card${lockedClass}" ${clickAction}>
+    <div class="sup-gc-cover">
+      <img src="${previewImg}" alt="${s.name}" loading="lazy" onerror="this.style.display='none'">
+      <div class="sup-gc-cover-fallback"></div>
+    </div>
+    ${lockOverlay}
+    <div class="sup-gc-tier-badge ${tierClass}">${tierLabel}</div>
+    <div class="sup-gc-avatar">${s.emoji || '🏗️'}</div>
     <div class="sup-gc-body">
-      <div class="sup-gc-name">${s.name}</div>
+      <div class="sup-gc-name-row">
+        <span class="sup-gc-name">${s.name}</span>
+      </div>
       <div class="sup-gc-tagline">${s.tagline || ''}</div>
       <div class="sup-gc-mats">${mats}</div>
-      <div class="sup-gc-footer">
-        <div class="sup-gc-loc">
-          <div class="sup-gc-loc-dot"></div>
-          ${locCity}
-        </div>
-        ${(!blurred && s.tier === 'standard') ? '<button class="sup-gc-claim" onclick="event.stopPropagation();openSubModal(\'list\')">Claim listing →</button>' : '<span class="sup-gc-arrow">↗</span>'}
-      </div>
-    </div>`;
-
-  const clickAction = blurred ? '' : `onclick="openSupProfile(${SUPPLIERS.indexOf(s)})"`;
-  const isLockedClass = (blurred || dimLocked) ? ' sup-gc-locked' : '';
-  return `<div class="sup-grid-card${isFeatured ? ' featured-card' : ''}${isLockedClass}" ${clickAction}>${preview}${body}</div>`;
+    </div>
+    <div class="sup-gc-light">
+      <div class="slit"></div>
+      <div class="lumen"><div class="lm-min"></div><div class="lm-mid"></div><div class="lm-hi"></div></div>
+      <div class="darken"><div class="dk-sl"></div><div class="dk-ll"></div><div class="dk-slt"></div><div class="dk-srt"></div></div>
+    </div>
+    <div class="sup-gc-details"><div style="height:0.3rem"></div>${detailRows}<div style="height:0.3rem"></div></div>
+    <div class="sup-gc-footer">
+      <div class="sup-gc-loc"><div class="sup-gc-loc-dot"></div>${locCity}</div>
+      ${footerRight}
+    </div>
+  </div>`
 }
 
 function buildSuppliers() {
