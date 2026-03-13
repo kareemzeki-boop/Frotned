@@ -3902,6 +3902,12 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- Supplier pending banner -->
+<div id="pending-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:490;background:rgba(245,158,11,0.12);border-top:1px solid rgba(245,158,11,0.3);backdrop-filter:blur(8px);padding:12px 24px;display:none;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+  <span style="font-size:13px;color:#f59e0b;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.5px">⏳ Your supplier account is <strong>pending approval</strong> — you will receive an email once reviewed (usually within 24–48 hrs)</span>
+  <button onclick="document.getElementById('pending-banner').style.display='none'" style="background:none;border:1px solid rgba(245,158,11,0.3);color:#f59e0b;border-radius:4px;padding:3px 10px;font-size:10px;cursor:pointer;font-family:'DM Mono',monospace">Dismiss</button>
+</div>
+
 <script>
 // ─── DATA ───────────────────────────────────────────────────────────────────
 const MATERIALS = {
@@ -5521,10 +5527,12 @@ async function cwLoadSession() {
     cwSession = await cwFetch('GET', '/users/me');
     cwUpdateNav();
     cwUpdateSupplierSection();
+    cwUpdatePendingBanner();
   } catch {
     cwClearToken();
     cwSession = null;
     cwUpdateNav();
+    cwUpdatePendingBanner();
   }
 }
 
@@ -5542,6 +5550,13 @@ function cwUpdateNav() {
   }
   // Also sync the API tester token display
   if (typeof refreshTok === 'function') refreshTok();
+}
+
+function cwUpdatePendingBanner() {
+  const banner = document.getElementById('pending-banner');
+  if (!banner) return;
+  const isPending = cwSession?.user?.role === 'SUPPLIER' && cwSession?.profile?.verification_status === 'PENDING';
+  banner.style.display = isPending ? 'flex' : 'none';
 }
 
 // ── NAV SCROLL SPY ───────────────────────────────────────────────────────────

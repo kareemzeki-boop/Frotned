@@ -73,6 +73,9 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32p
 .act-res{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-top:8px;display:none}
 .empty{text-align:center;padding:60px 0;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px}
 .loading{text-align:center;padding:60px 0;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px}
+.page-tab{padding:12px 24px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s,border-color 0.15s}
+.page-tab:hover{color:var(--text)}
+.page-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -92,31 +95,65 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32p
     <div class="header-logo">CLADWISE UAE</div>
     <div class="header-right">
       <div class="header-badge">ADMIN</div>
-      <button class="icon-btn" onclick="loadApps()">↻ Refresh</button>
+      <button class="icon-btn" onclick="refreshCurrent()">↻ Refresh</button>
       <a href="index.html" class="icon-btn" style="text-decoration:none">← Site</a>
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
   </header>
   <div class="main">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
-      <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;letter-spacing:0.5px;text-transform:uppercase">Supplier Applications</div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:2px">REVIEW · APPROVE · REJECT</div>
+
+    <!-- Page tabs -->
+    <div style="display:flex;gap:0;margin-bottom:32px;border-bottom:1px solid var(--border)">
+      <button class="page-tab active" id="ptab-apps" onclick="switchPage('apps')">Supplier Applications</button>
+      <button class="page-tab" id="ptab-regs" onclick="switchPage('regs')">Registered Accounts <span id="regs-pending-badge" style="display:none;margin-left:6px;background:rgba(245,158,11,0.2);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:10px;font-size:9px;padding:2px 7px;font-family:'DM Mono',monospace"></span></button>
+    </div>
+
+    <!-- APPLICATIONS PAGE -->
+    <div id="page-apps">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;letter-spacing:0.5px;text-transform:uppercase">Supplier Applications</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:2px">REVIEW · APPROVE · REJECT</div>
+        </div>
       </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="st-total">—</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-card s-pending"><div class="stat-val" id="st-pending">—</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-card s-approved"><div class="stat-val" id="st-approved">—</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-card s-rejected"><div class="stat-val" id="st-rejected">—</div><div class="stat-lbl">Rejected</div></div>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-tab" onclick="setFilter('pending',this)">Pending</button>
+        <button class="filter-tab" onclick="setFilter('approved',this)">Approved</button>
+        <button class="filter-tab" onclick="setFilter('rejected',this)">Rejected</button>
+      </div>
+      <div id="app-list" class="app-list"><div class="loading">LOADING...</div></div>
     </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-val" id="st-total">—</div><div class="stat-lbl">Total</div></div>
-      <div class="stat-card s-pending"><div class="stat-val" id="st-pending">—</div><div class="stat-lbl">Pending</div></div>
-      <div class="stat-card s-approved"><div class="stat-val" id="st-approved">—</div><div class="stat-lbl">Approved</div></div>
-      <div class="stat-card s-rejected"><div class="stat-val" id="st-rejected">—</div><div class="stat-lbl">Rejected</div></div>
+
+    <!-- REGISTERED ACCOUNTS PAGE -->
+    <div id="page-regs" style="display:none">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;letter-spacing:0.5px;text-transform:uppercase">Registered Accounts</div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:2px">SUPPLIER SIGNUPS · APPROVE · REJECT</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="rg-total">—</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-card s-pending"><div class="stat-val" id="rg-pending">—</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-card s-approved"><div class="stat-val" id="rg-verified">—</div><div class="stat-lbl">Verified</div></div>
+        <div class="stat-card s-rejected"><div class="stat-val" id="rg-rejected">—</div><div class="stat-lbl">Rejected</div></div>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setRegFilter('all',this)">All</button>
+        <button class="filter-tab" onclick="setRegFilter('PENDING',this)">Pending</button>
+        <button class="filter-tab" onclick="setRegFilter('VERIFIED',this)">Verified</button>
+        <button class="filter-tab" onclick="setRegFilter('REJECTED',this)">Rejected</button>
+      </div>
+      <div id="reg-list" class="app-list"><div class="loading">LOADING...</div></div>
     </div>
-    <div class="filter-tabs">
-      <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
-      <button class="filter-tab" onclick="setFilter('pending',this)">Pending</button>
-      <button class="filter-tab" onclick="setFilter('approved',this)">Approved</button>
-      <button class="filter-tab" onclick="setFilter('rejected',this)">Rejected</button>
-    </div>
-    <div id="app-list" class="app-list"><div class="loading">LOADING...</div></div>
+
   </div>
 </div>
 
@@ -124,6 +161,8 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32p
 const API='https://backend-cladwise-production.up.railway.app'
 const ADMIN_SECRET='cladwise2025admin'
 let allApps=[], currentFilter='all'
+let allRegs=[], currentRegFilter='all'
+let currentPage='apps'
 
 function login(){
   const p=document.getElementById('admin-pass').value
@@ -131,12 +170,26 @@ function login(){
   document.getElementById('login-screen').style.display='none'
   document.getElementById('admin-screen').style.display='block'
   loadApps()
+  loadRegs()
 }
 function logout(){
   document.getElementById('login-screen').style.display='flex'
   document.getElementById('admin-screen').style.display='none'
   document.getElementById('admin-pass').value=''
 }
+function refreshCurrent(){
+  if(currentPage==='apps') loadApps()
+  else loadRegs()
+}
+function switchPage(page){
+  currentPage=page
+  document.getElementById('page-apps').style.display=page==='apps'?'block':'none'
+  document.getElementById('page-regs').style.display=page==='regs'?'block':'none'
+  document.getElementById('ptab-apps').classList.toggle('active',page==='apps')
+  document.getElementById('ptab-regs').classList.toggle('active',page==='regs')
+}
+
+// APPLICATIONS
 async function loadApps(){
   document.getElementById('app-list').innerHTML='<div class="loading">LOADING APPLICATIONS...</div>'
   try{
@@ -154,7 +207,7 @@ async function loadApps(){
 }
 function setFilter(f,el){
   currentFilter=f
-  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'))
+  document.querySelectorAll('#page-apps .filter-tab').forEach(t=>t.classList.remove('active'))
   el.classList.add('active')
   renderApps()
 }
@@ -169,8 +222,8 @@ function renderRow(a){
   const mats=(d.materials?.live||[]).map(m=>`<span class="app-mat">${m}</span>`).join('')||'<span class="app-mat" style="opacity:.3">—</span>'
   const date=new Date(a.created_at).toLocaleDateString('en-AE',{day:'2-digit',month:'short',year:'numeric'})
   const c=d.company||{}, ct=d.contact||{}, m=d.materials||{}
-  const rev = a.reviewed_at ? `Reviewed ${new Date(a.reviewed_at).toLocaleDateString('en-AE')}` : ''
-  const detHtml = `
+  const rev=a.reviewed_at?`Reviewed ${new Date(a.reviewed_at).toLocaleDateString('en-AE')}`:''
+  const detHtml=`
   <div class="det-grid">
     <div>
       <div class="det-sec-title" style="margin-bottom:10px">Company</div>
@@ -224,14 +277,6 @@ function renderRow(a){
     <div class="app-detail" id="det-${a.id}">${detHtml}</div>
   </div>`
 }
-function drow(k,v){return `<div class="det-row"><span class="det-k">${k}</span><span class="det-v">${v}</span></div>`}
-function toggle(id,row){
-  const det=document.getElementById(id)
-  const isOpen=det.classList.contains('open')
-  document.querySelectorAll('.app-detail').forEach(d=>d.classList.remove('open'))
-  document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('expanded'))
-  if(!isOpen){det.classList.add('open');row.classList.add('expanded')}
-}
 async function doAction(id,action){
   const note=document.getElementById(`note-${id}`)?.value||''
   const res=document.getElementById(`res-${id}`)
@@ -246,6 +291,110 @@ async function doAction(id,action){
     if(r.ok){res.textContent=`✓ ${action==='approve'?'Approved':'Rejected'} — email sent`;setTimeout(()=>loadApps(),1500)}
     else{res.textContent='✕ '+data.message;res.style.color='#f87171'}
   }catch(e){res.textContent='✕ Network error';res.style.color='#f87171'}
+}
+
+// REGISTERED ACCOUNTS
+async function loadRegs(){
+  document.getElementById('reg-list').innerHTML='<div class="loading">LOADING ACCOUNTS...</div>'
+  try{
+    const r=await fetch(`${API}/api/admin/registrations`,{headers:{'x-admin-secret':ADMIN_SECRET}})
+    const data=await r.json()
+    allRegs=data.registrations||[]
+    const pending=allRegs.filter(x=>x.verification_status==='PENDING').length
+    document.getElementById('rg-total').textContent=allRegs.length
+    document.getElementById('rg-pending').textContent=pending
+    document.getElementById('rg-verified').textContent=allRegs.filter(x=>x.verification_status==='VERIFIED').length
+    document.getElementById('rg-rejected').textContent=allRegs.filter(x=>x.verification_status==='REJECTED').length
+    const badge=document.getElementById('regs-pending-badge')
+    if(pending>0){badge.style.display='inline';badge.textContent=pending+' pending'}
+    else badge.style.display='none'
+    renderRegs()
+  }catch(e){
+    document.getElementById('reg-list').innerHTML='<div class="empty">Failed to load — check backend</div>'
+  }
+}
+function setRegFilter(f,el){
+  currentRegFilter=f
+  document.querySelectorAll('#page-regs .filter-tab').forEach(t=>t.classList.remove('active'))
+  el.classList.add('active')
+  renderRegs()
+}
+function renderRegs(){
+  const list=document.getElementById('reg-list')
+  const filtered=currentRegFilter==='all'?allRegs:allRegs.filter(x=>x.verification_status===currentRegFilter)
+  if(!filtered.length){list.innerHTML='<div class="empty">No accounts</div>';return}
+  list.innerHTML=filtered.map(x=>renderRegRow(x)).join('')
+}
+function renderRegRow(r){
+  const date=new Date(r.registered_at).toLocaleDateString('en-AE',{day:'2-digit',month:'short',year:'numeric'})
+  const st=r.verification_status
+  const stClass=st==='VERIFIED'?'s-approved':st==='REJECTED'?'s-rejected':'s-pending'
+  const detHtml=`
+  <div class="det-grid">
+    <div>
+      <div class="det-sec-title" style="margin-bottom:10px">Account Details</div>
+      ${drow('Email',r.email)}
+      ${drow('Category',r.category||'—')}
+      ${drow('Tax ID',r.tax_id||'—')}
+      ${drow('Trade Licence',r.trade_licence_number||'—')}
+      ${drow('Emirate',r.trade_licence_emirate||'—')}
+      ${drow('Registered',date)}
+    </div>
+    <div>
+      ${r.verification_note?`<div class="det-sec-title">Review Note</div><div style="font-size:12px;color:var(--muted);padding:10px;background:var(--bg2);border-radius:4px;line-height:1.6;margin-bottom:16px">${r.verification_note}</div>`:''}
+      ${r.verified_at?drow('Approved On',new Date(r.verified_at).toLocaleDateString('en-AE')):''}
+    </div>
+  </div>
+  ${st==='PENDING'?`
+  <div class="action-area">
+    <div class="det-sec-title" style="margin-bottom:10px">Admin Action</div>
+    <textarea class="note-inp" id="rnote-${r.id}" placeholder="Optional note for the email to supplier..."></textarea>
+    <div class="action-btns">
+      <button class="btn-approve" onclick="doRegAction('${r.id}','VERIFIED')">✓ Approve & Notify</button>
+      <button class="btn-reject"  onclick="doRegAction('${r.id}','REJECTED')">✕ Reject & Notify</button>
+      <button class="btn-mail"    onclick="window.open('mailto:${r.email}')">✉ Email Directly</button>
+    </div>
+    <div class="act-res" id="rres-${r.id}"></div>
+  </div>`:`
+  <div style="margin-top:16px;display:flex;align-items:center;gap:12px">
+    <span class="sbadge ${stClass}">${st}</span>
+    <button class="btn-mail" style="margin-left:auto" onclick="window.open('mailto:${r.email}')">✉ Email</button>
+  </div>`}
+  `
+  return `<div>
+    <div class="app-row" onclick="toggle('rdet-${r.id}',this)">
+      <div><div class="app-name">${r.shop_name}</div><div class="app-sub">${r.email} · ${r.category||'—'}</div></div>
+      <div class="app-mats"><span class="app-mat">${r.trade_licence_emirate||'UAE'}</span></div>
+      <div class="app-date">${date}</div>
+      <span class="sbadge ${stClass}">${st}</span>
+    </div>
+    <div class="app-detail" id="rdet-${r.id}">${detHtml}</div>
+  </div>`
+}
+async function doRegAction(id,status){
+  const note=document.getElementById(`rnote-${id}`)?.value||''
+  const res=document.getElementById(`rres-${id}`)
+  res.style.display='block';res.style.color='var(--accent)';res.textContent='Sending...'
+  try{
+    const r=await fetch(`${API}/api/admin/registrations/${id}/verify`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json','x-admin-secret':ADMIN_SECRET},
+      body:JSON.stringify({status,note})
+    })
+    const data=await r.json()
+    if(r.ok){res.textContent=`✓ ${status==='VERIFIED'?'Approved':'Rejected'} — email sent`;setTimeout(()=>loadRegs(),1500)}
+    else{res.textContent='✕ '+data.message;res.style.color='#f87171'}
+  }catch(e){res.textContent='✕ Network error';res.style.color='#f87171'}
+}
+
+// SHARED
+function drow(k,v){return `<div class="det-row"><span class="det-k">${k}</span><span class="det-v">${v}</span></div>`}
+function toggle(id,row){
+  const det=document.getElementById(id)
+  const isOpen=det.classList.contains('open')
+  document.querySelectorAll('.app-detail').forEach(d=>d.classList.remove('open'))
+  document.querySelectorAll('.app-row').forEach(r=>r.classList.remove('expanded'))
+  if(!isOpen){det.classList.add('open');row.classList.add('expanded')}
 }
 </script>
 </body>
