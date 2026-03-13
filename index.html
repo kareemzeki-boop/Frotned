@@ -2737,6 +2737,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   transition: transform 0.15s, color 0.15s;
 }
 .sup-grid-card:hover .sup-gc-arrow { transform: translate(2px,-2px); color: #00e5a0; }
+.sup-gc-claim {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--amber); background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25); border-radius: 5px;
+  padding: 4px 9px; cursor: pointer; transition: background 0.15s;
+}
+.sup-gc-claim:hover { background: rgba(245,158,11,0.15); }
 
 /* Featured card — wider (span 2 in grid via different approach — CSS grid version) */
 .sup-grid-card.featured-card { border-color: rgba(245,158,11,0.2); }
@@ -5310,7 +5317,7 @@ function supGridCardHTML(s, blurred, dimLocked) {
           <div class="sup-gc-loc-dot"></div>
           ${locCity}
         </div>
-        <span class="sup-gc-arrow">↗</span>
+        ${(!blurred && s.tier === 'standard') ? '<button class="sup-gc-claim" onclick="event.stopPropagation();openSubModal(\'list\')">Claim listing →</button>' : '<span class="sup-gc-arrow">↗</span>'}
       </div>
     </div>`;
 
