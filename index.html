@@ -232,50 +232,9 @@ h1 span{color:var(--accent)}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:16px;overflow:hidden;opacity:0;animation:fadeUp 0.6s 0.8s ease forwards}
 .stat-box{background:transparent;padding:32px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.06)}
-.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;color:var(--text);line-height:1;display:block;position:relative}
-
-/* Glitch + roll effect */
-@keyframes statRoll {
-  0%   { transform: translateY(-6px); opacity: 0; filter: blur(4px); }
-  30%  { transform: translateY(2px);  opacity: 0.7; filter: blur(1px); }
-  55%  { transform: translateY(-2px); opacity: 0.9; filter: blur(0.5px); }
-  75%  { transform: translateY(1px);  opacity: 1;   filter: blur(0); }
-  88%  { transform: translateY(-0.5px); }
-  100% { transform: translateY(0);    opacity: 1;   filter: blur(0); }
-}
-@keyframes glitchShift {
-  0%,100% { clip-path: none; transform: none; color: var(--text); }
-  8%  { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); color: #00e5a0; }
-  10% { clip-path: inset(50% 0 30% 0); transform: translateX(4px);  color: #ff3a3a; }
-  12% { clip-path: none; transform: none; color: var(--text); }
-  22% { clip-path: inset(10% 0 80% 0); transform: translateX(-2px); color: #00e5a0; }
-  24% { clip-path: none; transform: none; color: var(--text); }
-  60% { clip-path: inset(70% 0 10% 0); transform: translateX(3px);  color: #00e5a0; }
-  62% { clip-path: none; transform: none; color: var(--text); }
-}
-.stat-num.animating {
-  animation: statRoll 0.7s cubic-bezier(0.22,1,0.36,1) forwards,
-             glitchShift 0.7s steps(1) forwards;
-}
-.stat-num.animating::before,
-.stat-num.animating::after {
-  content: attr(data-val);
-  position: absolute; left: 0; right: 0; top: 0;
-  font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit;
-  pointer-events: none;
-}
-.stat-num.animating::before {
-  color: #00e5a0;
-  animation: glitchShift 0.7s steps(1) forwards;
-  opacity: 0.5;
-}
-.stat-num.animating::after {
-  color: #ff3a3a;
-  animation: glitchShift 0.7s steps(1) reverse forwards;
-  opacity: 0.35;
-}
 .stat-num{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;color:var(--text);line-height:1;display:block}
 .stat-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:6px;font-family:'DM Mono',monospace}
+/* Airport split-flap: each char cycles via JS, no CSS animation needed */
 .hero-visual{opacity:0;animation:fadeRight 0.8s 0.4s ease forwards}
 .material-preview{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .mat-prev{border-radius:16px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;height:160px;cursor:pointer;transition:all 0.3s;border:1px solid transparent;position:relative;overflow:hidden}
@@ -9114,26 +9073,81 @@ function spTab(name, btn) {
 </div>
 
 <script>
-// ── STAT NUMBERS: roll + glitch on enter viewport ──────────────
+// ── STAT NUMBERS: Airport split-flap / departures board ──────────
 (function() {
-  const nums = document.querySelectorAll('.stat-num[data-val]');
-  if (!nums.length) return;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      io.unobserve(el);
-      // Stagger each number slightly
-      const idx = Array.from(nums).indexOf(el);
+  const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ';
+  // Each stat: { el, target }
+  const stats = [
+    { sel: '.hero-stats-inner .stat-box:nth-child(1) .stat-num', target: '2' },
+    { sel: '.hero-stats-inner .stat-box:nth-child(2) .stat-num', target: '4' },
+    { sel: '.hero-stats-inner .stat-box:nth-child(3) .stat-num', target: '7' },
+    { sel: '.hero-stats-inner .stat-box:nth-child(4) .stat-num', target: 'MANUALLY REVIEWED' },
+  ];
+
+  function rollChar(el, finalChar, duration, delay) {
+    // cycles through random chars then snaps to final
+    const steps = Math.round(duration / 60); // ~60ms per frame
+    let count = 0;
+    const interval = setInterval(() => {
+      count++;
+      if (count >= steps) {
+        el.textContent = finalChar;
+        clearInterval(interval);
+      } else {
+        // Weighted: last 30% of steps bias toward final char
+        const progress = count / steps;
+        if (progress > 0.7 && Math.random() > 0.4) {
+          el.textContent = finalChar;
+        } else {
+          el.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+        }
+      }
+    }, 60);
+    return interval;
+  }
+
+  function animateStat(statEl, target, baseDelay) {
+    // Each character gets its own rolling span, staggered
+    statEl.innerHTML = '';
+    const chars = target.split('');
+    chars.forEach((ch, i) => {
+      const span = document.createElement('span');
+      span.style.cssText = 'display:inline-block;min-width:0.55ch';
+      span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+      statEl.appendChild(span);
+
+      // Each char starts slightly after the previous
+      const charDelay = baseDelay + i * 80;
+      // Duration increases slightly for later chars (like real board)
+      const charDuration = 600 + i * 60;
+
       setTimeout(() => {
-        el.classList.remove('animating');
-        void el.offsetWidth; // reflow to restart
-        el.classList.add('animating');
-        el.addEventListener('animationend', () => el.classList.remove('animating'), { once: true });
-      }, idx * 120);
+        rollChar(span, ch, charDuration, 0);
+      }, charDelay);
     });
-  }, { threshold: 0.5 });
-  nums.forEach(n => io.observe(n));
+  }
+
+  // Trigger on first intersection
+  const boxes = document.querySelectorAll('.hero-stats-inner .stat-box');
+  if (!boxes.length) return;
+
+  let fired = false;
+  const io = new IntersectionObserver((entries) => {
+    if (fired) return;
+    const visible = entries.some(e => e.isIntersecting);
+    if (!visible) return;
+    fired = true;
+    io.disconnect();
+
+    stats.forEach((s, i) => {
+      const el = document.querySelector(s.sel);
+      if (!el) return;
+      // Stagger each stat box by 150ms
+      animateStat(el, s.target, i * 150);
+    });
+  }, { threshold: 0.4 });
+
+  boxes.forEach(b => io.observe(b));
 })();
 </script>
 
