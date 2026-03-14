@@ -30,6 +30,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
@@ -4783,9 +4784,9 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous material" onclick="deckPrev()">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" role="button" tabindex="0" aria-label="Go to material ${i+1}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next material" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
@@ -5201,6 +5202,13 @@ document.addEventListener('keydown', e => {
   } else if (document.getElementById('modal-overlay').classList.contains('open')) {
     if (e.key === 'Escape') closeModal();
   }
+  // Global Enter/Space to click mapping for role="button"
+  if (e.target instanceof Element && e.target.getAttribute('role') === 'button') {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.target.click();
+    }
+  }
 });
 
 // ─── COMPARISON ─────────────────────────────────────────────────────────────
@@ -5210,7 +5218,7 @@ function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
   controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" role="button" tabindex="0" aria-label="Toggle ${key} in comparison" onclick="toggleMat('${key}')">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
     </div>`).join('');
