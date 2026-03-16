@@ -1,0 +1,3 @@
+## 2025-05-15 - Material Deck Keyboard Accessibility
+**Learning:** Core interactive components in this repository (e.g., .mat-toggle, .mat-deck-dot, .mat-deck-arrow) are often built using non-semantic <div> elements that require manual addition of role="button", tabindex="0", and aria-label for accessibility. Furthermore, keyboard parity for these custom buttons requires a global or local 'keydown' listener to map 'Enter' and 'Space' to 'click' events.
+**Action:** When implementing micro-UX improvements in this codebase, prioritize native <button> elements where possible, or ensure 'role="button"' and keyboard event mapping are consistently applied to custom <div> triggers. Use 2px solid var(--accent) for focus-visible outlines to maintain design system consistency.
