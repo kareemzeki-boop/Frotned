@@ -559,6 +559,7 @@ section{padding:100px 0}
 }
 .mat-deck-dot.active { background: var(--accent); transform: scale(1.35); }
 .mat-deck-dot:hover { background: rgba(0,229,160,0.5); }
+.mat-deck-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; background: rgba(0,229,160,0.5); }
 .mat-deck-arrow {
   width: 32px; height: 32px; border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.1);
@@ -568,6 +569,7 @@ section{padding:100px 0}
   transition: all 0.15s;
 }
 .mat-deck-arrow:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,0.06); }
+.mat-deck-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-color: var(--accent); color: var(--accent); }
 
 /* ── DECK SIDEBAR (material list) ──────────────────────────────────── */
 .mat-deck-sidebar {
@@ -588,6 +590,7 @@ section{padding:100px 0}
   transition: all 0.18s;
 }
 .mat-deck-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.07); }
+.mat-deck-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: rgba(0,229,160,0.1); border-color: rgba(0,229,160,0.3); }
 .mat-deck-item.active {
   background: rgba(0,229,160,0.06);
   border-color: rgba(0,229,160,0.2);
@@ -4900,14 +4903,14 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous material" onclick="deckPrev()">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" role="button" tabindex="0" aria-label="Go to ${MATERIALS[k].name}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next material" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" role="button" tabindex="0" aria-label="Select ${MATERIALS[key].name}" onclick="deckGo(${i})">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
       <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
@@ -4993,6 +4996,26 @@ function buildDeck() {
 
   window.deckNext = function() { deckGo(current + 1, 1);  };
   window.deckPrev = function() { deckGo(current - 1, -1); };
+
+  // ── KEYBOARD ACCESSIBILITY ───────────────────────────────────────
+  const handleKeyNav = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.currentTarget.click();
+    }
+  };
+
+  function addKeyListeners() {
+    nav.querySelectorAll('.mat-deck-dot, .mat-deck-arrow').forEach(el => {
+      el.addEventListener('keydown', handleKeyNav);
+    });
+    sidebar.querySelectorAll('.mat-deck-item').forEach(el => {
+      el.addEventListener('keydown', handleKeyNav);
+    });
+  }
+
+  // Initial key listeners
+  addKeyListeners();
 
   // ── SWIPE UP / DOWN + MOUSE WHEEL ────────────────────────────────
   let touchStartY = 0;
