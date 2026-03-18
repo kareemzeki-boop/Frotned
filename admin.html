@@ -160,6 +160,25 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32p
 <script>
 const API='https://backend-cladwise-production.up.railway.app'
 const ADMIN_SECRET='cladwise2025admin'
+
+// Retry fetch up to 3 times — handles Railway cold-start (first request may timeout)
+async function fetchWithRetry(url, opts, retries=3, delayMs=4000) {
+  for (let i=0; i<retries; i++) {
+    try {
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), 12000); // 12s timeout per attempt
+      const r = await fetch(url, { ...opts, signal: controller.signal });
+      clearTimeout(tid);
+      return r;
+    } catch(e) {
+      if (i < retries-1) {
+        await new Promise(res => setTimeout(res, delayMs));
+      } else {
+        throw e;
+      }
+    }
+  }
+}
 let allApps=[], currentFilter='all'
 let allRegs=[], currentRegFilter='all'
 let currentPage='apps'
@@ -169,8 +188,14 @@ function login(){
   if(p!=='cladwise2025admin'){document.getElementById('login-err').style.display='block';return}
   document.getElementById('login-screen').style.display='none'
   document.getElementById('admin-screen').style.display='block'
-  loadApps()
-  loadRegs()
+  // Show waking message after 3s if still loading
+  const wakeTimer = setTimeout(() => {
+    const appEl = document.getElementById('app-list');
+    const regEl = document.getElementById('reg-list');
+    if (appEl && appEl.innerHTML.includes('LOADING')) appEl.innerHTML='<div class="loading">WAKING BACKEND — this takes up to 15s on first load...</div>'
+    if (regEl && regEl.innerHTML.includes('LOADING')) regEl.innerHTML='<div class="loading">WAKING BACKEND — this takes up to 15s on first load...</div>'
+  }, 3000)
+  Promise.all([loadApps(), loadRegs()]).finally(() => clearTimeout(wakeTimer))
 }
 function logout(){
   document.getElementById('login-screen').style.display='flex'
@@ -191,9 +216,9 @@ function switchPage(page){
 
 // APPLICATIONS
 async function loadApps(){
-  document.getElementById('app-list').innerHTML='<div class="loading">LOADING APPLICATIONS...</div>'
+  document.getElementById('app-list').innerHTML='<div class="loading">LOADING...</div>'
   try{
-    const r=await fetch(`${API}/api/admin/applications`,{headers:{'x-admin-secret':ADMIN_SECRET}})
+    const r=await fetchWithRetry(`${API}/api/admin/applications`,{headers:{'x-admin-secret':ADMIN_SECRET}})
     const data=await r.json()
     allApps=data.applications||[]
     document.getElementById('st-total').textContent=allApps.length
@@ -202,7 +227,7 @@ async function loadApps(){
     document.getElementById('st-rejected').textContent=allApps.filter(a=>a.status==='rejected').length
     renderApps()
   }catch(e){
-    document.getElementById('app-list').innerHTML='<div class="empty">Failed to load — check backend</div>'
+    document.getElementById('app-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center">Backend is asleep — <button onclick="loadApps()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
   }
 }
 function setFilter(f,el){
@@ -295,9 +320,9 @@ async function doAction(id,action){
 
 // REGISTERED ACCOUNTS
 async function loadRegs(){
-  document.getElementById('reg-list').innerHTML='<div class="loading">LOADING ACCOUNTS...</div>'
+  document.getElementById('reg-list').innerHTML='<div class="loading">LOADING...</div>'
   try{
-    const r=await fetch(`${API}/api/admin/registrations`,{headers:{'x-admin-secret':ADMIN_SECRET}})
+    const r=await fetchWithRetry(`${API}/api/admin/registrations`,{headers:{'x-admin-secret':ADMIN_SECRET}})
     const data=await r.json()
     allRegs=data.registrations||[]
     const pending=allRegs.filter(x=>x.verification_status==='PENDING').length
@@ -310,7 +335,7 @@ async function loadRegs(){
     else badge.style.display='none'
     renderRegs()
   }catch(e){
-    document.getElementById('reg-list').innerHTML='<div class="empty">Failed to load — check backend</div>'
+    document.getElementById('reg-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center">Backend is asleep — <button onclick="loadRegs()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
   }
 }
 function setRegFilter(f,el){
