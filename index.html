@@ -710,42 +710,46 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 /* WIZARD */
 #wizard{background:var(--bg);border-top:1px solid rgba(0,229,160,0.07)}
-.wizard-wrap{max-width:760px;margin:52px auto 0}
-.wizard-card{background:var(--bg2);border-radius:0;border:1px solid rgba(0,229,160,0.12);overflow:hidden}
+.wizard-wrap{max-width:720px;margin:52px auto 0}
+.wizard-card{background:var(--bg2);border-radius:12px;border:1px solid rgba(0,229,160,0.12);overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.4)}
 .wizard-progress{height:3px;background:rgba(0,229,160,0.08)}
-.wizard-progress-bar{height:4px;background:var(--accent);transition:width 0.4s ease}
+.wizard-progress-bar{height:3px;background:linear-gradient(to right,rgba(0,229,160,0.6),var(--accent));transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
 .wizard-body{padding:48px 52px}
 .wizard-step{display:none}
 .wizard-step.active{display:block}
-.wizard-q{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;letter-spacing:0px;margin-bottom:8px;text-transform:uppercase}
-.wizard-hint{color:var(--muted);font-size:13px;margin-bottom:32px}
-.wizard-options{display:grid;gap:12px}
-.wiz-opt{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all 0.2s;font-size:14px;font-weight:500}
-.wiz-opt:hover{border-color:var(--accent);background:rgba(0,229,160,0.04)}
-.wiz-opt.selected{border-color:var(--accent);background:rgba(0,229,160,0.08);color:var(--accent)}
-.wiz-opt .wiz-icon{width:40px;height:40px;border-radius:2px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px}
-.step-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
-.btn-wiz{padding:12px 28px;border-radius:2px;font-weight:800;font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'Barlow Condensed',sans-serif;border:none;letter-spacing:2px;text-transform:uppercase}
+.wizard-q{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;letter-spacing:0px;margin-bottom:6px;text-transform:uppercase;line-height:1.05}
+.wizard-hint{color:var(--muted);font-size:12px;margin-bottom:28px;font-family:'DM Mono',monospace;letter-spacing:0.5px}
+.wizard-options{display:grid;gap:8px}
+.wiz-opt{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;font-size:14px;font-weight:500}
+.wiz-opt:hover{border-color:rgba(0,229,160,0.35);background:rgba(0,229,160,0.03);transform:translateX(3px)}
+.wiz-opt.selected{border-color:var(--accent);background:rgba(0,229,160,0.07);color:#e8f0ea}
+.wiz-opt.selected .wiz-icon{background:rgba(0,229,160,0.15);border-color:rgba(0,229,160,0.3)}
+.wiz-opt .wiz-icon{width:38px;height:38px;border-radius:6px;background:var(--bg3);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all 0.2s}
+.wiz-opt-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;transition:all 0.2s}
+.wiz-opt.selected .wiz-opt-check{background:var(--accent);border-color:var(--accent);color:#000}
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.05)}
+.step-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px}
+.btn-wiz{padding:11px 28px;border-radius:6px;font-weight:800;font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'Barlow Condensed',sans-serif;border:none;letter-spacing:2px;text-transform:uppercase}
 .btn-wiz-next{background:var(--accent);color:#000}
 .btn-wiz-next:hover{background:#00ffb3}
-.btn-wiz-back{background:var(--bg3);color:var(--muted)}
-.btn-wiz-back:hover{color:var(--text)}
+.btn-wiz-back{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.08)}
+.btn-wiz-back:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
 
 /* RESULTS */
-.result-header{text-align:center;margin-bottom:36px}
-.result-header h3{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;letter-spacing:0px;margin-bottom:8px;text-transform:uppercase}
-.result-header p{color:var(--muted);font-size:14px}
-.results-grid{display:grid;gap:0}
-.result-row{display:flex;align-items:center;gap:20px;padding:20px 24px;background:var(--bg2);border-radius:0;border:1px solid rgba(255,255,255,0.06);border-bottom:none;transition:all 0.3s}
+.result-header{text-align:center;margin-bottom:32px}
+.result-header h3{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;letter-spacing:0px;margin-bottom:6px;text-transform:uppercase}
+.result-header p{color:var(--muted);font-size:12px;font-family:'DM Mono',monospace}
+.results-grid{display:flex;flex-direction:column;gap:8px}
+.result-row{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--bg);border-radius:8px;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s}
+.result-row:hover{border-color:rgba(0,229,160,0.2)}
 .result-row.top-pick{border-color:rgba(0,229,160,0.3);border-left:3px solid var(--accent);background:rgba(0,229,160,0.04)}
-.result-rank{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;color:var(--muted);width:40px;text-align:center;flex-shrink:0}
+.result-rank{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:rgba(200,220,205,0.18);width:36px;text-align:center;flex-shrink:0;line-height:1}
 .result-rank.rank-1{color:var(--accent)}
-.result-info{flex:1}
-.result-name{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase}
-.result-reason{font-size:12px;color:var(--muted);margin-top:2px}
-.result-score-bar{flex:1;max-width:200px}
-.score-pct{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--accent);text-align:right;width:60px;flex-shrink:0}
+.result-info{flex:1;min-width:0}
+.result-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;line-height:1}
+.result-reason{font-size:11px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
+.result-score-bar{flex:1;max-width:140px}
+.score-pct{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--accent);text-align:right;width:52px;flex-shrink:0}
 
 /* SUPPLIERS PREMIUM */
 #suppliers{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.07)}
@@ -3427,135 +3431,18 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <!-- AI MATERIAL ADVISOR — MERGED TOOL -->
 <section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07);padding:80px 0">
   <div class="section-inner" style="text-align:center">
-    <span class="section-label">AI-Powered</span>
+    <span class="section-label">AI-Powered · 5 Questions</span>
     <h2 class="section-title">Material Advisor</h2>
-    <p class="section-desc" style="margin:0 auto">Get a precise material recommendation for your UAE project. Answer 5 quick questions or describe your brief — same AI, your choice.</p>
+    <p class="section-desc" style="margin:0 auto">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
   </div>
 
   <div class="wizard-wrap">
-
-    <!-- TAB SWITCHER -->
-    <div style="display:flex;gap:0;margin-bottom:24px;border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:420px;margin-left:auto;margin-right:auto">
-      <button id="tab-wizard" onclick="switchAdvisorTab('wizard')" style="flex:1;padding:13px;background:var(--accent);color:#0b110d;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:1px;transition:all 0.2s">
-        <i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 7h11v2H2zm0 5h11v2H2zm0 5h11v2H2zM16 7l-1.4 1.4 1.9 1.9-4.5 4.5 1.4 1.41 4.5-4.5 1.9 1.9L21 11 16 7zm0 7l-1.4 1.4 1.9 1.9-1.1 1.1 1.4 1.41L18 18.7l1.4 1.41L21 18.7 16 14z"/></svg></i> &nbsp;QUICK QUESTIONS
-      </button>
-      <button id="tab-brief" onclick="switchAdvisorTab('brief')" style="flex:1;padding:13px;background:var(--bg2);color:var(--muted);border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:1px;transition:all 0.2s">
-        <i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-3h8v-2H8v2zm0-4h8v-2H8v2zm0-4h4V7H8v2z"/></svg></i> &nbsp;DESCRIBE PROJECT
-      </button>
-    </div>
-
-    <!-- PANEL A: WIZARD -->
-    <div id="advisor-panel-wizard">
-      <div class="wizard-card">
-        <div class="wizard-progress"><div class="wizard-progress-bar" id="wiz-bar" style="width:20%"></div></div>
-        <div class="wizard-body" id="wizard-body">
-          <!-- Injected by JS -->
-        </div>
+    <div class="wizard-card">
+      <div class="wizard-progress"><div class="wizard-progress-bar" id="wiz-bar" style="width:20%"></div></div>
+      <div class="wizard-body" id="wizard-body">
+        <!-- Injected by JS -->
       </div>
     </div>
-
-    <!-- PANEL B: SPEC ANALYSER -->
-    <div id="advisor-panel-brief" style="display:none">
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:0;overflow:hidden">
-
-        <!-- TOP BAR -->
-        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px">🔬</div>
-          <div>
-            <div style="font-weight:700;font-size:15px">Material Intelligence Engine</div>
-            <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">Powered by CladWise AI · UAE Market Data 2025</div>
-          </div>
-        </div>
-
-        <!-- INPUT FORM -->
-        <div style="padding:24px" id="analyser-form">
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px" class="spec-form-grid">
-            <div>
-              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT TYPE</label>
-              <select id="spec-project-type" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
-                <option value="">Select type...</option>
-                <option>Residential Tower</option>
-                <option>Commercial Office Tower</option>
-                <option>Hospitality / Hotel</option>
-                <option>Mixed-Use Development</option>
-                <option>Cultural / Civic Building</option>
-                <option>Retail / Mall</option>
-                <option>Government / Embassy</option>
-                <option>Villa / Low-Rise Residential</option>
-                <option>Healthcare / Hospital</option>
-                <option>Education</option>
-                <option>Refurbishment / Retrofit</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">LOCATION / EMIRATE</label>
-              <select id="spec-location" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
-                <option value="">Select location...</option>
-                <option>Dubai — Downtown / DIFC</option>
-                <option>Dubai — JBR / Marina / Coastal</option>
-                <option>Dubai — Business Bay</option>
-                <option>Abu Dhabi — City Centre</option>
-                <option>Abu Dhabi — Saadiyat Island</option>
-                <option>Sharjah</option>
-                <option>Ajman</option>
-                <option>Ras Al Khaimah</option>
-                <option>Fujairah</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">BUILDING HEIGHT</label>
-              <select id="spec-height" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
-                <option value="">Select height...</option>
-                <option>Low-rise (under 15m)</option>
-                <option>Mid-rise (15m – 30m)</option>
-                <option>High-rise (30m – 60m)</option>
-                <option>Tall (60m – 150m)</option>
-                <option>Super-tall (150m+)</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">FACADE BUDGET (AED/m²)</label>
-              <select id="spec-budget" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Barlow',sans-serif">
-                <option value="">Select budget range...</option>
-                <option>Under AED 200/m²</option>
-                <option>AED 200 – 400/m²</option>
-                <option>AED 400 – 700/m²</option>
-                <option>AED 700 – 1,200/m²</option>
-                <option>Above AED 1,200/m²</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="margin-bottom:14px">
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">PROJECT BRIEF & REQUIREMENTS</label>
-            <textarea id="spec-brief" placeholder="Describe your project — facade area, aesthetic requirements, sustainability targets, coastal exposure, wind loads, programme constraints, client brief highlights..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:13px;font-family:'Barlow',sans-serif;resize:vertical;min-height:120px;outline:none;line-height:1.6" onfocus="this.style.borderColor='rgba(0,229,160,0.4)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-          </div>
-
-          <div style="margin-bottom:20px">
-            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;display:block;margin-bottom:6px">UPLOAD PROJECT DOCUMENT (OPTIONAL)</label>
-            <div id="spec-dropzone" onclick="document.getElementById('spec-file-input').click()" style="border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='rgba(0,229,160,0.4)'" onmouseout="this.style.borderColor='var(--border)'">
-              <div style="font-size:24px;margin-bottom:8px">📎</div>
-              <div style="font-size:13px;color:var(--muted)">Drop PDF or tap to upload</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace">PDF · Max 10MB</div>
-            </div>
-            <input type="file" id="spec-file-input" accept=".pdf" style="display:none" onchange="handleSpecFile(this)">
-            <div id="spec-file-name" style="font-size:12px;color:var(--accent);margin-top:6px;font-family:'DM Mono',monospace"></div>
-          </div>
-
-          <button onclick="runSpecAnalyser()" id="spec-submit-btn" style="width:100%;background:var(--accent);color:#000;border:none;border-radius:10px;padding:14px 24px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px">
-            <i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9.46 6.28 11 9l-2 1 2.05 3.55A5 5 0 0 1 15 19H5a5 5 0 0 1 4-4.9V14l-2-1 .54-.93L5 9.65l.54-.93 2 1.16.38-.66-2-1.15.54-.93 2 1.16.38-.66-2-1.15.54-.93L8 7.7l.38-.66-2-1.15.54-.93 2 1.16.54-.93L8.46 4l1-1.73.54.93zM21 20v1H3v-1h18z"/></svg></i> ANALYSE MY PROJECT
-          </button>
-          <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">⚡ Free for all users · Login required · Powered by CladWise AI</div>
-
-        </div>
-
-        <!-- RESULTS AREA -->
-        <div id="analyser-results" style="display:none;padding:24px;border-top:1px solid var(--border)"></div>
-
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -5556,15 +5443,7 @@ function renderTable() {
 }
 
 // ─── WIZARD ─────────────────────────────────────────────────────────────────
-function switchAdvisorTab(tab) {
-  const isWizard = tab === 'wizard';
-  document.getElementById('advisor-panel-wizard').style.display = isWizard ? '' : 'none';
-  document.getElementById('advisor-panel-brief').style.display = isWizard ? 'none' : '';
-  document.getElementById('tab-wizard').style.background = isWizard ? 'var(--accent)' : 'var(--bg2)';
-  document.getElementById('tab-wizard').style.color = isWizard ? '#0b110d' : 'var(--muted)';
-  document.getElementById('tab-brief').style.background = isWizard ? 'var(--bg2)' : 'var(--accent)';
-  document.getElementById('tab-brief').style.color = isWizard ? 'var(--muted)' : '#0b110d';
-}
+function switchAdvisorTab(tab) { /* Describe Project removed — wizard only */ }
 
 let wizStep = 0;
 let wizAnswers = [];
@@ -5583,29 +5462,38 @@ function renderWizStep() {
   const step = WIZARD_STEPS[wizStep];
   const pct = ((wizStep + 1) / (WIZARD_STEPS.length + 1)) * 100;
   document.getElementById('wiz-bar').style.width = pct + '%';
+
+  // Step dots
+  const dots = WIZARD_STEPS.map((_,i) =>
+    `<div style="width:6px;height:6px;border-radius:50%;background:${i<=wizStep?'var(--accent)':'rgba(200,220,205,0.15)'};opacity:${i===wizStep?1:i<wizStep?0.6:0.3}"></div>`
+  ).join('');
+
   body.innerHTML = `
     <div class="wizard-step active">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        ${dots}
+        <span class="step-count" style="margin-left:4px">Step ${wizStep + 1} of ${WIZARD_STEPS.length}</span>
+      </div>
       <div class="wizard-q">${step.q}</div>
       <div class="wizard-hint">${step.hint}</div>
       <div class="wizard-options" id="wiz-opts">
         ${step.opts.map((o, i) => `
           <div class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})">
             <div class="wiz-icon">${o.icon}</div>
-            <span>${o.label}</span>
+            <span style="flex:1">${o.label}</span>
+            <div class="wiz-opt-check">✓</div>
           </div>`).join('')}
       </div>
       <div class="wizard-nav">
         ${wizStep > 0 ? `<button class="btn-wiz btn-wiz-back" onclick="wizBack()">← Back</button>` : '<div></div>'}
-        <span class="step-count">Step ${wizStep + 1} of ${WIZARD_STEPS.length}</span>
-        <button class="btn-wiz btn-wiz-next" id="wiz-next" onclick="wizNext()" disabled style="opacity:0.4;cursor:not-allowed">Next →</button>
+        <button class="btn-wiz btn-wiz-next" id="wiz-next" onclick="wizNext()" disabled style="opacity:0.35;cursor:not-allowed">${wizStep === WIZARD_STEPS.length - 1 ? 'See Results →' : 'Next →'}</button>
       </div>
     </div>`;
-  // restore selection if exists
+
   if (wizAnswers[wizStep] !== undefined) {
     document.getElementById(`wiz-opt-${wizAnswers[wizStep]}`).classList.add('selected');
-    document.getElementById('wiz-next').disabled = false;
-    document.getElementById('wiz-next').style.opacity = '';
-    document.getElementById('wiz-next').style.cursor = '';
+    const btn = document.getElementById('wiz-next');
+    btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = '';
   }
 }
 
@@ -5629,7 +5517,6 @@ function wizBack() {
 
 function renderWizResults() {
   document.getElementById('wiz-bar').style.width = '100%';
-  // Compute scores
   const scores = { GFRC: 0, GFRP: 0, Aluminum: 0, ACM: 0, Stone: 0 };
   WIZARD_STEPS.forEach((step, si) => {
     const ans = wizAnswers[si];
@@ -5645,32 +5532,36 @@ function renderWizResults() {
   const maxScore = sorted[0][1];
   document.getElementById('wizard-body').innerHTML = `
     <div class="result-header">
-      <div style="font-size:32px;margin-bottom:12px">✅</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:10px">Analysis Complete</div>
       <h3>Your Results</h3>
-      <p>Based on your project parameters, here are your ranked materials:</p>
+      <p>Ranked by fit for your project parameters</p>
     </div>
     <div class="results-grid">
       ${sorted.map(([mat, score], i) => {
         const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+        const bestTag = i===0 ? ' <span style="font-size:10px;color:var(--accent);font-family:DM Mono,monospace;font-weight:400;text-transform:none;letter-spacing:1px;vertical-align:middle">← best match</span>' : '';
+        const viewBtn = i===0 ? `<button onclick="openModal('${mat}')" style="padding:7px 14px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.25);border-radius:6px;color:var(--accent);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap" onmouseover="this.style.background='rgba(0,229,160,0.16)'" onmouseout="this.style.background='rgba(0,229,160,0.08)'">View spec &#8594;</button>` : '';
+        const bar = `<div style="height:3px;background:var(--bg3);border-radius:2px"><div style="height:3px;background:${i===0?'var(--accent)':'rgba(0,229,160,0.3)'};border-radius:2px;width:${pct}%;transition:width 0.8s ${i*0.1}s ease"></div></div>`;
         return `
         <div class="result-row ${i===0?'top-pick':''}">
           <div class="result-rank ${i===0?'rank-1':''}">${i+1}</div>
           <div class="result-info">
-            <div class="result-name">${mat} ${i===0?'<span style="font-size:12px;color:var(--accent);font-family:DM Sans,sans-serif">← Best Match</span>':''}</div>
+            <div class="result-name">${mat}${bestTag}</div>
             <div class="result-reason">${MATERIALS[mat]?.tagline || ''}</div>
           </div>
-          <div class="result-score-bar">
-            <div style="height:4px;background:var(--bg3);border-radius:2px;margin-bottom:4px"><div style="height:4px;background:var(--accent);border-radius:2px;width:${pct}%;transition:width 0.6s ease"></div></div>
-          </div>
+          <div class="result-score-bar">${bar}</div>
           <div class="score-pct">${pct}%</div>
-          <button onclick="openModal('${mat}')" style="margin-left:8px;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">View →</button>
+          ${viewBtn}
         </div>`;
       }).join('')}
     </div>
-    <div style="text-align:center;margin-top:28px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
-      <button onclick="resetWizard()" class="btn-outline" style="font-size:13px">Retake Wizard</button>
-      <button onclick="exportAdvisoryFromWizard()" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b110d;border:none;border-radius:10px;padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-        <i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-1 3 4 1.5v3c0 2-4 3-4 3s-4-1-4-3v-3l4-1.5z"/></svg></i> Generate Advisory Report
+    <div style="margin:20px 0 0;padding:12px 16px;background:rgba(0,229,160,0.03);border:1px solid rgba(0,229,160,0.1);border-radius:8px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;line-height:1.7">
+      &#9888; Recommendation based on UAE market data 2025. Verify with your facade consultant and local authority before final specification.
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px">
+      <button onclick="resetWizard()" class="btn-outline" style="font-size:13px">&#8635; Retake</button>
+      <button onclick="exportAdvisoryFromWizard()" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b110d;border:none;border-radius:8px;padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        Generate Advisory Report
       </button>
     </div>`;
 }
