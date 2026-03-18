@@ -5956,8 +5956,13 @@ async function cwFetch(method, path, body) {
   if (cwGetToken()) headers['Authorization'] = 'Bearer ' + cwGetToken();
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(API_BASE + path, opts);
-  const data = await res.json();
+  let res, data;
+  try {
+    res = await fetch(API_BASE + path, opts);
+  } catch (e) {
+    throw { message: 'Cannot reach server — please check your connection and try again.' };
+  }
+  try { data = await res.json(); } catch { data = {}; }
   if (!res.ok) throw data;
   return data;
 }
@@ -6422,19 +6427,24 @@ async function runSpecAnalyser() {
     const payload = { projectType, location, height, budget, programme, brief };
     if (specFileData) payload.file = specFileData;
 
-    const res = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/spec-analyser', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify(payload)
-    });
+    let res, data;
+    try {
+      res = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/spec-analyser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(payload)
+      });
+      data = await res.json();
+    } catch(e) {
+      throw new Error('Cannot reach server — please try again in a moment.');
+    }
 
-    const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Analysis failed');
 
     renderSpecResults(data.report, { projectType, location, height, budget });
 
   } catch(err) {
-    resultsDiv.innerHTML = `<div style="color:var(--red);padding:20px;font-size:13px">❌ ${err.message || 'Analysis failed. Please try again.'}</div>`;
+    resultsDiv.innerHTML = `<div style="color:#f87171;padding:20px;font-size:13px;font-family:'DM Mono',monospace;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px">❌ ${err.message || 'Analysis failed. Please try again.'}</div>`;
   }
 
   btn.disabled = false;
@@ -7943,6 +7953,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 
     // ── 2. Build PDF ───────────────────────────────────────────────────────
     btn.innerHTML = '<i class="fai fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fa-spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z" opacity=".5"/><path d="M12 4a8 8 0 0 1 8 8h2A10 10 0 0 0 12 2v2z"/></svg></i> Building PDF...';
+    await ensureJsPDF();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
