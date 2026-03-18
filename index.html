@@ -3054,12 +3054,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* Claim listing button (standard tier) */
 .sup-gc-claim {
-  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--amber); background: rgba(245,158,11,0.08);
-  border: 1px solid rgba(245,158,11,0.25); border-radius: 5px;
-  padding: 4px 9px; cursor: pointer; transition: background 0.15s;
+  font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--amber);
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.3); border-radius: 5px;
+  padding: 4px 10px; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap; flex-shrink: 0;
 }
-.sup-gc-claim:hover { background: rgba(245,158,11,0.15); }
+.sup-gc-claim:hover { background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.6); color: #fbbf24; }
 
 </style>
 <script defer data-domain="cladwise.ae" src="https://plausible.io/js/script.js"></script>
@@ -5752,14 +5754,21 @@ function supGridCardHTML(s, blurred, dimLocked) {
     s.address ? `<a class="sup-gc-detail-row" href="https://maps.google.com/?q=${encodeURIComponent(s.address)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><div class="sup-gc-detail-icon">📍</div><div class="sup-gc-detail-text"><span class="sup-gc-detail-label">Location</span><span class="sup-gc-detail-value">${s.address}</span></div><span class="sup-gc-detail-chevron">›</span></a>` : '',
   ].filter(Boolean).join('');
 
-  // Footer right: toggle for all non-locked cards
+  // Footer right: toggle for non-locked, claim button for standard tier
   const footerRight = isLocked
     ? ''
-    : `<div class="sup-gc-toggle" onclick="event.stopPropagation();this.classList.toggle('active')"><div class="sup-gc-toggle-handle"></div></div>`;
+    : s.tier === 'standard'
+      ? `<button class="sup-gc-claim" onclick="event.stopPropagation();openSupApply()" title="Is this your business? Claim and upgrade your profile">★ Claim Profile</button>`
+      : `<div class="sup-gc-toggle" onclick="event.stopPropagation();this.classList.toggle('active')"><div class="sup-gc-toggle-handle"></div></div>`;
 
   const clickAction = isLocked ? '' : `onclick="openSupProfile(${idx})"`;
   const lockedClass = isLocked ? ' sup-gc-locked' : '';
-  const lockOverlay = (blurred && !dimLocked) ? '<div class="sup-gc-lock-icon">🔒</div>' : dimLocked ? '<div class="sup-gc-lock-icon" style="font-size:14px;color:rgba(255,255,255,0.2)">COMING SOON</div>' : '';
+  const lockOverlay = (blurred && !dimLocked)
+    ? `<div class="sup-gc-lock-icon">
+        <div style="font-size:18px;margin-bottom:6px">🔒</div>
+        ${s.tier === 'standard' ? `<button class="sup-gc-claim" onclick="event.stopPropagation();openSupApply()" style="font-size:8px;padding:4px 10px">★ Claim this profile</button>` : ''}
+       </div>`
+    : dimLocked ? '<div class="sup-gc-lock-icon" style="font-size:14px;color:rgba(255,255,255,0.2)">COMING SOON</div>' : '';
 
   return `<div class="sup-grid-card${lockedClass}" ${clickAction}>
     <div class="sup-gc-cover">
