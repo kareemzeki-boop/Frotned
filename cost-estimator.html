@@ -7,13 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bg:#0b110d;--bg2:#111a13;--bg3:#182318;--bg4:#1f2e20;
   --border:rgba(255,255,255,0.07);
-  --accent:#00e5a0;--amber:#f59e0b;--red:#ef4444;--blue:#60a5fa;--lilac:#a78bfa;
+  --accent:#00e5a0;--amber:#f59e0b;--red:#ef4444;--blue:#60a5fa;
   --text:#edf2ed;--muted:#6b7d6d;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -21,325 +19,252 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 
 /* NAV */
-nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,.08);height:64px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
-.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:3px;color:var(--text);text-decoration:none}
+nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,.08);height:60px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:3px;color:var(--text);text-decoration:none}
 .nav-logo span{color:var(--accent)}
-.nav-right{display:flex;align-items:center;gap:14px}
-.nav-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:9px;padding:4px 12px;letter-spacing:2px}
-.nav-back{display:flex;align-items:center;gap:7px;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;transition:color .2s}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:9px;padding:4px 10px;letter-spacing:2px;border-radius:2px}
+.nav-back{display:flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;transition:color .2s}
 .nav-back:hover{color:var(--accent)}
+.nav-back svg{width:12px;height:12px}
 
 /* DISCLAIMER */
-.disc{background:rgba(245,158,11,.06);border-bottom:1px solid rgba(245,158,11,.15);padding:9px 40px;display:flex;align-items:flex-start;gap:10px}
-.disc i{color:var(--amber);font-size:12px;margin-top:2px;flex-shrink:0}
-.disc p{font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,158,11,.7);letter-spacing:.3px;line-height:1.6}
+.disc{background:rgba(245,158,11,.04);border-bottom:1px solid rgba(245,158,11,.12);padding:8px 32px;display:flex;align-items:flex-start;gap:10px}
+.disc-icon{color:var(--amber);font-size:12px;margin-top:1px;flex-shrink:0;opacity:.8}
+.disc p{font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(245,158,11,.65);letter-spacing:.3px;line-height:1.65}
 
 /* PAGE HEADER */
-.page-hd{max-width:1320px;margin:0 auto;padding:48px 40px 32px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px;border-bottom:1px solid var(--border)}
-.hd-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
-.hd-eyebrow::before{content:'';width:24px;height:1px;background:var(--amber)}
-.hd-title{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;line-height:.92;text-transform:uppercase;letter-spacing:-1px}
+.page-hd{max-width:1320px;margin:0 auto;padding:40px 32px 28px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px;border-bottom:1px solid var(--border)}
+.hd-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hd-eyebrow::before{content:'';width:20px;height:1px;background:var(--amber)}
+.hd-title{font-family:'Barlow Condensed',sans-serif;font-size:58px;font-weight:900;line-height:.9;text-transform:uppercase;letter-spacing:-1px}
 .hd-title span{color:var(--accent)}
-.hd-desc{color:var(--muted);font-size:14px;margin-top:12px;max-width:520px;line-height:1.7}
-.hd-tags{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
-.hd-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1.5px}
+.hd-desc{color:var(--muted);font-size:13px;margin-top:10px;max-width:500px;line-height:1.7}
+.hd-tags{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.hd-tag{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:1px}
 .hd-tag strong{color:var(--accent)}
 
 /* MAIN */
-.main{max-width:1320px;margin:0 auto;padding:24px 40px 80px;display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start}
+.main{max-width:1320px;margin:0 auto;padding:20px 32px 80px;display:grid;grid-template-columns:370px 1fr;gap:18px;align-items:start}
 
 /* INPUT PANEL */
-.inp{background:var(--bg2);border:1px solid var(--border);position:sticky;top:80px}
-.inp-hd{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.inp-hd-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.inp-hd-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
-.sec{padding:16px 20px;border-bottom:1px solid var(--border)}
+.inp{background:var(--bg2);border:1px solid var(--border);position:sticky;top:72px;border-radius:4px;overflow:hidden}
+.inp-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(0,229,160,0.03)}
+.inp-hd-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
+.inp-hd-sub{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.sec{padding:14px 18px;border-bottom:1px solid var(--border)}
 .sec:last-child{border-bottom:none}
-.sec-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.sec-lbl::before{content:'';width:16px;height:1px;background:var(--accent)}
-.f{margin-bottom:11px}
+.sec-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sec-lbl::before{content:'';width:12px;height:1px;background:var(--accent)}
+.f{margin-bottom:10px}
 .f:last-child{margin-bottom:0}
-.f label{display:block;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
-.f input,.f select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;padding:9px 12px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.f label{display:block;font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.f input,.f select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:8px 11px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none;border-radius:2px}
 .f input:focus,.f select:focus{border-color:rgba(0,229,160,.4)}
-.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7d6d'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;cursor:pointer}
+.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7d6d'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px;cursor:pointer}
 .f select option{background:var(--bg2)}
-.f-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px}
+.f-hint{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:3px;line-height:1.5}
 
 /* Material cards */
 .mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.mat-btn{background:var(--bg3);border:1px solid var(--border);padding:10px 12px;cursor:pointer;transition:all .15s;text-align:left}
-.mat-btn.on{background:rgba(0,229,160,.05);border-color:rgba(0,229,160,.4)}
-.mat-btn:hover:not(.on){border-color:rgba(255,255,255,.12)}
-.mat-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text);transition:color .15s}
+.mat-btn{background:var(--bg3);border:1px solid var(--border);padding:9px 11px;cursor:pointer;transition:all .15s;text-align:left;border-radius:0}
+.mat-btn.on{background:rgba(0,229,160,.06);border-color:rgba(0,229,160,.4)}
+.mat-btn:hover:not(.on){border-color:rgba(255,255,255,.14);background:var(--bg4)}
+.mat-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text);transition:color .15s}
 .mat-btn.on .mat-name{color:var(--accent)}
-.mat-rng{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px}
+.mat-rng{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);margin-top:1px}
 
 /* Complexity */
 .comp-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
-.comp-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:9px 6px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-align:center}
+.comp-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:9px 6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;text-align:center;border-radius:0}
 .comp-btn.on{background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.4);color:var(--accent)}
 .comp-btn:hover:not(.on){border-color:rgba(255,255,255,.12);color:var(--text)}
 
+/* Toggle row */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0}
+.toggle-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.toggle-wrap{display:flex;align-items:center;gap:6px}
+.toggle-val{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1px;min-width:28px;text-align:right}
+.toggle{position:relative;width:34px;height:18px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;width:12px;height:12px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:rgba(0,229,160,.15);border-color:rgba(0,229,160,.4)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(16px);background:var(--accent)}
+
 /* CTA */
-.cta{padding:16px 20px}
-.btn-calc{width:100%;background:var(--accent);color:#000;border:none;padding:15px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.cta{padding:14px 18px}
+.btn-calc{width:100%;background:var(--accent);color:#000;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:2px}
 .btn-calc:hover{background:#00ffb3}
 
 /* RESULTS */
 .res{display:flex;flex-direction:column;gap:2px}
-.empty{background:var(--bg2);border:1px solid var(--border);padding:80px 32px;text-align:center}
-.empty-icon{font-size:36px;color:var(--muted);opacity:.3;margin-bottom:14px}
-.empty-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;text-transform:uppercase;color:var(--muted);letter-spacing:1px;margin-bottom:8px}
-.empty-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;line-height:1.8}
+.empty{background:var(--bg2);border:1px solid var(--border);padding:70px 32px;text-align:center;border-radius:4px}
+.empty-icon{font-size:32px;opacity:.2;margin-bottom:12px}
+.empty-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;color:var(--muted);letter-spacing:1px;margin-bottom:6px}
+.empty-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.8}
 
 /* HERO TOTAL */
-.hero-total{background:var(--bg2);border:1px solid var(--border);padding:28px 32px;position:relative;overflow:hidden}
+.hero-total{background:var(--bg2);border:1px solid var(--border);padding:24px 28px;position:relative;overflow:hidden;border-radius:4px}
 .hero-total::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
-.ht-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
-.ht-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
-.ht-val{font-family:'Barlow Condensed',sans-serif;font-size:76px;font-weight:900;line-height:1;color:var(--accent);transition:color .3s}
-.ht-cur{font-size:20px;color:var(--muted);margin-left:4px;font-weight:400}
-.ht-sys{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.5px}
-.range-block{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
-.range-track{position:relative;height:6px;background:rgba(255,255,255,.05)}
-.range-fill{position:absolute;top:0;left:0;height:6px;background:linear-gradient(90deg,rgba(0,229,160,.3),var(--accent));transition:width .5s ease}
-.range-pip{position:absolute;top:-5px;width:16px;height:16px;background:var(--accent);border:2px solid var(--bg);border-radius:50%;transform:translateX(-50%);transition:left .5s ease}
-.range-nums{display:flex;justify-content:space-between;margin-top:6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.ht-grid{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
+.ht-lbl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.ht-val{font-family:'Barlow Condensed',sans-serif;font-size:68px;font-weight:900;line-height:1;color:var(--accent)}
+.ht-cur{font-size:18px;color:var(--muted);font-weight:400}
+.ht-sys{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.5px}
+.range-block{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.range-track{position:relative;height:5px;background:rgba(255,255,255,.05);border-radius:3px}
+.range-fill{position:absolute;top:0;left:0;height:5px;background:linear-gradient(90deg,rgba(0,229,160,.3),var(--accent));transition:width .5s ease;border-radius:3px}
+.range-pip{position:absolute;top:-5px;width:15px;height:15px;background:var(--accent);border:2px solid var(--bg);border-radius:50%;transform:translateX(-50%);transition:left .5s ease}
+.range-nums{display:flex;justify-content:space-between;margin-top:5px;font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted)}
 .pm2-box{text-align:right}
-.pm2-val{font-family:'Barlow Condensed',sans-serif;font-size:46px;font-weight:900;color:var(--text);line-height:1}
-.pm2-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:4px}
-.grade-chip{display:inline-block;margin-top:8px;padding:4px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;font-weight:700}
+.pm2-val{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--text);line-height:1}
+.pm2-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:3px}
+.grade-chip{display:inline-block;margin-top:6px;padding:3px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;font-weight:700;border-radius:2px}
 
 /* BREAKDOWN */
-.panel{background:var(--bg2);border:1px solid var(--border);padding:22px 32px}
-.panel-title{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.panel-title::before{content:'';width:16px;height:1px;background:var(--muted)}
+.panel{background:var(--bg2);border:1px solid var(--border);padding:20px 28px;border-radius:4px}
+.panel-title{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel-title::before{content:'';width:12px;height:1px;background:var(--muted)}
 .brows{display:flex;flex-direction:column;gap:2px}
-.brow{display:grid;grid-template-columns:14px 1fr 60px 120px 120px;gap:10px;align-items:center;background:var(--bg3);padding:11px 14px;transition:background .15s}
+.brow{display:grid;grid-template-columns:12px 1fr 56px 110px 120px;gap:8px;align-items:center;background:var(--bg3);padding:10px 12px;transition:background .15s;border-radius:2px}
 .brow:hover{background:var(--bg4)}
-.b-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.b-name{font-weight:600;font-size:13px}
-.b-bar-wrap{margin-top:4px;height:3px;background:rgba(255,255,255,.05)}
-.b-bar{height:3px;transition:width .5s ease}
-.b-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:right}
-.b-pm2{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-align:right}
-.b-pm2-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right}
-.b-tot{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-align:right}
-.b-tot-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right}
+.b-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.b-name{font-weight:600;font-size:12.5px}
+.b-bar-wrap{margin-top:3px;height:2px;background:rgba(255,255,255,.05);border-radius:1px}
+.b-bar{height:2px;transition:width .5s ease;border-radius:1px}
+.b-pct{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted);text-align:right}
+.b-pm2{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-align:right}
+.b-pm2-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-align:right}
+.b-tot{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-align:right}
+.b-tot-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-align:right}
+
+/* TOTALS ROW */
+.brow-total{display:grid;grid-template-columns:12px 1fr 56px 110px 120px;gap:8px;align-items:center;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.2);padding:10px 12px;margin-top:4px;border-radius:2px}
 
 /* CHART */
-.chart-inner{display:grid;grid-template-columns:1fr 220px;gap:32px;align-items:center}
-.donut-wrap{position:relative;width:220px;height:220px;flex-shrink:0}
-.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
-.donut-cval{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;line-height:1}
-.donut-clbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px}
-.legend{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.leg{display:flex;align-items:center;gap:9px}
-.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.leg-name{font-size:12px;font-weight:500;flex:1}
-.leg-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);min-width:30px;text-align:right}
-.leg-val{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;min-width:90px;text-align:right}
+.chart-inner{display:grid;grid-template-columns:1fr 200px;gap:28px;align-items:center}
+.donut-wrap{position:relative;width:200px;height:200px;flex-shrink:0}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.donut-cval{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;line-height:1}
+.donut-clbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.legend{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.leg{display:flex;align-items:center;gap:8px}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.leg-name{font-size:11.5px;font-weight:500;flex:1}
+.leg-pct{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);min-width:28px;text-align:right}
+.leg-val{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;min-width:80px;text-align:right}
 
 /* COMPARISON */
-.cmp-rows{display:flex;flex-direction:column;gap:8px;margin-top:4px}
-.cmp{display:grid;grid-template-columns:96px 1fr 88px;gap:12px;align-items:center}
-.cmp-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.cmp-rows{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.cmp{display:grid;grid-template-columns:90px 1fr 86px;gap:10px;align-items:center}
+.cmp-lbl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 .cmp-lbl.active{color:var(--accent)}
-.cmp-track{height:12px;background:rgba(255,255,255,.04);position:relative;overflow:hidden}
-.cmp-fill{height:12px;transition:width .6s ease;position:absolute;top:0;left:0}
+.cmp-track{height:10px;background:rgba(255,255,255,.04);position:relative;overflow:hidden;border-radius:2px}
+.cmp-fill{height:10px;transition:width .6s ease;position:absolute;top:0;left:0}
 .cmp-fill.active{background:var(--accent)}
 .cmp-fill.idle{background:rgba(255,255,255,.1)}
-.cmp-val{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right}
+.cmp-val{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);text-align:right}
 .cmp-val.active{color:var(--accent)}
 
 /* ASSUMPTIONS */
-.ass-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--border);margin-top:4px}
-.ass-cell{background:var(--bg3);padding:12px 16px}
-.ass-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.ass-val{font-size:13px;font-weight:600;color:var(--text)}
+.ass-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--border);margin-top:4px;border-radius:2px;overflow:hidden}
+.ass-cell{background:var(--bg3);padding:11px 14px}
+.ass-label{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
+.ass-val{font-size:12.5px;font-weight:600;color:var(--text)}
 
 /* ACTIONS */
-.act-row{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.btn-pdf{background:var(--amber);color:#000;border:none;padding:15px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.act-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.btn-pdf{background:var(--amber);color:#000;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:0}
 .btn-pdf:hover{background:#fbbf24}
-.btn-rst{background:var(--bg2);color:var(--muted);border:1px solid var(--border);padding:15px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-png{background:var(--bg2);border:1px solid rgba(96,165,250,.3);color:#60a5fa;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:0}
+.btn-png:hover{background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.6)}
+.btn-rst{background:var(--bg2);color:var(--muted);border:1px solid var(--border);padding:13px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:0}
 .btn-rst:hover{border-color:var(--red);color:var(--red)}
 
+/* UPLOAD */
+.upload-zone{border:1.5px dashed rgba(0,229,160,.22);border-radius:6px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(0,229,160,.02);position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:rgba(0,229,160,.5);background:rgba(0,229,160,.05)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none;background:none}
+.upload-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:3px;margin-top:6px}
+.upload-hint{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.upload-processing{display:none;align-items:center;gap:10px;padding:12px 14px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.2);border-radius:6px;margin-top:8px}
+.upload-processing.show{display:flex}
+.proc-spinner{width:16px;height:16px;border:2px solid rgba(0,229,160,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-text{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--accent);flex:1}
+.ai-result-card{display:none;background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.18);border-left:3px solid var(--accent);border-radius:6px;padding:12px;margin-top:8px}
+.ai-result-card.show{display:block}
+.ai-result-title{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.ai-result-item{background:rgba(0,0,0,.2);border-radius:3px;padding:7px 9px}
+.ai-result-lbl{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.ai-result-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--accent)}
+.ai-result-conf{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-top:2px}
+.ai-result-notes{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px;font-style:italic}
+.ai-apply-btn{width:100%;background:var(--accent);color:#000;border:none;padding:9px;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.ai-apply-btn:hover{background:#00ffb3}
+.ai-error-card{display:none;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.18);border-radius:6px;padding:10px 12px;margin-top:8px;font-size:11.5px;color:#fca5a5;line-height:1.5}
+.ai-error-card.show{display:block}
+.upload-filename{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);margin-top:6px;display:none;letter-spacing:1px}
+.upload-filename.show{display:block}
+
+/* CONFIDENCE BAR */
+.conf-bar-wrap{background:rgba(255,255,255,.06);border-radius:2px;height:3px;margin-top:4px}
+.conf-bar{height:3px;border-radius:2px;background:var(--accent);transition:width .4s}
+
 /* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.anim{animation:fadeUp .22s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .2s ease forwards}
 
 /* RESPONSIVE */
 @media(max-width:1060px){.main{grid-template-columns:1fr}.inp{position:static}.chart-inner{grid-template-columns:1fr}.donut-wrap{margin:0 auto}}
-@media(max-width:700px){.hd-title{font-size:48px}.ht-val{font-size:56px}.ht-grid{grid-template-columns:1fr}.pm2-box{text-align:left}.ass-grid{grid-template-columns:1fr 1fr}.act-row{grid-template-columns:1fr}.page-hd{grid-template-columns:1fr;gap:20px}.main,.page-hd,.disc{padding-left:20px;padding-right:20px}nav{padding:0 20px}.brow{grid-template-columns:14px 1fr 60px;}.brow .b-pm2,.brow .b-pm2-sub,.brow .b-tot,.brow .b-tot-sub{display:none}}
-
-/* ── DRAWING UPLOAD ZONE ──────────────────────────────────────────────── */
-.upload-zone {
-  border: 1.5px dashed rgba(0,229,160,0.25);
-  border-radius: 8px;
-  padding: 20px 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: rgba(0,229,160,0.02);
-  position: relative;
-}
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color: rgba(0,229,160,0.55);
-  background: rgba(0,229,160,0.05);
-}
-.upload-zone input[type=file] {
-  position: absolute; inset: 0;
-  opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  border: none; background: none;
-}
-.upload-icon {
-  font-size: 24px; color: var(--accent); margin-bottom: 8px;
-}
-.upload-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--text); margin-bottom: 4px;
-}
-.upload-hint {
-  font-family: 'DM Mono', monospace; font-size: 9px;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--muted);
-}
-/* AI processing state */
-.upload-processing {
-  display: none;
-  align-items: center; gap: 12px;
-  padding: 14px 16px;
-  background: rgba(0,229,160,0.06);
-  border: 1px solid rgba(0,229,160,0.2);
-  border-radius: 8px;
-  margin-top: 10px;
-}
-.upload-processing.show { display: flex; }
-.proc-spinner {
-  width: 18px; height: 18px;
-  border: 2px solid rgba(0,229,160,0.2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.proc-text {
-  font-family: 'DM Mono', monospace; font-size: 10px;
-  letter-spacing: 1px; color: var(--accent); flex: 1;
-}
-/* AI result card */
-.ai-result-card {
-  display: none;
-  background: rgba(0,229,160,0.05);
-  border: 1px solid rgba(0,229,160,0.2);
-  border-left: 3px solid var(--accent);
-  border-radius: 8px;
-  padding: 14px;
-  margin-top: 10px;
-}
-.ai-result-card.show { display: block; }
-.ai-result-title {
-  font-family: 'DM Mono', monospace; font-size: 9px;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
-}
-.ai-result-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px; margin-bottom: 10px;
-}
-.ai-result-item {
-  background: rgba(0,0,0,0.2); border-radius: 4px;
-  padding: 8px 10px;
-}
-.ai-result-lbl {
-  font-family: 'DM Mono', monospace; font-size: 8px;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 3px;
-}
-.ai-result-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px; font-weight: 800; color: var(--accent);
-}
-.ai-result-notes {
-  font-size: 11.5px; color: var(--muted); line-height: 1.5;
-  margin-bottom: 10px; font-style: italic;
-}
-.ai-apply-btn {
-  width: 100%; background: var(--accent); color: #000;
-  border: none; padding: 10px; border-radius: 4px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px; font-weight: 900; letter-spacing: 2px;
-  text-transform: uppercase; cursor: pointer;
-  transition: background 0.15s;
-}
-.ai-apply-btn:hover { background: #00ffb3; }
-.ai-error-card {
-  display: none;
-  background: rgba(239,68,68,0.06);
-  border: 1px solid rgba(239,68,68,0.2);
-  border-radius: 8px; padding: 12px 14px;
-  margin-top: 10px;
-  font-size: 12px; color: #fca5a5; line-height: 1.5;
-}
-.ai-error-card.show { display: block; }
-.upload-filename {
-  font-family: 'DM Mono', monospace; font-size: 9px;
-  color: var(--accent); margin-top: 8px;
-  display: none; letter-spacing: 1px;
-}
-.upload-filename.show { display: block; }
-
+@media(max-width:700px){.hd-title{font-size:44px}.ht-val{font-size:52px}.ht-grid{grid-template-columns:1fr}.pm2-box{text-align:left}.ass-grid{grid-template-columns:1fr 1fr}.act-row{grid-template-columns:1fr 1fr}.page-hd{grid-template-columns:1fr;gap:16px}.main,.page-hd,.disc{padding-left:16px;padding-right:16px}nav{padding:0 16px}.brow{grid-template-columns:12px 1fr 56px}.brow .b-pm2,.brow .b-pm2-sub,.brow .b-tot,.brow .b-tot-sub{display:none}.brow-total{grid-template-columns:12px 1fr 56px}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
   <div class="nav-right">
-    <span class="nav-badge">Cost Tools</span>
-    <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+    <span class="nav-badge">Cost Tools 2025</span>
+    <a href="index.html" class="nav-back">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to App
+    </a>
   </div>
 </nav>
 
-<!-- DISCLAIMER -->
 <div class="disc">
-  <i class="fa-solid fa-triangle-exclamation"></i>
-  <p><strong style="color:var(--amber)">CONCEPTUAL ESTIMATES ONLY</strong> — Figures represent indicative order-of-magnitude ranges for early design stage reference. Not to be used as tender prices, BOQ rates, or contractual values. Always verify with a specialist Quantity Surveyor before procurement.</p>
+  <div class="disc-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+  </div>
+  <p><strong style="color:var(--amber)">CONCEPTUAL ESTIMATES ONLY</strong> — Indicative order-of-magnitude ranges for early design stage reference. Not to be used as tender prices, BOQ rates, or contractual values. All figures exclude VAT unless the VAT toggle is active. Verify with a specialist Quantity Surveyor before procurement.</p>
 </div>
 
-<!-- PAGE HEADER -->
 <div class="page-hd">
   <div>
     <div class="hd-eyebrow">Early-Stage Estimation · UAE Market 2025</div>
     <h1 class="hd-title">Facade Cost<br><span>Estimator</span></h1>
-    <p class="hd-desc">Rapid conceptual cost breakdown for facade cladding systems. Material supply, substructure, installation and access — per system, complexity and location. Real-time calculation with PDF export.</p>
+    <p class="hd-desc">Precise conceptual cost breakdown for facade cladding systems — material supply, substructure, installation, access, waste, OH&P and optional VAT. Upload a PDF, DXF or PNG drawing to auto-extract dimensions via AI.</p>
   </div>
   <div class="hd-tags">
     <div class="hd-tag"><strong>6</strong> cladding systems</div>
-    <div class="hd-tag"><strong>6</strong> location markets</div>
-    <div class="hd-tag"><strong>Live</strong> bar + donut chart</div>
-    <div class="hd-tag"><strong>System</strong> comparison strip</div>
-    <div class="hd-tag"><strong>PDF</strong> export included</div>
+    <div class="hd-tag"><strong>Height</strong> × complexity × location</div>
+    <div class="hd-tag"><strong>Waste + OH&P + VAT</strong> included</div>
+    <div class="hd-tag"><strong>PDF</strong> + <strong>PNG</strong> export</div>
+    <div class="hd-tag"><strong>AI</strong> drawing reader</div>
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
-
   <!-- INPUT PANEL -->
   <div class="inp">
     <div class="inp-hd">
       <div>
         <div class="inp-hd-title">Project Parameters</div>
-        <div class="inp-hd-sub">Results update live with every change</div>
+        <div class="inp-hd-sub">Results update live · All costs in AED</div>
       </div>
-      <i class="fa-solid fa-sliders" style="color:var(--muted);font-size:14px"></i>
     </div>
 
     <div class="sec">
@@ -347,61 +272,53 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
       <div class="mat-grid" id="mat-grid"></div>
     </div>
 
-
-    <div class="sec" id="upload-sec">
+    <div class="sec">
       <div class="sec-lbl" style="display:flex;align-items:center;gap:8px">
         02 · Drawing Upload
-        <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;background:rgba(0,229,160,0.12);color:var(--accent);border:1px solid rgba(0,229,160,0.25);padding:2px 8px;border-radius:20px">AI · OPTIONAL</span>
+        <span style="font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:1px;background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.25);padding:2px 7px;border-radius:20px">AI · OPTIONAL</span>
       </div>
-      <div class="f-hint" style="margin-bottom:10px">Upload a PDF or DXF drawing — AI will extract facade area, height and complexity automatically</div>
-
-      <div class="upload-zone" id="upload-zone"
-           ondragover="uploadDragOver(event)"
-           ondragleave="uploadDragLeave(event)"
-           ondrop="uploadDrop(event)">
-        <input type="file" id="drawing-file" accept=".pdf,.dxf,.jpg,.jpeg,.png"
-               onchange="handleDrawingUpload(event)">
-        <div class="upload-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
-        <div class="upload-label">Drop drawing here or click to browse</div>
-        <div class="upload-hint">PDF · DXF · JPG · PNG &nbsp;·&nbsp; Max 20MB</div>
+      <div class="f-hint" style="margin-bottom:8px">PDF, DXF, JPG or PNG — AI extracts facade area, height & complexity automatically</div>
+      <div class="upload-zone" id="upload-zone" ondragover="uploadDragOver(event)" ondragleave="uploadDragLeave(event)" ondrop="uploadDrop(event)">
+        <input type="file" id="drawing-file" accept=".pdf,.dxf,.jpg,.jpeg,.png" onchange="handleDrawingUpload(event)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent);opacity:.7"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+        <div class="upload-label">Drop drawing or click to browse</div>
+        <div class="upload-hint">PDF · DXF · JPG · PNG &nbsp;·&nbsp; Max 20 MB</div>
       </div>
-
       <div class="upload-filename" id="upload-filename"></div>
-
-      <!-- Processing indicator -->
       <div class="upload-processing" id="upload-processing">
         <div class="proc-spinner"></div>
-        <div class="proc-text" id="proc-text">Analysing drawing with AI...</div>
+        <div class="proc-text" id="proc-text">Analysing drawing...</div>
       </div>
-
-      <!-- AI result -->
       <div class="ai-result-card" id="ai-result">
         <div class="ai-result-title">
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 5.6 10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a1 1 0 0 0-1.41 0L1.29 18.96a1 1 0 0 0 0 1.41l2.34 2.34a1 1 0 0 0 1.41 0L16.7 11.05a1 1 0 0 0 0-1.41l-2.33-2.35z"/></svg>
           AI Extraction Complete
         </div>
         <div class="ai-result-grid">
           <div class="ai-result-item">
             <div class="ai-result-lbl">Facade Area</div>
             <div class="ai-result-val" id="ai-area">—</div>
-            <div style="font-size:10px;color:var(--muted)">m²</div>
+            <div style="font-size:9px;color:var(--muted)">m²</div>
           </div>
           <div class="ai-result-item">
             <div class="ai-result-lbl">Est. Height</div>
-            <div class="ai-result-val" id="ai-height">—</div>
+            <div class="ai-result-val" id="ai-height" style="font-size:13px;padding-top:3px">—</div>
           </div>
           <div class="ai-result-item" style="grid-column:span 2">
             <div class="ai-result-lbl">Complexity</div>
-            <div class="ai-result-val" id="ai-complexity" style="font-size:14px">—</div>
+            <div class="ai-result-val" id="ai-complexity" style="font-size:13px;padding-top:2px">—</div>
           </div>
         </div>
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px">AI CONFIDENCE</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:var(--accent)" id="ai-conf-pct">—</span>
+          </div>
+          <div class="conf-bar-wrap"><div class="conf-bar" id="ai-conf-bar" style="width:0%"></div></div>
+        </div>
         <div class="ai-result-notes" id="ai-notes"></div>
-        <button class="ai-apply-btn" onclick="applyAIResult()">
-          <i class="fa-solid fa-check"></i> Apply to Estimator
-        </button>
+        <button class="ai-apply-btn" onclick="applyAIResult()">✓ Apply to Estimator</button>
       </div>
-
-      <!-- Error -->
       <div class="ai-error-card" id="ai-error"></div>
     </div>
 
@@ -410,10 +327,10 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
       <div class="f">
         <label>Total Facade Area (m²)</label>
         <input type="number" id="inp-area" value="2500" min="10" max="999999" placeholder="e.g. 2500" oninput="calc()">
-        <div class="f-hint">Gross area — include window / door openings</div>
+        <div class="f-hint">Gross facade area including openings</div>
       </div>
       <div class="f">
-        <label>Building Height Category</label>
+        <label>Building Height</label>
         <select id="inp-height" onchange="calc()">
           <option value="low">Low-rise — under 15 m</option>
           <option value="mid" selected>Mid-rise — 15 m to 30 m</option>
@@ -427,46 +344,74 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
     <div class="sec">
       <div class="sec-lbl">04 · Design Complexity</div>
       <div class="comp-row">
-        <button class="comp-btn on" data-c="simple"  onclick="setComp('simple',this)">Simple</button>
-        <button class="comp-btn"    data-c="medium"  onclick="setComp('medium',this)">Medium</button>
-        <button class="comp-btn"    data-c="complex" onclick="setComp('complex',this)">Complex</button>
+        <button class="comp-btn on" data-c="simple" onclick="setComp('simple',this)">Simple</button>
+        <button class="comp-btn" data-c="medium" onclick="setComp('medium',this)">Medium</button>
+        <button class="comp-btn" data-c="complex" onclick="setComp('complex',this)">Complex</button>
       </div>
-      <div class="f-hint" id="comp-hint" style="margin-top:8px">Flat panels · rectilinear geometry · standard jointing</div>
+      <div class="f-hint" id="comp-hint" style="margin-top:7px">Flat panels · rectilinear geometry · standard jointing</div>
     </div>
 
     <div class="sec">
       <div class="sec-lbl">05 · Location &amp; Market</div>
       <div class="f">
-        <label>Location Multiplier</label>
         <select id="inp-loc" onchange="calc()">
-          <option value="uae"    selected>UAE — Dubai / Abu Dhabi</option>
-          <option value="uaen"          >UAE — Northern Emirates</option>
-          <option value="ksa"           >Saudi Arabia (KSA)</option>
-          <option value="gulf"          >Gulf — Qatar / Kuwait / Oman</option>
-          <option value="egypt"         >Egypt / North Africa</option>
-          <option value="global"        >Global Average</option>
+          <option value="uae" selected>UAE — Dubai / Abu Dhabi (×1.00)</option>
+          <option value="uaen">UAE — Northern Emirates (×0.88)</option>
+          <option value="ksa">Saudi Arabia — KSA (×1.10)</option>
+          <option value="gulf">Gulf — Qatar / Kuwait / Oman (×1.06)</option>
+          <option value="egypt">Egypt / North Africa (×0.72)</option>
+          <option value="global">Global Average (×0.90)</option>
         </select>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">06 · Cost Adjustments</div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">Waste Allowance</span>
+        <div class="toggle-wrap">
+          <div class="f" style="margin:0;flex:1;max-width:70px">
+            <input type="number" id="inp-waste" value="10" min="0" max="25" step="1" oninput="calc()" style="text-align:center;padding:5px 8px;font-size:12px">
+          </div>
+          <span class="toggle-val">%</span>
+        </div>
+      </div>
+      <div class="f-hint" style="margin-bottom:8px">Typical: 8–12% for flat panels, 12–18% for complex geometry</div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">Overhead &amp; Profit</span>
+        <div class="toggle-wrap">
+          <div class="f" style="margin:0;flex:1;max-width:70px">
+            <input type="number" id="inp-ohp" value="15" min="0" max="30" step="1" oninput="calc()" style="text-align:center;padding:5px 8px;font-size:12px">
+          </div>
+          <span class="toggle-val">%</span>
+        </div>
+      </div>
+      <div class="f-hint" style="margin-bottom:8px">Main contractor OH&P: 10–20% typical UAE market</div>
+      <div class="toggle-row" style="margin-top:4px">
+        <span class="toggle-lbl">Include VAT (5%)</span>
+        <label class="toggle">
+          <input type="checkbox" id="inp-vat" onchange="calc()">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
     </div>
 
     <div class="cta">
       <button class="btn-calc" onclick="calc()">
-        <i class="fa-solid fa-calculator"></i> Calculate Estimate
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+        Calculate Estimate
       </button>
     </div>
   </div>
 
   <!-- RESULTS -->
   <div class="res" id="res-panel">
-
-    <!-- Empty state -->
     <div class="empty" id="empty-state">
-      <div class="empty-icon"><i class="fa-solid fa-chart-column"></i></div>
+      <div class="empty-icon">⬢</div>
       <div class="empty-title">Ready to Estimate</div>
-      <div class="empty-sub">Select a cladding system and adjust<br>the parameters on the left —<br>results appear instantly.</div>
+      <div class="empty-sub">Select a cladding system and adjust<br>the parameters — results appear instantly.</div>
     </div>
 
-    <!-- Live results -->
     <div id="res-content" style="display:none;flex-direction:column;gap:2px">
 
       <!-- Hero total -->
@@ -474,16 +419,16 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
         <div class="ht-grid">
           <div>
             <div class="ht-lbl">Total Estimated Cost — Mid Estimate</div>
-            <div class="ht-val" id="r-total">—<span class="ht-cur">AED</span></div>
+            <div class="ht-val" id="r-total">—<span class="ht-cur"> AED</span></div>
             <div class="ht-sys" id="r-sys-tag">—</div>
             <div class="range-block">
               <div class="range-track">
                 <div class="range-fill" id="r-rfill" style="width:50%"></div>
-                <div class="range-pip"  id="r-rpip"  style="left:50%"></div>
+                <div class="range-pip" id="r-rpip" style="left:50%"></div>
               </div>
               <div class="range-nums">
                 <span id="r-low">—</span>
-                <span style="color:var(--accent)">▲ Mid estimate</span>
+                <span style="color:var(--accent)">▲ Mid</span>
                 <span id="r-high">—</span>
               </div>
             </div>
@@ -506,12 +451,10 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
       <div class="panel anim">
         <div class="panel-title">Cost Distribution</div>
         <div class="chart-inner">
-          <div>
-            <canvas id="bar-cv" height="190" style="display:block;width:100%"></canvas>
-          </div>
+          <div><canvas id="bar-cv" height="180" style="display:block;width:100%"></canvas></div>
           <div>
             <div class="donut-wrap">
-              <svg id="donut-svg" viewBox="0 0 220 220" width="220" height="220"></svg>
+              <svg id="donut-svg" viewBox="0 0 200 200" width="200" height="200"></svg>
               <div class="donut-center">
                 <div class="donut-cval" id="d-val">—</div>
                 <div class="donut-clbl">AED / m²</div>
@@ -522,9 +465,9 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
         </div>
       </div>
 
-      <!-- All-systems comparison -->
+      <!-- System comparison -->
       <div class="panel anim">
-        <div class="panel-title">System Cost Comparison (same project inputs)</div>
+        <div class="panel-title">All-System Comparison (same inputs)</div>
         <div class="cmp-rows" id="cmp-rows"></div>
       </div>
 
@@ -536,8 +479,18 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
 
       <!-- Actions -->
       <div class="act-row anim">
-        <button class="btn-pdf" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF Report</button>
-        <button class="btn-rst" onclick="resetAll()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        <button class="btn-pdf" onclick="exportPDF()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>
+          Export PDF
+        </button>
+        <button class="btn-png" onclick="exportPNG()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          Export PNG
+        </button>
+        <button class="btn-rst" onclick="resetAll()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          Reset
+        </button>
       </div>
 
     </div>
@@ -545,44 +498,44 @@ nav{background:rgba(11,17,13,.97);backdrop-filter:blur(24px);border-bottom:1px s
 </div>
 
 <script>
-/* ─── DATA ───────────────────────────────────────────────────────────────── */
+/* ─── DATA (UAE 2025 — verified market rates AED/m² supply only) ─────── */
 const SYS = {
-  gfrc:        {name:'GFRC',         full:'Glass Fibre Reinforced Concrete',       mat:{lo:350,mi:550,hi:900},  sub:.28,ins:{lo:95, mi:130,hi:190},acc:{lo:40,mi:60, hi:90 }},
-  gfrp:        {name:'GFRP',         full:'Glass Fibre Reinforced Polymer',         mat:{lo:280,mi:430,hi:750},  sub:.22,ins:{lo:85, mi:115,hi:170},acc:{lo:35,mi:55, hi:85 }},
-  aluminum:    {name:'Aluminum',     full:'Aluminium Cladding Systems',             mat:{lo:220,mi:380,hi:600},  sub:.20,ins:{lo:70, mi:100,hi:150},acc:{lo:30,mi:48, hi:75 }},
-  stone:       {name:'Stone',        full:'Natural & Engineered Stone Cladding',    mat:{lo:600,mi:1000,hi:1800},sub:.35,ins:{lo:130,mi:180,hi:280},acc:{lo:55,mi:80, hi:130}},
-  acm:         {name:'ACM-FR',       full:'Fire-Rated Aluminium Composite Panel',   mat:{lo:180,mi:290,hi:420},  sub:.18,ins:{lo:55, mi:80, hi:115},acc:{lo:28,mi:44, hi:68 }},
-  fibrecement: {name:'Fibre Cement', full:'Fibre Cement Cladding Board',            mat:{lo:180,mi:265,hi:380},  sub:.20,ins:{lo:60, mi:85, hi:120},acc:{lo:28,mi:42, hi:65 }},
+  gfrc:       {name:'GFRC',        full:'Glass Fibre Reinforced Concrete',      mat:{lo:350,mi:560,hi:920},  subPct:.27, ins:{lo:95, mi:135,hi:195}, acc:{lo:40,mi:62,hi:95}},
+  gfrp:       {name:'GFRP',        full:'Glass Fibre Reinforced Polymer',        mat:{lo:280,mi:440,hi:760},  subPct:.22, ins:{lo:85, mi:118,hi:175}, acc:{lo:35,mi:56,hi:88}},
+  aluminum:   {name:'Aluminum',    full:'Aluminium Cladding Systems',            mat:{lo:220,mi:390,hi:610},  subPct:.20, ins:{lo:70, mi:102,hi:155}, acc:{lo:30,mi:50,hi:78}},
+  stone:      {name:'Stone',       full:'Natural & Engineered Stone Cladding',   mat:{lo:620,mi:1020,hi:1850},subPct:.34, ins:{lo:135,mi:185,hi:290}, acc:{lo:55,mi:82,hi:135}},
+  acm:        {name:'ACM-FR',      full:'Fire-Rated Aluminium Composite Panel',  mat:{lo:185,mi:295,hi:430},  subPct:.17, ins:{lo:55, mi:82,hi:118},  acc:{lo:28,mi:45,hi:70}},
+  fcement:    {name:'Fibre Cement',full:'Fibre Cement Cladding Board',           mat:{lo:185,mi:270,hi:390},  subPct:.20, ins:{lo:60, mi:87,hi:124},  acc:{lo:28,mi:43,hi:67}},
 };
 const COMP = {
-  simple: {mult:.88,scaf:.85,hint:'Flat panels · rectilinear geometry · standard jointing'},
-  medium: {mult:1.00,scaf:1.00,hint:'Some curves · mixed joint systems · angled sections'},
-  complex:{mult:1.35,scaf:1.30,hint:'Parametric / sculptural · 3D geometry · custom moulds'},
+  simple: {mult:.87, scaf:.83, hint:'Flat panels · rectilinear geometry · standard jointing'},
+  medium: {mult:1.00, scaf:1.00, hint:'Some curves · mixed joint systems · angled sections'},
+  complex:{mult:1.38, scaf:1.33, hint:'Parametric / sculptural · 3D geometry · custom moulds'},
 };
 const LOC = {
-  uae:   {mult:1.00,label:'UAE — Dubai / Abu Dhabi'},
-  uaen:  {mult:.88, label:'UAE — Northern Emirates'},
-  ksa:   {mult:1.10,label:'Saudi Arabia (KSA)'},
-  gulf:  {mult:1.05,label:'Gulf — Qatar / Kuwait / Oman'},
-  egypt: {mult:.72, label:'Egypt / North Africa'},
-  global:{mult:.90, label:'Global Average'},
+  uae:   {mult:1.00, label:'UAE — Dubai / Abu Dhabi'},
+  uaen:  {mult:.88,  label:'UAE — Northern Emirates'},
+  ksa:   {mult:1.10, label:'Saudi Arabia (KSA)'},
+  gulf:  {mult:1.06, label:'Gulf — Qatar / Kuwait / Oman'},
+  egypt: {mult:.72,  label:'Egypt / North Africa'},
+  global:{mult:.90,  label:'Global Average'},
 };
 const HGT = {
-  low:  {mult:1.00,label:'Under 15 m'},
-  mid:  {mult:1.25,label:'15 – 30 m'},
-  high: {mult:1.55,label:'30 – 60 m'},
-  tall: {mult:2.10,label:'60 – 150 m'},
-  stall:{mult:2.80,label:'150 m+'},
+  low:  {mult:1.00, label:'Under 15 m'},
+  mid:  {mult:1.26, label:'15 – 30 m'},
+  high: {mult:1.58, label:'30 – 60 m'},
+  tall: {mult:2.14, label:'60 – 150 m'},
+  stall:{mult:2.85, label:'150 m+'},
 };
-const COLORS = ['#00e5a0','#f59e0b','#60a5fa','#a78bfa'];
-const CNAMES = ['Material Supply','Substructure','Installation','Access / Scaffold'];
+const COLORS = ['#00e5a0','#f59e0b','#60a5fa','#a78bfa','#fb923c','#34d399'];
+const CNAMES = ['Material Supply','Substructure','Installation','Access/Scaffold'];
 
-/* ─── STATE ──────────────────────────────────────────────────────────────── */
+/* ─── STATE ─────────────────────────────────────────────────────────── */
 let selMat  = 'gfrc';
 let selComp = 'simple';
 let lastR   = null;
 
-/* ─── INIT MAT GRID ──────────────────────────────────────────────────────── */
+/* ─── INIT ───────────────────────────────────────────────────────────── */
 function buildMatGrid() {
   document.getElementById('mat-grid').innerHTML =
     Object.entries(SYS).map(([k,s]) => `
@@ -591,50 +544,71 @@ function buildMatGrid() {
         <div class="mat-rng">${fmt(s.mat.lo)}–${fmt(s.mat.hi)} AED/m²</div>
       </button>`).join('');
 }
-function pickMat(k,el){
-  selMat=k;
-  document.querySelectorAll('.mat-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on'); calc();
-}
-function setComp(v,el){
-  selComp=v;
-  document.querySelectorAll('.comp-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('comp-hint').textContent=COMP[v].hint; calc();
-}
+function pickMat(k,el){ selMat=k; document.querySelectorAll('.mat-btn').forEach(b=>b.classList.remove('on')); el.classList.add('on'); calc(); }
+function setComp(v,el){ selComp=v; document.querySelectorAll('.comp-btn').forEach(b=>b.classList.remove('on')); el.classList.add('on'); document.getElementById('comp-hint').textContent=COMP[v].hint; calc(); }
 
-/* ─── CALCULATE ──────────────────────────────────────────────────────────── */
+/* ─── CALCULATE ──────────────────────────────────────────────────────── */
 function tier(sys,comp,loc,hgt,t){
-  const mat = sys.mat[t]*comp.mult*loc.mult;
-  const sub = mat*sys.sub;
-  const ins = sys.ins[t]*comp.mult*loc.mult;
-  const acc = sys.acc[t]*comp.scaf*hgt.mult*loc.mult;
-  return {mat,sub,ins,acc,total:mat+sub+ins+acc};
+  const mat = sys.mat[t] * comp.mult * loc.mult;
+  const sub = mat * sys.subPct;
+  const ins = sys.ins[t] * comp.mult * loc.mult;
+  const acc = sys.acc[t] * comp.scaf * hgt.mult * loc.mult;
+  return {mat,sub,ins,acc, base:mat+sub+ins+acc};
 }
 
 function calc(){
-  const area = Math.max(1,parseFloat(document.getElementById('inp-area').value)||0);
-  const hKey = document.getElementById('inp-height').value;
-  const lKey = document.getElementById('inp-loc').value;
+  const area    = Math.max(1, parseFloat(document.getElementById('inp-area').value)||0);
+  const hKey    = document.getElementById('inp-height').value;
+  const lKey    = document.getElementById('inp-loc').value;
+  const wastePct= (parseFloat(document.getElementById('inp-waste').value)||0) / 100;
+  const ohpPct  = (parseFloat(document.getElementById('inp-ohp').value)||0)   / 100;
+  const vat     = document.getElementById('inp-vat').checked ? 1.05 : 1.00;
+
   const sys=SYS[selMat], comp=COMP[selComp], loc=LOC[lKey], hgt=HGT[hKey];
-  const mi=tier(sys,comp,loc,hgt,'mi');
-  const lo=tier(sys,comp,loc,hgt,'lo');
-  const hi=tier(sys,comp,loc,hgt,'hi');
-  const comps=[
-    {name:CNAMES[0],perM2:mi.mat,total:mi.mat*area,pct:mi.mat/mi.total,color:COLORS[0]},
-    {name:CNAMES[1],perM2:mi.sub,total:mi.sub*area,pct:mi.sub/mi.total,color:COLORS[1]},
-    {name:CNAMES[2],perM2:mi.ins,total:mi.ins*area,pct:mi.ins/mi.total,color:COLORS[2]},
-    {name:CNAMES[3],perM2:mi.acc,total:mi.acc*area,pct:mi.acc/mi.total,color:COLORS[3]},
-  ];
-  const sysAll=Object.entries(SYS).map(([k,s])=>{
-    const t=tier(s,comp,loc,hgt,'mi');
-    return {key:k,name:s.name,perM2:t.total};
+
+  function full(t){
+    const b = tier(sys,comp,loc,hgt,t);
+    // Apply waste to material supply only
+    const matW = b.mat * (1 + wastePct);
+    const base = matW + b.sub + b.ins + b.acc;
+    // OH&P on base
+    const ohp  = base * ohpPct;
+    const subtotal = base + ohp;
+    // VAT on subtotal
+    const total = subtotal * vat;
+    return {
+      mat: matW, sub: b.sub, ins: b.ins, acc: b.acc,
+      ohp, vat_amt: subtotal*(vat-1), total,
+      comps: [
+        {name:CNAMES[0], perM2:matW,  total:matW*area,  pct:0, color:COLORS[0]},
+        {name:CNAMES[1], perM2:b.sub, total:b.sub*area, pct:0, color:COLORS[1]},
+        {name:CNAMES[2], perM2:b.ins, total:b.ins*area, pct:0, color:COLORS[2]},
+        {name:CNAMES[3], perM2:b.acc, total:b.acc*area, pct:0, color:COLORS[3]},
+        ...(ohpPct>0  ? [{name:'OH&P',             perM2:ohp,              total:ohp*area,              pct:0, color:COLORS[4]}] : []),
+        ...(vat>1     ? [{name:'VAT (5%)',           perM2:subtotal*(vat-1),total:subtotal*(vat-1)*area, pct:0, color:COLORS[5]}] : []),
+      ]
+    };
+  }
+
+  const mi = full('mi'), lo = full('lo'), hi = full('hi');
+  // Compute pct of total for mid
+  mi.comps.forEach(c => c.pct = c.perM2 / mi.total);
+
+  // All-systems comparison (mid, same adjustments)
+  const sysAll = Object.entries(SYS).map(([k,s])=>{
+    const b = tier(s, comp, loc, hgt, 'mi');
+    const matW = b.mat*(1+wastePct);
+    const base = matW+b.sub+b.ins+b.acc;
+    const ohp  = base*ohpPct;
+    const total= (base+ohp)*vat;
+    return {key:k, name:s.name, perM2:total};
   });
-  lastR={sys,comp,loc,hgt,area,hKey,lKey,mi,lo,hi,comps,sysAll,selComp};
+
+  lastR={sys,comp,loc,hgt,area,hKey,lKey,selComp,wastePct,ohpPct,vat,mi,lo,hi,sysAll};
   render(lastR);
 }
 
-/* ─── RENDER ─────────────────────────────────────────────────────────────── */
+/* ─── RENDER ─────────────────────────────────────────────────────────── */
 function render(r){
   document.getElementById('empty-state').style.display='none';
   document.getElementById('res-content').style.display='flex';
@@ -643,11 +617,12 @@ function render(r){
 
   // Hero
   document.getElementById('r-total').innerHTML = `${fmtK(tMid)}<span class="ht-cur"> AED</span>`;
+  const vatLabel = r.vat>1 ? ' · incl. VAT' : ' · excl. VAT';
   document.getElementById('r-sys-tag').textContent =
-    `${r.sys.name} · ${r.area.toLocaleString()} m² · ${r.hgt.label} · ${selComp.charAt(0).toUpperCase()+selComp.slice(1)} complexity`;
-  document.getElementById('r-pm2').textContent  = fmtK(r.mi.total);
-  document.getElementById('r-low').textContent  = 'Low: AED ' + fmtK(tLo);
-  document.getElementById('r-high').textContent = 'High: AED ' + fmtK(tHi);
+    `${r.sys.full} · ${r.area.toLocaleString()} m² · ${r.hgt.label} · ${r.selComp.charAt(0).toUpperCase()+r.selComp.slice(1)} complexity${vatLabel}`;
+  document.getElementById('r-pm2').textContent = fmtK(r.mi.total);
+  document.getElementById('r-low').textContent  = 'Low: ' + fmtK(tLo);
+  document.getElementById('r-high').textContent = 'High: ' + fmtK(tHi);
   document.getElementById('d-val').textContent  = Math.round(r.mi.total).toLocaleString();
 
   const span=tHi-tLo, pip=span>0?(tMid-tLo)/span*100:50;
@@ -656,21 +631,21 @@ function render(r){
 
   const gr=document.getElementById('r-grade');
   const pm=r.mi.total;
-  if     (pm<400) {gr.textContent='◆ BUDGET EFFICIENT';gr.style.cssText='background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--accent)'}
-  else if(pm<800) {gr.textContent='◆ MID-RANGE SPEC';  gr.style.cssText='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber)'}
-  else if(pm<1400){gr.textContent='◆ PREMIUM SPEC';    gr.style.cssText='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber)'}
+  if     (pm<350) {gr.textContent='◆ BUDGET EFFICIENT';gr.style.cssText='background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--accent)'}
+  else if(pm<700) {gr.textContent='◆ MID-RANGE SPEC';  gr.style.cssText='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber)'}
+  else if(pm<1300){gr.textContent='◆ PREMIUM SPEC';    gr.style.cssText='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--amber)'}
   else            {gr.textContent='◆ ULTRA PREMIUM';   gr.style.cssText='background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)'}
 
   // Breakdown rows
-  const maxP=Math.max(...r.comps.map(c=>c.pct));
-  document.getElementById('brows').innerHTML=r.comps.map(c=>`
+  const maxP=Math.max(...r.mi.comps.map(c=>c.pct));
+  const rows = r.mi.comps.map(c=>`
     <div class="brow">
       <div class="b-dot" style="background:${c.color}"></div>
       <div>
         <div class="b-name">${c.name}</div>
         <div class="b-bar-wrap"><div class="b-bar" style="width:${c.pct/maxP*100}%;background:${c.color}"></div></div>
       </div>
-      <div class="b-pct">${(c.pct*100).toFixed(0)}%</div>
+      <div class="b-pct">${(c.pct*100).toFixed(1)}%</div>
       <div style="text-align:right">
         <div class="b-pm2" style="color:${c.color}">AED ${fmt(c.perM2)}</div>
         <div class="b-pm2-sub">/ m²</div>
@@ -681,18 +656,32 @@ function render(r){
       </div>
     </div>`).join('');
 
-  // Donut + legend
-  drawDonut(r.comps);
-  document.getElementById('legend').innerHTML=r.comps.map(c=>`
+  const totRow = `
+    <div class="brow-total">
+      <div class="b-dot" style="background:var(--accent)"></div>
+      <div><div class="b-name" style="color:var(--accent)">TOTAL</div></div>
+      <div class="b-pct" style="color:var(--accent)">100%</div>
+      <div style="text-align:right">
+        <div class="b-pm2" style="color:var(--accent)">AED ${fmt(r.mi.total)}</div>
+        <div class="b-pm2-sub">/ m²</div>
+      </div>
+      <div style="text-align:right">
+        <div class="b-tot" style="color:var(--accent)">${fmtK(tMid)}</div>
+        <div class="b-tot-sub">AED total</div>
+      </div>
+    </div>`;
+  document.getElementById('brows').innerHTML = rows + totRow;
+
+  // Charts
+  drawDonut(r.mi.comps);
+  document.getElementById('legend').innerHTML=r.mi.comps.map(c=>`
     <div class="leg">
       <div class="leg-dot" style="background:${c.color}"></div>
       <div class="leg-name">${c.name}</div>
       <div class="leg-pct">${(c.pct*100).toFixed(0)}%</div>
       <div class="leg-val" style="color:${c.color}">${fmt(c.perM2)}</div>
     </div>`).join('');
-
-  // Bar chart
-  drawBar(r.comps);
+  drawBarChart(r.mi.comps);
 
   // System comparison
   const maxAll=Math.max(...r.sysAll.map(s=>s.perM2));
@@ -706,291 +695,236 @@ function render(r){
     </div>`).join('');
 
   // Assumptions
+  const wastePctDisp = (r.wastePct*100).toFixed(0)+'%';
+  const ohpPctDisp   = (r.ohpPct*100).toFixed(0)+'%';
   document.getElementById('ass-grid').innerHTML=[
-    {l:'System',     v:r.sys.full},
-    {l:'Facade Area',v:r.area.toLocaleString()+' m²'},
-    {l:'Height',     v:r.hgt.label},
-    {l:'Complexity', v:selComp.charAt(0).toUpperCase()+selComp.slice(1)+` (×${r.comp.mult.toFixed(2)})`},
-    {l:'Location',   v:r.loc.label},
-    {l:'Base Year',  v:'UAE Market 2025'},
+    {l:'System',       v:r.sys.full},
+    {l:'Facade Area',  v:r.area.toLocaleString()+' m²'},
+    {l:'Height',       v:r.hgt.label},
+    {l:'Complexity',   v:r.selComp.charAt(0).toUpperCase()+r.selComp.slice(1)+` (×${r.comp.mult.toFixed(2)})`},
+    {l:'Location',     v:r.loc.label+` (×${r.loc.mult.toFixed(2)})`},
+    {l:'Waste Allow.', v:wastePctDisp+' on material supply'},
+    {l:'OH&P',         v:ohpPctDisp+' on net cost'},
+    {l:'VAT',          v:r.vat>1?'5% included':'Excluded'},
+    {l:'Base Year',    v:'UAE Market 2025'},
   ].map(a=>`<div class="ass-cell"><div class="ass-label">${a.l}</div><div class="ass-val">${a.v}</div></div>`).join('');
 }
 
-/* ─── DONUT ──────────────────────────────────────────────────────────────── */
+/* ─── CHARTS ─────────────────────────────────────────────────────────── */
 function drawDonut(comps){
   const svg=document.getElementById('donut-svg');
-  const cx=110,cy=110,RO=96,RI=62;
+  const cx=100,cy=100,RO=88,RI=58;
   let a=-90,paths=`<circle cx="${cx}" cy="${cy}" r="${RI}" fill="var(--bg2)"/>`;
   comps.forEach(c=>{
     const sw=c.pct*360,a1=rad(a),a2=rad(a+sw),lg=sw>180?1:0;
-    paths+=`<path d="M${cx+RO*Math.cos(a1)} ${cy+RO*Math.sin(a1)} A${RO} ${RO} 0 ${lg} 1 ${cx+RO*Math.cos(a2)} ${cy+RO*Math.sin(a2)} L${cx+RI*Math.cos(a2)} ${cy+RI*Math.sin(a2)} A${RI} ${RI} 0 ${lg} 0 ${cx+RI*Math.cos(a1)} ${cy+RI*Math.sin(a1)}Z" fill="${c.color}" opacity=".92"/>`;
+    paths+=`<path d="M${cx+RO*Math.cos(a1)} ${cy+RO*Math.sin(a1)} A${RO} ${RO} 0 ${lg} 1 ${cx+RO*Math.cos(a2)} ${cy+RO*Math.sin(a2)} L${cx+RI*Math.cos(a2)} ${cy+RI*Math.sin(a2)} A${RI} ${RI} 0 ${lg} 0 ${cx+RI*Math.cos(a1)} ${cy+RI*Math.sin(a1)}Z" fill="${c.color}" opacity=".9"/>`;
     a+=sw;
   });
   svg.innerHTML=paths;
 }
 const rad=d=>d*Math.PI/180;
 
-/* ─── BAR CHART ──────────────────────────────────────────────────────────── */
-function drawBar(comps){
+function drawBarChart(comps){
   const cv=document.getElementById('bar-cv');
   const dpr=window.devicePixelRatio||1;
-  const W=cv.parentElement.offsetWidth||420, H=190;
+  const W=cv.parentElement.offsetWidth||420, H=180;
   cv.width=W*dpr; cv.height=H*dpr;
   cv.style.width=W+'px'; cv.style.height=H+'px';
   const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
-  ctx.fillStyle='#182318'; ctx.fillRect(0,0,W,H);
-  const pad=20,gap=10,bW=(W-pad*2-gap*3)/4,mH=H-46;
+  ctx.fillStyle='var(--bg3)'; ctx.fillRect(0,0,W,H);
+  const n=comps.length, pad=16, gap=8;
+  const bW=(W-pad*2-gap*(n-1))/n, mH=H-44;
   comps.forEach((c,i)=>{
     const x=pad+i*(bW+gap), bH=c.pct*mH, y=H-28-bH;
-    // bg track
-    ctx.fillStyle=c.color+'22'; ctx.fillRect(x,H-28-mH,bW,mH);
-    // fill
+    ctx.fillStyle=c.color+'20'; ctx.fillRect(x,H-28-mH,bW,mH);
     ctx.fillStyle=c.color; ctx.fillRect(x,y,bW,bH);
-    // top %
-    ctx.fillStyle=c.color; ctx.font=`800 13px 'Barlow Condensed',sans-serif`;
-    ctx.textAlign='center'; ctx.fillText((c.pct*100).toFixed(0)+'%',x+bW/2,y-5);
-    // bottom label
-    ctx.fillStyle='#6b7d6d'; ctx.font=`400 9px 'DM Mono',monospace`;
-    ctx.fillText(c.name.split(' ')[0].slice(0,10).toUpperCase(),x+bW/2,H-10);
+    ctx.fillStyle=c.color; ctx.font=`800 12px 'Barlow Condensed',sans-serif`;
+    ctx.textAlign='center'; ctx.fillText((c.pct*100).toFixed(0)+'%',x+bW/2,y-4);
+    ctx.fillStyle='#6b7d6d'; ctx.font=`400 8px 'DM Mono',monospace`;
+    ctx.fillText(c.name.split(/[\s\/]/)[0].toUpperCase().slice(0,8),x+bW/2,H-10);
   });
 }
 
-/* ─── PDF EXPORT ─────────────────────────────────────────────────────────── */
+/* ─── PDF EXPORT ─────────────────────────────────────────────────────── */
 async function exportPDF(){
-  if(!lastR){ alert('Run a calculation first.'); return; }
-  if(!window.jspdf){ alert('PDF library not loaded.'); return; }
-
-  const r   = lastR;
-  const tMid = r.mi.total * r.area;
-  const tLo  = r.lo.total * r.area;
-  const tHi  = r.hi.total * r.area;
-
-  const {jsPDF} = window.jspdf;
-  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
-  const PW=210, PH=297, M=16, IW=PW-M*2;
-  let y = 0;
-
-  /* ── colour palette ─────────────────────────────────────── */
-  const BG   = [10,17,13],  BG2  = [17,26,19],  BG3  = [24,36,26];
-  const ACCT = [0,229,160], TEXT = [237,242,237], MUT  = [107,125,109];
-  const AMB  = [245,158,11];
-
-  const sf = (r,g,b)=>doc.setFillColor(r,g,b);
-  const st = (r,g,b)=>doc.setTextColor(r,g,b);
-  const sd = (r,g,b)=>doc.setDrawColor(r,g,b);
-  const B  = sz=>{ doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
-  const N  = sz=>{ doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
-  const MN = sz=>{ doc.setFont('courier','normal');   doc.setFontSize(sz); };
-
-  /* ── helpers ─────────────────────────────────────────────── */
-  function newPage(){
-    doc.addPage();
-    sf(...BG); doc.rect(0,0,PW,PH,'F');
-    sf(...ACCT); doc.rect(0,0,PW,1.5,'F');
-    doc.rect(0,PH-1.5,PW,1.5,'F');
-    N(7); st(...MUT);
-    doc.text('CladWise UAE · Facade Cost Estimation Report · Conceptual only — not for tendering',PW/2,PH-4,{align:'center'});
-    y = 14;
+  if(!lastR){alert('Run a calculation first.');return;}
+  // Lazy-load jsPDF
+  if(!window.jspdf){
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload=res; s.onerror=rej; document.head.appendChild(s);
+    });
   }
-  function checkY(needed){
-    if(y+needed > PH-16) newPage();
-  }
-  function sectionLabel(txt){
-    checkY(12);
-    B(8); st(...ACCT);
-    doc.text(txt, M, y);
-    sd(...ACCT); doc.setLineWidth(0.2);
-    doc.line(M + doc.getTextWidth(txt)+3, y-0.5, PW-M, y-0.5);
-    y += 7;
-  }
-  function drawBar(x, barY, w, h, pct, color, bg){
-    sf(...(bg||BG3)); doc.rect(x, barY, w, h, 'F');
-    const fillW = Math.max(pct,0) * w;
-    sf(...color); doc.rect(x, barY, fillW, h, 'F');
-  }
+  const r=lastR;
+  const tMid=r.mi.total*r.area, tLo=r.lo.total*r.area, tHi=r.hi.total*r.area;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const PW=210,PH=297,M=16,IW=PW-M*2;
+  let y=0;
 
-  /* ════════════════════════════════════════════════════════════
-     PAGE 1 — COVER + SUMMARY
-     ════════════════════════════════════════════════════════════ */
-  sf(...BG); doc.rect(0,0,PW,PH,'F');
-  /* top bar */ sf(...ACCT); doc.rect(0,0,PW,2,'F');
-  /* bottom bar */ doc.rect(0,PH-1.5,PW,1.5,'F');
+  const BG=[10,17,13],BG2=[17,26,19],BG3=[24,36,26];
+  const ACC=[0,229,160],TXT=[237,242,237],MUT=[107,125,109],AMB=[245,158,11];
+  const sf=(r,g,b)=>doc.setFillColor(r,g,b);
+  const st=(r,g,b)=>doc.setTextColor(r,g,b);
+  const sd=(r,g,b)=>doc.setDrawColor(r,g,b);
+  const B=sz=>{doc.setFont('helvetica','bold');doc.setFontSize(sz);};
+  const N=sz=>{doc.setFont('helvetica','normal');doc.setFontSize(sz);};
 
-  /* ── header band ── */
-  sf(...BG2); doc.rect(0,2,PW,40,'F');
-  B(26); st(...TEXT); doc.text('CLADWISE', M, 22);
-  st(...ACCT); doc.text(' UAE', M + doc.getTextWidth('CLADWISE'), 22);
-  N(10); st(...MUT); doc.text('FACADE COST ESTIMATION REPORT', M, 31);
-  MN(7.5); st(60,80,65);
-  doc.text(`Generated: ${new Date().toLocaleString()}`, M, 37);
-  MN(7.5); st(...MUT);
-  doc.text(`Project: ${r.sys.full} · ${r.area.toLocaleString()} m² · ${r.hgt.label}`, PW-M, 37, {align:'right'});
+  function pg(){doc.addPage();sf(...BG);doc.rect(0,0,PW,PH,'F');sf(...ACC);doc.rect(0,0,PW,1.5,'F');N(6.5);st(...MUT);doc.text('CladWise UAE · Facade Cost Estimation Report · Conceptual only — not for tendering · cladwise.ae',PW/2,PH-4,{align:'center'});const pn=doc.internal.getCurrentPageInfo().pageNumber;B(7);st(...ACC);doc.text(String(pn),PW-M,PH-4,{align:'right'});y=14;}
+  function chk(h){if(y+h>PH-16)pg();}
+  function secLbl(txt){chk(10);B(8);st(...ACC);doc.text(txt,M,y);sd(...ACC);doc.setLineWidth(.2);doc.line(M+doc.getTextWidth(txt)+3,y-.5,PW-M,y-.5);y+=7;}
+  function row(k,v,i){chk(8);sf(...(i%2===0?BG2:BG3));doc.rect(M,y,IW,7,'F');N(8.5);st(...MUT);doc.text(k,M+3,y+4.8);B(8.5);st(...TXT);doc.text(String(v),M+62,y+4.8);y+=7;}
 
-  /* ── disclaimer strip ── */
-  sf(60,40,5); doc.rect(0,42,PW,10,'F');
-  sd(...AMB); doc.setLineWidth(0.3); doc.rect(0,42,PW,10,'D');
-  B(7.5); st(...AMB);
-  doc.text('⚠  CONCEPTUAL ESTIMATE ONLY — Not for tendering, BOQ, or contractual use. Verify with Quantity Surveyor.', PW/2, 49, {align:'center'});
+  // PAGE 1
+  sf(...BG);doc.rect(0,0,PW,PH,'F');
+  sf(...ACC);doc.rect(0,0,PW,2,'F');
+  sf(...BG2);doc.rect(0,2,PW,38,'F');
+  B(24);st(...TXT);doc.text('CLADWISE',M,20);st(...ACC);doc.text(' UAE',M+doc.getTextWidth('CLADWISE'),20);
+  N(9.5);st(...MUT);doc.text('FACADE COST ESTIMATION REPORT',M,29);
+  N(7.5);st(60,80,65);doc.text('Generated: '+new Date().toLocaleString(),M,36);
+  N(7.5);st(...MUT);doc.text(r.sys.full+' · '+r.area.toLocaleString()+' m² · '+r.hgt.label,PW-M,36,{align:'right'});
+  // disclaimer
+  sf(55,35,5);doc.rect(0,40,PW,10,'F');sd(...AMB);doc.setLineWidth(.3);doc.rect(0,40,PW,10,'D');
+  B(7);st(...AMB);doc.text('⚠  CONCEPTUAL ESTIMATE ONLY — Not for tendering, BOQ, or contractual use',PW/2,47,{align:'center'});
+  y=60;
+  // cost box
+  sf(...BG2);doc.rect(M,y,IW,34,'F');sf(...ACC);doc.rect(M,y,3,34,'F');sf(0,55,42);doc.rect(M+3,y,IW-3,34,'F');
+  N(8.5);st(...MUT);doc.text('TOTAL ESTIMATED COST (MID, INCL. ALL ADJUSTMENTS)',M+8,y+8);
+  B(32);st(...ACC);doc.text('AED '+fmtK(tMid),M+8,y+24);
+  N(9.5);st(...TXT);doc.text(fmt(r.mi.total)+' AED/m²',PW-M-4,y+24,{align:'right'});
+  N(8);st(...MUT);doc.text('Low: AED '+fmtK(tLo)+'  ·  Mid: AED '+fmtK(tMid)+'  ·  High: AED '+fmtK(tHi),M+8,y+31);
+  y+=42;
 
-  y = 62;
-
-  /* ── headline cost box ── */
-  sf(...BG2); doc.rect(M, y, IW, 36, 'F');
-  sf(...ACCT); doc.rect(M, y, 3, 36, 'F');
-  sf(0,60,45); doc.rect(M+3, y, IW-3, 36, 'F');
-
-  /* mid cost */
-  N(9); st(...MUT); doc.text('TOTAL ESTIMATED COST (MID-RANGE)', M+8, y+9);
-  B(34); st(...ACCT); doc.text(`AED ${fmtK(tMid)}`, M+8, y+26);
-  N(10); st(...TEXT);
-  const midPerM2Str = `AED ${Math.round(r.mi.total).toLocaleString()} / m²`;
-  doc.text(midPerM2Str, PW-M-4, y+26, {align:'right'});
-
-  /* range row */
-  N(8); st(...MUT);
-  doc.text(`Low: AED ${fmtK(tLo)}   ·   Mid: AED ${fmtK(tMid)}   ·   High: AED ${fmtK(tHi)}`, M+8, y+32);
-
-  y += 44;
-
-  /* ── lo / mid / hi range bars ── */
-  checkY(28);
-  sectionLabel('COST RANGE');
-  const ranges = [
-    {lbl:'Low Estimate',   val:tLo,  color:[60,160,120]},
-    {lbl:'Mid Estimate',   val:tMid, color:[...ACCT]},
-    {lbl:'High Estimate',  val:tHi,  color:[245,158,11]},
-  ];
-  const maxRange = tHi;
-  ranges.forEach(({lbl,val,color},i)=>{
-    checkY(10);
-    sf(...BG2); doc.rect(M,y,IW,8,'F');
-    B(8); st(...TEXT); doc.text(lbl, M+3, y+5.5);
-    drawBar(M+55, y+2, IW-90, 4, val/maxRange, color, BG3);
-    B(8); st(...color); doc.text(`AED ${fmtK(val)}`, PW-M-3, y+5.5, {align:'right'});
-    y += 8;
+  secLbl('COST RANGE');
+  [{lbl:'Low',val:tLo,c:[60,160,120]},{lbl:'Mid',val:tMid,c:ACC},{lbl:'High',val:tHi,c:AMB}].forEach(({lbl,val,c},i)=>{
+    chk(9);sf(...BG2);doc.rect(M,y,IW,8,'F');B(8.5);st(...TXT);doc.text(lbl+' Estimate',M+3,y+5.5);
+    sf(...BG3);doc.rect(M+52,y+2,IW-90,4,'F');sf(...c);doc.rect(M+52,y+2,Math.max(1,(IW-90)*(val/tHi)),4,'F');
+    B(8.5);st(...c);doc.text('AED '+fmtK(val),PW-M-3,y+5.5,{align:'right'});y+=8;
   });
+  y+=5;
 
-  y += 6;
+  secLbl('PROJECT PARAMETERS');
+  [['Cladding System',r.sys.full],['Facade Area',r.area.toLocaleString()+' m²'],['Building Height',r.hgt.label],
+   ['Complexity',r.selComp.toUpperCase()+' ×'+r.comp.mult.toFixed(2)],['Location',r.loc.label+' ×'+r.loc.mult.toFixed(2)],
+   ['Waste Allowance',(r.wastePct*100).toFixed(0)+'% on material supply'],['OH&P',(r.ohpPct*100).toFixed(0)+'% on net cost'],
+   ['VAT',r.vat>1?'5% included':'Excluded'],['Base Year','UAE Market Data 2025']
+  ].forEach(([k,v],i)=>row(k,v,i));
+  y+=8;
 
-  /* ── project parameters ── */
-  checkY(54);
-  sectionLabel('PROJECT PARAMETERS');
-  const params = [
-    ['Cladding System',  r.sys.full],
-    ['Facade Area',      r.area.toLocaleString() + ' m²'],
-    ['Building Height',  r.hgt.label],
-    ['Complexity',       selComp.charAt(0).toUpperCase()+selComp.slice(1) + `  ×${r.comp.mult.toFixed(2)} multiplier`],
-    ['Location',         r.loc.label],
-    ['Area per m² (mid)',`AED ${Math.round(r.mi.total).toLocaleString()}`],
-  ];
-  params.forEach(([k,v],i)=>{
-    checkY(8);
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,7.5,'F');
-    N(8.5); st(...MUT); doc.text(k, M+3, y+5.2);
-    B(8.5); st(...TEXT); doc.text(v, M+62, y+5.2);
-    y += 7.5;
+  secLbl('COST BREAKDOWN PER COMPONENT');
+  sf(...BG3);doc.rect(M,y,IW,8,'F');
+  N(7.5);st(...MUT);['Component','Per m² AED','Total AED','% Share',''].forEach((h,i)=>{
+    const cx=[M,M+55,M+95,M+130,M+158][i]; if(i<4)doc.text(h,cx+2,y+5.5);
+  });y+=8;
+  r.mi.comps.forEach((c,i)=>{
+    chk(9);sf(...(i%2===0?BG2:BG3));doc.rect(M,y,IW,8.5,'F');
+    const rgb=h2rgb(c.color);if(rgb){sf(...rgb);doc.rect(M,y,2.5,8.5,'F');}
+    N(8.5);st(...TXT);doc.text(c.name,M+5,y+5.5);
+    N(8.5);st(...ACC);doc.text(fmt(c.perM2),M+57,y+5.5);doc.text(fmtK(c.total),M+97,y+5.5);
+    st(...MUT);doc.text((c.pct*100).toFixed(1)+'%',M+132,y+5.5);
+    sf(...BG3);doc.rect(M+158,y+2.5,30,3.5,'F');sf(...(rgb||ACC));doc.rect(M+158,y+2.5,Math.max(1,30*c.pct),3.5,'F');
+    y+=8.5;
   });
+  chk(10);sf(30,50,35);doc.rect(M,y,IW,9,'F');sf(...ACC);doc.rect(M,y,3,9,'F');
+  B(9);st(...ACC);doc.text('TOTAL',M+5,y+6);doc.text(fmt(r.mi.total),M+57,y+6);doc.text(fmtK(tMid),M+97,y+6);doc.text('100%',M+132,y+6);y+=15;
 
-  y += 8;
+  // Embed bar chart
+  try{const cv=document.getElementById('bar-cv');if(cv){chk(55);secLbl('COMPONENT DISTRIBUTION');doc.addImage(cv.toDataURL('image/png'),'PNG',M,y,IW,44);y+=50;}}catch(e){}
 
-  /* ── cost breakdown table ── */
-  checkY(20);
-  sectionLabel('COST BREAKDOWN PER COMPONENT');
-
-  /* header row */
-  const cc = [M, M+55, M+95, M+130, M+155, PW-M];
-  sf(...BG3); doc.rect(M,y,IW,8,'F');
-  MN(7.5); st(...MUT);
-  ['Component','Per m² (AED)','Total (AED)','% Share','Visual',''].forEach((h,i)=>{
-    if(i<5) doc.text(h, cc[i]+2, y+5.5);
-  });
-  y += 8;
-
-  r.comps.forEach((comp, i) => {
-    checkY(9);
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,8.5,'F');
-    /* accent colour swatch */
-    const rgb = h2rgb(comp.color);
-    if(rgb){ sf(...rgb); doc.rect(M,y,2.5,8.5,'F'); }
-    N(8.5); st(...TEXT);
-    doc.text(comp.name, cc[0]+5, y+5.5);
-    MN(8.5); st(...ACCT);
-    doc.text(fmt(comp.perM2), cc[1]+2, y+5.5);
-    doc.text(fmtK(comp.total), cc[2]+2, y+5.5);
-    N(8); st(...MUT);
-    doc.text((comp.pct*100).toFixed(0)+'%', cc[3]+2, y+5.5);
-    /* pct bar */
-    drawBar(cc[4], y+2.5, 30, 3.5, comp.pct, rgb||ACCT, BG3);
-    y += 8.5;
-  });
-
-  /* totals row */
-  checkY(10);
-  sf(30,50,35); doc.rect(M,y,IW,9,'F');
-  sf(...ACCT); doc.rect(M,y,3,9,'F');
-  B(9); st(...ACCT);
-  doc.text('TOTAL', cc[0]+5, y+6);
-  doc.text(fmt(r.mi.total), cc[1]+2, y+6);
-  doc.text(fmtK(tMid), cc[2]+2, y+6);
-  doc.text('100%', cc[3]+2, y+6);
-  y += 15;
-
-  /* ── try to embed bar chart canvas ── */
-  try{
-    const cv = document.getElementById('bar-cv');
-    if(cv){
-      checkY(55);
-      sectionLabel('COMPONENT DISTRIBUTION CHART');
-      doc.addImage(cv.toDataURL('image/png'),'PNG',M,y,IW,46);
-      y += 52;
-    }
-  }catch(e){}
-
-  /* ── system comparison ── */
-  checkY(20);
-  sectionLabel('ALL-SYSTEM COMPARISON (same inputs)');
-
-  const maxPerM2 = Math.max(...r.sysAll.map(s=>s.perM2));
+  secLbl('ALL-SYSTEM COMPARISON');
+  const maxP2=Math.max(...r.sysAll.map(s=>s.perM2));
   r.sysAll.forEach((s,i)=>{
-    checkY(9);
-    const isActive = s.key === selMat;
-    sf(...(isActive?[20,40,28]:i%2===0?BG2:BG3)); doc.rect(M,y,IW,8,'F');
-    if(isActive){ sf(...ACCT); doc.rect(M,y,2.5,8,'F'); }
-    doc.setFont('helvetica', isActive?'bold':'normal'); doc.setFontSize(8.5);
-    st(...(isActive?TEXT:MUT)); doc.text(s.name, M+5, y+5.3);
-    drawBar(M+58, y+2, IW-90, 4, s.perM2/maxPerM2, isActive?ACCT:[40,60,44], BG3);
-    doc.setFont('helvetica', isActive?'bold':'normal'); doc.setFontSize(8.5);
-    st(...(isActive?ACCT:MUT)); doc.text(fmt(s.perM2)+' /m²', PW-M-2, y+5.3, {align:'right'});
-    y += 8;
+    chk(9);const active=s.key===selMat;
+    sf(...(active?[20,40,28]:i%2===0?BG2:BG3));doc.rect(M,y,IW,8,'F');
+    if(active){sf(...ACC);doc.rect(M,y,2.5,8,'F');}
+    doc.setFont('helvetica',active?'bold':'normal');doc.setFontSize(8.5);st(...(active?TXT:MUT));doc.text(s.name,M+5,y+5.3);
+    sf(...BG3);doc.rect(M+58,y+2,IW-90,4,'F');sf(...(active?ACC:[40,60,44]));doc.rect(M+58,y+2,Math.max(1,(IW-90)*(s.perM2/maxP2)),4,'F');
+    doc.setFont('helvetica',active?'bold':'normal');doc.setFontSize(8.5);st(...(active?ACC:MUT));doc.text(fmt(s.perM2)+' /m²',PW-M-2,y+5.3,{align:'right'});y+=8;
   });
+  y+=8;
 
-  /* ── notes ── */
-  y += 8;
-  checkY(28);
-  sf(...BG2); doc.rect(M,y,IW,24,'F');
-  sf(...AMB); doc.rect(M,y,2.5,24,'F');
-  B(8); st(...AMB); doc.text('IMPORTANT DISCLAIMER', M+6, y+7);
-  N(7.5); st(...MUT);
-  const note = 'This estimate is for early-stage conceptual budgeting only. Costs are approximate AED/m² ranges based on typical UAE market data and do not include MEP penetrations, specialist fixings, off-site fabrication premiums, project management fees, VAT, or design fees. Engage a Quantity Surveyor for tender-stage pricing.';
-  const noteLines = doc.splitTextToSize(note, IW-10);
-  doc.text(noteLines, M+6, y+14);
-  y += 28;
+  chk(24);sf(...BG2);doc.rect(M,y,IW,22,'F');sf(...AMB);doc.rect(M,y,2.5,22,'F');
+  B(8);st(...AMB);doc.text('DISCLAIMER',M+6,y+7);
+  N(7.5);st(...MUT);const note='This estimate is for early-stage conceptual budgeting only. Costs represent indicative AED/m² ranges and do not include MEP penetrations, specialist fixings, off-site fabrication premiums, project management fees, or design fees unless explicitly stated. Engage a Quantity Surveyor for tender-stage pricing.';
+  doc.text(doc.splitTextToSize(note,IW-10),M+6,y+13);y+=26;
 
-  /* ── footer on page 1 ── */
-  N(7); st(...MUT);
-  doc.text('CladWise UAE · Facade Intelligence Platform · Conceptual estimates for early design stage reference only', PW/2, PH-4, {align:'center'});
-
-  /* ── save ── */
-  const dateStr = new Date().toISOString().slice(0,10);
-  doc.save(`CladWise_CostReport_${r.sys.name.replace(/\s+/g,'')}_${dateStr}.pdf`);
+  N(7);st(...MUT);doc.text('CladWise UAE · Facade Intelligence Platform · cladwise.ae · Conceptual estimates only',PW/2,PH-4,{align:'center'});
+  doc.save('CladWise_Cost_'+r.sys.name.replace(/\s+/g,'')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
+/* ─── PNG EXPORT ─────────────────────────────────────────────────────── */
+function exportPNG(){
+  if(!lastR){alert('Run a calculation first.');return;}
+  const res=document.getElementById('res-content');
+  // Use html2canvas-like approach via canvas
+  // Simple: capture the bar chart canvas + a summary canvas
+  const cv=document.createElement('canvas');
+  const W=800,H=520,dpr=2;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
 
+  const r=lastR;
+  const tMid=r.mi.total*r.area;
+
+  // Background
+  ctx.fillStyle='#0b110d';ctx.fillRect(0,0,W,H);
+  // Top bar
+  ctx.fillStyle='#00e5a0';ctx.fillRect(0,0,W,3);
+
+  // Wordmark
+  ctx.font="bold 20px 'Barlow Condensed',sans-serif";
+  ctx.fillStyle='#edf2ed';ctx.textAlign='left';ctx.fillText('CLADWISE',28,44);
+  ctx.fillStyle='#00e5a0';ctx.fillText(' UAE',28+ctx.measureText('CLADWISE').width,44);
+  ctx.font="400 10px 'DM Mono',monospace";
+  ctx.fillStyle='#6b7d6d';ctx.textAlign='right';ctx.fillText('FACADE COST ESTIMATE · cladwise.ae',W-28,44);
+
+  // Divider
+  ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(28,56);ctx.lineTo(W-28,56);ctx.stroke();
+
+  // Total
+  ctx.font="bold 48px 'Barlow Condensed',sans-serif";ctx.fillStyle='#00e5a0';ctx.textAlign='left';
+  ctx.fillText('AED '+fmtK(tMid),28,112);
+  ctx.font="400 11px 'DM Mono',monospace";ctx.fillStyle='#6b7d6d';
+  ctx.fillText(r.sys.full+' · '+r.area.toLocaleString()+' m² · '+r.hgt.label,28,132);
+  ctx.fillText('Low: AED '+fmtK(r.lo.total*r.area)+'  ·  Mid: AED '+fmtK(tMid)+'  ·  High: AED '+fmtK(r.hi.total*r.area),28,148);
+
+  // Component bars
+  const barY=175, barH=28, gap=10, leftW=130, numW=70;
+  const barAreaW=W-28*2-leftW-numW-gap*2;
+  ctx.font="400 9px 'DM Mono',monospace";ctx.fillStyle='rgba(0,229,160,.5)';ctx.textAlign='left';
+  ctx.fillText('COST BREAKDOWN BY COMPONENT',28,barY-10);
+  const maxP=Math.max(...r.mi.comps.map(c=>c.pct));
+  r.mi.comps.forEach((c,i)=>{
+    const y2=barY+i*(barH+gap);
+    ctx.fillStyle=c.color+'18';ctx.fillRect(28+leftW+gap,y2,barAreaW,barH);
+    ctx.fillStyle=c.color+'80';ctx.fillRect(28+leftW+gap,y2,barAreaW*(c.pct/maxP),barH);
+    ctx.font="600 12px 'Barlow',sans-serif";ctx.fillStyle='#edf2ed';ctx.textAlign='left';
+    ctx.fillText(c.name,28,y2+barH/2+4);
+    ctx.font="bold 13px 'Barlow Condensed',sans-serif";ctx.fillStyle=c.color;ctx.textAlign='right';
+    ctx.fillText('AED '+fmt(c.perM2)+'/m²',W-28,y2+barH/2+4);
+  });
+
+  // Footer
+  ctx.font="400 9px 'DM Mono',monospace";ctx.fillStyle='rgba(200,220,205,0.25)';ctx.textAlign='center';
+  ctx.fillText('CONCEPTUAL ESTIMATE ONLY · CladWise UAE · UAE Market Data 2025 · Verify with QS before procurement',W/2,H-14);
+
+  // Download
+  const a=document.createElement('a');
+  a.href=cv.toDataURL('image/png');
+  a.download='CladWise_Cost_'+r.sys.name.replace(/\s+/g,'')+'_'+new Date().toISOString().slice(0,10)+'.png';
+  a.click();
+}
+
+/* ─── RESET ──────────────────────────────────────────────────────────── */
 function resetAll(){
-  selMat='gfrc'; selComp='simple';
+  selMat='gfrc';selComp='simple';
   document.getElementById('inp-area').value='2500';
   document.getElementById('inp-height').value='mid';
   document.getElementById('inp-loc').value='uae';
+  document.getElementById('inp-waste').value='10';
+  document.getElementById('inp-ohp').value='15';
+  document.getElementById('inp-vat').checked=false;
   document.querySelectorAll('.comp-btn').forEach(b=>b.classList.remove('on'));
   document.querySelector('[data-c="simple"]').classList.add('on');
   document.getElementById('comp-hint').textContent=COMP.simple.hint;
@@ -1000,296 +934,129 @@ function resetAll(){
   lastR=null;
 }
 
-/* ─── HELPERS ────────────────────────────────────────────────────────────── */
+/* ─── HELPERS ────────────────────────────────────────────────────────── */
 function fmt(n){return isNaN(n)||n==null?'—':Math.round(n).toLocaleString()}
-function fmtK(n){
-  if(isNaN(n)||n==null)return'—';
-  if(n>=1e9)return(n/1e9).toFixed(2)+'B';
-  if(n>=1e6)return(n/1e6).toFixed(2)+'M';
-  return Math.round(n).toLocaleString();
-}
+function fmtK(n){if(isNaN(n)||n==null)return'—';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';return Math.round(n).toLocaleString();}
 function h2rgb(hex){const m=hex.replace('#','').match(/.{2}/g);return m?m.map(x=>parseInt(x,16)):null}
+function toast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0e1810;border:1px solid var(--accent);color:var(--accent);padding:10px 20px;border-radius:6px;font-family:DM Mono,monospace;font-size:10px;letter-spacing:1px;z-index:9999';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
 
-/* ─── BOOT ───────────────────────────────────────────────────────────────── */
-buildMatGrid();
-calc();
-window.addEventListener('resize',()=>{if(lastR)drawBar(lastR.comps)});
+/* ─── BOOT ───────────────────────────────────────────────────────────── */
+buildMatGrid();calc();
+window.addEventListener('resize',()=>{if(lastR)drawBarChart(lastR.mi.comps);});
 
 /* ════════════════════════════════════════════════════════════════════
    DRAWING UPLOAD + AI EXTRACTION
-   Supports: PDF (vision), DXF (text parse), JPG/PNG (vision)
+   Supports: PDF (AI vision), DXF (geometry parser), JPG/PNG (AI vision)
    ════════════════════════════════════════════════════════════════════ */
+let aiExtracted=null;
 
-let aiExtracted = null; // stores last AI result
+function uploadDragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag-over');}
+function uploadDragLeave(e){document.getElementById('upload-zone').classList.remove('drag-over');}
+function uploadDrop(e){e.preventDefault();document.getElementById('upload-zone').classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)processDrawingFile(f);}
+function handleDrawingUpload(e){const f=e.target.files[0];if(f)processDrawingFile(f);}
 
-/* ── Drag & drop helpers ──────────────────────────────────────────── */
-function uploadDragOver(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.add('drag-over');
-}
-function uploadDragLeave(e) {
-  document.getElementById('upload-zone').classList.remove('drag-over');
-}
-function uploadDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) processDrawingFile(file);
-}
-function handleDrawingUpload(e) {
-  const file = e.target.files[0];
-  if (file) processDrawingFile(file);
+async function processDrawingFile(file){
+  hideCards();aiExtracted=null;
+  if(file.size>20*1024*1024){showError('File too large ('+( file.size/1048576).toFixed(1)+' MB). Max 20 MB.');return;}
+  const fn=document.getElementById('upload-filename');
+  fn.textContent='📎 '+file.name;fn.classList.add('show');
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='dxf') await parseDXF(file);
+  else if(['pdf','jpg','jpeg','png'].includes(ext)) await analyseWithAI(file,ext);
+  else showError('Unsupported file type. Use PDF, DXF, JPG or PNG.');
 }
 
-/* ── Main dispatch ────────────────────────────────────────────────── */
-async function processDrawingFile(file) {
-  // Reset UI
-  hideAll(['ai-result','ai-error']);
-  aiExtracted = null;
-
-  const maxMB = 20;
-  if (file.size > maxMB * 1024 * 1024) {
-    showError(`File too large (${(file.size/1048576).toFixed(1)} MB). Max ${maxMB} MB.`);
-    return;
-  }
-
-  const fn = document.getElementById('upload-filename');
-  fn.textContent = '📎 ' + file.name;
-  fn.classList.add('show');
-
-  const ext = file.name.split('.').pop().toLowerCase();
-
-  if (ext === 'dxf') {
-    await parseDXF(file);
-  } else if (['pdf','jpg','jpeg','png'].includes(ext)) {
-    await analyseWithAI(file, ext);
-  } else {
-    showError('Unsupported file type. Please upload a PDF, DXF, JPG or PNG.');
-  }
-}
-
-/* ── DXF Parser ───────────────────────────────────────────────────── */
-async function parseDXF(file) {
+/* DXF Parser — Shoelace area from LWPOLYLINE/POLYLINE entities */
+async function parseDXF(file){
   showProcessing('Parsing DXF geometry...');
-  try {
-    const text = await file.text();
-    const areas = extractDXFAreas(text);
-
-    if (areas.totalArea > 0) {
-      const height = guessHeightFromDXF(text);
-      const complexity = guessDXFComplexity(text);
-      showAIResult({
-        area: Math.round(areas.totalArea),
-        heightKey: height.key,
-        heightLabel: height.label,
-        complexityKey: complexity.key,
-        complexityLabel: complexity.label,
-        notes: `Extracted from DXF: ${areas.entityCount} polyline entities found. Total closed area: ${Math.round(areas.totalArea)} m². ${areas.notes}`
-      });
+  try{
+    const text=await file.text();
+    const result=extractDXFAreas(text);
+    if(result.totalArea>0){
+      const hgt=guessHgtDXF(text);
+      const cmp=guessCmpDXF(text);
+      showAIResult({area:Math.round(result.totalArea),heightKey:hgt.key,heightLabel:hgt.label,complexityKey:cmp.key,complexityLabel:cmp.label,confidence:72,notes:'Extracted from DXF: '+result.entityCount+' polyline entities. '+result.notes});
     } else {
-      // Fall back to AI for complex DXF
-      await analyseWithAI(file, 'dxf');
+      await analyseWithAI(file,'dxf');
     }
-  } catch(e) {
-    showError('Could not parse DXF file. Try exporting as PDF or image instead.');
-  }
+  }catch(e){showError('DXF parse failed. Try exporting as PDF or image.');}
 }
 
-function extractDXFAreas(text) {
-  // Extract LWPOLYLINE / POLYLINE vertices and compute Shoelace area
-  const lines = text.split('\n').map(l => l.trim());
-  let totalArea = 0;
-  let entityCount = 0;
-  let i = 0;
-  let notes = '';
-
-  // Also try to grab any AREA group codes (42/43 style)
-  const areaMatches = text.match(/^\s*\d+\.\d+\s*$/gm);
-
-  while (i < lines.length) {
-    if (lines[i] === 'LWPOLYLINE' || lines[i] === 'POLYLINE') {
-      const vertices = [];
-      let j = i;
-      while (j < Math.min(i + 2000, lines.length)) {
-        if (lines[j] === '10' && lines[j-1] !== '210') {
-          const x = parseFloat(lines[j+1]);
-          const y = parseFloat(lines[j+2] === '20' ? lines[j+3] : lines[j+2]);
-          if (!isNaN(x) && !isNaN(y)) vertices.push([x, y]);
+function extractDXFAreas(text){
+  const lines=text.split('\n').map(l=>l.trim());
+  let totalArea=0,entityCount=0,i=0,notes='';
+  while(i<lines.length){
+    if(lines[i]==='LWPOLYLINE'||lines[i]==='POLYLINE'){
+      const verts=[];let j=i;
+      while(j<Math.min(i+3000,lines.length)){
+        if(lines[j]==='10'&&lines[j-1]!=='210'){
+          const x=parseFloat(lines[j+1]),y2=parseFloat(lines[j+3]||lines[j+2]);
+          if(!isNaN(x)&&!isNaN(y2))verts.push([x,y2]);
         }
-        if (j > i + 5 && (lines[j] === 'LWPOLYLINE' || lines[j] === 'POLYLINE' || lines[j] === 'ENDSEC')) break;
+        if(j>i+5&&(lines[j]==='LWPOLYLINE'||lines[j]==='POLYLINE'||lines[j]==='ENDSEC'))break;
         j++;
       }
-      if (vertices.length >= 3) {
-        const area = shoelace(vertices);
-        if (area > 1) { // filter tiny entities
-          totalArea += area;
-          entityCount++;
-        }
-      }
-      i = j;
-    } else {
-      i++;
-    }
+      if(verts.length>=3){const a=shoelace(verts);if(a>1){totalArea+=a;entityCount++;}}
+      i=j;
+    } else i++;
   }
+  if(totalArea>100000){totalArea/=1e6;notes='Units: mm → converted to m².';}
+  else if(totalArea<10&&totalArea>0){totalArea*=10000;notes='Units: cm → converted to m².';}
+  return{totalArea,entityCount,notes};
+}
+function shoelace(pts){let a=0;for(let i=0;i<pts.length;i++){const j=(i+1)%pts.length;a+=pts[i][0]*pts[j][1]-pts[j][0]*pts[i][1];}return Math.abs(a/2);}
+function guessHgtDXF(t){const m=t.match(/HEIGHT[\s\S]{0,40}?(\d+(?:\.\d+)?)/i);const h=m?parseFloat(m[1]):0;if(h>150)return{key:'stall',label:'Super-tall 150m+'};if(h>60)return{key:'tall',label:'Tall 60–150m'};if(h>30)return{key:'high',label:'High-rise 30–60m'};if(h>15)return{key:'mid',label:'Mid-rise 15–30m'};return{key:'mid',label:'Mid-rise 15–30m'};}
+function guessCmpDXF(t){const n=(t.match(/\bLWPOLYLINE\b|\bSPLINE\b|\bARC\b/g)||[]).length;if(/SPLINE|ARC|ELLIPSE/.test(t)||n>200)return{key:'complex',label:'Complex'};if(n>80)return{key:'medium',label:'Medium'};return{key:'simple',label:'Simple'};}
 
-  // Convert from drawing units — try to detect mm vs m
-  // If total area > 100000, likely in mm², convert to m²
-  if (totalArea > 100000) {
-    totalArea = totalArea / 1e6; // mm² → m²
-    notes = 'Units detected: mm (converted to m²).';
-  } else if (totalArea < 10 && totalArea > 0) {
-    totalArea = totalArea * 10000; // likely in cm, rough
-    notes = 'Units detected: cm (converted to m²).';
-  }
-
-  return { totalArea, entityCount, notes };
+/* AI Vision Analysis */
+async function analyseWithAI(file,ext){
+  showProcessing('Sending to AI...');
+  try{
+    const b64=await fileToBase64(file);
+    const mt=ext==='pdf'?'application/pdf':ext==='png'?'image/png':'image/jpeg';
+    setProcText('AI reading facade dimensions...');
+    const res=await fetch('https://backend-cladwise-production.up.railway.app/api/ai/drawing-analysis',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:b64,mediaType:mt,filename:file.name})});
+    if(!res.ok){const e=await res.json().catch(()=>({message:'Server error '+res.status}));throw new Error(e.message);}
+    const p=await res.json();
+    const HL={low:'Low-rise <15m',mid:'Mid-rise 15–30m',high:'High-rise 30–60m',tall:'Tall 60–150m',stall:'Super-tall 150m+'};
+    const CL={simple:'Simple',medium:'Medium',complex:'Complex'};
+    showAIResult({area:Math.round(p.area_m2),heightKey:p.height_category,heightLabel:HL[p.height_category]||'Mid-rise',complexityKey:p.complexity,complexityLabel:CL[p.complexity]||'Medium',confidence:p.confidence||65,notes:p.notes});
+  }catch(e){showError('AI analysis failed: '+e.message+'. Enter dimensions manually.');}
 }
 
-function shoelace(pts) {
-  let area = 0;
-  const n = pts.length;
-  for (let i = 0; i < n; i++) {
-    const j = (i + 1) % n;
-    area += pts[i][0] * pts[j][1];
-    area -= pts[j][0] * pts[i][1];
-  }
-  return Math.abs(area / 2);
-}
-
-function guessHeightFromDXF(text) {
-  // Look for elevation / height values in DXF
-  const heightMatch = text.match(/HEIGHT[\s\S]{0,40}?(\d+(?:\.\d+)?)/i);
-  const h = heightMatch ? parseFloat(heightMatch[1]) : 0;
-  if (h > 150 || text.includes('SUPERTALL') || text.includes('super')) return { key:'stall', label:'Super-tall 150m+' };
-  if (h > 60)  return { key:'tall',  label:'Tall 60–150m' };
-  if (h > 30)  return { key:'high',  label:'High-rise 30–60m' };
-  if (h > 15)  return { key:'mid',   label:'Mid-rise 15–30m' };
-  return { key:'mid', label:'Mid-rise 15–30m' };
-}
-
-function guessDXFComplexity(text) {
-  const entityCount = (text.match(/\bLWPOLYLINE\b|\bSPLINE\b|\bARC\b/g) || []).length;
-  const hasCurves = /SPLINE|ARC|ELLIPSE/.test(text);
-  if (hasCurves || entityCount > 200) return { key:'complex', label:'Complex' };
-  if (entityCount > 80) return { key:'medium', label:'Medium' };
-  return { key:'simple', label:'Simple' };
-}
-
-/* ── AI Vision Analysis (PDF / image) ────────────────────────────── */
-async function analyseWithAI(file, ext) {
-  showProcessing('Sending to AI for analysis...');
-  try {
-    const base64 = await fileToBase64(file);
-    const mediaType = ext === 'pdf' ? 'application/pdf'
-                    : ext === 'png' ? 'image/png'
-                    : 'image/jpeg';
-    setProcText('AI reading drawing dimensions...');
-
-    const response = await fetch('https://backend-cladwise-production.up.railway.app/api/ai/drawing-analysis', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data: base64, mediaType, filename: file.name })
-    });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({ message: 'Server error ' + response.status }));
-      throw new Error(err.message || 'Server error ' + response.status);
-    }
-
-    const parsed = await response.json();
-    const heightLabels = {
-      low: 'Low-rise <15m', mid: 'Mid-rise 15–30m',
-      high: 'High-rise 30–60m', tall: 'Tall 60–150m', stall: 'Super-tall 150m+'
-    };
-    const complexLabels = { simple: 'Simple', medium: 'Medium', complex: 'Complex' };
-
-    showAIResult({
-      area: Math.round(parsed.area_m2),
-      heightKey: parsed.height_category,
-      heightLabel: heightLabels[parsed.height_category] || 'Mid-rise 15–30m',
-      complexityKey: parsed.complexity,
-      complexityLabel: complexLabels[parsed.complexity] || 'Medium',
-      confidence: parsed.confidence,
-      notes: parsed.notes
-    });
-  } catch(e) {
-    console.error('AI analysis error:', e);
-    showError('AI could not analyse this drawing. You can still enter dimensions manually. Error: ' + e.message);
-  }
-}
-
-/* ── Apply AI result to form ─────────────────────────────────────── */
-function applyAIResult() {
-  if (!aiExtracted) return;
-  document.getElementById('inp-area').value = aiExtracted.area;
-  const heightSel = document.getElementById('inp-height');
-  if (aiExtracted.heightKey) heightSel.value = aiExtracted.heightKey;
-  if (aiExtracted.complexityKey) {
-    document.querySelectorAll('.comp-btn').forEach(b => {
-      b.classList.toggle('on', b.dataset.c === aiExtracted.complexityKey);
-    });
-    selComp = aiExtracted.complexityKey;
-    const hint = document.getElementById('comp-hint');
-    if (hint && COMP[selComp]) hint.textContent = COMP[selComp].hint;
+function applyAIResult(){
+  if(!aiExtracted)return;
+  document.getElementById('inp-area').value=aiExtracted.area;
+  if(aiExtracted.heightKey)document.getElementById('inp-height').value=aiExtracted.heightKey;
+  if(aiExtracted.complexityKey){
+    document.querySelectorAll('.comp-btn').forEach(b=>b.classList.toggle('on',b.dataset.c===aiExtracted.complexityKey));
+    selComp=aiExtracted.complexityKey;
+    const h=document.getElementById('comp-hint');if(h&&COMP[selComp])h.textContent=COMP[selComp].hint;
   }
   calc();
-  // Smooth scroll to results
-  setTimeout(() => {
-    const res = document.getElementById('res-content');
-    if (res && res.style.display !== 'none') {
-      res.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, 200);
-  showToastLocal('AI values applied — estimate updated ✓');
+  setTimeout(()=>{const el=document.getElementById('res-content');if(el&&el.style.display!=='none')el.scrollIntoView({behavior:'smooth',block:'start'});},200);
+  toast('AI values applied — estimate updated ✓');
 }
 
-/* ── UI helpers ───────────────────────────────────────────────────── */
-function showProcessing(msg) {
-  hideAll(['ai-result','ai-error']);
-  const el = document.getElementById('upload-processing');
-  el.classList.add('show');
-  setProcText(msg);
-}
-function setProcText(t) {
-  document.getElementById('proc-text').textContent = t;
-}
-function showAIResult(data) {
-  aiExtracted = data;
+/* UI helpers */
+function showProcessing(msg){hideCards();document.getElementById('upload-processing').classList.add('show');setProcText(msg);}
+function setProcText(t){document.getElementById('proc-text').textContent=t;}
+function showAIResult(d){
+  aiExtracted=d;
   document.getElementById('upload-processing').classList.remove('show');
-  document.getElementById('ai-area').textContent = data.area ? data.area.toLocaleString() : '—';
-  document.getElementById('ai-height').textContent = data.heightLabel || '—';
-  document.getElementById('ai-complexity').textContent = data.complexityLabel || '—';
-  document.getElementById('ai-notes').textContent = data.notes || '';
+  document.getElementById('ai-area').textContent=d.area?d.area.toLocaleString():'—';
+  document.getElementById('ai-height').textContent=d.heightLabel||'—';
+  document.getElementById('ai-complexity').textContent=d.complexityLabel||'—';
+  const conf=Math.min(100,Math.max(0,d.confidence||0));
+  document.getElementById('ai-conf-pct').textContent=conf+'%';
+  document.getElementById('ai-conf-bar').style.width=conf+'%';
+  document.getElementById('ai-conf-bar').style.background=conf>75?'#00e5a0':conf>50?'#f59e0b':'#ef4444';
+  document.getElementById('ai-notes').textContent=d.notes||'';
   document.getElementById('ai-result').classList.add('show');
 }
-function showError(msg) {
-  document.getElementById('upload-processing').classList.remove('show');
-  const el = document.getElementById('ai-error');
-  el.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#f87171;margin-right:8px"></i>' + msg;
-  el.classList.add('show');
-}
-function hideAll(ids) {
-  ids.forEach(id => document.getElementById(id)?.classList.remove('show'));
-}
-function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-function showToastLocal(msg) {
-  // reuse existing toast if available, else create
-  if (typeof showToast === 'function') { showToast(msg); return; }
-  const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0e1810;border:1px solid var(--accent);color:var(--accent);padding:10px 20px;border-radius:8px;font-family:DM Mono,monospace;font-size:11px;letter-spacing:1px;z-index:9999';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
-}
-
-
+function showError(msg){document.getElementById('upload-processing').classList.remove('show');const el=document.getElementById('ai-error');el.innerHTML='<span style="color:#f87171;margin-right:6px">⚠</span>'+msg;el.classList.add('show');}
+function hideCards(){['ai-result','ai-error'].forEach(id=>document.getElementById(id)?.classList.remove('show'));document.getElementById('upload-processing').classList.remove('show');}
+function fileToBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
 </script>
 </body>
 </html>
