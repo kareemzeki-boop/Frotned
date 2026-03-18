@@ -7842,165 +7842,164 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
       matDataArr.push({ key, mat, ai: parsed });
     }
 
-    // ── 2. Build PDF ───────────────────────────────────────────────────────
+    // ── 2. Build PDF ─────────────────────────────────────────────────────────
     btn.innerHTML = '<i class="fai fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fa-spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z" opacity=".5"/><path d="M12 4a8 8 0 0 1 8 8h2A10 10 0 0 0 12 2v2z"/></svg></i> Building PDF...';
     await ensureJsPDF();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    // ── CONSTANTS ────────────────────────────────────────────────────────
+    // ── CONSTANTS ──────────────────────────────────────────────────────────
     const PW = 210, PH = 297, ML = 16, MR = 16;
-    const CW  = PW - ML - MR;
-    const FTH = 8;           // footer height
-    const HDR = 14;          // top header reserved per page
-    const SAFE_B = PH - FTH - 4;
+    const CW   = PW - ML - MR;
+    const FTH  = 10;         // footer height
+    const HDR  = 16;         // top margin after startPage
+    const SAFE_B = PH - FTH - 6;  // never write below this
 
     const now     = new Date();
     const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
     const refNo   = 'CW-' + now.getFullYear()
-                  + '-' + String(now.getMonth()+1).padStart(2,'0')
+                  + String(now.getMonth()+1).padStart(2,'0')
                   + String(now.getDate()).padStart(2,'0')
                   + '-' + String(Math.floor(Math.random()*9000)+1000);
 
-    // ── PALETTE ──────────────────────────────────────────────────────────
+    // ── PALETTE ────────────────────────────────────────────────────────────
     const C = {
-      bg:   [8,  14, 10], bg2: [14, 22, 16], bg3: [22, 34, 24],
-      acc:  [0, 229,160], white:[255,255,255], muted:[130,155,135],
-      dim:  [60, 80, 65], red: [210, 70, 70], amber:[210,155, 40],
+      bg:   [8, 14, 10],  bg2: [14, 22, 16], bg3: [22, 34, 24],
+      acc:  [0,229,160],  white:[255,255,255], muted:[130,155,135],
+      dim:  [60, 80, 65], red: [210, 70, 70],  amber:[210,155,40],
     };
     const MAT_COL = {
       GFRC:[0,229,160], GFRP:[96,165,250], Aluminum:[163,163,163],
       Stone:[220,160,50], 'ACM-FR':[192,132,252], 'Fibre Cement':[220,120,60]
     };
 
-    // ── PRIMITIVES ───────────────────────────────────────────────────────
-    const fc  = c       => doc.setFillColor(c[0],c[1],c[2]);
-    const tc  = c       => doc.setTextColor(c[0],c[1],c[2]);
-    const dc  = c       => doc.setDrawColor(c[0],c[1],c[2]);
-    const R   = (x,y,w,h,col)       => { fc(col); doc.rect(x,y,w,h,'F'); };
-    const RR  = (x,y,w,h,r,col)     => { fc(col); doc.roundedRect(x,y,w,h,r,r,'F'); };
-    const HL  = (x1,y1,x2,col,lw=0.15) => { dc(col); doc.setLineWidth(lw); doc.line(x1,y1,x2,y1); };
+    // ── PRIMITIVES ─────────────────────────────────────────────────────────
+    const fc = c => doc.setFillColor(c[0],c[1],c[2]);
+    const tc = c => doc.setTextColor(c[0],c[1],c[2]);
+    const dc = c => doc.setDrawColor(c[0],c[1],c[2]);
+    const R  = (x,y,w,h,col)     => { fc(col); doc.rect(x,y,w,h,'F'); };
+    const RR = (x,y,w,h,r,col)   => { fc(col); doc.roundedRect(x,y,w,h,r,r,'F'); };
+    const HL = (x1,y1,x2,col,lw=0.15) => { dc(col); doc.setLineWidth(lw); doc.line(x1,y1,x2,y1); };
 
-    // Safe single-line text (clips with ellipsis)
+    // Single-line text, clips with ellipsis
     function safeT(txt, x, y, maxW) {
       txt = String(txt || '—');
       if (maxW) {
+        const orig = txt;
         while (txt.length > 2 && doc.getTextWidth(txt) > maxW) txt = txt.slice(0,-1);
-        if (txt !== String(txt || '—')) txt = txt.slice(0,-1) + '…';
+        if (txt !== orig) txt = txt.slice(0,-1) + '…';
       }
       doc.text(txt, x, y);
     }
 
-    // Multi-line wrapped text — returns new Y
+    // Multi-line text with automatic page-break — returns new Y
     function wrapT(txt, x, y, maxW, size, color, bold) {
       doc.setFont('helvetica', bold ? 'bold' : 'normal');
       if (size)  doc.setFontSize(size);
       if (color) tc(color);
-      const lh    = doc.getFontSize() * 0.3528 + 1.4;
+      const lh = doc.getFontSize() * 0.3528 + 1.6;
       const lines = doc.splitTextToSize(String(txt || ''), maxW);
-      lines.forEach(ln => { doc.text(ln, x, y); y += lh; });
+      for (const ln of lines) {
+        if (y > SAFE_B) { doc.addPage(); startPage(); y = HDR; }
+        doc.text(ln, x, y);
+        y += lh;
+      }
       return y;
     }
 
-    // ── PAGE MANAGEMENT ──────────────────────────────────────────────────
-    // Track pages that need footers; draw all at the very end
+    // ── PAGE MANAGEMENT ────────────────────────────────────────────────────
     function startPage() {
       R(0, 0, PW, PH, C.bg);
-      R(0, 0, PW, 1.8, C.acc);
+      R(0, 0, PW, 1.5, C.acc);  // top accent strip only
     }
 
     function drawFooter(pn, total) {
-      R(0, PH - FTH, PW, FTH, C.bg2);
-      HL(0, PH - FTH, PW, C.dim, 0.15);
+      HL(ML, PH - FTH + 0.5, ML + CW, C.dim, 0.2);
+      R(0, PH - FTH + 0.8, PW, FTH - 0.8, C.bg2);
       doc.setFont('helvetica','normal'); doc.setFontSize(5.5); tc(C.dim);
-      doc.text(
-        'Generated by cladwise.ae  ·  Report Ref: ' + refNo + '  ·  ' + dateStr +
-        '  ·  For professional guidance only — verify all data with relevant UAE authorities before procurement.',
-        ML, PH - 2.8
-      );
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.acc);
+      safeT('cladwise.ae  ·  Ref: ' + refNo + '  ·  ' + dateStr + '  ·  For guidance only — verify with UAE authorities before procurement.', ML, PH - 3.5, CW - 20);
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
       const lbl = pn + ' / ' + total;
-      doc.text(lbl, PW - MR - doc.getTextWidth(lbl), PH - 2.8);
+      doc.text(lbl, PW - MR - doc.getTextWidth(lbl), PH - 3.5);
     }
 
-    // ── SECTION HEADER ───────────────────────────────────────────────────
-    // Clean horizontal rule + label, no icons or badges
-    function secHead(label, accentCol, yRef) {
-      y = yRef;
-      if (y > SAFE_B - 32) { doc.addPage(); startPage(); y = HDR; }
-      HL(ML, y, ML + CW, accentCol, 0.4);
-      y += 1;
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(accentCol);
-      doc.text(label.toUpperCase(), ML, y + 4.5);
-      y += 9;
-      return y;
+    // ── SECTION HEADER ─────────────────────────────────────────────────────
+    function secHead(label, col, yIn) {
+      let y = yIn + 6;
+      if (y > SAFE_B - 30) { doc.addPage(); startPage(); y = HDR; }
+      HL(ML, y, ML + CW, col, 0.5); y += 1.5;
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(col);
+      doc.text(label.toUpperCase(), ML, y + 4);
+      return y + 10;
     }
 
-    // ── FIELD ROW ────────────────────────────────────────────────────────
-    function fieldRow(label, value) {
+    // ── FIELD ROW ──────────────────────────────────────────────────────────
+    function fieldRow(label, value, yRef) {
+      let y = yRef;
       if (y > SAFE_B - 9) { doc.addPage(); startPage(); y = HDR; }
       const FH = 7.5;
       R(ML, y, CW, FH, C.bg2);
       HL(ML, y + FH, ML + CW, C.bg3, 0.1);
       doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.muted);
-      safeT(label, ML + 3, y + 5, 48);
+      safeT(label, ML + 3, y + 5, 50);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.white);
-      safeT(String(value || '—'), ML + 54, y + 5, CW - 56);
-      y += FH;
+      safeT(String(value || '—'), ML + 56, y + 5, CW - 58);
+      return y + FH;
     }
 
-    // ── PARA FIELD ───────────────────────────────────────────────────────
-    function paraField(label, text) {
-      // Estimate lines needed
+    // ── PARA FIELD ─────────────────────────────────────────────────────────
+    function paraField(label, text, yIn) {
+      let y = yIn;
       doc.setFontSize(7);
-      const lh       = 7 * 0.3528 + 1.4;
+      const lh = 7 * 0.3528 + 1.6;
       const estLines = doc.splitTextToSize(String(text || ''), CW).length;
-      const estH     = 6 + estLines * lh;
+      const estH = 6 + estLines * lh + 4;
       if (y + estH > SAFE_B) { doc.addPage(); startPage(); y = HDR; }
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
-      doc.text(label, ML, y); y += 4;
+      doc.text(label, ML, y); y += 5;
       y = wrapT(text, ML, y, CW, 7, C.white, false) + 3;
+      return y;
     }
 
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     // PAGE 1 — COVER
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     startPage();
-    let y = 18;
+    let y = 20;
 
-    // Logo
+    // Wordmark
     doc.setFont('helvetica','bold'); doc.setFontSize(22); tc(C.acc);
     doc.text('CLADWISE', ML, y);
-    doc.setFont('helvetica','normal'); doc.setFontSize(8); tc(C.muted);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); tc(C.muted);
     doc.text('UAE', ML + doc.getTextWidth('CLADWISE') + 2, y - 0.5);
-    doc.setFontSize(6.5); tc(C.dim);
+    doc.setFontSize(6); tc(C.dim);
     doc.text('cladwise.ae', PW - MR - doc.getTextWidth('cladwise.ae'), y);
-    y += 4; HL(ML, y, ML + CW, C.dim); y += 12;
+    y += 5; HL(ML, y, ML + CW, C.dim); y += 14;
 
-    // Report type label
+    // Report type
     doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
-    doc.text('MATERIAL ADVISORY REPORT', ML, y); y += 10;
+    doc.text('MATERIAL ADVISORY REPORT', ML, y); y += 12;
 
-    // Main title block
+    // Title
     doc.setFont('helvetica','bold'); doc.setFontSize(28); tc(C.white);
     doc.text('MATERIAL', ML, y + 10);
     doc.setFontSize(28); tc(C.acc);
-    doc.text('ADVISORY &', ML, y + 21);
-    doc.setFontSize(20); tc(C.white);
-    doc.text('COMPLIANCE REPORT', ML, y + 31);
-    y += 42;
+    doc.text('ADVISORY &', ML, y + 22);
+    doc.setFontSize(18); tc(C.white);
+    doc.text('COMPLIANCE REPORT', ML, y + 32);
+    y += 44;
 
     doc.setFont('helvetica','normal'); doc.setFontSize(8); tc(C.muted);
     doc.text('Formal Material Assessment  ·  2026 UAE Standards  ·  Prepared by CladWise UAE', ML, y);
-    y += 14;
+    y += 16;
 
     // Meta strip
     RR(ML, y, CW, 24, 2, C.bg2);
     const metaCols = [
-      { label: 'REPORT REF.',  val: refNo },
-      { label: 'DATE',         val: dateStr },
-      { label: 'STANDARD',     val: 'Law No. 3 of 2026' },
-      { label: 'MATERIALS',    val: mats.length + ' assessed' },
+      { label:'REPORT REF.', val: refNo },
+      { label:'DATE',         val: dateStr },
+      { label:'STANDARD',     val:'Law No. 3 of 2026' },
+      { label:'MATERIALS',    val: mats.length + ' assessed' },
     ];
     const mColW = CW / 4;
     metaCols.forEach((m, i) => {
@@ -8008,11 +8007,11 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
       doc.setFont('helvetica','normal'); doc.setFontSize(5.5); tc(C.dim);
       doc.text(m.label, mx, y + 6);
       doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.white);
-      safeT(m.val, mx, y + 14, mColW - 6);
+      safeT(m.val, mx, y + 14, mColW - 8);
     });
     y += 32;
 
-    // Regulatory reference box
+    // Regulatory ref box
     R(ML, y, 3, 18, C.acc);
     R(ML + 3, y, CW - 3, 18, C.bg2);
     doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
@@ -8027,286 +8026,274 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
     doc.text('MATERIALS ASSESSED IN THIS REPORT', ML, y); y += 5;
     let chipX = ML;
     mats.forEach(key => {
-      const col   = MAT_COL[key] || [100,100,100];
+      const col2  = MAT_COL[key] || [100,100,100];
       const label = MATERIALS[key]?.name || key;
       doc.setFontSize(7.5);
       const tw = doc.getTextWidth(label) + 12;
       RR(chipX, y - 3.5, tw, 7, 2, C.bg3);
-      R(chipX, y - 3.5, 2.5, 7, col);
-      doc.setFont('helvetica','bold'); tc(col);
+      R(chipX, y - 3.5, 2.5, 7, col2);
+      doc.setFont('helvetica','bold'); tc(col2);
       doc.text(label, chipX + 5.5, y + 1);
       chipX += tw + 3;
     });
     y += 16;
 
     // Disclaimer
-    R(ML, y, CW, 1, C.bg3);
-    y += 4;
+    HL(ML, y, ML + CW, C.bg3, 0.3); y += 5;
     y = wrapT(
-      'DISCLAIMER: This report is generated by CladWise AI using UAE regulatory data current as of 2026. It is provided for professional specification guidance only and does not constitute formal engineering, legal, or regulatory certification advice. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) before procurement or construction.',
+      'DISCLAIMER: This report is generated by CladWise AI using UAE regulatory data current as of 2026. It is provided for professional specification guidance only and does not constitute formal engineering, legal, or regulatory certification. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) before procurement or construction.',
       ML, y, CW, 6.5, C.dim, false
     );
 
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     // PAGE 2 — TABLE OF CONTENTS
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     doc.addPage(); startPage(); y = HDR;
 
     doc.setFont('helvetica','bold'); doc.setFontSize(14); tc(C.white);
-    doc.text('TABLE OF CONTENTS', ML, y); y += 3;
-    HL(ML, y, ML + CW, C.dim, 0.2); y += 8;
+    doc.text('TABLE OF CONTENTS', ML, y); y += 4;
+    HL(ML, y, ML + CW, C.dim, 0.2); y += 10;
 
     const tocEntries = [
       ...matDataArr.map((md, i) => ({
-        num:   String(i + 1).padStart(2, '0'),
+        num:   String(i + 1).padStart(2,'0'),
         title: 'Material Data Sheet — ' + md.mat.name,
         sub:   md.mat.full || md.key,
         page:  3 + i
       })),
       {
-        num:   String(matDataArr.length + 1).padStart(2, '0'),
+        num:   String(matDataArr.length + 1).padStart(2,'0'),
         title: 'Compliance Summary Matrix',
-        sub:   'All materials · Side-by-side verdict',
+        sub:   'All materials · Side-by-side verdict table',
         page:  3 + matDataArr.length
       }
     ];
 
     tocEntries.forEach((entry, i) => {
-      const rowBg = i % 2 === 0 ? C.bg2 : C.bg;
-      R(ML, y, CW, 10, rowBg);
-      // Number box
-      R(ML + 2, y + 1.5, 7, 7, C.bg3);
+      if (y > SAFE_B - 10) { doc.addPage(); startPage(); y = HDR; }
+      R(ML, y, CW, 11, i % 2 === 0 ? C.bg2 : C.bg);
+      R(ML + 2, y + 2, 7, 7, C.bg3);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
-      doc.text(entry.num, ML + 3.2, y + 6.8);
-      // Title
+      doc.text(entry.num, ML + 3.2, y + 7);
       doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.white);
-      safeT(entry.title, ML + 13, y + 5.5, CW - 36);
-      // Subtitle
+      safeT(entry.title, ML + 13, y + 6, CW - 36);
       doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
-      safeT(entry.sub, ML + 13, y + 9, CW - 36);
-      // Page
+      safeT(entry.sub, ML + 13, y + 10, CW - 36);
       doc.setFont('helvetica','bold'); doc.setFontSize(7); tc(C.muted);
       const pg = 'p.' + entry.page;
-      doc.text(pg, PW - MR - doc.getTextWidth(pg), y + 6.5);
+      doc.text(pg, PW - MR - doc.getTextWidth(pg), y + 7);
+      y += 11;
+    });
+
+    y += 12;
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.acc);
+    doc.text('COMPLIANCE VERDICT SUMMARY', ML, y); y += 4;
+    HL(ML, y, ML + CW, C.dim, 0.2); y += 6;
+
+    matDataArr.forEach(md => {
+      if (y > SAFE_B - 9) { doc.addPage(); startPage(); y = HDR; }
+      const vc = verdictColor(md.ai.verdict);
+      R(ML, y, CW, 9, C.bg2);
+      R(ML, y, 2.5, 9, vc);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); tc(C.white);
+      safeT(md.mat.name, ML + 6, y + 6, 58);
+      doc.setFontSize(7); tc(vc);
+      safeT(md.ai.verdict || 'Pending Documentation', ML + 68, y + 6, 62);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
+      safeT(md.ai.verdict_notes || '', ML + 134, y + 6, CW - 124);
       y += 10;
     });
 
-    y += 10;
-
-    // Verdict summary
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(C.acc);
-    doc.text('COMPLIANCE VERDICT SUMMARY', ML, y); y += 3;
-    HL(ML, y, ML + CW, C.dim, 0.15); y += 5;
-
-    matDataArr.forEach(md => {
-      const vc = verdictColor(md.ai.verdict);
-      R(ML, y, CW, 8.5, C.bg2);
-      R(ML, y, 2.5, 8.5, vc);
-      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); tc(C.white);
-      safeT(md.mat.name, ML + 6, y + 5.8, 58);
-      doc.setFontSize(7); tc(vc);
-      safeT(md.ai.verdict || 'Pending Documentation', ML + 68, y + 5.8, 62);
-      doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.dim);
-      safeT(md.ai.verdict_notes || '', ML + 134, y + 5.8, CW - 122);
-      y += 9;
-    });
-
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     // PAGES 3+ — MATERIAL DATA SHEETS
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     for (const md of matDataArr) {
       doc.addPage(); startPage(); y = HDR;
-      const col = MAT_COL[md.key] || [100, 100, 100];
-      const ai  = md.ai;
+      const col3 = MAT_COL[md.key] || [100,100,100];
+      const ai   = md.ai;
 
-      // ── Material header ────────────────────────────────────────────────
-      R(ML, y, CW, 20, C.bg2);
-      R(ML, y, 4,  20, col);
-
-      // Verdict badge
+      // Material header band
+      R(ML, y, CW, 22, C.bg2);
+      R(ML, y, 4, 22, col3);
       const vc2 = verdictColor(ai.verdict);
       const vLabel = ai.verdict || 'Pending Documentation';
       const vW = doc.getTextWidth(vLabel) + 10;
-      RR(PW - MR - vW - 2, y + 4, vW, 7, 2, C.bg3);
+      RR(PW - MR - vW - 2, y + 4, vW, 8, 2, C.bg3);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(vc2);
-      doc.text(vLabel, PW - MR - vW + 2, y + 9);
-
+      doc.text(vLabel, PW - MR - vW + 2, y + 9.5);
       doc.setFont('helvetica','bold'); doc.setFontSize(13); tc(C.white);
-      safeT(md.mat.name, ML + 8, y + 9, CW - vW - 20);
+      safeT(md.mat.name, ML + 8, y + 10, CW - vW - 20);
       doc.setFont('helvetica','normal'); doc.setFontSize(7); tc(C.muted);
-      safeT(md.mat.full || md.key, ML + 8, y + 16, CW - vW - 20);
-      y += 25;
+      safeT(md.mat.full || md.key, ML + 8, y + 17, CW - vW - 20);
+      y += 28;
 
-      // ── Quick specs strip ──────────────────────────────────────────────
+      // Quick specs strip
       const qspecs = [
-        { l: 'FIRE CLASS',    v: ai.technical?.fire_class   || '—' },
-        { l: 'HEIGHT LIMIT',  v: ai.technical?.height_limit || '—' },
-        { l: 'PRICE / m²',   v: md.mat.priceRange           || '—' },
-        { l: 'SERVICE LIFE',  v: md.mat.specs?.['Service Life']?.val || '—' },
-        { l: 'VOC',           v: ai.sustainability?.voc      || '—' },
-        { l: 'VERDICT',       v: ai.verdict                  || '—' },
+        { l:'FIRE CLASS',   v: ai.technical?.fire_class   || '—' },
+        { l:'HEIGHT LIMIT', v: ai.technical?.height_limit || '—' },
+        { l:'PRICE / m²',   v: md.mat.priceRange          || '—' },
+        { l:'SERVICE LIFE', v: md.mat.specs?.['Service Life']?.val || '—' },
+        { l:'VOC',          v: ai.sustainability?.voc     || '—' },
+        { l:'VERDICT',      v: ai.verdict                  || '—' },
       ];
       const qW = CW / qspecs.length;
-      R(ML, y, CW, 13, C.bg3);
+      R(ML, y, CW, 14, C.bg3);
       qspecs.forEach((qs, qi) => {
         const qx = ML + qi * qW;
-        if (qi > 0) { dc(C.bg2); doc.setLineWidth(0.15); doc.line(qx, y+1, qx, y+12); }
+        if (qi > 0) { dc(C.bg2); doc.setLineWidth(0.15); doc.line(qx, y+1, qx, y+13); }
         doc.setFont('helvetica','normal'); doc.setFontSize(5); tc(C.dim);
-        doc.text(qs.l, qx + 3, y + 5);
+        doc.text(qs.l, qx + 3, y + 5.5);
         doc.setFont('helvetica','bold'); doc.setFontSize(6.5);
         tc(qs.l === 'VERDICT' ? verdictColor(qs.v) : C.white);
-        safeT(qs.v, qx + 3, y + 10.5, qW - 5);
+        safeT(qs.v, qx + 3, y + 11.5, qW - 5);
       });
-      y += 18;
+      y += 20;
 
-      // ── 1. REGULATORY FRAMEWORK ────────────────────────────────────────
-      y = secHead('1.  Regulatory Framework', col, y);
-      paraField('MoIAT Mandatory Standards & Law No. 3 of 2026', ai.regulatory?.moiat);
+      // 1. Regulatory
+      y = secHead('1.  Regulatory Framework', col3, y);
+      y = paraField('MoIAT Mandatory Standards & Law No. 3 of 2026', ai.regulatory?.moiat, y);
       if (ai.regulatory?.standard_refs?.length) {
-        if (y > SAFE_B - 12) { doc.addPage(); startPage(); y = HDR; }
+        if (y > SAFE_B - 10) { doc.addPage(); startPage(); y = HDR; }
         doc.setFont('helvetica','bold'); doc.setFontSize(6); tc(C.muted);
-        doc.text('APPLICABLE STANDARDS', ML, y); y += 4;
+        doc.text('APPLICABLE STANDARDS', ML, y); y += 5;
         const refs = ai.regulatory.standard_refs;
-        const colCount = Math.min(2, refs.length);
-        const refW = CW / colCount;
         refs.forEach((ref, ri) => {
-          if (y > SAFE_B - 8) { doc.addPage(); startPage(); y = HDR; }
-          const rx = ML + (ri % colCount) * refW;
-          if (ri % colCount === 0) R(ML, y, CW, 5.5, C.bg2);
+          if (y > SAFE_B - 7) { doc.addPage(); startPage(); y = HDR; }
+          R(ML, y, CW, 6, ri % 2 === 0 ? C.bg2 : C.bg);
           doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.white);
-          safeT('·  ' + ref, rx + 3, y + 3.8, refW - 5);
-          if ((ri + 1) % colCount === 0 || ri === refs.length - 1) y += 5.5;
+          safeT('·  ' + ref, ML + 4, y + 4.2, CW - 6);
+          y += 6;
         });
-        y += 2;
+        y += 3;
       }
-      fieldRow('Regulatory Status', ai.regulatory?.status || 'Compliant');
+      y = fieldRow('Regulatory Status', ai.regulatory?.status || 'Compliant', y);
 
-      // ── 2. TECHNICAL COMPLIANCE ────────────────────────────────────────
-      y = secHead('2.  Technical Compliance', col, y + 4);
-      paraField('UAE Fire and Life Safety Code 2017', ai.technical?.fire_code);
-      paraField('ECAS / EQM Certification Requirement', ai.technical?.ecas);
-      fieldRow('EN 13501-1 Fire Classification', ai.technical?.fire_class   || '—');
-      fieldRow('DCD Height Suitability',         ai.technical?.height_limit || '—');
+      // 2. Technical
+      y = secHead('2.  Technical Compliance', col3, y);
+      y = paraField('UAE Fire and Life Safety Code 2017', ai.technical?.fire_code, y);
+      y = paraField('ECAS / EQM Certification Requirement', ai.technical?.ecas, y);
+      y = fieldRow('EN 13501-1 Fire Classification', ai.technical?.fire_class   || '—', y);
+      y = fieldRow('DCD Height Suitability',         ai.technical?.height_limit || '—', y);
 
-      // ── 3. SUSTAINABILITY ──────────────────────────────────────────────
-      y = secHead('3.  Sustainability Status', col, y + 4);
-      paraField("Al Sa'fat Dubai Green Building Regulations", ai.sustainability?.alsafat);
-      paraField('Abu Dhabi Estidama Pearl Rating System',     ai.sustainability?.estidama);
-      fieldRow('VOC Level',           ai.sustainability?.voc              || '—');
-      fieldRow('Recycled Content',    ai.sustainability?.recycled_content || '—');
-      fieldRow('Sustainability Rating', ai.sustainability?.rating         || '—');
+      // 3. Sustainability
+      y = secHead('3.  Sustainability Status', col3, y);
+      y = paraField("Al Sa'fat Dubai Green Building Regulations", ai.sustainability?.alsafat, y);
+      y = paraField('Abu Dhabi Estidama Pearl Rating System',     ai.sustainability?.estidama, y);
+      y = fieldRow('VOC Level',            ai.sustainability?.voc              || '—', y);
+      y = fieldRow('Recycled Content',     ai.sustainability?.recycled_content || '—', y);
+      y = fieldRow('Sustainability Rating',ai.sustainability?.rating           || '—', y);
 
-      // ── 4. QUALITY & TRACEABILITY ──────────────────────────────────────
-      y = secHead('4.  Quality & Traceability', col, y + 4);
-      paraField('Certificate of Conformity (CoC)', ai.quality?.coc_requirement);
-      fieldRow('Product QR Code',          ai.quality?.qr_code    || 'Required');
-      fieldRow('Supply Chain Traceability', ai.quality?.traceability || '—');
+      // 4. Quality
+      y = secHead('4.  Quality & Traceability', col3, y);
+      y = paraField('Certificate of Conformity (CoC)', ai.quality?.coc_requirement, y);
+      y = fieldRow('Product QR Code',          ai.quality?.qr_code      || 'Required', y);
+      y = fieldRow('Supply Chain Traceability', ai.quality?.traceability || '—', y);
 
-      // ── 5. KEY RISKS ──────────────────────────────────────────────────
+      // 5. Risks
       if (ai.key_risks?.length) {
-        y = secHead('5.  Key Risks', col, y + 4);
+        y = secHead('5.  Key Risks', col3, y);
         ai.key_risks.forEach(risk => {
           if (y > SAFE_B - 9) { doc.addPage(); startPage(); y = HDR; }
-          R(ML, y, CW, 7, C.bg2);
-          R(ML, y, 2, 7, C.red);
+          R(ML, y, CW, 7.5, C.bg2);
+          R(ML, y, 2, 7.5, C.red);
           doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
-          safeT(risk, ML + 6, y + 4.8, CW - 8);
-          y += 7.5;
+          safeT(risk, ML + 6, y + 5, CW - 8);
+          y += 8;
         });
       }
 
-      // ── 6. SPECIFIER ACTIONS ───────────────────────────────────────────
+      // 6. Actions
       if (ai.specifier_actions?.length) {
-        y = secHead('6.  Required Specifier Actions', col, y + 4);
-        ai.specifier_actions.forEach((action, ai2) => {
+        y = secHead('6.  Required Specifier Actions', col3, y);
+        ai.specifier_actions.forEach((action, idx) => {
           if (y > SAFE_B - 9) { doc.addPage(); startPage(); y = HDR; }
-          R(ML, y, CW, 7, C.bg2);
-          R(ML, y, 2, 7, col);
-          doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(col);
-          doc.text(String(ai2 + 1), ML + 5, y + 4.8);
+          R(ML, y, CW, 7.5, C.bg2);
+          R(ML, y, 2, 7.5, col3);
+          doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(col3);
+          doc.text(String(idx + 1), ML + 5, y + 5);
           doc.setFont('helvetica','normal'); tc(C.white);
-          safeT(action, ML + 12, y + 4.8, CW - 14);
-          y += 7.5;
+          safeT(action, ML + 13, y + 5, CW - 15);
+          y += 8;
         });
       }
 
-      // ── Verdict box ────────────────────────────────────────────────────
-      y += 5;
+      // Verdict box
+      y += 6;
       if (y > SAFE_B - 16) { doc.addPage(); startPage(); y = HDR; }
       R(ML, y, CW, 14, C.bg2);
       R(ML, y, 3, 14, vc2);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.muted);
       doc.text('COMPLIANCE VERDICT', ML + 8, y + 5);
       doc.setFontSize(11); tc(vc2);
-      doc.text(ai.verdict || 'Pending Documentation', ML + 8, y + 11.5);
+      doc.text(ai.verdict || 'Pending Documentation', ML + 8, y + 12);
       doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(C.white);
-      safeT(ai.verdict_notes || '', ML + 80, y + 11.5, CW - 82);
+      safeT(ai.verdict_notes || '', ML + 82, y + 12, CW - 84);
       y += 18;
     }
 
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     // FINAL PAGE — COMPLIANCE MATRIX
-    // ════════════════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════
     doc.addPage(); startPage(); y = HDR;
 
     doc.setFont('helvetica','bold'); doc.setFontSize(13); tc(C.white);
-    doc.text('COMPLIANCE SUMMARY MATRIX', ML, y); y += 3;
-    HL(ML, y, ML + CW, C.dim, 0.2); y += 7;
+    doc.text('COMPLIANCE SUMMARY MATRIX', ML, y); y += 4;
+    HL(ML, y, ML + CW, C.dim, 0.2); y += 8;
 
-    const mxCols  = ['Material', 'Fire Class', 'DCD', 'UAE Fire Code', 'Estidama', 'VOC', 'CoC', 'VERDICT'];
-    const mxColW  = CW / mxCols.length;
-
-    R(ML, y, CW, 8, C.bg3);
-    mxCols.forEach((col2, ci) => {
-      if (ci > 0) { dc(C.bg3); doc.setLineWidth(0.1); doc.line(ML+ci*mxColW, y+1, ML+ci*mxColW, y+7); }
+    const mxCols = ['Material','Fire Class','DCD','UAE Fire Code','Estidama','VOC','CoC','VERDICT'];
+    const mxColW = CW / mxCols.length;
+    R(ML, y, CW, 8.5, C.bg3);
+    mxCols.forEach((col4, ci) => {
+      if (ci > 0) { dc(C.bg3); doc.setLineWidth(0.1); doc.line(ML+ci*mxColW, y+1, ML+ci*mxColW, y+7.5); }
       doc.setFont('helvetica','bold'); doc.setFontSize(5.5); tc(C.acc);
-      safeT(col2, ML + ci * mxColW + 2, y + 5.5, mxColW - 3);
+      safeT(col4, ML + ci*mxColW + 2, y + 5.8, mxColW - 3);
     });
-    y += 8;
+    y += 9;
 
     matDataArr.forEach((md, ri) => {
+      if (y > SAFE_B - 10) { doc.addPage(); startPage(); y = HDR; }
       R(ML, y, CW, 9, ri % 2 === 0 ? C.bg : C.bg2);
-      const ai  = md.ai;
-      const vc3 = verdictColor(ai.verdict);
-      const cv  = val => {
+      const ai2  = md.ai;
+      const vc3  = verdictColor(ai2.verdict);
+      const cv   = val => {
         const v = (val || '').toLowerCase();
         return v === 'yes' || v === 'compliant' ? { t:'Compliant', c:C.acc }
              : v === 'no'  || v === 'non-compliant' ? { t:'Non-Compliant', c:C.red }
              : { t:'Conditional', c:C.amber };
       };
       const cells = [
-        { t: md.mat.name,                                             c: MAT_COL[md.key]||C.white, bold:true },
-        { t: ai.technical?.fire_class || '—',                        c: C.white },
+        { t: md.mat.name,                                            c: MAT_COL[md.key]||C.white, bold:true },
+        { t: ai2.technical?.fire_class || '—',                       c: C.white },
         cv(md.mat.compliance?.['Dubai Civil Defence']),
         cv(md.mat.compliance?.['UAE Fire Code 2017']),
         cv(md.mat.compliance?.['Estidama Pearl Rating']),
-        { t: ai.sustainability?.voc || '—',                          c: C.muted },
-        { t: ai.quality?.qr_code || 'Required',                      c: C.muted },
-        { t: ai.verdict || '—',                                      c: vc3, bold:true },
+        { t: ai2.sustainability?.voc || '—',                         c: C.muted },
+        { t: ai2.quality?.qr_code || 'Required',                     c: C.muted },
+        { t: ai2.verdict || '—',                                     c: vc3, bold:true },
       ];
       cells.forEach((cell, ci) => {
         if (ci > 0) { dc(C.bg3); doc.setLineWidth(0.1); doc.line(ML+ci*mxColW, y+1, ML+ci*mxColW, y+8); }
         doc.setFont('helvetica', cell.bold ? 'bold' : 'normal');
         doc.setFontSize(6); tc(cell.c || C.white);
-        safeT(cell.t, ML + ci * mxColW + 2, y + 6, mxColW - 3);
+        safeT(cell.t, ML + ci*mxColW + 2, y + 6, mxColW - 3);
       });
       y += 9;
     });
 
-    y += 10;
+    y += 12;
     if (y < SAFE_B - 18) {
-      R(ML, y, 3, 16, C.acc);
-      R(ML + 3, y, CW - 3, 16, C.bg2);
+      R(ML, y, 3, 18, C.acc);
+      R(ML+3, y, CW-3, 18, C.bg2);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(C.acc);
-      doc.text('IMPORTANT NOTICE', ML + 8, y + 5.5);
+      doc.text('IMPORTANT NOTICE', ML + 8, y + 6);
       doc.setFont('helvetica','normal'); doc.setFontSize(6); tc(C.muted);
-      y = wrapT(
+      wrapT(
         "This report references 2026 UAE regulatory standards. All compliance verdicts are AI-generated guidance based on material technical data and should be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) prior to formal submission.",
-        ML + 8, y + 11, CW - 10, 6, C.muted, false
+        ML + 8, y + 12, CW - 12, 6, C.muted, false
       );
     }
 
-    // ── Draw footers on ALL pages (once, at the end) ──────────────────
+    // ── Footers on ALL pages — drawn once at the end ──────────────────────
     const tp = doc.internal.getNumberOfPages();
     for (let p = 1; p <= tp; p++) { doc.setPage(p); drawFooter(p, tp); }
 
