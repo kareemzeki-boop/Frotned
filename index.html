@@ -4424,6 +4424,12 @@ const MATERIALS = {
       'Heavier than GFRP — structural engineer must confirm deflection, fixing loads and bracket capacity before specification',
     ],
     priceRange: 'AED 450–900/m²',
+    whenNotToUse: [
+      'When programme is critical and delivery exceeds 10 weeks — consider ACM-FR for rectilinear facades with tight schedule',
+      'On low-rise standard residential where the cost premium of custom moulds cannot be justified against a simpler ACM-FR or fibre cement system',
+      'Where the design is entirely flat and rectilinear — GFRC offers no geometric advantage over ACM-FR at significantly higher cost',
+      'When independent third-party mix design verification and GRCA-compliant installation supervision cannot be resourced',
+    ],
   },
   GFRP: {
     name: 'GFRP', full: 'Glass Fibre Reinforced Polymer',
@@ -4471,6 +4477,12 @@ const MATERIALS = {
       'Full BS 8414 system test may be required by DCD for high-rise — costly (AED 200,000+) and time-consuming',
     ],
     priceRange: 'AED 380–750/m²',
+    whenNotToUse: [
+      'On any building exceeding 23 m height without prior DCD Special Approval and a full fire engineering report — approval is not guaranteed',
+      'Where the client expects a 50-year design life without planned re-coating or maintenance — GFRC provides a more durable long-term solution',
+      'On projects where the structural load budget is exhausted — even at 8–25 kg/m2, verify fixing and bracket capacity at height',
+      'When a UV-stable vinylester or epoxy resin system cannot be specified and enforced at procurement — standard polyester will fail in UAE within 5 years',
+    ],
   },
   Aluminum: {
     name: 'Aluminum', full: 'Solid Aluminium & Aluminium Cladding Systems',
@@ -4518,6 +4530,12 @@ const MATERIALS = {
       'Limited design freedom — flat and simple single-curve panels only; no compound curves, no 3D relief or textured profiles',
     ],
     priceRange: 'AED 280–550/m²',
+    whenNotToUse: [
+      'Where the primary structure or facade bracket system has not been designed for the weight of aluminium cladding — thermal break design must be confirmed before specification',
+      'On projects requiring compound curves, deep textured relief or three-dimensional articulation — aluminium cannot achieve this without significant fabrication complexity and cost premium',
+      'When the coating specification cannot be enforced as AAMA 2605 PVDF Kynar 500 — powder coat will fail visibly in UAE UV within 5 to 8 years',
+      'In highly corrosive coastal zones within 1 km of the sea without AA25 anodising or marine-grade alloy specification',
+    ],
   },
   Stone: {
     name: 'Stone', full: 'Natural & Engineered Stone Cladding',
@@ -4566,6 +4584,12 @@ const MATERIALS = {
       'Highest supply cost — budget AED 650–1,800/m² supply-only; specialist fixer rates add AED 180–300/m² for installation',
     ],
     priceRange: 'AED 650–1,800/m²',
+    whenNotToUse: [
+      'On fast-track programmes where 12 to 22 week import lead time cannot be accommodated — stone must be ordered at concept design stage',
+      'Where the primary structure has not been designed for heavy cladding loads (54 to 200 kg/m2) — re-engineering the structure at detailed design is costly',
+      'For coastal projects where the selected stone has a water absorption rate exceeding 3 percent without a sealed and maintained waterproofing programme',
+      'On low-budget or affordable housing projects — the cost differential vs fibre cement or ACM-FR rarely provides proportionate value',
+    ],
   },
   ACM: {
     name: 'ACM-FR', full: 'Fire-Rated Aluminium Composite Panel (Mineral Core)',
@@ -4613,6 +4637,12 @@ const MATERIALS = {
       'Cost premium over PE-core makes site substitution a real risk — inspection hold points for material certificates are essential in contract',
     ],
     priceRange: 'AED 320–620/m²',
+    whenNotToUse: [
+      'Wherever a PE-core panel might be substituted — if contract documents and inspection hold points cannot guarantee FR-core delivery, specify solid aluminium instead',
+      'On projects requiring compound curves, sculptural geometry or three-dimensional facade articulation — ACM-FR is a flat or single-fold material only',
+      'When the design intent calls for deep texture, natural material appearance or surface relief — GFRC or stone should be considered instead',
+      'On very low-budget projects where the FR-core premium over PE-core creates commercial pressure for substitution at procurement stage',
+    ],
   },
   FibreCement: {
     name: 'Fibre Cement', full: 'Fibre Cement Cladding Panel',
@@ -4661,6 +4691,12 @@ const MATERIALS = {
       'Fewer premium finish options vs GFRC — cannot replicate deep stone texture or tactile quality of natural materials',
     ],
     priceRange: 'AED 180–380/m²',
+    whenNotToUse: [
+      'On projects requiring compound curves, double-curvature or parametric three-dimensional geometry — fibre cement is limited to flat panels and simple single-curve applications',
+      'Where site management cannot enforce the mandatory cut-edge sealing requirement — unsealed edges will cause delamination within 2 to 3 years in UAE humidity',
+      'On high-prestige architectural facades where deep texture, surface relief or the tactile quality of stone or GFRC is expected by the client brief',
+      'Where fragile material handling cannot be guaranteed on a congested or high-activity site — budget a minimum 8 percent breakage allowance and confirm site storage provision',
+    ],
   },
 };
 
@@ -5345,298 +5381,412 @@ async function downloadMatSpec() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  // ── Constants ──────────────────────────────────────────────────────────────
-  const PW=210, PH=297, ML=16, MR=16;
-  const CW = PW-ML-MR;          // 178 mm content width
-  const FH = 10;                 // footer height
-  const SAFE_B = PH - FH - 4;   // never write below this
+  // ── Page geometry ──────────────────────────────────────────────────────────
+  const PW = 210, PH = 297;
+  const ML = 18, MR = 18;          // margins
+  const CW = PW - ML - MR;         // 174 mm usable width
+  const FTH = 11;                   // footer height
+  const SAFE_B = PH - FTH - 5;     // bottom safe limit
 
+  // ── Colour palette ─────────────────────────────────────────────────────────
   const C = {
-    bg:[10,17,13], bg2:[17,26,19], bg3:[24,36,26], bg4:[32,48,34],
-    acc:[0,229,160], white:[237,242,237], muted:[107,125,109], dim:[55,72,57],
-    red:[200,65,65], amber:[195,125,20],
+    bg:    [11, 18, 13],
+    bg2:   [18, 28, 20],
+    bg3:   [26, 40, 29],
+    bg4:   [36, 54, 40],
+    line:  [38, 58, 42],
+    acc:   [0,  210, 148],
+    white: [230, 240, 232],
+    muted: [120, 148, 124],
+    dim:   [65,  85,  68],
+    red:   [195,  65,  65],
+    amber: [190, 125,  20],
+    hlbg:  [14,  24,  16],
   };
 
-  // ── Primitives ─────────────────────────────────────────────────────────────
+  // ── Typography helpers ─────────────────────────────────────────────────────
   const sf = (r,g,b) => doc.setFillColor(r,g,b);
   const st = (r,g,b) => doc.setTextColor(r,g,b);
   const sd = (r,g,b) => doc.setDrawColor(r,g,b);
-  const B  = sz => { doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
-  const N  = sz => { doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
-  const MN = sz => { doc.setFont('courier','normal');   doc.setFontSize(sz); };
+  const setB  = sz => { doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
+  const setN  = sz => { doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
+  const setMN = sz => { doc.setFont('courier','normal');   doc.setFontSize(sz); };
+  const LH = sz => sz * 0.3528 + 1.8;  // line height for font size
 
-  // Clip text to maxW chars with ellipsis — never overflows column
-  function clip(txt, x, y, maxW, align) {
-    txt = String(txt || '');
-    const orig = txt;
-    while (txt.length > 2 && doc.getTextWidth(txt) > maxW) txt = txt.slice(0,-1);
-    if (txt !== orig && txt.length > 1) txt = txt.slice(0,-1) + '…';
-    doc.text(txt, x, y, align ? { align } : undefined);
-  }
+  // Wrap text to width, return array of lines
+  const wrap = (txt, maxW, sz) => {
+    doc.setFontSize(sz);
+    return doc.splitTextToSize(String(txt || ''), maxW);
+  };
 
-  // Wrap paragraph, return new Y, respects SAFE_B with page break
-  function wrap(txt, x, y, maxW, sz, col) {
-    N(sz); if (col) st(...col);
-    const lh = sz * 0.3528 + 1.8;
-    const lines = doc.splitTextToSize(String(txt || ''), maxW);
-    for (const ln of lines) {
-      if (y > SAFE_B) { addPage(); y = HDR; }
-      doc.text(ln, x, y);
-      y += lh;
-    }
+  // Draw wrapped text block at (x, y), return new y
+  function drawWrapped(txt, x, y, maxW, sz, col, bold) {
+    bold ? setB(sz) : setN(sz);
+    if (col) st(...col);
+    const lh = LH(sz);
+    const lines = wrap(txt, maxW, sz);
+    lines.forEach(ln => { if (y <= SAFE_B) { doc.text(ln, x, y); y += lh; } });
     return y;
   }
 
   // ── Page management ────────────────────────────────────────────────────────
-  let y = 0, HDR = 16, pageNum = 1;
+  let y = 0;
+  const HDR_Y = 16;
 
-  function startPage() {
-    sf(...C.bg); doc.rect(0,0,PW,PH,'F');
-    sf(...C.acc); doc.rect(0,0,PW,1.6,'F');
+  function bgPage() {
+    sf(...C.bg); doc.rect(0, 0, PW, PH, 'F');
+    sf(...C.acc); doc.rect(0, 0, PW, 1.5, 'F');
   }
 
-  function drawFooter() {
-    sf(...C.bg2); doc.rect(0,PH-FH,PW,FH,'F');
-    sd(...C.dim); doc.setLineWidth(0.12); doc.line(ML,PH-FH,ML+CW,PH-FH);
-    MN(5); st(...C.dim);
-    clip('CladWise UAE  ·  '+m.name+' — '+m.full+'  ·  cladwise.ae  ·  Professional guidance only — verify with UAE authorities before procurement', ML, PH-3.5, CW-18);
-    const tp = doc.internal.getNumberOfPages();
-    B(6.5); st(...C.acc);
-    const lbl = doc.internal.getCurrentPageInfo().pageNumber+' / '+tp;
-    doc.text(lbl, PW-MR, PH-3.5, { align:'right' });
+  function drawFooter(pageN, totalN) {
+    sf(...C.bg2); doc.rect(0, PH - FTH, PW, FTH, 'F');
+    sd(...C.line); doc.setLineWidth(0.12); doc.line(ML, PH - FTH, PW - MR, PH - FTH);
+    setMN(5); st(...C.dim);
+    const fLeft = 'CLADWISE UAE  |  ' + m.name + '  |  ' + m.full + '  |  cladwise.ae';
+    const fRight = 'PROFESSIONAL GUIDANCE ONLY  |  ' + pageN + ' of ' + totalN;
+    const fRW = doc.getTextWidth(fRight);
+    doc.text(fLeft.substring(0, 95), ML, PH - 3.8);
+    setB(5); st(...C.acc);
+    doc.text(fRight, PW - MR - fRW, PH - 3.8);
   }
 
-  function addPage() {
-    drawFooter();
-    doc.addPage(); startPage(); y = HDR;
+  function newPage() {
+    doc.addPage();
+    bgPage();
+    y = HDR_Y;
   }
 
-  function chk(h) { if (y + h > SAFE_B) addPage(); }
+  function chk(h) { if (y + h > SAFE_B) newPage(); }
 
-  // ── Section header ─────────────────────────────────────────────────────────
-  function secHead(label, col) {
+  // ── Section divider ────────────────────────────────────────────────────────
+  function secDiv(title, col) {
     col = col || C.acc;
-    chk(12);
-    sd(...col); doc.setLineWidth(0.5); doc.line(ML, y, ML+CW, y);
+    chk(14);
+    y += 4;
+    sd(...col); doc.setLineWidth(0.5);
+    doc.line(ML, y, PW - MR, y);
     y += 1.5;
-    B(7.5); st(...col); doc.text(label.toUpperCase(), ML, y + 4);
-    y += 10;
+    setB(8); st(...col);
+    doc.text(title, ML, y + 4.5);
+    y += 11;
   }
 
-  // ── Cover page ─────────────────────────────────────────────────────────────
-  startPage();
-  const dateStr = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  // ── Sub-label ──────────────────────────────────────────────────────────────
+  function subLabel(txt) {
+    setMN(6.5); st(...C.dim);
+    doc.text(txt.toUpperCase(), ML, y);
+    y += 5;
+  }
 
-  // Header band
-  sf(...C.bg2); doc.rect(0, 0, PW, 46, 'F');
-  sf(...C.acc); doc.rect(0, 0, PW, 1.6, 'F');
+  // ── Bullet row (left-bar + wrapped text) ──────────────────────────────────
+  function bulletRow(txt, barCol) {
+    setN(7.5); st(...C.white);
+    const lines = wrap(txt, CW - 12, 7.5);
+    const rh = Math.max(9, 3 + lines.length * LH(7.5));
+    chk(rh);
+    sf(...C.bg2); doc.rect(ML, y, CW, rh, 'F');
+    sf(...barCol); doc.rect(ML, y, 2.5, rh, 'F');
+    setN(7.5); st(...C.white);
+    const ty = y + (rh - lines.length * LH(7.5)) / 2 + LH(7.5) * 0.8;
+    lines.forEach((ln, i) => doc.text(ln, ML + 6, ty + i * LH(7.5)));
+    y += rh + 2;
+  }
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // PAGE 1 — COVER
+  // ════════════════════════════════════════════════════════════════════════════
+  bgPage();
+  const dateStr = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const refNo   = 'CW-SPEC-' + new Date().getFullYear() + String(new Date().getMonth()+1).padStart(2,'0') + '-' + String(Math.floor(Math.random()*9000)+1000);
+
+  // Top header band
+  sf(...C.bg2); doc.rect(0, 0, PW, 50, 'F');
+  sf(...C.acc); doc.rect(0, 0, PW, 1.5, 'F');
 
   // Wordmark
-  B(20); st(...C.white); doc.text('CLADWISE', ML, 17);
-  st(...C.acc); doc.text(' UAE', ML + doc.getTextWidth('CLADWISE'), 17);
-  N(8); st(...C.muted); doc.text('MATERIAL TECHNICAL SPECIFICATION SHEET', ML, 25.5);
-  MN(6.5); st(...C.dim);
-  doc.text('Issued: '+dateStr+'   ·   cladwise.ae   ·   UAE Façade Intelligence Platform', ML, 32);
+  setB(21); st(...C.white); doc.text('CLADWISE', ML, 18);
+  setN(8);  st(...C.acc);   doc.text(' UAE', ML + doc.getTextWidth('CLADWISE'), 17.5);
+  setN(8);  st(...C.muted); doc.text('MATERIAL TECHNICAL SPECIFICATION', ML, 26.5);
+  setMN(6.5); st(...C.dim); doc.text('UAE / GCC Facade Engineering Reference  |  Issued: ' + dateStr, ML, 33);
 
-  // Ref box
-  const refNo = 'CW-SPEC-'+new Date().getFullYear()+String(new Date().getMonth()+1).padStart(2,'0')+'-'+String(Math.floor(Math.random()*9000)+1000);
-  sf(...C.bg3); doc.rect(PW-MR-48, 4, 48, 14, 'F');
-  MN(5.5); st(...C.dim); doc.text('DOCUMENT REF.', PW-MR-46, 9.5);
-  B(7); st(...C.acc); doc.text(refNo, PW-MR-46, 15.5);
+  // Doc ref top-right
+  sf(...C.bg3); doc.rect(PW - MR - 52, 5, 52, 16, 'F');
+  setMN(5.5); st(...C.dim);   doc.text('DOCUMENT REF.', PW - MR - 50, 11);
+  setB(7);    st(...C.acc);   doc.text(refNo, PW - MR - 50, 17);
 
-  // Material name band
-  y = 52;
-  sf(...C.bg3); doc.rect(ML, y, CW, 30, 'F');
-  sf(...C.acc); doc.rect(ML, y, 4, 30, 'F');
+  // Material identity band
+  y = 56;
+  sf(...C.bg3); doc.rect(ML, y, CW, 34, 'F');
+  sf(...C.acc); doc.rect(ML, y, 4,  34, 'F');
 
-  B(28); st(...C.acc); clip(m.name, ML+9, y+16, CW-60);
-  N(8.5); st(...C.muted); clip(m.full, ML+9, y+24, CW-60);
+  setB(26); st(...C.acc);
+  const nameW = doc.getTextWidth(m.name);
+  doc.text(m.name, ML + 9, y + 15);
 
-  // Price + Score in right corner of band
-  const priceX = PW-MR-2;
-  N(6.5); st(...C.dim); doc.text('SUPPLY PRICE RANGE', priceX, y+9, {align:'right'});
-  B(12); st(...C.acc); clip(m.priceRange, priceX, y+18, 58, 'right');
-  N(6.5); st(...C.dim); doc.text('OVERALL UAE SCORE', priceX, y+25, {align:'right'});
-  B(10); st(...C.white); doc.text(String(m.overall)+' / 10', priceX, y+31.5, {align:'right'});
-  y += 38;
+  setN(8.5); st(...C.muted);
+  // clip full name so it doesn't run into price
+  const fullTxt = m.full || '';
+  doc.text(fullTxt.substring(0, 52), ML + 9, y + 24);
 
-  // Tags strip
+  // Price + Score right side
+  setN(6);   st(...C.dim);   doc.text('INDICATIVE SUPPLY PRICE', PW - MR, y + 9,  { align:'right' });
+  setB(13);  st(...C.acc);   doc.text(m.priceRange || '—', PW - MR, y + 19,  { align:'right' });
+  setN(6);   st(...C.dim);   doc.text('MATERIAL ONLY, EXCL. VAT', PW - MR, y + 24, { align:'right' });
+  setN(6);   st(...C.dim);   doc.text('OVERALL UAE SCORE', PW - MR, y + 31, { align:'right' });
+  setB(9);   st(...C.white); doc.text(String(m.overall) + ' / 10', PW - MR, y + 37, { align:'right' });
+  y += 42;
+
+  // Tags
   if (m.tags && m.tags.length) {
     let tx = ML;
-    m.tags.slice(0,6).forEach(tag => {
-      N(6.5); st(...C.acc);
+    setN(6.5);
+    m.tags.slice(0, 7).forEach(tag => {
       const tw = doc.getTextWidth(tag) + 10;
-      sf(...C.bg3); doc.roundedRect(tx, y-3.5, tw, 6.5, 1.5, 1.5, 'F');
-      sd(...C.acc); doc.setLineWidth(0.15); doc.roundedRect(tx, y-3.5, tw, 6.5, 1.5, 1.5, 'D');
-      doc.text(tag, tx+5, y+1.2);
+      if (tx + tw > PW - MR) return;
+      sf(...C.bg4); doc.rect(tx, y - 3.5, tw, 7, 'F');
+      sd(...C.line); doc.setLineWidth(0.12); doc.rect(tx, y - 3.5, tw, 7, 'D');
+      st(...C.acc);  doc.text(tag, tx + 5, y + 1.5);
       tx += tw + 4;
     });
-    y += 12;
+    y += 11;
   }
 
-  // Tagline
-  N(8.5); st(...C.muted);
-  y = wrap(m.tagline || '', ML, y, CW, 8.5, C.muted) + 4;
+  // Tagline / description
+  y += 2;
+  setN(9); st(...C.white);
+  y = drawWrapped(m.tagline || '', ML, y, CW, 9, C.white, false) + 3;
 
-  // ── Specifications table ───────────────────────────────────────────────────
-  secHead('Technical Specifications');
+  // Key metrics strip (4 cells)
+  const metricsArr = [
+    { l: 'FIRE CLASSIFICATION', v: Object.entries(m.specs || {}).find(([k]) => k.toLowerCase().includes('fire class'))?.[1]?.val || 'See Technical Data' },
+    { l: 'SERVICE LIFE',        v: Object.entries(m.specs || {}).find(([k]) => k.toLowerCase().includes('service life'))?.[1]?.val || '—' },
+    { l: 'PANEL WEIGHT',        v: Object.entries(m.specs || {}).find(([k]) => k.toLowerCase().includes('weight'))?.[1]?.val || '—' },
+    { l: 'LEAD TIME',           v: Object.entries(m.specs || {}).find(([k]) => k.toLowerCase().includes('lead time'))?.[1]?.val || '—' },
+  ];
+  chk(20);
+  const mW = CW / 4;
+  sf(...C.bg3); doc.rect(ML, y, CW, 18, 'F');
+  metricsArr.forEach((m2, i) => {
+    const mx = ML + i * mW;
+    if (i > 0) { sd(...C.bg4); doc.setLineWidth(0.1); doc.line(mx, y+1, mx, y+17); }
+    setMN(5.5); st(...C.dim);   doc.text(m2.l, mx + 4, y + 6);
+    setB(8);    st(...C.acc);
+    // wrap value if needed
+    const vlines = wrap(m2.v, mW - 8, 8);
+    doc.text(vlines[0] || m2.v, mx + 4, y + 13);
+  });
+  y += 22;
 
-  // Column layout: label | value | notes
-  const C1 = ML;          // label start
-  const C2 = ML + 58;     // value start
-  const C3 = ML + 106;    // notes start
-  const W1 = 55, W2 = 45, W3 = CW - 108;
+  // ════════════════════════════════════════════════════════════════════════════
+  // TECHNICAL SPECIFICATIONS TABLE
+  // ════════════════════════════════════════════════════════════════════════════
+  secDiv('SECTION 1   TECHNICAL SPECIFICATIONS');
 
-  // Table header row
-  chk(8);
-  sf(...C.bg4); doc.rect(ML, y, CW, 7.5, 'F');
-  N(6.5); st(...C.muted);
-  doc.text('PARAMETER',  C1+3, y+5);
-  doc.text('VALUE',      C2+2, y+5);
-  doc.text('NOTES / UAE GUIDANCE', C3+2, y+5);
-  y += 7.5;
+  // Column definitions — must total CW exactly
+  const KC = ML;           // Parameter col x
+  const KW = 52;           // Parameter col width
+  const VC = ML + KW + 3;  // Value col x
+  const VW = 40;           // Value col width
+  const NC = VC + VW + 3;  // Notes col x
+  const NW = CW - KW - VW - 6; // Notes col width (remaining)
+
+  // Table header
+  chk(9);
+  sf(...C.bg4); doc.rect(ML, y, CW, 8, 'F');
+  setB(6.5); st(...C.acc);
+  doc.text('PARAMETER',        KC + 3, y + 5.2);
+  doc.text('VALUE',            VC + 2, y + 5.2);
+  doc.text('ENGINEERING NOTES / UAE GUIDANCE', NC + 2, y + 5.2);
+  // Column separator lines
+  sd(...C.bg3); doc.setLineWidth(0.15);
+  doc.line(VC - 1, y, VC - 1, y + 8);
+  doc.line(NC - 1, y, NC - 1, y + 8);
+  y += 8;
 
   Object.entries(m.specs || {}).forEach(([k, v], i) => {
-    // Estimate height: notes may wrap
-    N(7); doc.setFontSize(7);
-    const noteLines = doc.splitTextToSize(v.sub || '', W3-2);
-    const rowH = Math.max(9, 4 + noteLines.length * (7*0.3528+1.5));
+    // Pre-calculate row height
+    setN(7.5); const kLines = wrap(k, KW - 4, 7.5);
+    setB(8);   const vLines = wrap(v.val || '—', VW - 3, 8);
+    setN(7);   const nLines = wrap(v.sub || '', NW - 3, 7);
+    const lhK = LH(7.5), lhV = LH(8), lhN = LH(7);
+    const hK = kLines.length * lhK;
+    const hV = vLines.length * lhV;
+    const hN = nLines.length * lhN;
+    const rowH = Math.max(10, Math.max(hK, hV, hN) + 5);
+
     chk(rowH + 1);
 
-    sf(...(i%2===0 ? C.bg2 : C.bg3)); doc.rect(ML, y, CW, rowH, 'F');
-    // separator lines
-    sd(...C.bg4); doc.setLineWidth(0.1);
-    doc.line(C2, y+1, C2, y+rowH-1);
-    doc.line(C3, y+1, C3, y+rowH-1);
+    // Row background
+    sf(...(i % 2 === 0 ? C.bg2 : C.hlbg)); doc.rect(ML, y, CW, rowH, 'F');
+    // Bottom border
+    sd(...C.line); doc.setLineWidth(0.08); doc.line(ML, y + rowH, ML + CW, y + rowH);
+    // Column separators
+    doc.setLineWidth(0.1);
+    doc.line(VC - 1, y, VC - 1, y + rowH);
+    doc.line(NC - 1, y, NC - 1, y + rowH);
 
-    const midY = y + rowH/2 + 2.2;
+    // Vertical centre offset
+    const vOff = (rowH - hK) / 2;
+    const vOffV = (rowH - hV) / 2;
+    const vOffN = (rowH - hN) / 2;
 
-    // Label
-    N(7.5); st(...C.muted); clip(k, C1+3, midY, W1);
+    // Parameter (monospace, muted)
+    setMN(7.5); st(...C.muted);
+    kLines.forEach((ln, li) => doc.text(ln, KC + 3, y + vOff + lhK * (li + 0.85)));
 
-    // Value — accent, bold, clipped
-    B(8); st(...C.acc); clip(v.val || '—', C2+2, midY, W2);
+    // Value (bold, accent)
+    setB(8.5); st(...C.acc);
+    vLines.forEach((ln, li) => doc.text(ln, VC + 2, y + vOffV + lhV * (li + 0.85)));
 
-    // Notes — wrapped, small
-    if (v.sub) {
-      N(6.5); st(...C.dim);
-      const lh = 6.5*0.3528+1.5;
-      const noteY = y + rowH/2 - ((noteLines.length-1)*lh)/2 + 1.5;
-      noteLines.forEach((ln, ni) => { doc.text(ln, C3+2, noteY + ni*lh); });
-    }
+    // Notes (normal, white)
+    setN(7); st(...C.white);
+    nLines.forEach((ln, li) => doc.text(ln, NC + 2, y + vOffN + lhN * (li + 0.85)));
+
     y += rowH;
   });
 
-  y += 10;
+  y += 8;
 
-  // ── Compliance table ───────────────────────────────────────────────────────
-  chk(20);
-  secHead('Compliance & Regulatory Status');
+  // ════════════════════════════════════════════════════════════════════════════
+  // COMPLIANCE & REGULATORY
+  // ════════════════════════════════════════════════════════════════════════════
+  secDiv('SECTION 2   COMPLIANCE & REGULATORY STATUS');
 
-  // Two-column compliance layout
-  const entries = Object.entries(m.compliance || {});
-  const half = Math.ceil(entries.length / 2);
-  const colW = (CW - 6) / 2;
+  // Two-column table
+  const compEntries = Object.entries(m.compliance || {});
+  const half = Math.ceil(compEntries.length / 2);
+  const cColW = (CW - 4) / 2;
+
+  // Column headers
+  chk(8);
+  sf(...C.bg4); doc.rect(ML, y, CW, 7.5, 'F');
+  setB(6.5); st(...C.acc);
+  doc.text('STANDARD / AUTHORITY', ML + 3, y + 5);
+  doc.text('STATUS', ML + cColW - 2, y + 5, { align:'right' });
+  doc.text('STANDARD / AUTHORITY', ML + cColW + 7, y + 5);
+  doc.text('STATUS', ML + CW - 2, y + 5, { align:'right' });
+  sd(...C.bg3); doc.setLineWidth(0.1); doc.line(ML + cColW + 3, y, ML + cColW + 3, y + 7.5);
+  y += 7.5;
 
   for (let i = 0; i < half; i++) {
-    const left  = entries[i];
-    const right = entries[i + half];
+    const left  = compEntries[i];
+    const right = compEntries[i + half];
     chk(9);
-    const rowBg = i%2===0 ? C.bg2 : C.bg3;
+    sf(...(i % 2 === 0 ? C.bg2 : C.hlbg)); doc.rect(ML, y, CW, 8.5, 'F');
+    sd(...C.line); doc.setLineWidth(0.08); doc.line(ML, y + 8.5, ML + CW, y + 8.5);
+    sd(...C.bg3);  doc.setLineWidth(0.1);  doc.line(ML + cColW + 3, y, ML + cColW + 3, y + 8.5);
 
-    // Left cell
-    sf(...rowBg); doc.rect(ML, y, colW, 8.5, 'F');
-    N(7.5); st(...C.muted); clip(left[0], ML+3, y+5.5, colW-28);
+    // Left
+    setN(7.5); st(...C.muted);
+    doc.text(left[0].substring(0, 34), ML + 3, y + 5.5);
     const lvc = left[1]==='yes' ? C.acc : left[1]==='no' ? C.red : C.amber;
-    const lvl = left[1]==='yes' ? '✓ Compliant' : left[1]==='no' ? '✗ Non-Compliant' : '⚠ Conditional';
-    B(7); st(...lvc); clip(lvl, ML+colW-2, y+5.5, 26, 'right');
+    const lvl = left[1]==='yes' ? 'Compliant' : left[1]==='no' ? 'Non-Compliant' : 'Conditional';
+    setB(7.5); st(...lvc); doc.text(lvl, ML + cColW - 2, y + 5.5, { align:'right' });
 
-    // Right cell
+    // Right
     if (right) {
-      sf(...rowBg); doc.rect(ML+colW+6, y, colW, 8.5, 'F');
-      N(7.5); st(...C.muted); clip(right[0], ML+colW+9, y+5.5, colW-28);
+      setN(7.5); st(...C.muted);
+      doc.text(right[0].substring(0, 34), ML + cColW + 7, y + 5.5);
       const rvc = right[1]==='yes' ? C.acc : right[1]==='no' ? C.red : C.amber;
-      const rvl = right[1]==='yes' ? '✓ Compliant' : right[1]==='no' ? '✗ Non-Compliant' : '⚠ Conditional';
-      B(7); st(...rvc); clip(rvl, ML+colW*2+6, y+5.5, 26, 'right');
+      const rvl = right[1]==='yes' ? 'Compliant' : right[1]==='no' ? 'Non-Compliant' : 'Conditional';
+      setB(7.5); st(...rvc); doc.text(rvl, ML + CW - 2, y + 5.5, { align:'right' });
     }
     y += 8.5;
   }
 
-  y += 6;
-
   // Compliance note
-  chk(14);
-  sf(...C.bg3); doc.rect(ML, y, CW, 12, 'F');
-  sf(...C.amber); doc.rect(ML, y, 2.5, 12, 'F');
-  N(6.5); st(...C.amber); doc.text('NOTE', ML+6, y+5);
-  N(6.5); st(...C.muted);
-  clip('Always verify current compliance with DCD, ADCD, MoIAT and the relevant UAE authority prior to final specification. Referenced standards correct as at 2025.', ML+6, y+9.5, CW-10);
-  y += 16;
+  y += 6;
+  chk(16);
+  sf(...C.bg3); doc.rect(ML, y, CW, 14, 'F');
+  sf(...C.amber); doc.rect(ML, y, 2.5, 14, 'F');
+  setB(6.5); st(...C.amber); doc.text('VERIFICATION REQUIREMENT', ML + 6, y + 6);
+  setN(6.5); st(...C.muted);
+  const compNote = 'All compliance statuses are for professional guidance only. Final determination must be obtained from the relevant UAE authority prior to specification: DCD (Dubai), ADCD (Abu Dhabi), MoIAT, Trakhees, or the applicable municipal body. Standards referenced are current as at 2025.';
+  const cnLines = wrap(compNote, CW - 10, 6.5);
+  cnLines.forEach((ln, i) => doc.text(ln, ML + 6, y + 11 + i * LH(6.5)));
+  y += Math.max(14, 10 + cnLines.length * LH(6.5)) + 6;
 
-  // ── Advantages ────────────────────────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════════════════
+  // ADVANTAGES
+  // ════════════════════════════════════════════════════════════════════════════
   if (m.pros && m.pros.length) {
-    chk(20);
-    secHead('Advantages', C.acc);
-    m.pros.forEach(p => {
-      N(7); doc.setFontSize(7);
-      const lines = doc.splitTextToSize(p, CW-14);
-      const rowH = Math.max(8, 4 + lines.length * (7*0.3528+1.5));
-      chk(rowH);
-      sf(...C.bg2); doc.rect(ML, y, CW, rowH, 'F');
-      sf(...C.acc); doc.rect(ML, y, 2.5, rowH, 'F');
-      N(7); st(...C.white);
-      const lh = 7*0.3528+1.5;
-      const startY = y + rowH/2 - ((lines.length-1)*lh)/2 + 1.5;
-      lines.forEach((ln, ni) => doc.text(ln, ML+6, startY+ni*lh));
-      y += rowH + 2;
-    });
+    secDiv('SECTION 3   DESIGN & ENGINEERING ADVANTAGES', C.acc);
+    m.pros.forEach(p => bulletRow(p, C.acc));
     y += 4;
   }
 
-  // ── Limitations ───────────────────────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════════════════
+  // LIMITATIONS
+  // ════════════════════════════════════════════════════════════════════════════
   if (m.cons && m.cons.length) {
-    chk(20);
-    secHead('Limitations & Risks', C.red);
-    m.cons.forEach(p => {
-      N(7); doc.setFontSize(7);
-      const lines = doc.splitTextToSize(p, CW-14);
-      const rowH = Math.max(8, 4 + lines.length * (7*0.3528+1.5));
-      chk(rowH);
-      sf(...C.bg2); doc.rect(ML, y, CW, rowH, 'F');
-      sf(...C.red); doc.rect(ML, y, 2.5, rowH, 'F');
-      N(7); st(...C.white);
-      const lh = 7*0.3528+1.5;
-      const startY = y + rowH/2 - ((lines.length-1)*lh)/2 + 1.5;
-      lines.forEach((ln, ni) => doc.text(ln, ML+6, startY+ni*lh));
-      y += rowH + 2;
-    });
+    secDiv('SECTION 4   LIMITATIONS & ENGINEERING RISKS', C.red);
+    m.cons.forEach(p => bulletRow(p, C.red));
     y += 4;
   }
 
-  // ── Professional disclaimer ────────────────────────────────────────────────
-  chk(26);
-  sf(...C.bg3); doc.rect(ML, y, CW, 24, 'F');
-  sf(...C.amber); doc.rect(ML, y, 2.5, 24, 'F');
-  B(7.5); st(...C.amber); doc.text('PROFESSIONAL GUIDANCE NOTICE', ML+7, y+7);
-  sd(...C.amber); doc.setLineWidth(0.12); doc.line(ML+7, y+8.5, ML+CW-4, y+8.5);
-  const disc = 'This specification sheet is for professional guidance only and does not constitute a formal cost plan, engineering report, or regulatory certification. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) prior to final specification, procurement or construction. CladWise UAE accepts no liability for decisions made solely on the basis of this document.';
-  y = wrap(disc, ML+7, y+12, CW-10, 6.5, C.muted) + 4;
+  // ════════════════════════════════════════════════════════════════════════════
+  // WHEN NOT TO USE
+  // ════════════════════════════════════════════════════════════════════════════
+  if (m.whenNotToUse && m.whenNotToUse.length) {
+    secDiv('SECTION 5   WHEN NOT TO USE THIS MATERIAL', C.amber);
+    setN(7.5); st(...C.muted);
+    y = drawWrapped('The following conditions indicate that an alternative material should be considered. These are not absolute exclusions, but require significant additional justification, re-engineering, or specialist approval if the material is to be retained.', ML, y, CW, 7.5, C.muted, false) + 5;
+    m.whenNotToUse.forEach(p => bulletRow(p, C.amber));
+    y += 4;
+  }
 
-  // ── Draw footers on all pages ──────────────────────────────────────────────
+  // ════════════════════════════════════════════════════════════════════════════
+  // COMMERCIAL CLARITY
+  // ════════════════════════════════════════════════════════════════════════════
+  secDiv('SECTION 6   COMMERCIAL GUIDANCE', C.muted);
+  chk(48);
+  sf(...C.bg2); doc.rect(ML, y, CW, 42, 'F');
+  sf(...C.acc); doc.rect(ML, y, 2.5, 42, 'F');
+
+  const commercialRows = [
+    ['Price Scope',         'Material supply only — excludes VAT, delivery, off-loading, substructure, installation labour, specialist fixings, scaffolding, access equipment, and QS / design fees.'],
+    ['Price Range',         m.priceRange + '  (UAE Market 2025 — indicative only)'],
+    ['Procurement Method',  'Direct from manufacturer or licensed distributor. Verify that the supplier holds current MoIAT / ECAS certification before placing order.'],
+    ['Submission Requirements', 'Third-party test certificates, product data sheets, and relevant authority approvals must be submitted as part of the material submittal package prior to ordering.'],
+    ['Cost Escalation Risk', 'UAE import-dependent materials (stone, specialist GFRC components, proprietary systems) are subject to freight cost and lead time volatility. Allow contingency in programme and budget.'],
+  ];
+
+  let cy = y + 5;
+  commercialRows.forEach(([label, val], i) => {
+    if (i > 0) { sd(...C.line); doc.setLineWidth(0.08); doc.line(ML + 5, cy - 1, ML + CW - 3, cy - 1); }
+    setB(7); st(...C.acc); doc.text(label + ':', ML + 6, cy + 3.5);
+    setN(7); st(...C.white);
+    const vl = wrap(val, CW - 56, 7);
+    vl.forEach((ln, li) => doc.text(ln, ML + 52, cy + 3.5 + li * LH(7)));
+    cy += Math.max(8, vl.length * LH(7) + 2);
+  });
+  y += 44;
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // PROFESSIONAL DISCLAIMER
+  // ════════════════════════════════════════════════════════════════════════════
+  chk(32);
+  y += 6;
+  sf(...C.bg3); doc.rect(ML, y, CW, 28, 'F');
+  sf(...C.amber); doc.rect(ML, y, 2.5, 28, 'F');
+  sd(...C.amber); doc.setLineWidth(0.2); doc.rect(ML, y, CW, 28, 'D');
+  setB(7.5); st(...C.amber); doc.text('PROFESSIONAL GUIDANCE NOTICE', ML + 7, y + 7.5);
+  sd(...C.amber); doc.setLineWidth(0.12); doc.line(ML + 7, y + 9, ML + CW - 4, y + 9);
+  setN(7); st(...C.muted);
+  const disc = 'This specification sheet has been produced by CladWise UAE as a professional reference for facade engineers, architects, and consultants. It is provided for information and guidance purposes only and does not constitute a formal engineering report, cost plan, bill of quantities, or regulatory certification. All compliance determinations, structural calculations, and procurement decisions must be independently verified with the relevant UAE authority — DCD, ADCD, MoIAT, Trakhees, or the applicable municipal body — before final specification or construction. CladWise UAE and its contributors accept no liability for decisions made solely on the basis of this document.';
+  const discLines = wrap(disc, CW - 12, 7);
+  discLines.forEach((ln, i) => doc.text(ln, ML + 7, y + 14 + i * LH(7)));
+  y += 32;
+
+  // ── Draw footers on ALL pages ──────────────────────────────────────────────
   const tp = doc.internal.getNumberOfPages();
   for (let p = 1; p <= tp; p++) {
     doc.setPage(p);
-    sf(...C.bg2); doc.rect(0, PH-FH, PW, FH, 'F');
-    sd(...C.dim); doc.setLineWidth(0.12); doc.line(ML, PH-FH, ML+CW, PH-FH);
-    MN(5); st(...C.dim);
-    clip('CladWise UAE  ·  '+m.name+' — '+m.full+'  ·  cladwise.ae  ·  Professional guidance only — verify with UAE authorities before procurement', ML, PH-3.5, CW-18);
-    B(6.5); st(...C.acc);
-    const lbl = p+' / '+tp;
-    doc.text(lbl, PW-MR, PH-3.5, {align:'right'});
+    drawFooter(p, tp);
   }
 
-  doc.save('CladWise_SpecSheet_'+m.name.replace(/\s+/g,'')+'_'+dateStr.replace(/ /g,'_')+'.pdf');
-  showToast('Spec sheet downloaded ✓');
+  doc.save('CladWise_SpecSheet_' + m.name.replace(/\s+/g, '_') + '_' + dateStr.replace(/ /g, '_') + '.pdf');
+  showToast('Spec sheet downloaded');
 }
 
 function checkCloseModal(e) {
