@@ -3050,6 +3050,31 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 .sup-gc-btn-primary svg { width: 13px; height: 13px; }
 
+/* Claim strip — shown on all standard cards */
+.sup-gc-claim-strip {
+  margin: 8px 16px 14px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 12px;
+  background: rgba(245,158,11,0.05);
+  border: 1px solid rgba(245,158,11,0.18);
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.5px;
+  color: #8a7040;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sup-gc-claim-strip strong { color: var(--amber); letter-spacing: 0.5px; }
+.sup-gc-claim-strip:hover {
+  background: rgba(245,158,11,0.12);
+  border-color: rgba(245,158,11,0.4);
+  color: #b89050;
+}
+.sup-gc-claim-strip:hover strong { color: #fbbf24; }
+.sup-gc-claim-star {
+  color: var(--amber); font-size: 10px; flex-shrink: 0;
+}
+
 /* Claim button */
 .sup-gc-claim {
   font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1.5px;
@@ -4804,7 +4829,7 @@ const SUPPLIERS = [
     email: '', 
     emoji: '🏛️', 
     color: '#1a1a2a', 
-    verified: true, 
+    verified: false, 
     tier: 'standard', 
     tagline: 'Decoration and facade works specialist — Umm Al Quwain',
     about: 'Majd Alemaara Decoration Works is a UAE-based facade and decoration contractor located in Umm Al Quwain. Serving projects across the Northern Emirates.',
@@ -4822,8 +4847,8 @@ const SUPPLIERS = [
     website: 'https://abm-i.com',
     emoji: '🏗️',
     color: '#0a2015',
-    verified: true,
-    tier: 'verified_pro',
+    verified: false,
+    tier: 'standard',
     licenceNo: '721178',
     regNo: '154855',
     established: 'Dec 2013',
@@ -4840,15 +4865,15 @@ const SUPPLIERS = [
     ],
     projects: ['Fujairah Beach Hotel', 'ADNOC Kitchen – Abu Dhabi', 'Khadijah Mosque – Sharjah', 'GRP Roof Cladding – Marsa Al Arab Dubai'],
   },
-  { name: 'Duratec Facades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', email: 'info@duratec.ae', emoji: '🏭', color: '#0f3020', verified: true, tier: 'featured', tagline: 'Premium GFRC & GFRP facade contractor for landmark projects' },
-  { name: 'Arabian GFRC Industries', location: 'ICAD, Abu Dhabi', mats: ['GFRC'], phone: '+971 2 550 9800', email: 'sales@arabiangfrc.ae', emoji: '🏗️', color: '#1a2f1a', verified: true, tier: 'verified_pro', tagline: 'Specialist GFRC manufacturer serving Abu Dhabi and Al Ain' },
-  { name: 'Alubond UAE', location: 'Ajman Industrial', mats: ['Aluminum', 'ACM-FR'], phone: '+971 6 742 2211', email: 'uae@alubond.com', emoji: '🔩', color: '#1a1a2a', verified: true, tier: 'featured', tagline: 'Market-leading ACM-FR panels — fire-rated and UAE code compliant' },
-  { name: 'Zahrat Al Khaleej Marble', location: 'Sharjah Industrial', mats: ['Stone'], phone: '+971 6 535 1100', email: 'info@zakmarble.ae', emoji: '🗿', color: '#2a1e10', verified: true, tier: 'verified_pro', tagline: 'Natural and engineered stone cladding for luxury facades' },
-  { name: 'Alucobond Gulf', location: 'Dubai Investment Park', mats: ['ACM-FR', 'Aluminum'], phone: '+971 4 885 7700', email: 'gulf@alucobond.ae', emoji: '🛡️', color: '#12172a', verified: true, tier: 'standard', tagline: 'Trusted ACM-FR supplier with in-house fabrication' },
-  { name: 'Al Marjan Composites', location: 'RAK Free Zone', mats: ['GFRP', 'ACM-FR'], phone: '+971 7 228 9900', email: 'info@almarjancomp.ae', emoji: '⚡', color: '#1a2030', verified: true, tier: 'standard', tagline: 'Lightweight GFRP composite panels, fast lead times' },
-  { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', email: 'sales@emiratesprecast.ae', emoji: '🏗️', color: '#1a2a1e', verified: true, tier: 'verified_pro', tagline: 'High-volume GFRC precast production for major developers' },
+  { name: 'Duratec Facades LLC', location: 'Jebel Ali, Dubai', mats: ['GFRC', 'GFRP'], phone: '+971 4 812 4400', email: 'info@duratec.ae', emoji: '🏭', color: '#0f3020', verified: false, tier: 'standard', tagline: 'Premium GFRC & GFRP facade contractor for landmark projects' },
+  { name: 'Arabian GFRC Industries', location: 'ICAD, Abu Dhabi', mats: ['GFRC'], phone: '+971 2 550 9800', email: 'sales@arabiangfrc.ae', emoji: '🏗️', color: '#1a2f1a', verified: false, tier: 'standard', tagline: 'Specialist GFRC manufacturer serving Abu Dhabi and Al Ain' },
+  { name: 'Alubond UAE', location: 'Ajman Industrial', mats: ['Aluminum', 'ACM-FR'], phone: '+971 6 742 2211', email: 'uae@alubond.com', emoji: '🔩', color: '#1a1a2a', verified: false, tier: 'standard', tagline: 'Market-leading ACM-FR panels — fire-rated and UAE code compliant' },
+  { name: 'Zahrat Al Khaleej Marble', location: 'Sharjah Industrial', mats: ['Stone'], phone: '+971 6 535 1100', email: 'info@zakmarble.ae', emoji: '🗿', color: '#2a1e10', verified: false, tier: 'standard', tagline: 'Natural and engineered stone cladding for luxury facades' },
+  { name: 'Alucobond Gulf', location: 'Dubai Investment Park', mats: ['ACM-FR', 'Aluminum'], phone: '+971 4 885 7700', email: 'gulf@alucobond.ae', emoji: '🛡️', color: '#12172a', verified: false, tier: 'standard', tagline: 'Trusted ACM-FR supplier with in-house fabrication' },
+  { name: 'Al Marjan Composites', location: 'RAK Free Zone', mats: ['GFRP', 'ACM-FR'], phone: '+971 7 228 9900', email: 'info@almarjancomp.ae', emoji: '⚡', color: '#1a2030', verified: false, tier: 'standard', tagline: 'Lightweight GFRP composite panels, fast lead times' },
+  { name: 'Emirates Precast LLC', location: 'Dubai Silicon Oasis', mats: ['GFRC'], phone: '+971 4 501 3300', email: 'sales@emiratesprecast.ae', emoji: '🏗️', color: '#1a2a1e', verified: false, tier: 'standard', tagline: 'High-volume GFRC precast production for major developers' },
   { name: 'Marmara Stone Trading', location: 'Mussafah, Abu Dhabi', mats: ['Stone'], phone: '+971 2 553 6688', email: 'info@marmara.ae', emoji: '🗿', color: '#2a200e', verified: false, tier: 'standard', tagline: 'Imported marble and limestone cladding at competitive prices' },
-  { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', email: 'me@technal.ae', emoji: '🔩', color: '#222222', verified: true, tier: 'standard', tagline: 'Aluminium facade systems and curtain wall solutions' },
+  { name: 'Technal Middle East', location: 'DAFZA, Dubai', mats: ['Aluminum'], phone: '+971 4 299 9800', email: 'me@technal.ae', emoji: '🔩', color: '#222222', verified: false, tier: 'standard', tagline: 'Aluminium facade systems and curtain wall solutions' },
 ];
 
 const WIZARD_STEPS = [
@@ -5750,7 +5775,6 @@ function supGridCardHTML(s, blurred, dimLocked) {
   const lockOverlay = isLocked
     ? `<div class="sup-gc-lock-icon">
         <div style="font-size:20px">${dimLocked ? '⏳' : '🔒'}</div>
-        ${(!dimLocked && s.tier === 'standard') ? `<button class="sup-gc-claim" onclick="event.stopPropagation();openSupApply()">★ Claim Profile</button>` : ''}
        </div>`
     : '';
 
@@ -5802,6 +5826,13 @@ function supGridCardHTML(s, blurred, dimLocked) {
       View Profile
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>`}
+
+    <!-- CLAIM PROFILE PROMPT -->
+    <div class="sup-gc-claim-strip" onclick="event.stopPropagation();openSupApply()">
+      <span class="sup-gc-claim-star">★</span>
+      Is this your business? <strong>Claim this profile</strong>
+      <svg viewBox="0 0 12 12" fill="none" style="margin-left:auto;flex-shrink:0"><path d="M2 6h8M6 2.5l3.5 3.5L6 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
 
     <!-- EXPAND TOGGLE -->
     ${isLocked ? '' : `<div class="sup-gc-divider"></div>
