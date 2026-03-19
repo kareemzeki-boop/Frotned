@@ -3054,30 +3054,29 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 .sup-gc-btn-primary svg { width: 13px; height: 13px; }
 
-/* Claim strip — shown on all standard cards */
-.sup-gc-claim-strip {
-  margin: 8px 16px 14px;
-  display: flex; align-items: center; gap: 6px;
-  padding: 9px 12px;
-  background: rgba(245,158,11,0.05);
-  border: 1px solid rgba(245,158,11,0.18);
-  border-radius: 10px;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 0.5px;
-  color: #8a7040;
+/* Claim button — same shape as view-btn, amber colour, below it */
+.sup-gc-claim-btn {
+  margin: 4px 16px 0;
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 50px;
+  padding: 11px 18px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--amber);
   cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: all 0.2s;
+  width: calc(100% - 32px);
 }
-.sup-gc-claim-strip strong { color: var(--amber); letter-spacing: 0.5px; }
-.sup-gc-claim-strip:hover {
-  background: rgba(245,158,11,0.12);
-  border-color: rgba(245,158,11,0.4);
-  color: #b89050;
+.sup-gc-claim-btn:hover {
+  background: rgba(245,158,11,0.14);
+  border-color: rgba(245,158,11,0.5);
+  color: #fbbf24;
 }
-.sup-gc-claim-strip:hover strong { color: #fbbf24; }
-.sup-gc-claim-star {
-  color: var(--amber); font-size: 10px; flex-shrink: 0;
-}
+.sup-gc-claim-btn svg { width: 14px; height: 14px; }
 
 /* Claim button */
 .sup-gc-claim {
@@ -6485,12 +6484,11 @@ function supGridCardHTML(s, blurred, dimLocked) {
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>`}
 
-    <!-- CLAIM PROFILE PROMPT -->
-    <div class="sup-gc-claim-strip" onclick="event.stopPropagation();openSupApply()">
-      <span class="sup-gc-claim-star">★</span>
-      Is this your business? <strong>Claim this profile</strong>
-      <svg viewBox="0 0 12 12" fill="none" style="margin-left:auto;flex-shrink:0"><path d="M2 6h8M6 2.5l3.5 3.5L6 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+    <!-- CLAIM PROFILE BUTTON -->
+    <button class="sup-gc-claim-btn" onclick="event.stopPropagation();openSupApply()">
+      ★ Claim This Profile
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
 
     <!-- EXPAND TOGGLE -->
     ${isLocked ? '' : `<div class="sup-gc-divider"></div>
