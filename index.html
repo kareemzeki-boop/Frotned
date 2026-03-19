@@ -867,7 +867,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border-radius:0;border:1px solid rgba(0,229,160,0.12);width:100%;max-width:840px;overflow:hidden;animation:modalIn 0.3s ease}
+.modal{background:var(--bg2);border-radius:0;border:1px solid rgba(0,229,160,0.12);width:100%;max-width:840px;overflow:visible;animation:modalIn 0.3s ease}
 @keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-header{padding:36px 40px 0;display:flex;justify-content:space-between;align-items:flex-start}
 .modal-title-wrap{}
@@ -5675,9 +5675,15 @@ function renderModalBody(m, tab) {
           <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">OVERALL UAE SCORE</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--accent);line-height:1">${m.overall}<span style="font-size:18px;color:var(--muted)">/10</span></div>
         </div>
+      </div>
+      <div style="margin-top:12px;padding:16px 20px;background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--text);letter-spacing:0.5px">Download Full Specification Sheet</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:1px">PDF · All specs, compliance & guidance · Free with account</div>
+        </div>
         <button class="modal-dl-btn" onclick="downloadMatSpec()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          Download Spec Sheet
+          Download PDF
         </button>
       </div>
       <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right;letter-spacing:1px">PDF · Free with account · Login required</div>`;
