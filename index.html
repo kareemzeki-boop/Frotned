@@ -4348,13 +4348,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
-    <div class="modal-dl-bar">
-      <button class="modal-dl-btn" onclick="downloadMatSpec()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        Download Material Spec Sheet
-      </button>
-      <span class="modal-dl-note">PDF · Free with account</span>
-    </div>
   </div>
 </div>
 
@@ -5334,16 +5327,13 @@ function closeModal() {
 async function downloadMatSpec() {
   const token = localStorage.getItem('cw_token');
   if (!token) {
-    // Not logged in — show auth modal with a message
     showToast('Create a free account to download spec sheets');
     openAuthModal('signup');
     return;
   }
-
   const m = MATERIALS[currentModal];
   if (!m) return;
 
-  // Lazy-load jsPDF
   if (!window.jspdf) {
     await new Promise((res, rej) => {
       const s = document.createElement('script');
@@ -5354,163 +5344,298 @@ async function downloadMatSpec() {
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const PW = 210, PH = 297, M = 16, IW = PW - M * 2;
-  const BG=[10,17,13], BG2=[17,26,19], BG3=[24,36,26];
-  const ACC=[0,229,160], TXT=[237,242,237], MUT=[107,125,109], DIM=[55,72,57];
-  const sf=(r,g,b)=>doc.setFillColor(r,g,b);
-  const st=(r,g,b)=>doc.setTextColor(r,g,b);
-  const B=sz=>{doc.setFont('helvetica','bold');doc.setFontSize(sz);};
-  const N=sz=>{doc.setFont('helvetica','normal');doc.setFontSize(sz);};
-  const MN=sz=>{doc.setFont('courier','normal');doc.setFontSize(sz);};
-  function safeT(txt,x,y,maxW,align){
-    txt=String(txt||'');
-    if(maxW){while(txt.length>2&&doc.getTextWidth(txt)>maxW)txt=txt.slice(0,-1);if(txt.length<String(txt||'').length)txt=txt.slice(0,-1)+'…';}
-    doc.text(txt,x,y,align?{align}:undefined);
+
+  // ── Constants ──────────────────────────────────────────────────────────────
+  const PW=210, PH=297, ML=16, MR=16;
+  const CW = PW-ML-MR;          // 178 mm content width
+  const FH = 10;                 // footer height
+  const SAFE_B = PH - FH - 4;   // never write below this
+
+  const C = {
+    bg:[10,17,13], bg2:[17,26,19], bg3:[24,36,26], bg4:[32,48,34],
+    acc:[0,229,160], white:[237,242,237], muted:[107,125,109], dim:[55,72,57],
+    red:[200,65,65], amber:[195,125,20],
+  };
+
+  // ── Primitives ─────────────────────────────────────────────────────────────
+  const sf = (r,g,b) => doc.setFillColor(r,g,b);
+  const st = (r,g,b) => doc.setTextColor(r,g,b);
+  const sd = (r,g,b) => doc.setDrawColor(r,g,b);
+  const B  = sz => { doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
+  const N  = sz => { doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
+  const MN = sz => { doc.setFont('courier','normal');   doc.setFontSize(sz); };
+
+  // Clip text to maxW chars with ellipsis — never overflows column
+  function clip(txt, x, y, maxW, align) {
+    txt = String(txt || '');
+    const orig = txt;
+    while (txt.length > 2 && doc.getTextWidth(txt) > maxW) txt = txt.slice(0,-1);
+    if (txt !== orig && txt.length > 1) txt = txt.slice(0,-1) + '…';
+    doc.text(txt, x, y, align ? { align } : undefined);
   }
-  const SAFE_B = PH - 14;
-  let y = 0;
 
-  // PAGE 1
-  sf(...BG); doc.rect(0,0,PW,PH,'F');
-  sf(...ACC); doc.rect(0,0,PW,1.8,'F');
-  sf(...BG2); doc.rect(0,1.8,PW,42,'F');
+  // Wrap paragraph, return new Y, respects SAFE_B with page break
+  function wrap(txt, x, y, maxW, sz, col) {
+    N(sz); if (col) st(...col);
+    const lh = sz * 0.3528 + 1.8;
+    const lines = doc.splitTextToSize(String(txt || ''), maxW);
+    for (const ln of lines) {
+      if (y > SAFE_B) { addPage(); y = HDR; }
+      doc.text(ln, x, y);
+      y += lh;
+    }
+    return y;
+  }
 
-  // Wordmark
-  B(20); st(...TXT); doc.text('CLADWISE', M, 18);
-  st(...ACC); doc.text(' UAE', M + doc.getTextWidth('CLADWISE'), 18);
-  N(8); st(...MUT); doc.text('MATERIAL TECHNICAL SPECIFICATION', M, 27);
-  MN(6.5); st(...DIM);
-  const dateStr = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  doc.text('Issued: ' + dateStr + '  ·  cladwise.ae  ·  UAE Façade Intelligence Platform', M, 34);
+  // ── Page management ────────────────────────────────────────────────────────
+  let y = 0, HDR = 16, pageNum = 1;
 
-  // Material name band
-  sf(...BG3); doc.rect(0, 44, PW, 28, 'F');
-  sf(...ACC); doc.rect(0, 44, 4, 28, 'F');
-  B(26); st(...ACC); doc.text(m.name, M+8, 58);
-  N(9); st(...MUT); safeT(m.full, M+8, 65, IW-10);
-  N(7.5); st(...DIM); safeT(m.tagline || '', M+8, 70, IW-10);
-  // Price + score
-  B(9); st(...TXT); doc.text(m.priceRange, PW-M-4, 56, {align:'right'});
-  N(7); st(...MUT); doc.text('supply price range', PW-M-4, 62, {align:'right'});
-  B(14); st(...ACC); doc.text(String(m.overall)+'/10', PW-M-4, 70, {align:'right'});
-  y = 82;
+  function startPage() {
+    sf(...C.bg); doc.rect(0,0,PW,PH,'F');
+    sf(...C.acc); doc.rect(0,0,PW,1.6,'F');
+  }
 
-  // Tags
-  if (m.tags && m.tags.length) {
-    let tx = M;
-    m.tags.forEach(tag => {
-      const tw = doc.getTextWidth(tag) + 8;
-      sf(...BG3); doc.roundedRect(tx, y-3.5, tw, 6, 1.5, 1.5, 'F');
-      N(6.5); st(...ACC); doc.text(tag, tx+4, y+1);
-      tx += tw + 3;
-    });
+  function drawFooter() {
+    sf(...C.bg2); doc.rect(0,PH-FH,PW,FH,'F');
+    sd(...C.dim); doc.setLineWidth(0.12); doc.line(ML,PH-FH,ML+CW,PH-FH);
+    MN(5); st(...C.dim);
+    clip('CladWise UAE  ·  '+m.name+' — '+m.full+'  ·  cladwise.ae  ·  Professional guidance only — verify with UAE authorities before procurement', ML, PH-3.5, CW-18);
+    const tp = doc.internal.getNumberOfPages();
+    B(6.5); st(...C.acc);
+    const lbl = doc.internal.getCurrentPageInfo().pageNumber+' / '+tp;
+    doc.text(lbl, PW-MR, PH-3.5, { align:'right' });
+  }
+
+  function addPage() {
+    drawFooter();
+    doc.addPage(); startPage(); y = HDR;
+  }
+
+  function chk(h) { if (y + h > SAFE_B) addPage(); }
+
+  // ── Section header ─────────────────────────────────────────────────────────
+  function secHead(label, col) {
+    col = col || C.acc;
+    chk(12);
+    sd(...col); doc.setLineWidth(0.5); doc.line(ML, y, ML+CW, y);
+    y += 1.5;
+    B(7.5); st(...col); doc.text(label.toUpperCase(), ML, y + 4);
     y += 10;
   }
 
-  // Spec table
-  B(7.5); st(...ACC); doc.text('TECHNICAL SPECIFICATIONS', M, y); y += 2;
-  doc.setLineWidth(0.4); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 7;
+  // ── Cover page ─────────────────────────────────────────────────────────────
+  startPage();
+  const dateStr = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 
-  // Table header
-  sf(...BG3); doc.rect(M, y, IW, 7.5, 'F');
-  N(7); st(...MUT); doc.text('Parameter', M+3, y+5); doc.text('Value', M+62, y+5); doc.text('Notes', M+105, y+5);
+  // Header band
+  sf(...C.bg2); doc.rect(0, 0, PW, 46, 'F');
+  sf(...C.acc); doc.rect(0, 0, PW, 1.6, 'F');
+
+  // Wordmark
+  B(20); st(...C.white); doc.text('CLADWISE', ML, 17);
+  st(...C.acc); doc.text(' UAE', ML + doc.getTextWidth('CLADWISE'), 17);
+  N(8); st(...C.muted); doc.text('MATERIAL TECHNICAL SPECIFICATION SHEET', ML, 25.5);
+  MN(6.5); st(...C.dim);
+  doc.text('Issued: '+dateStr+'   ·   cladwise.ae   ·   UAE Façade Intelligence Platform', ML, 32);
+
+  // Ref box
+  const refNo = 'CW-SPEC-'+new Date().getFullYear()+String(new Date().getMonth()+1).padStart(2,'0')+'-'+String(Math.floor(Math.random()*9000)+1000);
+  sf(...C.bg3); doc.rect(PW-MR-48, 4, 48, 14, 'F');
+  MN(5.5); st(...C.dim); doc.text('DOCUMENT REF.', PW-MR-46, 9.5);
+  B(7); st(...C.acc); doc.text(refNo, PW-MR-46, 15.5);
+
+  // Material name band
+  y = 52;
+  sf(...C.bg3); doc.rect(ML, y, CW, 30, 'F');
+  sf(...C.acc); doc.rect(ML, y, 4, 30, 'F');
+
+  B(28); st(...C.acc); clip(m.name, ML+9, y+16, CW-60);
+  N(8.5); st(...C.muted); clip(m.full, ML+9, y+24, CW-60);
+
+  // Price + Score in right corner of band
+  const priceX = PW-MR-2;
+  N(6.5); st(...C.dim); doc.text('SUPPLY PRICE RANGE', priceX, y+9, {align:'right'});
+  B(12); st(...C.acc); clip(m.priceRange, priceX, y+18, 58, 'right');
+  N(6.5); st(...C.dim); doc.text('OVERALL UAE SCORE', priceX, y+25, {align:'right'});
+  B(10); st(...C.white); doc.text(String(m.overall)+' / 10', priceX, y+31.5, {align:'right'});
+  y += 38;
+
+  // Tags strip
+  if (m.tags && m.tags.length) {
+    let tx = ML;
+    m.tags.slice(0,6).forEach(tag => {
+      N(6.5); st(...C.acc);
+      const tw = doc.getTextWidth(tag) + 10;
+      sf(...C.bg3); doc.roundedRect(tx, y-3.5, tw, 6.5, 1.5, 1.5, 'F');
+      sd(...C.acc); doc.setLineWidth(0.15); doc.roundedRect(tx, y-3.5, tw, 6.5, 1.5, 1.5, 'D');
+      doc.text(tag, tx+5, y+1.2);
+      tx += tw + 4;
+    });
+    y += 12;
+  }
+
+  // Tagline
+  N(8.5); st(...C.muted);
+  y = wrap(m.tagline || '', ML, y, CW, 8.5, C.muted) + 4;
+
+  // ── Specifications table ───────────────────────────────────────────────────
+  secHead('Technical Specifications');
+
+  // Column layout: label | value | notes
+  const C1 = ML;          // label start
+  const C2 = ML + 58;     // value start
+  const C3 = ML + 106;    // notes start
+  const W1 = 55, W2 = 45, W3 = CW - 108;
+
+  // Table header row
+  chk(8);
+  sf(...C.bg4); doc.rect(ML, y, CW, 7.5, 'F');
+  N(6.5); st(...C.muted);
+  doc.text('PARAMETER',  C1+3, y+5);
+  doc.text('VALUE',      C2+2, y+5);
+  doc.text('NOTES / UAE GUIDANCE', C3+2, y+5);
   y += 7.5;
 
   Object.entries(m.specs || {}).forEach(([k, v], i) => {
-    if (y > SAFE_B - 9) {
-      // footer
-      sf(...BG2); doc.rect(0,PH-10,PW,10,'F'); MN(5.5); st(...DIM);
-      doc.text('CladWise UAE · '+m.name+' Specification Sheet · cladwise.ae · For guidance only — verify with UAE authorities before procurement', PW/2, PH-4, {align:'center'});
-      const pn = doc.internal.getCurrentPageInfo().pageNumber;
-      B(6.5); st(...ACC); doc.text(String(pn), PW-M, PH-4, {align:'right'});
-      doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
+    // Estimate height: notes may wrap
+    N(7); doc.setFontSize(7);
+    const noteLines = doc.splitTextToSize(v.sub || '', W3-2);
+    const rowH = Math.max(9, 4 + noteLines.length * (7*0.3528+1.5));
+    chk(rowH + 1);
+
+    sf(...(i%2===0 ? C.bg2 : C.bg3)); doc.rect(ML, y, CW, rowH, 'F');
+    // separator lines
+    sd(...C.bg4); doc.setLineWidth(0.1);
+    doc.line(C2, y+1, C2, y+rowH-1);
+    doc.line(C3, y+1, C3, y+rowH-1);
+
+    const midY = y + rowH/2 + 2.2;
+
+    // Label
+    N(7.5); st(...C.muted); clip(k, C1+3, midY, W1);
+
+    // Value — accent, bold, clipped
+    B(8); st(...C.acc); clip(v.val || '—', C2+2, midY, W2);
+
+    // Notes — wrapped, small
+    if (v.sub) {
+      N(6.5); st(...C.dim);
+      const lh = 6.5*0.3528+1.5;
+      const noteY = y + rowH/2 - ((noteLines.length-1)*lh)/2 + 1.5;
+      noteLines.forEach((ln, ni) => { doc.text(ln, C3+2, noteY + ni*lh); });
     }
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M, y, IW, 8.5, 'F');
-    N(7.5); st(...MUT); safeT(k, M+3, y+5.5, 56);
-    B(7.5); st(...TXT); safeT(v.val||'—', M+62, y+5.5, 40);
-    N(7); st(...DIM); safeT(v.sub||'', M+105, y+5.5, IW-107);
+    y += rowH;
+  });
+
+  y += 10;
+
+  // ── Compliance table ───────────────────────────────────────────────────────
+  chk(20);
+  secHead('Compliance & Regulatory Status');
+
+  // Two-column compliance layout
+  const entries = Object.entries(m.compliance || {});
+  const half = Math.ceil(entries.length / 2);
+  const colW = (CW - 6) / 2;
+
+  for (let i = 0; i < half; i++) {
+    const left  = entries[i];
+    const right = entries[i + half];
+    chk(9);
+    const rowBg = i%2===0 ? C.bg2 : C.bg3;
+
+    // Left cell
+    sf(...rowBg); doc.rect(ML, y, colW, 8.5, 'F');
+    N(7.5); st(...C.muted); clip(left[0], ML+3, y+5.5, colW-28);
+    const lvc = left[1]==='yes' ? C.acc : left[1]==='no' ? C.red : C.amber;
+    const lvl = left[1]==='yes' ? '✓ Compliant' : left[1]==='no' ? '✗ Non-Compliant' : '⚠ Conditional';
+    B(7); st(...lvc); clip(lvl, ML+colW-2, y+5.5, 26, 'right');
+
+    // Right cell
+    if (right) {
+      sf(...rowBg); doc.rect(ML+colW+6, y, colW, 8.5, 'F');
+      N(7.5); st(...C.muted); clip(right[0], ML+colW+9, y+5.5, colW-28);
+      const rvc = right[1]==='yes' ? C.acc : right[1]==='no' ? C.red : C.amber;
+      const rvl = right[1]==='yes' ? '✓ Compliant' : right[1]==='no' ? '✗ Non-Compliant' : '⚠ Conditional';
+      B(7); st(...rvc); clip(rvl, ML+colW*2+6, y+5.5, 26, 'right');
+    }
     y += 8.5;
-  });
-  y += 10;
-
-  // Compliance
-  if (y > SAFE_B - 30) {
-    sf(...BG2); doc.rect(0,PH-10,PW,10,'F'); MN(5.5); st(...DIM);
-    doc.text('CladWise UAE · '+m.name+' Specification Sheet · cladwise.ae', PW/2, PH-4, {align:'center'});
-    doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
   }
-  B(7.5); st(...ACC); doc.text('COMPLIANCE & REGULATORY STATUS', M, y); y += 2;
-  doc.setLineWidth(0.4); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 7;
-  sf(...BG3); doc.rect(M, y, IW, 7.5, 'F');
-  N(7); st(...MUT); doc.text('Standard / Authority', M+3, y+5); doc.text('Status', PW-M-4, y+5, {align:'right'});
-  y += 7.5;
 
-  Object.entries(m.compliance || {}).forEach(([k, v], i) => {
-    if (y > SAFE_B - 9) {
-      doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
-    }
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M, y, IW, 8, 'F');
-    N(8); st(...TXT); safeT(k, M+3, y+5.5, IW-50);
-    const vc = v==='yes'?ACC:v==='no'?[210,70,70]:[200,130,20];
-    const vl = v==='yes'?'✓ Compliant':v==='no'?'✗ Non-Compliant':'⚠ Conditional';
-    sf(...vc); doc.rect(PW-M-24, y+1.5, 24, 5, 'F');
-    B(7); st(...BG); safeT(v==='yes'?'Compliant':v==='no'?'Non-Compliant':'Conditional', PW-M-2, y+5.5, 24, 'right');
-    y += 8;
-  });
-  y += 10;
+  y += 6;
 
-  // Pros
+  // Compliance note
+  chk(14);
+  sf(...C.bg3); doc.rect(ML, y, CW, 12, 'F');
+  sf(...C.amber); doc.rect(ML, y, 2.5, 12, 'F');
+  N(6.5); st(...C.amber); doc.text('NOTE', ML+6, y+5);
+  N(6.5); st(...C.muted);
+  clip('Always verify current compliance with DCD, ADCD, MoIAT and the relevant UAE authority prior to final specification. Referenced standards correct as at 2025.', ML+6, y+9.5, CW-10);
+  y += 16;
+
+  // ── Advantages ────────────────────────────────────────────────────────────
   if (m.pros && m.pros.length) {
-    if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
-    B(7.5); st(...ACC); doc.text('ADVANTAGES', M, y); y += 2;
-    doc.setLineWidth(0.3); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 6;
+    chk(20);
+    secHead('Advantages', C.acc);
     m.pros.forEach(p => {
-      if (y > SAFE_B - 12) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
-      sf(...BG2); doc.rect(M, y, IW, 7, 'F'); sf(...ACC); doc.rect(M, y, 2.5, 7, 'F');
-      N(7); st(...TXT);
-      const lines = doc.splitTextToSize('→  ' + p, IW-8);
-      doc.text(lines[0], M+6, y+4.8);
-      y += 7;
+      N(7); doc.setFontSize(7);
+      const lines = doc.splitTextToSize(p, CW-14);
+      const rowH = Math.max(8, 4 + lines.length * (7*0.3528+1.5));
+      chk(rowH);
+      sf(...C.bg2); doc.rect(ML, y, CW, rowH, 'F');
+      sf(...C.acc); doc.rect(ML, y, 2.5, rowH, 'F');
+      N(7); st(...C.white);
+      const lh = 7*0.3528+1.5;
+      const startY = y + rowH/2 - ((lines.length-1)*lh)/2 + 1.5;
+      lines.forEach((ln, ni) => doc.text(ln, ML+6, startY+ni*lh));
+      y += rowH + 2;
     });
-    y += 8;
+    y += 4;
   }
 
-  // Cons
+  // ── Limitations ───────────────────────────────────────────────────────────
   if (m.cons && m.cons.length) {
-    if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
-    B(7.5); st(210,70,70); doc.text('LIMITATIONS & RISKS', M, y); y += 2;
-    doc.setLineWidth(0.3); doc.setDrawColor(210,70,70); doc.line(M, y, M+IW, y); y += 6;
+    chk(20);
+    secHead('Limitations & Risks', C.red);
     m.cons.forEach(p => {
-      if (y > SAFE_B - 12) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
-      sf(...BG2); doc.rect(M, y, IW, 7, 'F'); sf(210,70,70); doc.rect(M, y, 2.5, 7, 'F');
-      N(7); st(...TXT);
-      const lines = doc.splitTextToSize('→  ' + p, IW-8);
-      doc.text(lines[0], M+6, y+4.8);
-      y += 7;
+      N(7); doc.setFontSize(7);
+      const lines = doc.splitTextToSize(p, CW-14);
+      const rowH = Math.max(8, 4 + lines.length * (7*0.3528+1.5));
+      chk(rowH);
+      sf(...C.bg2); doc.rect(ML, y, CW, rowH, 'F');
+      sf(...C.red); doc.rect(ML, y, 2.5, rowH, 'F');
+      N(7); st(...C.white);
+      const lh = 7*0.3528+1.5;
+      const startY = y + rowH/2 - ((lines.length-1)*lh)/2 + 1.5;
+      lines.forEach((ln, ni) => doc.text(ln, ML+6, startY+ni*lh));
+      y += rowH + 2;
     });
-    y += 8;
+    y += 4;
   }
 
-  // Disclaimer
-  if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
-  sf(...BG3); doc.rect(M, y, IW, 20, 'F'); sf(200,130,20); doc.rect(M, y, 2.5, 20, 'F');
-  B(7); st(200,130,20); doc.text('PROFESSIONAL GUIDANCE NOTICE', M+6, y+6);
-  N(6.5); st(...MUT);
-  const disc = 'This specification sheet is for professional guidance only. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) prior to final specification, procurement or construction. CladWise UAE accepts no liability for decisions made solely on the basis of this document.';
-  doc.text(doc.splitTextToSize(disc, IW-10), M+6, y+11);
-  y += 24;
+  // ── Professional disclaimer ────────────────────────────────────────────────
+  chk(26);
+  sf(...C.bg3); doc.rect(ML, y, CW, 24, 'F');
+  sf(...C.amber); doc.rect(ML, y, 2.5, 24, 'F');
+  B(7.5); st(...C.amber); doc.text('PROFESSIONAL GUIDANCE NOTICE', ML+7, y+7);
+  sd(...C.amber); doc.setLineWidth(0.12); doc.line(ML+7, y+8.5, ML+CW-4, y+8.5);
+  const disc = 'This specification sheet is for professional guidance only and does not constitute a formal cost plan, engineering report, or regulatory certification. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) prior to final specification, procurement or construction. CladWise UAE accepts no liability for decisions made solely on the basis of this document.';
+  y = wrap(disc, ML+7, y+12, CW-10, 6.5, C.muted) + 4;
 
-  // Footers on all pages
+  // ── Draw footers on all pages ──────────────────────────────────────────────
   const tp = doc.internal.getNumberOfPages();
   for (let p = 1; p <= tp; p++) {
     doc.setPage(p);
-    sf(...BG2); doc.rect(0, PH-10, PW, 10, 'F');
-    MN(5.5); st(...DIM);
-    doc.text('CladWise UAE  ·  ' + m.name + ' — ' + m.full + '  ·  cladwise.ae  ·  For guidance only — verify with UAE authorities before procurement', PW/2, PH-4, {align:'center'});
-    B(6.5); st(...ACC); doc.text(p + ' / ' + tp, PW-M, PH-4, {align:'right'});
+    sf(...C.bg2); doc.rect(0, PH-FH, PW, FH, 'F');
+    sd(...C.dim); doc.setLineWidth(0.12); doc.line(ML, PH-FH, ML+CW, PH-FH);
+    MN(5); st(...C.dim);
+    clip('CladWise UAE  ·  '+m.name+' — '+m.full+'  ·  cladwise.ae  ·  Professional guidance only — verify with UAE authorities before procurement', ML, PH-3.5, CW-18);
+    B(6.5); st(...C.acc);
+    const lbl = p+' / '+tp;
+    doc.text(lbl, PW-MR, PH-3.5, {align:'right'});
   }
 
-  doc.save('CladWise_SpecSheet_' + m.name.replace(/\s+/g,'') + '_' + dateStr.replace(/ /g,'_') + '.pdf');
+  doc.save('CladWise_SpecSheet_'+m.name.replace(/\s+/g,'')+'_'+dateStr.replace(/ /g,'_')+'.pdf');
   showToast('Spec sheet downloaded ✓');
 }
 
@@ -5541,12 +5666,21 @@ function renderModalBody(m, tab) {
             ${v.sub ? `<div class="spec-item-sub">${v.sub}</div>` : ''}
           </div>`).join('')}
       </div>
-      <div style="margin-top:20px;background:var(--bg3);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center">
-        <div><div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">INDICATIVE PRICE RANGE</div>
-        <div style="font-size:22px;font-weight:700;color:var(--accent)">${m.priceRange}</div></div>
-        <div style="text-align:right"><div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">OVERALL UAE SCORE</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--accent);line-height:1">${m.overall}<span style="font-size:18px;color:var(--muted)">/10</span></div></div>
-      </div>`;
+      <div style="margin-top:20px;background:var(--bg3);border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">INDICATIVE PRICE RANGE</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent)">${m.priceRange}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:4px">OVERALL UAE SCORE</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;color:var(--accent);line-height:1">${m.overall}<span style="font-size:18px;color:var(--muted)">/10</span></div>
+        </div>
+        <button class="modal-dl-btn" onclick="downloadMatSpec()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Download Spec Sheet
+        </button>
+      </div>
+      <div style="margin-top:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right;letter-spacing:1px">PDF · Free with account · Login required</div>`;
   } else if (tab === 1) {
     body.innerHTML = `<div class="compliance-list">
       ${Object.entries(m.compliance).map(([k,v]) => `
