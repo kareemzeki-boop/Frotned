@@ -5419,7 +5419,53 @@ async function downloadMatSpec() {
   const MN=sz=>{doc.setFont('courier','normal');  doc.setFontSize(sz);};
   const LH=sz=>+(sz*0.3528+1.65).toFixed(3);
 
-  function wl(txt,w,sz){ doc.setFontSize(sz); return doc.splitTextToSize(String(txt||'').trim(),w); }
+  /* ── Unicode → ASCII-safe substitution ─────────────────────────────────────
+     jsPDF built-in Helvetica is Latin-1 only. Every character outside that
+     range renders as a box or garble. Pre-process ALL text through safe().    */
+  function safe(txt) {
+    return String(txt||'')
+      // dashes & hyphens
+      .replace(/\u2013/g, '-').replace(/\u2014/g, '--').replace(/\u2212/g, '-')
+      // multiplication & special operators
+      .replace(/\u00D7/g, 'x').replace(/\u00F7/g, '/')
+      .replace(/\u2265/g, '>=').replace(/\u2264/g, '<=')
+      .replace(/\u2260/g, '!=').replace(/\u00B1/g, '+/-')
+      // degree, micro, per-mille
+      .replace(/\u00B0/g, ' deg').replace(/\u00B5/g, 'u').replace(/\u2030/g, ' per mil')
+      // superscripts → plain digits
+      .replace(/\u00B2/g, '2').replace(/\u00B3/g, '3')
+      .replace(/\u00B9/g, '1')
+      .replace(/\u2070/g, '0').replace(/\u2074/g, '4').replace(/\u2075/g, '5')
+      .replace(/\u2076/g, '6').replace(/\u2077/g, '7').replace(/\u2078/g, '8').replace(/\u2079/g, '9')
+      .replace(/\u207B/g, '-').replace(/\u207A/g, '+')
+      // subscripts
+      .replace(/\u2080/g, '0').replace(/\u2081/g, '1').replace(/\u2082/g, '2')
+      .replace(/\u2083/g, '3').replace(/\u2084/g, '4')
+      // middle dot, bullet, ellipsis
+      .replace(/\u00B7/g, '·').replace(/\u2022/g, '-').replace(/\u2026/g, '...')
+      // fractions
+      .replace(/\u00BD/g, '1/2').replace(/\u00BC/g, '1/4').replace(/\u00BE/g, '3/4')
+      // arrows
+      .replace(/\u2192/g, '->').replace(/\u2190/g, '<-').replace(/\u2194/g, '<->')
+      // tick / cross
+      .replace(/\u2713/g, '[OK]').replace(/\u2717/g, '[X]').replace(/\u2714/g, '[OK]')
+      // quotes
+      .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
+      // common units written with special chars
+      .replace(/m\u00B2/g, 'm2').replace(/m\u00B3/g, 'm3')
+      .replace(/kg\/m\u00B2/g, 'kg/m2').replace(/W\/m\u00B7K/g, 'W/m.K')
+      .replace(/W\/m\u00B2K/g, 'W/m2K').replace(/kN\/m\u00B2/g, 'kN/m2')
+      // exponent notation  e.g. 10^-6  written as 10⁻⁶
+      .replace(/10\u207B6/g, '10^-6').replace(/10\u207B9/g, '10^-9')
+      // strip anything still outside Latin-1 (0x00–0xFF)
+      .replace(/[^\x00-\xFF]/g, '?')
+      // clean up multiple spaces
+      .replace(/  +/g, ' ')
+      .trim();
+  }
+
+  /* Wrap lines — run safe() on input first */
+  function wl(txt,w,sz){ doc.setFontSize(sz); return doc.splitTextToSize(safe(txt),w); }
   function lh_of(n,sz){ return n*LH(sz); }
 
   /* ──────────────────────────────────────────────────────────────────────────
@@ -5442,9 +5488,9 @@ async function downloadMatSpec() {
   function contHeader() {
     sf(...K.bg3); doc.rect(0,TOP_STRIPE,PW,HDR_H,'F');
     MN(5.5); st(...K.di);
-    doc.text('CLADWISE UAE  |  '+m.name+' — '+(m.full||'')+'  |  cladwise.ae', ML+2, TOP_STRIPE+6.2);
+    doc.text(safe('CLADWISE UAE  |  ')+m.name+' — '+(m.full||'')+'  |  cladwise.ae', ML+2, TOP_STRIPE+6.2);
     B(5.5); st(...K.acc);
-    doc.text('CONTINUED', PW-MR-2, TOP_STRIPE+6.2, {align:'right'});
+    doc.text(safe('CONTINUED'), PW-MR-2, TOP_STRIPE+6.2, {align:'right'});
     sd(...K.bdr); doc.setLineWidth(0.12);
     doc.line(ML,TOP_STRIPE+HDR_H,PW-MR,TOP_STRIPE+HDR_H);
   }
@@ -5459,9 +5505,9 @@ async function downloadMatSpec() {
       doc.line(ML,PH-FTR_H,PW-MR,PH-FTR_H);
       MN(5); st(...K.di);
       const fTxt='CladWise UAE  |  '+m.name+'  |  cladwise.ae  |  Professional guidance only';
-      doc.text(fTxt, ML+2, PH-3.8);
+      doc.text(safe(fTxt), ML+2, PH-3.8);
       B(6.5); st(...K.acc);
-      doc.text(p+' / '+total, PW-MR-2, PH-3.8, {align:'right'});
+      doc.text(safe(p+' / '+total), PW-MR-2, PH-3.8, {align:'right'});
     }
   }
 
@@ -5487,7 +5533,7 @@ async function downloadMatSpec() {
     sf(...col);   doc.rect(ML,y,3,10,'F');
     sd(...col); doc.setLineWidth(0.15);
     doc.line(ML,y+10,PW-MR,y+10);
-    B(8.5); st(...col); doc.text(label, ML+7, y+6.8);
+    B(8.5); st(...col); doc.text(safe(label), ML+7, y+6.8);
     y += 14;
   }
 
@@ -5506,9 +5552,9 @@ async function downloadMatSpec() {
     doc.line(C1x-1,y,C1x-1,y+8.5);
     doc.line(C2x-1,y,C2x-1,y+8.5);
     B(6.5); st(...K.acc);
-    doc.text('PARAMETER',               C0x+3, y+5.5);
-    doc.text('VALUE',                   C1x+2, y+5.5);
-    doc.text('ENGINEERING NOTES / UAE GUIDANCE', C2x+2, y+5.5);
+    doc.text(safe('PARAMETER'),               C0x+3, y+5.5);
+    doc.text(safe('VALUE'),                   C1x+2, y+5.5);
+    doc.text(safe('ENGINEERING NOTES / UAE GUIDANCE'), C2x+2, y+5.5);
     y += 8.5;
   }
 
@@ -5542,9 +5588,9 @@ async function downloadMatSpec() {
     const v1=y+(rh-h1)/2+LH(8.5)*0.82;
     const v2=y+(rh-h2)/2+LH(6.5)*0.82;
 
-    MN(7);   st(...K.mu); l0.forEach((ln,j)=>doc.text(ln,C0x+3,  v0+j*LH(7)));
-    B(8.5);  st(...K.acc);l1.forEach((ln,j)=>doc.text(ln,C1x+2,  v1+j*LH(8.5)));
-    N(6.5);  st(...K.wh); l2.forEach((ln,j)=>doc.text(ln,C2x+2,  v2+j*LH(6.5)));
+    MN(7);   st(...K.mu); l0.forEach((ln,j)=>doc.text(safe(ln),C0x+3,  v0+j*LH(7)));
+    B(8.5);  st(...K.acc);l1.forEach((ln,j)=>doc.text(safe(ln),C1x+2,  v1+j*LH(8.5)));
+    N(6.5);  st(...K.wh); l2.forEach((ln,j)=>doc.text(safe(ln),C2x+2,  v2+j*LH(6.5)));
 
     y += rh;
   }
@@ -5564,7 +5610,7 @@ async function downloadMatSpec() {
     sd(...K.bdr); doc.setLineWidth(0.12); doc.rect(ML,y,CW,rh,'D');
     st(...K.wh);
     const ty=y+(rh-lines.length*lh)/2+lh*0.85;
-    lines.forEach((ln,i)=>doc.text(ln,ML+6.5,ty+i*lh));
+    lines.forEach((ln,i)=>doc.text(safe(ln),ML+6.5,ty+i*lh));
     y += rh+1.5;
   }
 
@@ -5578,11 +5624,11 @@ async function downloadMatSpec() {
     sf(...K.bg3); doc.rect(ML,y,CW,bh,'F');
     sf(...barCol); doc.rect(ML,y,2.5,bh,'F');
     sd(...borderCol||barCol); doc.setLineWidth(0.2); doc.rect(ML,y,CW,bh,'D');
-    B(6.5); st(...barCol); doc.text(labelTxt, ML+6, y+7);
+    B(6.5); st(...barCol); doc.text(safe(labelTxt), ML+6, y+7);
     sd(...barCol); doc.setLineWidth(0.1); doc.line(ML+6,y+8.5,PW-MR-3,y+8.5);
     N(6.5); st(...K.mu);
     const startY=y+12;
-    bodyLines.forEach((ln,i)=>doc.text(ln,ML+6,startY+i*LH(6.5)));
+    bodyLines.forEach((ln,i)=>doc.text(safe(ln),ML+6,startY+i*LH(6.5)));
     y += bh+4;
   }
 
@@ -5605,30 +5651,30 @@ async function downloadMatSpec() {
   doc.line(ML,TOP_STRIPE,ML,PH-FTR_H);
   doc.line(PW-MR,TOP_STRIPE,PW-MR,PH-FTR_H);
 
-  B(21); st(...K.wh);  doc.text('CLADWISE', ML+2, 17);
+  B(21); st(...K.wh);  doc.text(safe('CLADWISE'), ML+2, 17);
   const _cwW = doc.getTextWidth('CLADWISE');
-  N(9);  st(...K.acc); doc.text(' UAE', ML+2+_cwW, 16.5);
-  N(7.5);st(...K.mu);  doc.text('MATERIAL TECHNICAL SPECIFICATION', ML+2, 25.5);
-  MN(6.5);st(...K.di); doc.text('UAE / GCC Facade Engineering Reference  |  Issued: '+dateStr, ML+2, 32.5);
+  N(9);  st(...K.acc); doc.text(safe(' UAE'), ML+2+_cwW, 16.5);
+  N(7.5);st(...K.mu);  doc.text(safe('MATERIAL TECHNICAL SPECIFICATION'), ML+2, 25.5);
+  MN(6.5);st(...K.di); doc.text(safe('UAE / GCC Facade Engineering Reference  |  Issued: ')+dateStr, ML+2, 32.5);
   /* doc ref box */
   sf(...K.bg4); doc.rect(PW-MR-52,5,52,16,'F');
   sd(...K.bdr); doc.setLineWidth(0.12); doc.rect(PW-MR-52,5,52,16,'D');
-  MN(5.5); st(...K.di); doc.text('DOCUMENT REF.', PW-MR-50, 11);
-  B(7);    st(...K.acc);doc.text(refNo, PW-MR-50, 17);
+  MN(5.5); st(...K.di); doc.text(safe('DOCUMENT REF.'), PW-MR-50, 11);
+  B(7);    st(...K.acc);doc.text(safe(refNo), PW-MR-50, 17);
 
   /* material band */
   y=50;
   sf(...K.bg4); doc.rect(ML,y,CW,30,'F');
   sf(...K.acc); doc.rect(ML,y,3.5,30,'F');
   sd(...K.bdr); doc.setLineWidth(0.2); doc.rect(ML,y,CW,30,'D');
-  B(24); st(...K.acc); doc.text(m.name, ML+8, y+14);
+  B(24); st(...K.acc); doc.text(safe(m.name), ML+8, y+14);
   N(9);  st(...K.mu);
   doc.text((m.full||'').substring(0,52), ML+8, y+23);
   /* price/score right */
-  N(6); st(...K.di); doc.text('INDICATIVE SUPPLY PRICE — MATERIAL ONLY, EXCL. VAT', PW-MR-2, y+8, {align:'right'});
+  N(6); st(...K.di); doc.text(safe('INDICATIVE SUPPLY PRICE — MATERIAL ONLY, EXCL. VAT'), PW-MR-2, y+8, {align:'right'});
   B(12);st(...K.acc);doc.text(m.priceRange||'—', PW-MR-2, y+17, {align:'right'});
-  N(6); st(...K.di); doc.text('OVERALL UAE SCORE', PW-MR-2, y+24, {align:'right'});
-  B(9); st(...K.wh); doc.text(String(m.overall)+' / 10', PW-MR-2, y+30, {align:'right'});
+  N(6); st(...K.di); doc.text(safe('OVERALL UAE SCORE'), PW-MR-2, y+24, {align:'right'});
+  B(9); st(...K.wh); doc.text(safe(String(m.overall)+' / 10'), PW-MR-2, y+30, {align:'right'});
   y+=36;
 
   /* tags */
@@ -5672,7 +5718,7 @@ async function downloadMatSpec() {
   y+=3; chk(14);
   N(9); st(...K.mu);
   const tgl=wl(m.tagline||'',CW-4,9);
-  tgl.forEach((ln,i)=>{doc.text(ln,ML+2,y+i*LH(9));});
+  tgl.forEach((ln,i)=>{doc.text(safe(ln),ML+2,y+i*LH(9));});
   y+=tgl.length*LH(9)+6;
 
   /* ══════════════════════════════════════════════════════════════════════════
@@ -5700,10 +5746,10 @@ async function downloadMatSpec() {
   sd(...K.bdr); doc.setLineWidth(0.2); doc.rect(ML,y,CW,8,'D');
   doc.setLineWidth(0.12); doc.line(ML+CcW+1.5,y,ML+CcW+1.5,y+8);
   B(6.5); st(...K.acc);
-  doc.text('STANDARD / AUTHORITY', ML+3, y+5.2);
-  doc.text('STATUS', ML+CcW-2, y+5.2, {align:'right'});
-  doc.text('STANDARD / AUTHORITY', ML+CcW+5, y+5.2);
-  doc.text('STATUS', ML+CW-2, y+5.2, {align:'right'});
+  doc.text(safe('STANDARD / AUTHORITY'), ML+3, y+5.2);
+  doc.text(safe('STATUS'), ML+CcW-2, y+5.2, {align:'right'});
+  doc.text(safe('STANDARD / AUTHORITY'), ML+CcW+5, y+5.2);
+  doc.text(safe('STATUS'), ML+CW-2, y+5.2, {align:'right'});
   y+=8;
 
   const vc=v=>v==='yes'?K.acc:v==='no'?K.red:K.amb;
@@ -5761,7 +5807,7 @@ async function downloadMatSpec() {
     /* intro paragraph */
     chk(14); N(7.5); st(...K.mu);
     const intro=wl('The following conditions indicate that an alternative material should be considered. These are engineering judgements, not absolute exclusions, and require additional justification if the material is retained.',CW-4,7.5);
-    intro.forEach((ln,i)=>doc.text(ln,ML+2,y+i*LH(7.5)));
+    intro.forEach((ln,i)=>doc.text(safe(ln),ML+2,y+i*LH(7.5)));
     y+=intro.length*LH(7.5)+6;
     m.whenNotToUse.forEach(p=>bullet(p,K.amb));
     y+=4;
@@ -5791,11 +5837,11 @@ async function downloadMatSpec() {
     sd(...K.bdr); doc.setLineWidth(0.12); doc.rect(ML,y,CW,rh,'D');
     doc.setLineWidth(0.1); doc.line(ML+R6_LW+1.5,y,ML+R6_LW+1.5,y+rh);
     /* label */
-    B(7.5); st(...K.acc); doc.text(label, ML+5, y+rh/2+2.5);
+    B(7.5); st(...K.acc); doc.text(safe(label), ML+5, y+rh/2+2.5);
     /* value — left-aligned to fixed x */
     N(7.5); st(...K.wh);
     const vy=y+(rh-vL.length*LH(7.5))/2+LH(7.5)*0.85;
-    vL.forEach((ln,j)=>doc.text(ln,ML+R6_LW+4,vy+j*LH(7.5)));
+    vL.forEach((ln,j)=>doc.text(safe(ln),ML+R6_LW+4,vy+j*LH(7.5)));
     y+=rh;
   });
   sd(...K.bdr); doc.setLineWidth(0.2); doc.line(ML,y,PW-MR,y);
