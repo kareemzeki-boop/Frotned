@@ -209,6 +209,7 @@ async function loadApps(){
   try{
     const r=await apiFetch(`${API}/api/admin/applications`,{headers:{'x-admin-secret':ADMIN_SECRET}})
     const data=await r.json()
+    if(!r.ok) throw new Error(`Server ${r.status}: ${data.message||JSON.stringify(data)}`)
     allApps=data.applications||[]
     document.getElementById('st-total').textContent=allApps.length
     document.getElementById('st-pending').textContent=allApps.filter(a=>a.status==='pending').length
@@ -216,7 +217,12 @@ async function loadApps(){
     document.getElementById('st-rejected').textContent=allApps.filter(a=>a.status==='rejected').length
     renderApps()
   }catch(e){
-    document.getElementById('app-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px"><div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted)">Failed to load — check your connection</div><button onclick="loadApps()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
+    const msg = e?.message || String(e)
+    document.getElementById('app-list').innerHTML=`<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f87171">Error: ${msg}</div>
+      <button onclick="loadApps()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button>
+    </div>`
+    console.error('loadApps error:', e)
   }
 }
 function setFilter(f,el){
@@ -313,6 +319,7 @@ async function loadRegs(){
   try{
     const r=await apiFetch(`${API}/api/admin/registrations`,{headers:{'x-admin-secret':ADMIN_SECRET}})
     const data=await r.json()
+    if(!r.ok) throw new Error(`Server ${r.status}: ${data.message||JSON.stringify(data)}`)
     allRegs=data.registrations||[]
     const pending=allRegs.filter(x=>x.verification_status==='PENDING').length
     document.getElementById('rg-total').textContent=allRegs.length
@@ -324,7 +331,8 @@ async function loadRegs(){
     else badge.style.display='none'
     renderRegs()
   }catch(e){
-    document.getElementById('reg-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px"><div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted)">Failed to load — check your connection</div><button onclick="loadRegs()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
+    document.getElementById('reg-list').innerHTML=`<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px"><div style="font-family:'DM Mono',monospace;font-size:11px;color:#f87171">Error: ${e?.message||String(e)}</div><button onclick="loadRegs()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>`
+    console.error('loadRegs error:', e)
   }
 }
 function setRegFilter(f,el){
