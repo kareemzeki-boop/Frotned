@@ -162,11 +162,25 @@ const API='https://backend-cladwise-production.up.railway.app'
 const ADMIN_SECRET='cladwise2025admin'
 
 // Retry fetch up to 3 times — handles Railway cold-start (first request may timeout)
-async function fetchWithRetry(url, opts, retries=3, delayMs=4000) {
+/* ── Wake the backend immediately when page loads ─────────────────────────
+   Railway free tier needs ~20-30s cold start. We ping /health as soon as
+   the script runs so it's warming up before the user even logs in.        */
+(function wakeNow() {
+  fetch('https://backend-cladwise-production.up.railway.app/api/health', { method:'GET' })
+    .catch(() => {}); // fire-and-forget — just wake it
+})();
+
+async function fetchWithRetry(url, opts, retries=5, delayMs=6000) {
   for (let i=0; i<retries; i++) {
+    // Update status message on each attempt
+    const statusMsg = i === 0 ? 'CONNECTING...'
+                    : i === 1 ? 'WAKING BACKEND — PLEASE WAIT...'
+                    : `RETRYING (${i}/${retries-1}) — BACKEND IS STARTING UP...`;
+    document.querySelectorAll('.loading').forEach(el => el.textContent = statusMsg);
+
     try {
       const controller = new AbortController();
-      const tid = setTimeout(() => controller.abort(), 12000); // 12s timeout per attempt
+      const tid = setTimeout(() => controller.abort(), 28000); // 28s per attempt
       const r = await fetch(url, { ...opts, signal: controller.signal });
       clearTimeout(tid);
       return r;
@@ -188,14 +202,22 @@ function login(){
   if(p!=='cladwise2025admin'){document.getElementById('login-err').style.display='block';return}
   document.getElementById('login-screen').style.display='none'
   document.getElementById('admin-screen').style.display='block'
-  // Show waking message after 3s if still loading
-  const wakeTimer = setTimeout(() => {
-    const appEl = document.getElementById('app-list');
-    const regEl = document.getElementById('reg-list');
-    if (appEl && appEl.innerHTML.includes('LOADING')) appEl.innerHTML='<div class="loading">WAKING BACKEND — this takes up to 15s on first load...</div>'
-    if (regEl && regEl.innerHTML.includes('LOADING')) regEl.innerHTML='<div class="loading">WAKING BACKEND — this takes up to 15s on first load...</div>'
-  }, 3000)
-  Promise.all([loadApps(), loadRegs()]).finally(() => clearTimeout(wakeTimer))
+
+  // Set initial loading state
+  document.getElementById('app-list').innerHTML='<div class="loading">CONNECTING...</div>'
+  document.getElementById('reg-list').innerHTML='<div class="loading">CONNECTING...</div>'
+
+  // Countdown display — updates every second so you can see progress
+  let secs = 0
+  const countdown = setInterval(() => {
+    secs++
+    const msg = secs < 5  ? 'CONNECTING...'
+               : secs < 15 ? `WAKING BACKEND — ${secs}s elapsed...`
+               : `BACKEND STARTING UP — ${secs}s elapsed, almost ready...`
+    document.querySelectorAll('.loading').forEach(el => { if (el) el.textContent = msg })
+  }, 1000)
+
+  Promise.all([loadApps(), loadRegs()]).finally(() => clearInterval(countdown))
 }
 function logout(){
   document.getElementById('login-screen').style.display='flex'
@@ -227,7 +249,14 @@ async function loadApps(){
     document.getElementById('st-rejected').textContent=allApps.filter(a=>a.status==='rejected').length
     renderApps()
   }catch(e){
-    document.getElementById('app-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center">Backend is asleep — <button onclick="loadApps()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
+    document.getElementById('app-list').innerHTML=`<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px">
+      <div style="font-size:28px">⏳</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;text-align:center">Backend took too long to respond.<br>Railway free tier may need more time.</div>
+      <button onclick="loadApps()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:10px 24px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px">↻ Retry Now</button>
+      <div id="app-auto-retry" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Auto-retrying in 10s...</div>
+    </div>`
+    // Auto-retry after 10s
+    let t=10; const iv=setInterval(()=>{const el=document.getElementById('app-auto-retry');if(el)el.textContent='Auto-retrying in '+(--t)+'s...';if(t<=0){clearInterval(iv);loadApps();}},1000)
   }
 }
 function setFilter(f,el){
@@ -335,7 +364,13 @@ async function loadRegs(){
     else badge.style.display='none'
     renderRegs()
   }catch(e){
-    document.getElementById('reg-list').innerHTML='<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center">Backend is asleep — <button onclick="loadRegs()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:8px 20px;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px">↻ Retry</button></div>'
+    document.getElementById('reg-list').innerHTML=`<div class="empty" style="display:flex;flex-direction:column;gap:12px;align-items:center;padding:32px">
+      <div style="font-size:28px">⏳</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;text-align:center">Backend took too long to respond.<br>Railway free tier may need more time.</div>
+      <button onclick="loadRegs()" style="background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent);border-radius:6px;padding:10px 24px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px">↻ Retry Now</button>
+      <div id="reg-auto-retry" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">Auto-retrying in 10s...</div>
+    </div>`
+    let t=10; const iv=setInterval(()=>{const el=document.getElementById('reg-auto-retry');if(el)el.textContent='Auto-retrying in '+(--t)+'s...';if(t<=0){clearInterval(iv);loadRegs();}},1000)
   }
 }
 function setRegFilter(f,el){
