@@ -880,6 +880,10 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .modal-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .modal-tab:hover{color:var(--text)}
 .modal-body{padding:36px 40px}
+.modal-dl-bar{padding:14px 40px;border-top:1px solid rgba(0,229,160,0.1);background:rgba(0,229,160,0.02);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.modal-dl-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b110d;border:none;border-radius:6px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.modal-dl-btn:hover{background:#00ffb3;transform:translateY(-1px)}
+.modal-dl-note{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px}
 .modal-panel{display:none}
 .modal-panel.active{display:block}
 .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -4344,6 +4348,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
+    <div class="modal-dl-bar">
+      <button class="modal-dl-btn" onclick="downloadMatSpec()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Download Material Spec Sheet
+      </button>
+      <span class="modal-dl-note">PDF · Free with account</span>
+    </div>
   </div>
 </div>
 
@@ -4373,189 +4384,289 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 // ─── DATA ───────────────────────────────────────────────────────────────────
 const MATERIALS = {
   GFRC: {
-    name: 'GFRC',
-    full: 'Glass Fibre Reinforced Concrete',
-    emoji: '🏗️',
-    color: '#1e3a2f',
-    tagline: 'Custom Shapes • Fireproof • UAE Favourite',
-    tags: ['Precast', 'Non-combustible', 'Custom moulds', 'Lightweight'],
-    scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 },
-    overall: 9.2,
+    name: 'GFRC', full: 'Glass Fibre Reinforced Concrete',
+    emoji: '🏗️', color: '#1e3a2f',
+    tagline: 'Custom Shapes • Non-Combustible • UAE Code Compliant',
+    tags: ['Precast','Non-combustible','Custom moulds','Lightweight concrete','A1 Fire rated'],
+    scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 }, overall: 9.2,
     specs: {
-      'Weight': { val: '75–110 kg/m²', sub: 'vs 180+ for solid concrete' },
-      'Thickness': { val: '10–25 mm', sub: 'Typical panel range' },
-      'Fire Rating': { val: 'Class A1', sub: 'Non-combustible (BS EN 13501-1)' },
-      'Compressive Strength': { val: '40–80 MPa', sub: 'Depending on mix design' },
-      'Thermal Conductivity': { val: '1.0 W/m·K', sub: 'Good with backing insulation' },
-      'Service Life': { val: '50+ years', sub: 'UAE climate tested' },
-      'Surface Finishes': { val: '12+ options', sub: 'Smooth, textured, stone-look' },
-      'Lead Time': { val: '8–14 weeks', sub: 'Custom mould fabrication' },
+      'Panel Weight':            { val: '75–110 kg/m²',               sub: 'Premix: 75–90 kg/m² · Spray-up: 95–110 kg/m² · vs 180–220 kg/m² for solid concrete' },
+      'Panel Thickness':         { val: '10–25 mm face skin',          sub: 'Face skin: 10–15 mm · Ribbed/stiffened backup: up to 25 mm · Sandwich panel: 75–150 mm total' },
+      'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'Non-combustible — zero contribution to fire or smoke · DCD Technical Approval: all building heights' },
+      'Compressive Strength':    { val: '40–80 MPa',                   sub: 'Design minimum 40 MPa per ACI 544 · Spray-up: 60–75 MPa · Premix: 40–60 MPa' },
+      'Flexural Strength':       { val: '6–14 MPa',                    sub: 'Per BS EN 1170-5 · Spray-up: 10–14 MPa · Premix: 6–10 MPa · Minimum 8 MPa for façade panels' },
+      'Tensile Strength':        { val: '3–8 MPa',                     sub: 'Related to AR-glass content · Minimum 3.5% by weight per GRCA Specification 2021' },
+      'Modulus of Elasticity':   { val: '10–20 GPa',                   sub: 'Lower than standard concrete — beneficial for thermal movement accommodation in UAE climate' },
+      'Water Absorption':        { val: '< 8% by weight',              sub: 'Per BS EN 1170-6 · Surface-treated panels: < 5% · Critical for UAE coastal and humid zones' },
+      'Thermal Conductivity':    { val: '0.9–1.2 W/m·K',              sub: 'Add 80–100 mm mineral wool insulation to achieve UAE required U-value ≤ 0.57 W/m²K' },
+      'Thermal Expansion':       { val: '10–12 × 10⁻⁶ /°C',           sub: 'UAE design ΔT up to 80°C — minimum 10 mm movement joint per 3 m panel width' },
+      'Max Panel Span':          { val: 'Up to 6,000 mm',              sub: 'Subject to thickness, rib schedule and fixing centres — structural engineer confirmation required' },
+      'Impact Resistance':       { val: 'Hard body: pass',             sub: 'Per BS EN 14019 soft and hard body impact · CWCT TN67 test protocol for high-rise facades' },
+      'AR-Glass Content':        { val: '≥ 3.5% by weight minimum',   sub: 'Long-term durability requires ≥ 5% spray-up · Zirconia-coated fibre mandatory for UAE service life' },
+      'Surface Finishes':        { val: '12+ factory options',         sub: 'Smooth · Sandblasted · Acid-etched · Exposed aggregate · Ribbed · Stone-look · Terracotta-look' },
+      'Service Life':            { val: '50+ years',                   sub: 'UAE climate tested per GRCA Durability Study 2018 · Correct AR-glass and surface treatment required' },
+      'Lead Time':               { val: '8–14 weeks',                  sub: 'New mould: 10–14 wks · Repeat mould: 6–10 wks · Express tooling available at cost premium' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'yes',
-      'Estidama Pearl Rating': 'yes',
-      'Dubai Civil Defence': 'yes',
-      'Abu Dhabi GSAS': 'yes',
-      'BS 8414 Façade Test': 'yes',
-      'ISO 9001 Certified Supply': 'partial',
+      'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence': 'yes',
+      "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
+      'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A1': 'yes',
+      'BS EN 1170 Parts 1–8': 'yes', 'GRCA Specification 2021': 'yes',
+      'BS 8414 Façade System Test': 'yes', 'ISO 9001 Certified Supply': 'partial',
     },
-    pros: ['Fully non-combustible – passes all UAE fire codes','Complex 3D forms & custom surface textures','Excellent thermal mass for hot climate','Long service life with minimal maintenance','Can mimic stone, concrete, terracotta finishes'],
-    cons: ['Higher upfront tooling cost for custom moulds','Longer lead time vs. aluminum panels','Requires skilled installation crew','Heavier than GFRP alternatives'],
+    pros: [
+      'Fully non-combustible (Class A1) — DCD Technical Approval for all building heights with no restriction or special conditions',
+      'Unmatched design freedom: complex 3D forms, deep reveals, perforations, custom textures, stone/terracotta/timber simulation',
+      'Excellent thermal mass — high heat capacity aids passive cooling and shifts peak load in UAE climate',
+      'Proven 50+ year service life when correct AR-glass content and surface treatment are specified',
+      'Single panel replaces multiple trades — architectural and structural functions combined in one element',
+      'Lowest long-term maintenance cost of any textured facade system — no painting, no recoating cycle',
+    ],
+    cons: [
+      'Higher upfront tooling cost for bespoke moulds — budget AED 15,000–60,000 per mould depending on complexity and size',
+      'Longest programme of all systems: 8–14 weeks from approved shop drawings to first panel delivery on site',
+      'Requires GRCA-trained or manufacturer-approved specialist installation subcontractor — limited pool in UAE',
+      'Mix design and AR-glass content must be independently verified by third-party lab — inadequate glass is the primary long-term failure mode',
+      'Heavier than GFRP — structural engineer must confirm deflection, fixing loads and bracket capacity before specification',
+    ],
     priceRange: 'AED 450–900/m²',
   },
   GFRP: {
-    name: 'GFRP',
-    full: 'Glass Fibre Reinforced Polymer',
-    emoji: '⚡',
-    color: '#1a2b3c',
-    tagline: 'Ultra-Light • Complex Geometry • Modern',
-    tags: ['Lightweight', 'Complex forms', 'FRP', 'Impact resistant'],
-    scores: { heat: 80, fire: 72, weight: 96, cost: 65, speed: 80 },
-    overall: 8.7,
+    name: 'GFRP', full: 'Glass Fibre Reinforced Polymer',
+    emoji: '⚡', color: '#1a2b3c',
+    tagline: 'Ultra-Light • Complex Geometry • Parametric Facades',
+    tags: ['Lightweight','Parametric','FRP composite','Impact resistant','Low thermal bridge'],
+    scores: { heat: 80, fire: 72, weight: 96, cost: 65, speed: 80 }, overall: 8.7,
     specs: {
-      'Weight': { val: '10–25 kg/m²', sub: 'Lightest facade option' },
-      'Thickness': { val: '4–15 mm', sub: 'Single skin or sandwich' },
-      'Fire Rating': { val: 'Class B–C', sub: 'Fire retardant grade available' },
-      'Tensile Strength': { val: '150–350 MPa', sub: 'Directional (fibre aligned)' },
-      'Thermal Conductivity': { val: '0.3–0.5 W/m·K', sub: 'Better insulator than concrete' },
-      'Service Life': { val: '25–40 years', sub: 'UV stabilised grade required in UAE' },
-      'Surface Finishes': { val: '8+ options', sub: 'Gel coat, paint, UV coating' },
-      'Lead Time': { val: '6–10 weeks', sub: 'Mould fabrication required' },
+      'Panel Weight':            { val: '8–25 kg/m²',                  sub: 'Single skin: 8–12 kg/m² · Sandwich (foam/honeycomb core): 16–25 kg/m² · 85% lighter than stone' },
+      'Laminate Thickness':      { val: '4–18 mm',                     sub: 'Single skin: 4–8 mm · Sandwich panel: 30–80 mm total with core · Structural profile: up to 20 mm' },
+      'Fire Classification':     { val: 'Class B–C (EN 13501-1)',      sub: 'FR resin achieves B-s1-d0 · DCD Special Approval required for buildings > 23 m height' },
+      'Tensile Strength':        { val: '150–350 MPa',                 sub: 'E-glass/polyester: 150–200 · E-glass/vinylester: 200–300 · E-glass/epoxy: 250–350 MPa' },
+      'Flexural Strength':       { val: '200–450 MPa',                 sub: 'Per ASTM D790 · Directional woven: 300–450 MPa · Random chopped mat: 200–280 MPa' },
+      'Flexural Modulus':        { val: '8–22 GPa',                    sub: 'Chopped mat: 8–12 GPa · Directional woven: 15–22 GPa · Subject to fibre orientation' },
+      'Thermal Conductivity':    { val: '0.2–0.4 W/m·K',              sub: 'Inherently low — reduces curtain wall thermal bridging compared to aluminium framing systems' },
+      'Thermal Expansion':       { val: '15–25 × 10⁻⁶ /°C',           sub: 'Higher than GFRC — UAE ΔT 80°C requires min 15 mm joint per 3 m · Sliding fixings mandatory' },
+      'UV Resistance':           { val: 'High — UV-stable grade req.', sub: 'ISO-NPG gelcoat or UV-stable PVDF topcoat mandatory — UAE solar exposure > 3,200 h/year' },
+      'Water Absorption':        { val: '< 0.5% (ISO 62)',             sub: 'Closed mould/infusion: < 0.3% · Hand layup: up to 1.2% — specify closed mould for UAE coastal' },
+      'Resin System':            { val: 'Vinylester or Epoxy required', sub: 'Standard polyester NOT acceptable — UV degradation within 5 years in UAE; vinylester minimum' },
+      'Max Panel Span':          { val: 'Up to 8,000 mm',              sub: 'Sandwich panel with structural foam core achieves very long unsupported spans' },
+      'Surface Finish Options':  { val: 'Gelcoat · PVDF · Lacquer',    sub: 'In-mould colour or post-mould coat · RAL/NCS colour matching · No repaint required 10–15 years' },
+      'Service Life':            { val: '25–40 years',                 sub: 'UV-stable vinylester + ISO-NPG gel coat in UAE · Shorter than GFRC — limited 25-year DCD track record' },
+      'Lead Time':               { val: '6–12 weeks',                  sub: 'New mould: 8–12 wks · Repeat production run: 4–6 wks · Infusion adds 1–2 weeks vs hand layup' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'partial',
-      'Estidama Pearl Rating': 'partial',
-      'Dubai Civil Defence': 'partial',
-      'Abu Dhabi GSAS': 'partial',
-      'BS 8414 Façade Test': 'no',
+      'UAE Fire Code 2017 (< 23 m)': 'yes', 'UAE Fire Code 2017 (> 23 m)': 'partial',
+      'DCD Technical Approval': 'partial', 'MoIAT / ECAS Certification': 'partial',
+      'Dubai Civil Defence': 'partial', "Al Sa'fat Green Building": 'partial',
+      'Estidama Pearl Rating': 'partial', 'BS EN 13501-1 Class B': 'yes',
+      'ASTM E84 (Flame Spread Index)': 'yes', 'BS 8414 Façade System Test': 'no',
       'ISO 9001 Certified Supply': 'yes',
     },
-    pros: ['Extremely lightweight – ideal for retrofits & tall towers','Can achieve complex parametric / sculptural forms','Good impact resistance','Lower structural load on building frame','Easier to transport and install at height'],
-    cons: ['Not fully non-combustible – fire classification varies','Requires UV-stable resin systems for UAE climate','Less proven long-term than GFRC in UAE market','Some fire authorities require special approval'],
+    pros: [
+      'Lightest facade cladding at 8–25 kg/m² — reduces structural loads, crane requirements and foundation design demands significantly',
+      'Ideal for complex parametric, sculptural and double-curved forms that are impractical in GFRC or metal panels',
+      'No corrosion — excellent for UAE coastal environments: Dubai Marina, JBR, Corniche and Saadiyat Island projects',
+      'Excellent thermal and acoustic insulation when specified as closed-cell foam-core sandwich panel',
+      'In-mould colour pigmentation eliminates repainting — reduces long-term maintenance cost significantly',
+    ],
+    cons: [
+      'Fire class B–C requires DCD Special Approval for all buildings > 23 m — not automatic; add 4–8 weeks to approval timeline',
+      'Standard polyester resin NOT acceptable in UAE — UV degradation within 5 years if wrong resin specified; vinylester or epoxy mandatory',
+      'Limited long-term UAE durability data (25-year track record) vs GFRC (50+ years)',
+      'Higher thermal expansion (15–25 × 10⁻⁶/°C) — expansion joint design must be carefully engineered for UAE temperature range',
+      'Full BS 8414 system test may be required by DCD for high-rise — costly (AED 200,000+) and time-consuming',
+    ],
     priceRange: 'AED 380–750/m²',
   },
   Aluminum: {
-    name: 'Aluminum',
-    full: 'Aluminum Composite / Solid Panels (ACM / ACP)',
-    emoji: '🔩',
-    color: '#252525',
-    tagline: 'Fast • Cost-Effective • Modern Aesthetic',
-    tags: ['ACM', 'ACP', 'PVDF coating', 'Recyclable'],
-    scores: { heat: 76, fire: 85, weight: 90, cost: 88, speed: 96 },
-    overall: 8.1,
+    name: 'Aluminum', full: 'Solid Aluminium & Aluminium Cladding Systems',
+    emoji: '🔩', color: '#252525',
+    tagline: 'Fastest Programme • Cost-Efficient • Unlimited Finish',
+    tags: ['Solid aluminium','Cassette panels','PVDF coated','Anodised','Recyclable'],
+    scores: { heat: 76, fire: 85, weight: 90, cost: 88, speed: 96 }, overall: 8.1,
     specs: {
-      'Weight': { val: '5–12 kg/m²', sub: 'Solid Al or composite' },
-      'Thickness': { val: '3–6 mm composite / 2–4 mm solid', sub: '' },
-      'Fire Rating': { val: 'A2–B (FR core)', sub: 'Fire-resistant mineral core required UAE' },
-      'Panel Width': { val: 'Up to 1500 mm', sub: 'Standard mill widths' },
-      'Thermal Conductivity': { val: '0.04 W/m·K (composite)', sub: 'With PE or FR core' },
-      'Service Life': { val: '20–35 years', sub: 'PVDF coating life in UAE sun' },
-      'Surface Finishes': { val: 'Unlimited', sub: 'PVDF, anodised, mirror, wood-print' },
-      'Lead Time': { val: '3–6 weeks', sub: 'Fastest of all options' },
+      'Panel Weight':            { val: '5–12 kg/m²',                  sub: '3 mm solid Al: 8.1 kg/m² · 4 mm solid: 10.8 kg/m² · Formed cassette: 5–8 kg/m²' },
+      'Panel Thickness':         { val: '2–6 mm',                      sub: 'Solid plate: 2–4 mm · Extruded cassette: up to 6 mm · Perforated screen: 1.5–3 mm' },
+      'Alloy Specification':     { val: 'AA 3003-H14 / AA 5005-H34',   sub: 'AA 3003-H14: standard cladding · AA 5005-H34: marine/coastal grade · AA 6082-T6: structural' },
+      'Fire Classification':     { val: 'Class A1 (EN 13501-1)',        sub: 'Solid aluminium is inherently A1 — no core, no combustible element · DCD approved all heights' },
+      'Yield Strength':          { val: '130–280 MPa',                  sub: 'AA 3003-H14: 145 MPa · AA 5005-H34: 165 MPa · AA 6082-T6: 250–280 MPa' },
+      'Thermal Conductivity':    { val: '160 W/m·K',                   sub: 'Very high — thermal break in subframe is mandatory to meet UAE energy code AEDE-2030 target' },
+      'Thermal Expansion':       { val: '23 × 10⁻⁶ /°C',              sub: 'Highest of all facade materials — UAE ΔT 80°C = 18 mm/m · Expansion slots and sliding fixings mandatory' },
+      'PVDF Coating (external)': { val: '3-coat 25–35 μm dry film',    sub: 'Kynar 500 or Hylar 5000 per AAMA 2605 mandatory for UAE external — 20-year gloss/colour warranty' },
+      'Anodising Class':         { val: 'AA25 minimum (BS 3987)',       sub: 'AA25 (25 μm) required within 5 km of sea · AA20 not recommended for coastal locations' },
+      'Panel Flatness':          { val: '≤ 1.5 mm / 1,500 mm span',    sub: 'Best-in-class flatness — critical for flush-joint and mirror-finish specification' },
+      'Max Single Panel Size':   { val: 'Up to 2,000 × 6,000 mm',      sub: 'Transport constraints typically limit UAE deliveries to 1,500 × 4,000 mm — confirm with fabricator' },
+      'Surface Finish Options':  { val: 'Unlimited via PVDF / Anodise', sub: '3-coat PVDF · Anodised silver/bronze/black · Powder coat · Digital print · Mirror/brushed polish' },
+      'Recycled Content':        { val: 'Up to 95% recycled aluminium', sub: 'High scrap value — contributes to Estidama Pearl and Al Sa\'fat recycled content credits' },
+      'Service Life':            { val: '30–50 years',                  sub: 'PVDF Kynar 500: 20-year warranty in UAE · Solid Al with AA25 anodise: 40–50+ years confirmed' },
+      'Lead Time':               { val: '3–7 weeks',                   sub: 'Fastest of all cladding systems · Standard PVDF stock colours: 3–4 wks · Custom RAL colour: 5–7 wks' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'partial',
-      'Estidama Pearl Rating': 'yes',
-      'Dubai Civil Defence': 'partial',
-      'Abu Dhabi GSAS': 'yes',
-      'BS 8414 Façade Test': 'partial',
+      'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence (all hts)': 'yes',
+      "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
+      'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A1': 'yes',
+      'AAMA 2605 (PVDF Coating)': 'yes', 'BS 8414 Façade System Test': 'partial',
       'ISO 9001 Certified Supply': 'yes',
     },
-    pros: ['Fastest installation – speeds up programme significantly','Lowest cost per m² for standard facades','Wide range of PVDF colours and finishes','Highly recyclable material','Excellent flatness and precision'],
-    cons: ['PE-core ACM NOT permitted on high-rise per UAE fire code','Requires FR mineral-core for compliance on towers > G+4','Less thermal mass than GFRC or stone','Denting and puncture risk in high-traffic areas','PVDF recoating may be needed after 20 years in UAE sun'],
+    pros: [
+      'Class A1 non-combustible solid aluminium — full DCD approval on all building heights with no restriction, no special approval required',
+      'Fastest delivery of any facade system — 3–7 weeks enables tight UAE fast-track programmes common in hospitality and residential towers',
+      'Unlimited PVDF colour palette per RAL, NCS or custom match — critical for branded or iconic architectural expression',
+      '100% recyclable at end of life with high aluminium scrap value — contributes to Estidama and Al Sa\'fat sustainability scoring',
+      'Best surface flatness of all facade materials — essential for mirror-finish, flush-joint and precision architectural detail',
+    ],
+    cons: [
+      'Very high thermal conductivity (160 W/m·K) — detailed thermal break design is mandatory to meet UAE energy code; inadequate detailing causes condensation and energy loss',
+      'Highest thermal expansion (23 × 10⁻⁶/°C) of all facade materials — mismanaged joints lead to panel buckling, noise and fixing failure',
+      'PVDF coating must meet AAMA 2605 — cheaper powder coat will visibly fail in UAE UV within 5–8 years',
+      'Anodised finish requires AA25 class for UAE coastal — AA20 degrades within 10 years within 5 km of seashore',
+      'Limited design freedom — flat and simple single-curve panels only; no compound curves, no 3D relief or textured profiles',
+    ],
     priceRange: 'AED 280–550/m²',
   },
   Stone: {
-    name: 'Stone',
-    full: 'Natural & Engineered Stone Cladding',
-    emoji: '🗿',
-    color: '#2a1f0f',
-    tagline: 'Premium • Timeless • Thermal Mass',
-    tags: ['Natural', 'Engineered', 'Sandstone', 'Limestone', 'Travertine'],
-    scores: { heat: 96, fire: 100, weight: 40, cost: 50, speed: 45 },
-    overall: 7.6,
+    name: 'Stone', full: 'Natural & Engineered Stone Cladding',
+    emoji: '🗿', color: '#2a1f0f',
+    tagline: 'Premium • Timeless • Fully Non-Combustible',
+    tags: ['Limestone','Travertine','Granite','Sandstone','Engineered stone','A1 rated'],
+    scores: { heat: 96, fire: 100, weight: 40, cost: 50, speed: 45 }, overall: 7.6,
     specs: {
-      'Weight': { val: '70–200 kg/m²', sub: 'Depends on stone type & thickness' },
-      'Thickness': { val: '20–50 mm', sub: 'Typical veneer/cladding range' },
-      'Fire Rating': { val: 'Class A1', sub: 'Fully non-combustible' },
-      'Porosity': { val: 'Low–High', sub: 'Granite low, limestone high – treat for UAE humidity' },
-      'Thermal Conductivity': { val: '1.5–3.5 W/m·K', sub: 'High mass = passive cooling benefit' },
-      'Service Life': { val: '100+ years', sub: 'With correct sealing and fixing' },
-      'Surface Finishes': { val: '6+ options', sub: 'Honed, polished, bush-hammered, flamed' },
-      'Lead Time': { val: '12–20 weeks', sub: 'Import lead time from Italy/Turkey/India' },
+      'Panel Weight':            { val: '54–200 kg/m²',                sub: '20 mm limestone: ~54 kg/m² · 30 mm travertine: ~75 kg/m² · 50 mm granite: ~140 kg/m²' },
+      'Cladding Thickness':      { val: '20–50 mm (veneer)',           sub: 'Minimum 30 mm for undercut anchor fixing · 20 mm with kerf only on sheltered low-rise elevations' },
+      'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'All natural stone is inherently non-combustible — zero contribution to fire, heat or smoke production' },
+      'Compressive Strength':    { val: '20–280 MPa (by type)',        sub: 'Sandstone: 20–50 MPa · Limestone: 40–100 MPa · Travertine: 50–80 MPa · Granite: 140–280 MPa' },
+      'Flexural Strength':       { val: '5–30 MPa',                   sub: 'Minimum 12 MPa required per BS EN 12372 · Granite: 20–30 MPa · Limestone: 8–15 MPa' },
+      'Water Absorption':        { val: '0.1–8% (by type)',           sub: 'Granite: < 0.5% · Limestone: 1–5% · Travertine: 3–8% · UAE coastal recommendation: max 3%' },
+      'Abrasion Resistance':     { val: 'Granite: MOHS 6–7',          sub: 'Limestone: MOHS 3 · Critical for podium and ground-level elevations in wind-driven sand areas' },
+      'Slip Resistance':         { val: 'PTV ≥ 36 (wet test)',        sub: 'Pendulum Test Value per BS 7976 — mandatory for horizontal applications per UAE building regulations' },
+      'Fixing Method':           { val: 'Undercut / Kerf / Rib anchor', sub: 'DCD preferred: undercut anchor (Hilti HDA, Halfen, Raimondi) for high-rise · Kerf for sheltered low-rise' },
+      'Fixing Centres':          { val: '300–600 mm c/c',             sub: 'Structural engineer to confirm based on wind load, panel weight and stone flexural strength' },
+      'Thermal Conductivity':    { val: '1.5–3.5 W/m·K',             sub: 'High thermal mass shifts peak heat load — beneficial passive cooling effect in UAE climate' },
+      'Thermal Expansion':       { val: '5–9 × 10⁻⁶ /°C',            sub: 'Lower than aluminium — but UAE ΔT 80°C requires minimum 8 mm horizontal joints per 3 m' },
+      'Waterproofing Treatment': { val: 'Penetrating siloxane sealer', sub: 'Mandatory on limestone, travertine and sandstone · Reapply every 5–10 years in UAE conditions' },
+      'Surface Finish Options':  { val: '7 standard options',         sub: 'Polished · Honed · Bush-hammered · Sandblasted · Flamed · Leathered · Split-face' },
+      'Service Life':            { val: '100+ years',                 sub: 'Correctly fixed and sealed stone outlasts the building lifecycle — confirmed by landmark projects worldwide' },
+      'Lead Time':               { val: '12–22 weeks',                sub: 'Italian/Turkish marble: 12–16 wks · Indian granite: 10–14 wks · Rare stone: 18–22 wks' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'yes',
-      'Estidama Pearl Rating': 'yes',
-      'Dubai Civil Defence': 'yes',
-      'Abu Dhabi GSAS': 'yes',
-      'BS 8414 Façade Test': 'yes',
-      'ISO 9001 Certified Supply': 'partial',
+      'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence': 'yes',
+      "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
+      'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A1': 'yes',
+      'BS EN 1469 (Cladding Slabs)': 'yes', 'BS EN 12372 (Flexural Strength)': 'yes',
+      'BS 8414 Façade System Test': 'yes', 'ISO 9001 Certified Supply': 'partial',
     },
-    pros: ['Truly timeless and premium aesthetic','Fully non-combustible – no fire compliance concerns','Excellent thermal mass for passive cooling','Extremely long lifespan – multigenerational','High resale / prestige value for luxury projects'],
-    cons: ['Heaviest material – significant structural load','Highest cost especially for imported stone','Longest programme – 12–20 week import lead time','Requires specialist fixings and waterproofing','Some stones absorb moisture – critical in UAE coastal zones'],
+    pros: [
+      'Inherently Class A1 non-combustible — zero fire restriction at any building height, no DCD conditions attached to approval',
+      'Timeless aesthetic with confirmed 100+ year service life — highest prestige value for luxury residential, hospitality and government projects',
+      'High thermal mass contributes to passive cooling and reduces peak HVAC sizing in UAE climate',
+      'No maintenance painting cycle — natural stone surface develops character over time, periodic sealer reapplication only',
+      'Widest architectural palette — 7 surface finish treatments and unlimited natural colour variation by quarry origin',
+    ],
+    cons: [
+      'Heaviest facade material (54–200 kg/m²) — structural framing, brackets and fixing system must be fully engineered before specification',
+      'Longest programme: 12–22 week import lead time — must be ordered at RIBA Stage 3 minimum to avoid delay',
+      'DCD requires undercut anchor or mechanical fixing for high-rise — kerf or adhesive fixings not accepted above 15 m',
+      'Porous stones require penetrating siloxane sealer and periodic re-treatment in UAE coastal humidity and UV environment',
+      'Highest supply cost — budget AED 650–1,800/m² supply-only; specialist fixer rates add AED 180–300/m² for installation',
+    ],
     priceRange: 'AED 650–1,800/m²',
   },
   ACM: {
-    name: 'ACM-FR',
-    full: 'Fire-Rated Aluminum Composite (Mineral Core)',
-    emoji: '🛡️',
-    color: '#1a1a2e',
-    tagline: 'Code-Compliant • Fast • Fire-Rated',
-    tags: ['Mineral core', 'A2 rated', 'High-rise safe', 'PVDF'],
-    scores: { heat: 78, fire: 95, weight: 88, cost: 80, speed: 90 },
-    overall: 8.5,
+    name: 'ACM-FR', full: 'Fire-Rated Aluminium Composite Panel (Mineral Core)',
+    emoji: '🛡️', color: '#1a1a2e',
+    tagline: 'A2 Code-Compliant • All Heights • Full Finish Range',
+    tags: ['Mineral core','A2-s1-d0','High-rise safe','PVDF','ECAS approved'],
+    scores: { heat: 78, fire: 95, weight: 88, cost: 80, speed: 90 }, overall: 8.5,
     specs: {
-      'Weight': { val: '7–14 kg/m²', sub: 'Heavier than PE-core but still light' },
-      'Thickness': { val: '4–6 mm', sub: 'Mineral core composite' },
-      'Fire Rating': { val: 'Class A2 (EN 13501-1)', sub: 'Accepted by Dubai Civil Defence for all heights' },
-      'Thermal Conductivity': { val: '0.06 W/m·K', sub: 'Mineral core insulation benefit' },
-      'Panel Size': { val: 'Up to 1500×5000 mm', sub: 'Large format available' },
-      'Service Life': { val: '25–40 years', sub: 'PVDF coating life in UAE' },
-      'Surface Finishes': { val: 'Unlimited', sub: 'PVDF, Anodised, Digital print' },
-      'Lead Time': { val: '4–8 weeks', sub: 'Faster than GFRC/Stone' },
+      'Panel Weight':            { val: '7–14 kg/m²',                  sub: '4 mm ACM-FR: ~7.5 kg/m² · 6 mm ACM-FR: ~11.5 kg/m² · vs PE-core: ~6–9 kg/m²' },
+      'Panel Construction':      { val: 'Al skin / Mineral core / Al skin', sub: 'Two 0.5 mm aluminium skins bonded to mineral-filled thermoplastic core with ≥ 70% inorganic content' },
+      'Total Thickness':         { val: '4–8 mm',                      sub: '4 mm: standard cladding · 6 mm: large panels / high wind zones · 8 mm: structural spandrel applications' },
+      'Fire Classification':     { val: 'Class A2-s1-d0 (EN 13501-1)', sub: 'Accepted by Dubai Civil Defence for ALL building heights — no height restriction · Independently certified' },
+      'Cone Calorimeter (FIGRA)':{ val: '≤ 120 W/s',                  sub: 'EN ISO 13823 test mandatory for A2 — must be independently certified, not self-declared' },
+      'Mineral Core Content':    { val: '≥ 70% inorganic fill by mass', sub: 'DCD requirement: min 70% verified by independent lab test — datasheet alone is NOT sufficient' },
+      'Aluminium Skin Alloy':    { val: 'AA 1100 / AA 3003-H14',       sub: '0.5 mm minimum skin thickness per ASTM B209 and EN 485-2 · Thinner skins increase dent risk on site' },
+      'PVDF Coating':            { val: '3-coat 25–35 μm (Kynar 500)', sub: 'Per AAMA 2605 mandatory for UAE external — 20-year warranty on gloss and colour · Not powder coat' },
+      'Panel Flatness':          { val: '≤ 1.5 mm / 1,500 mm span',    sub: 'Post-fabrication — verify Omega routing tolerance and fold radius in shop drawing review' },
+      'Max Panel Width':         { val: 'Up to 1,575 mm',              sub: 'Standard coil width limit — larger formats require welded construction or special order' },
+      'Max Panel Length':        { val: 'Up to 5,800 mm',              sub: 'Transport constraints typically limit UAE deliveries to 4,500 mm — confirm with fabricator' },
+      'Thermal Conductivity':    { val: '0.05–0.08 W/m·K (core)',     sub: 'Mineral core provides moderate insulation — aluminium skins still create thermal bridge through panel' },
+      'Thermal Expansion':       { val: '23 × 10⁻⁶ /°C',              sub: 'Same as solid aluminium — UAE ΔT 80°C = 18 mm/m · Expansion joints essential throughout fabrication zones' },
+      'Service Life':            { val: '25–40 years',                 sub: 'With PVDF Kynar 500 and sealed cut edges · PE-core (used in Grenfell) not acceptable in UAE' },
+      'Lead Time':               { val: '4–8 weeks',                   sub: 'Stock PVDF colours (white, silver, grey, black): 3–4 wks · Custom RAL / NCS: 5–8 wks' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'yes',
-      'Estidama Pearl Rating': 'yes',
-      'Dubai Civil Defence': 'yes',
-      'Abu Dhabi GSAS': 'yes',
-      'BS 8414 Façade Test': 'yes',
-      'ISO 9001 Certified Supply': 'yes',
+      'UAE Fire Code 2017': 'yes', 'DCD Technical Approval (all hts)': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence': 'yes',
+      "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
+      'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A2-s1-d0': 'yes',
+      'EN ISO 13823 (Cone Calorimeter)': 'yes', 'AAMA 2605 (PVDF Coating)': 'yes',
+      'BS 8414 Façade System Test': 'yes', 'ISO 9001 Certified Supply': 'yes',
     },
-    pros: ['Fully compliant on all UAE high-rise buildings','Fast installation vs GFRC/Stone','All finishes and colours available via PVDF','Lower cost than GFRC for standard rectilinear facades','Strong and proven supply chain in UAE'],
-    cons: ['Less design flexibility than GFRC (flat panels only)','Still has aluminium thermal bridge if not detailed correctly','Environmental debate on composite recyclability','Premium cost vs. standard ACM'],
+    pros: [
+      'A2-s1-d0 fire classification accepted by DCD for all UAE building heights — zero approval restriction on any tower project',
+      'Fastest fire-compliant cladding for towers: 4–8 week lead time vs 8–14 weeks for GFRC — critical for UAE fast-track programmes',
+      'Full PVDF finish range identical to PE-core ACM — same aesthetic and colour palette, with mandatory fire performance',
+      'Strongest BS 8414 full-scale fire test track record of all composite facade materials in the UAE market',
+      'Major UAE projects specify Alucobond A2, Alpolic FR, Alucore — well-established supply chain and local fabrication network',
+    ],
+    cons: [
+      'PE-core MUST NEVER be substituted — contractor must provide valid third-party Class A2 fire test certificates (not datasheets) at material submittal stage',
+      'Mineral core ≥ 70% inorganic fill must be independently verified by lab — fraudulent FR-core products exist in UAE market',
+      'Limited geometric freedom — flat and simple single-fold forms only; no compound curves, no relief texture, no 3D panel design',
+      'Aluminium skins create thermal bridge — thermal break subframe design required to meet UAE energy code targets',
+      'Cost premium over PE-core makes site substitution a real risk — inspection hold points for material certificates are essential in contract',
+    ],
     priceRange: 'AED 320–620/m²',
   },
-  'FibreCement': {
-    name: 'Fibre Cement',
-    full: 'Fibre Cement Cladding Panel',
-    emoji: '🪵',
-    color: '#1e2218',
-    tagline: 'Durable · Natural Look · Cost-Effective',
-    tags: ['Cement board', 'Wood-look', 'UV stable', 'Low maintenance'],
-    scores: { heat: 80, fire: 90, weight: 75, cost: 85, speed: 82 },
-    overall: 8.2,
+  FibreCement: {
+    name: 'Fibre Cement', full: 'Fibre Cement Cladding Panel',
+    emoji: '🪵', color: '#1e2218',
+    tagline: 'Non-Combustible • Natural Look • Low Lifecycle Cost',
+    tags: ['Cement board','Wood-look','Class A2','Rainscreen','Low maintenance'],
+    scores: { heat: 80, fire: 90, weight: 75, cost: 85, speed: 82 }, overall: 8.2,
     specs: {
-      'Weight': { val: '14–22 kg/m²', sub: 'Heavier than ACM, lighter than stone' },
-      'Thickness': { val: '8–20 mm', sub: 'Standard facade boards' },
-      'Fire Rating': { val: 'Class A2 / Class 0 (BS476)', sub: 'Non-combustible mineral core' },
-      'Thermal Conductivity': { val: '0.20–0.35 W/m·K', sub: 'Good with ventilated rainscreen cavity' },
-      'Panel Size': { val: 'Up to 1220×3050 mm', sub: 'Large format boards available' },
-      'Service Life': { val: '30–50 years', sub: 'With UV-stable factory coating' },
-      'Surface Finishes': { val: 'Smooth, textured, wood-look, stone-look', sub: 'Factory painted or site-finished' },
-      'Lead Time': { val: '3–6 weeks', sub: 'Widely stocked in UAE market' },
+      'Panel Weight':            { val: '14–22 kg/m²',                 sub: '8 mm board: ~14 kg/m² · 12 mm: ~17 kg/m² · 20 mm: ~22 kg/m² · Lighter than stone, heavier than ACM' },
+      'Board Thickness':         { val: '8–20 mm',                     sub: 'Standard external cladding: 10–12 mm · High-impact podium zones: 15–20 mm · Feature/reveal: 8 mm' },
+      'Composition':             { val: 'Portland cement + cellulose + silica', sub: 'Autoclaved curing produces calcium silicate matrix · No asbestos — banned from production since 1980s' },
+      'Fire Classification':     { val: 'Class A2-s1-d0 (EN 13501-1)', sub: 'Non-combustible mineral board — accepted by DCD for all building heights without restriction' },
+      'Compressive Strength':    { val: '35–55 MPa',                   sub: 'Per EN 12467 · Specify Type NT Category A — moisture-stable grade required for UAE external use' },
+      'Flexural Strength (dry)': { val: '12–22 MPa',                   sub: 'Per EN 12467 · Wet flexural: minimum 6 MPa required for UAE coastal high-humidity environments' },
+      'Water Absorption':        { val: '< 15% (factory primed: < 8%)', sub: 'Per EN 12467 · Factory primer coat reduces absorption · Unpainted cut edges MUST be field-sealed' },
+      'Moisture Expansion':      { val: '< 1.0 mm/m',                 sub: 'Low dimensional movement vs timber — critical for UAE humidity cycling (30–95% RH seasonally)' },
+      'Thermal Conductivity':    { val: '0.20–0.35 W/m·K',            sub: 'Outer leaf of ventilated rainscreen — 50 mm cavity + 80 mm mineral wool achieves UAE U-value target' },
+      'Thermal Expansion':       { val: '8–11 × 10⁻⁶ /°C',            sub: 'UAE ΔT 80°C → 8 mm/m joint allowance minimum · Open-joint rainscreen naturally accommodates movement' },
+      'Max Sheet Size':          { val: 'Up to 1,220 × 3,050 mm',      sub: 'Standard max — larger panels increase breakage risk · Budget 5–8% breakage allowance in BQ' },
+      'Fixing Method':           { val: 'Secret-fix clip / Screw / Rivet', sub: 'Secret-fix aluminium T-profile preferred · All screw heads must be covered or countersunk' },
+      'Cut Edge Treatment':      { val: '2-coat sealant primer — mandatory', sub: 'All site-cut edges MUST receive 2 coats manufacturer-approved sealant — unsealed edges cause delamination failure' },
+      'Factory Coating System':  { val: 'Primer + 2-coat acrylic / HPL overlay', sub: 'Standard factory coat: 10–15 year repaint cycle · HPL-faced boards: 25-year surface warranty' },
+      'Service Life':            { val: '30–50 years',                 sub: 'Factory-coated with sealed edges and ventilated rainscreen · HPL overlay boards: up to 50 years in UAE' },
+      'Lead Time':               { val: '2–5 weeks',                   sub: 'Widely stocked by UAE distributors (Eternit, Cembrit, James Hardie) · Custom large formats: 4–6 wks' },
     },
     compliance: {
-      'UAE Fire Code 2017': 'yes',
-      'Estidama Pearl Rating': 'yes',
-      'Dubai Civil Defence': 'yes',
-      'Abu Dhabi GSAS': 'yes',
-      'BS 8414 Façade Test': 'partial',
+      'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence': 'yes',
+      "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
+      'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A2-s1-d0': 'yes',
+      'BS EN 12467 (Fibre Cement Boards)': 'yes', 'BS 8414 Façade System Test': 'partial',
       'ISO 9001 Certified Supply': 'yes',
     },
-    pros: ['Non-combustible — safe for all building heights in UAE', 'Natural wood and stone look at fraction of real material cost', 'Excellent durability in harsh UAE UV and heat conditions', 'Low maintenance — no painting required for 10–15 years', 'Competitive price point for mid-range residential and commercial'],
-    cons: ['Heavier than ACM panels — additional subframe load', 'Limited to flat and single-curve geometries', 'Brittle — requires careful handling on site', 'Fewer high-end finish options vs GFRC or stone', 'Not ideal for complex parametric or 3D facades'],
+    pros: [
+      'Non-combustible Class A2 — DCD approved for all building heights at a fraction of the cost of GFRC or natural stone',
+      'Authentic wood, stone and concrete looks at 20–40% of the cost of real materials — ideal for mid-range residential and commercial facades',
+      'Lowest maintenance system: factory UV-stable acrylic coating requires no repainting for 10–15 years in UAE conditions',
+      'Shortest lead time of all compliant non-metal claddings: 2–5 weeks from UAE distributor stock',
+      'Contributes to Estidama Pearl and Al Sa\'fat recycled content credits when mineral-based certified products are specified',
+    ],
+    cons: [
+      'Brittle material — requires careful on-site handling; impact and droppage cause cracking; budget 5–8% breakage allowance in bill of quantities',
+      'All site-cut edges MUST be sealed with 2 coats of manufacturer-approved sealant — unsealed edges delaminate within 2–3 years in UAE humidity',
+      'Limited to flat and single-curve geometry — not suitable for compound curves, 3D parametric forms or deep-reveal profiles',
+      'Secret-fix fastener system adds cost and complexity; visible screw heads are not acceptable for architectural-grade specification',
+      'Fewer premium finish options vs GFRC — cannot replicate deep stone texture or tactile quality of natural materials',
+    ],
     priceRange: 'AED 180–380/m²',
   },
 };
@@ -5218,6 +5329,189 @@ function openModal(key) {
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+async function downloadMatSpec() {
+  const token = localStorage.getItem('cw_token');
+  if (!token) {
+    // Not logged in — show auth modal with a message
+    showToast('Create a free account to download spec sheets');
+    openAuthModal('signup');
+    return;
+  }
+
+  const m = MATERIALS[currentModal];
+  if (!m) return;
+
+  // Lazy-load jsPDF
+  if (!window.jspdf) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    });
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const PW = 210, PH = 297, M = 16, IW = PW - M * 2;
+  const BG=[10,17,13], BG2=[17,26,19], BG3=[24,36,26];
+  const ACC=[0,229,160], TXT=[237,242,237], MUT=[107,125,109], DIM=[55,72,57];
+  const sf=(r,g,b)=>doc.setFillColor(r,g,b);
+  const st=(r,g,b)=>doc.setTextColor(r,g,b);
+  const B=sz=>{doc.setFont('helvetica','bold');doc.setFontSize(sz);};
+  const N=sz=>{doc.setFont('helvetica','normal');doc.setFontSize(sz);};
+  const MN=sz=>{doc.setFont('courier','normal');doc.setFontSize(sz);};
+  function safeT(txt,x,y,maxW,align){
+    txt=String(txt||'');
+    if(maxW){while(txt.length>2&&doc.getTextWidth(txt)>maxW)txt=txt.slice(0,-1);if(txt.length<String(txt||'').length)txt=txt.slice(0,-1)+'…';}
+    doc.text(txt,x,y,align?{align}:undefined);
+  }
+  const SAFE_B = PH - 14;
+  let y = 0;
+
+  // PAGE 1
+  sf(...BG); doc.rect(0,0,PW,PH,'F');
+  sf(...ACC); doc.rect(0,0,PW,1.8,'F');
+  sf(...BG2); doc.rect(0,1.8,PW,42,'F');
+
+  // Wordmark
+  B(20); st(...TXT); doc.text('CLADWISE', M, 18);
+  st(...ACC); doc.text(' UAE', M + doc.getTextWidth('CLADWISE'), 18);
+  N(8); st(...MUT); doc.text('MATERIAL TECHNICAL SPECIFICATION', M, 27);
+  MN(6.5); st(...DIM);
+  const dateStr = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  doc.text('Issued: ' + dateStr + '  ·  cladwise.ae  ·  UAE Façade Intelligence Platform', M, 34);
+
+  // Material name band
+  sf(...BG3); doc.rect(0, 44, PW, 28, 'F');
+  sf(...ACC); doc.rect(0, 44, 4, 28, 'F');
+  B(26); st(...ACC); doc.text(m.name, M+8, 58);
+  N(9); st(...MUT); safeT(m.full, M+8, 65, IW-10);
+  N(7.5); st(...DIM); safeT(m.tagline || '', M+8, 70, IW-10);
+  // Price + score
+  B(9); st(...TXT); doc.text(m.priceRange, PW-M-4, 56, {align:'right'});
+  N(7); st(...MUT); doc.text('supply price range', PW-M-4, 62, {align:'right'});
+  B(14); st(...ACC); doc.text(String(m.overall)+'/10', PW-M-4, 70, {align:'right'});
+  y = 82;
+
+  // Tags
+  if (m.tags && m.tags.length) {
+    let tx = M;
+    m.tags.forEach(tag => {
+      const tw = doc.getTextWidth(tag) + 8;
+      sf(...BG3); doc.roundedRect(tx, y-3.5, tw, 6, 1.5, 1.5, 'F');
+      N(6.5); st(...ACC); doc.text(tag, tx+4, y+1);
+      tx += tw + 3;
+    });
+    y += 10;
+  }
+
+  // Spec table
+  B(7.5); st(...ACC); doc.text('TECHNICAL SPECIFICATIONS', M, y); y += 2;
+  doc.setLineWidth(0.4); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 7;
+
+  // Table header
+  sf(...BG3); doc.rect(M, y, IW, 7.5, 'F');
+  N(7); st(...MUT); doc.text('Parameter', M+3, y+5); doc.text('Value', M+62, y+5); doc.text('Notes', M+105, y+5);
+  y += 7.5;
+
+  Object.entries(m.specs || {}).forEach(([k, v], i) => {
+    if (y > SAFE_B - 9) {
+      // footer
+      sf(...BG2); doc.rect(0,PH-10,PW,10,'F'); MN(5.5); st(...DIM);
+      doc.text('CladWise UAE · '+m.name+' Specification Sheet · cladwise.ae · For guidance only — verify with UAE authorities before procurement', PW/2, PH-4, {align:'center'});
+      const pn = doc.internal.getCurrentPageInfo().pageNumber;
+      B(6.5); st(...ACC); doc.text(String(pn), PW-M, PH-4, {align:'right'});
+      doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
+    }
+    sf(...(i%2===0?BG2:BG3)); doc.rect(M, y, IW, 8.5, 'F');
+    N(7.5); st(...MUT); safeT(k, M+3, y+5.5, 56);
+    B(7.5); st(...TXT); safeT(v.val||'—', M+62, y+5.5, 40);
+    N(7); st(...DIM); safeT(v.sub||'', M+105, y+5.5, IW-107);
+    y += 8.5;
+  });
+  y += 10;
+
+  // Compliance
+  if (y > SAFE_B - 30) {
+    sf(...BG2); doc.rect(0,PH-10,PW,10,'F'); MN(5.5); st(...DIM);
+    doc.text('CladWise UAE · '+m.name+' Specification Sheet · cladwise.ae', PW/2, PH-4, {align:'center'});
+    doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
+  }
+  B(7.5); st(...ACC); doc.text('COMPLIANCE & REGULATORY STATUS', M, y); y += 2;
+  doc.setLineWidth(0.4); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 7;
+  sf(...BG3); doc.rect(M, y, IW, 7.5, 'F');
+  N(7); st(...MUT); doc.text('Standard / Authority', M+3, y+5); doc.text('Status', PW-M-4, y+5, {align:'right'});
+  y += 7.5;
+
+  Object.entries(m.compliance || {}).forEach(([k, v], i) => {
+    if (y > SAFE_B - 9) {
+      doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14;
+    }
+    sf(...(i%2===0?BG2:BG3)); doc.rect(M, y, IW, 8, 'F');
+    N(8); st(...TXT); safeT(k, M+3, y+5.5, IW-50);
+    const vc = v==='yes'?ACC:v==='no'?[210,70,70]:[200,130,20];
+    const vl = v==='yes'?'✓ Compliant':v==='no'?'✗ Non-Compliant':'⚠ Conditional';
+    sf(...vc); doc.rect(PW-M-24, y+1.5, 24, 5, 'F');
+    B(7); st(...BG); safeT(v==='yes'?'Compliant':v==='no'?'Non-Compliant':'Conditional', PW-M-2, y+5.5, 24, 'right');
+    y += 8;
+  });
+  y += 10;
+
+  // Pros
+  if (m.pros && m.pros.length) {
+    if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
+    B(7.5); st(...ACC); doc.text('ADVANTAGES', M, y); y += 2;
+    doc.setLineWidth(0.3); doc.setDrawColor(...ACC); doc.line(M, y, M+IW, y); y += 6;
+    m.pros.forEach(p => {
+      if (y > SAFE_B - 12) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
+      sf(...BG2); doc.rect(M, y, IW, 7, 'F'); sf(...ACC); doc.rect(M, y, 2.5, 7, 'F');
+      N(7); st(...TXT);
+      const lines = doc.splitTextToSize('→  ' + p, IW-8);
+      doc.text(lines[0], M+6, y+4.8);
+      y += 7;
+    });
+    y += 8;
+  }
+
+  // Cons
+  if (m.cons && m.cons.length) {
+    if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
+    B(7.5); st(210,70,70); doc.text('LIMITATIONS & RISKS', M, y); y += 2;
+    doc.setLineWidth(0.3); doc.setDrawColor(210,70,70); doc.line(M, y, M+IW, y); y += 6;
+    m.cons.forEach(p => {
+      if (y > SAFE_B - 12) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
+      sf(...BG2); doc.rect(M, y, IW, 7, 'F'); sf(210,70,70); doc.rect(M, y, 2.5, 7, 'F');
+      N(7); st(...TXT);
+      const lines = doc.splitTextToSize('→  ' + p, IW-8);
+      doc.text(lines[0], M+6, y+4.8);
+      y += 7;
+    });
+    y += 8;
+  }
+
+  // Disclaimer
+  if (y > SAFE_B - 20) { doc.addPage(); sf(...BG); doc.rect(0,0,PW,PH,'F'); sf(...ACC); doc.rect(0,0,PW,1.8,'F'); y = 14; }
+  sf(...BG3); doc.rect(M, y, IW, 20, 'F'); sf(200,130,20); doc.rect(M, y, 2.5, 20, 'F');
+  B(7); st(200,130,20); doc.text('PROFESSIONAL GUIDANCE NOTICE', M+6, y+6);
+  N(6.5); st(...MUT);
+  const disc = 'This specification sheet is for professional guidance only. All compliance determinations must be verified with the relevant UAE authority (DCD, ADCD, MoIAT, Trakhees) prior to final specification, procurement or construction. CladWise UAE accepts no liability for decisions made solely on the basis of this document.';
+  doc.text(doc.splitTextToSize(disc, IW-10), M+6, y+11);
+  y += 24;
+
+  // Footers on all pages
+  const tp = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= tp; p++) {
+    doc.setPage(p);
+    sf(...BG2); doc.rect(0, PH-10, PW, 10, 'F');
+    MN(5.5); st(...DIM);
+    doc.text('CladWise UAE  ·  ' + m.name + ' — ' + m.full + '  ·  cladwise.ae  ·  For guidance only — verify with UAE authorities before procurement', PW/2, PH-4, {align:'center'});
+    B(6.5); st(...ACC); doc.text(p + ' / ' + tp, PW-M, PH-4, {align:'right'});
+  }
+
+  doc.save('CladWise_SpecSheet_' + m.name.replace(/\s+/g,'') + '_' + dateStr.replace(/ /g,'_') + '.pdf');
+  showToast('Spec sheet downloaded ✓');
 }
 
 function checkCloseModal(e) {
