@@ -5385,7 +5385,7 @@ async function downloadMatSpec() {
   const TOP_STRIPE = 1.6;       // top accent stripe height
   const HDR_H = 9;              // continuation page header height
   const FTR_H = 11;             // footer height
-  const CONT_TOP = TOP_STRIPE + HDR_H + 3;  // y where content starts on cont pages
+  const CONT_TOP = TOP_STRIPE + HDR_H + 6;  // y where content starts on cont pages — extra space below mini-header
   const SAFE = PH - FTR_H - 3; // never draw below this
 
   /* ──────────────────────────────────────────────────────────────────────────
@@ -5482,7 +5482,7 @@ async function downloadMatSpec() {
   function section(label, col) {
     col = col||K.acc;
     chk(16);
-    y += 5;
+    y = Math.max(y + 5, CONT_TOP + 2);
     sf(...K.bg3); doc.rect(ML,y,CW,10,'F');
     sf(...col);   doc.rect(ML,y,3,10,'F');
     sd(...col); doc.setLineWidth(0.15);
@@ -5495,6 +5495,7 @@ async function downloadMatSpec() {
      SPEC TABLE — draws header on every page it starts on
   ────────────────────────────────────────────────────────────────────────── */
   function specTableHeader() {
+    y = Math.max(y, CONT_TOP);
     chk(9);
     sf(...K.bg4); doc.rect(ML,y,CW,8.5,'F');
     /* outer frame */
@@ -5557,6 +5558,7 @@ async function downloadMatSpec() {
     const lh=LH(7.5);
     const rh=Math.max(9.5, lines.length*lh+6);
     chk(rh);
+    y = Math.max(y, 0);  // ensure y is valid after potential page break
     sf(...K.bg2); doc.rect(ML,y,CW,rh,'F');
     sf(...barCol); doc.rect(ML,y,2.5,rh,'F');
     sd(...K.bdr); doc.setLineWidth(0.12); doc.rect(ML,y,CW,rh,'D');
@@ -5571,7 +5573,7 @@ async function downloadMatSpec() {
   ────────────────────────────────────────────────────────────────────────── */
   function framedBlock(labelTxt, bodyTxt, barCol, borderCol) {
     N(6.5); const bodyLines=wl(bodyTxt, CW-11, 6.5);
-    const bh=Math.max(16, LH(6.5)*(bodyLines.length)+12);
+    const bh=Math.max(18, LH(6.5)*(bodyLines.length)+14);
     chk(bh);
     sf(...K.bg3); doc.rect(ML,y,CW,bh,'F');
     sf(...barCol); doc.rect(ML,y,2.5,bh,'F');
@@ -5604,7 +5606,8 @@ async function downloadMatSpec() {
   doc.line(PW-MR,TOP_STRIPE,PW-MR,PH-FTR_H);
 
   B(21); st(...K.wh);  doc.text('CLADWISE', ML+2, 17);
-  N(9);  st(...K.acc); doc.text(' UAE', ML+2+doc.getTextWidth('CLADWISE'), 16.5);
+  const _cwW = doc.getTextWidth('CLADWISE');
+  N(9);  st(...K.acc); doc.text(' UAE', ML+2+_cwW, 16.5);
   N(7.5);st(...K.mu);  doc.text('MATERIAL TECHNICAL SPECIFICATION', ML+2, 25.5);
   MN(6.5);st(...K.di); doc.text('UAE / GCC Facade Engineering Reference  |  Issued: '+dateStr, ML+2, 32.5);
   /* doc ref box */
