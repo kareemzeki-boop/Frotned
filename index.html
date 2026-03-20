@@ -29,6 +29,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
 /* SCROLLBAR */
@@ -5275,9 +5276,9 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous material" onclick="deckPrev()">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" role="button" tabindex="0" aria-label="Go to material ${i+1}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next material" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
@@ -6206,12 +6207,26 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('lightbox').classList.contains('open')) closeLightbox();
+    else if (document.getElementById('modal-overlay').classList.contains('open')) closeModal();
+    else if (document.getElementById('exp-lightbox')?.classList.contains('open')) closeExpLightbox();
+    else if (document.getElementById('mat-explorer-overlay')?.classList.contains('open')) closeExplorer();
+    else if (document.getElementById('sp-overlay')?.classList.contains('open')) closeSupProfile();
+    else if (document.getElementById('auth-overlay')?.classList.contains('open')) closeAuthModal();
+    else if (document.getElementById('sup-apply-overlay')?.classList.contains('open')) closeSupApply();
+    else if (document.getElementById('sub-modal-overlay')?.classList.contains('open')) closeSubModal();
+  }
+
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'Escape') closeLightbox();
-  } else if (document.getElementById('modal-overlay').classList.contains('open')) {
-    if (e.key === 'Escape') closeModal();
+  }
+
+  // Map Enter/Space to Click for role="button" elements
+  if ((e.key === 'Enter' || e.key === ' ') && e.target instanceof Element && e.target.getAttribute('role') === 'button') {
+    e.preventDefault();
+    e.target.click();
   }
 });
 
@@ -9551,8 +9566,8 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 </div>
 
 <!-- Lightbox -->
-<div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+<div id="exp-lightbox" onclick="closeExpLightbox()">
+  <div class="exp-lb-close" onclick="closeExpLightbox()">✕</div>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
@@ -9582,7 +9597,7 @@ function openLightbox(images, startIdx) {
   renderLightbox();
   document.getElementById('exp-lightbox').classList.add('open');
 }
-function closeLightbox() {
+function closeExpLightbox() {
   document.getElementById('exp-lightbox').classList.remove('open');
 }
 function lbNav(dir) {
