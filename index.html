@@ -3455,9 +3455,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="section-inner">
     <div class="sup-section-head">
       <div>
-        <span class="section-label">Facade Material Suppliers · UAE Verified Directory</span>
+        <span class="section-label">Verified Supplier Directory · Free for Architects</span>
         <h2 class="section-title">UAE Suppliers</h2>
-        <p class="section-desc">Verified façade material manufacturers and specialists across the UAE. Every listing manually reviewed before going live.</p>
+        <p class="section-desc">Verified façade material manufacturers across the UAE — GRC, GRP, Precast, Aluminium and Stone. Direct contacts and compliance data included. Free for architects and consultants.</p>
       </div>
       <button class="sup-list-cta" onclick="openSupApply()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -3479,26 +3479,31 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="sup-gate-wrap">
       <div class="sup-grid-wrap teaser" id="sup-teaser"></div>
 
-      <!-- Gate overlay -->
-      <div class="sup-gate">
+      <!-- Free access hero — no paywall -->
+      <div class="sup-gate" id="sup-gate-free">
         <div class="gate-card">
-          <div class="gate-badge"><i class="fai" style="font-size:10px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></i> Members Only</div>
-          <div class="gate-title">Supplier Directory</div>
-          <p class="gate-desc">Access verified GRC and GFRP supplier profiles — with compliance documents, direct contacts, and RFQ routing. The most technically rigorous façade categories in the UAE, curated and verified.</p>
-          <div class="gate-stats">
-            <div><span class="gate-stat-num">GRC</span><span class="gate-stat-label">Live Now</span></div>
-            <div><span class="gate-stat-num">7</span><span class="gate-stat-label">Emirates</span></div>
-            <div><span class="gate-stat-num">GFRP</span><span class="gate-stat-label">Live Now</span></div>
+          <div class="gate-badge" style="background:rgba(0,229,160,0.1);border-color:rgba(0,229,160,0.3);color:var(--accent)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            Free Access
+          </div>
+          <div class="gate-title" style="font-size:36px;line-height:1.1">Choose the Right<br>Façade Material</div>
+          <p class="gate-desc" style="font-size:13px;line-height:1.8">Compare systems, review technical data, and connect with suppliers — all in one platform built for architects and consultants in the UAE.</p>
+          <div class="gate-stats" style="margin-bottom:28px">
+            <div><span class="gate-stat-num" style="font-size:32px">6</span><span class="gate-stat-label">Materials</span></div>
+            <div><span class="gate-stat-num" style="font-size:32px">18</span><span class="gate-stat-label">Suppliers</span></div>
+            <div><span class="gate-stat-num" style="font-size:32px">7</span><span class="gate-stat-label">Emirates</span></div>
           </div>
           <div class="gate-btns">
-            <button class="btn-gate-primary" onclick="openSubModal('access')">
-              <i class="fai" style="margin-right:8px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h2c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg></i>Unlock Full Directory
+            <button class="btn-gate-primary" onclick="openAuthModal('signup')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="margin-right:8px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+              Start Comparing — Free
             </button>
-            <button class="btn-gate-outline" onclick="openSubModal('list')">
-              <i class="fai" style="margin-right:8px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm4 4H9v-2h2v2zm0-4H9V9h2v2zm0-4H9V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg></i>I'm a Supplier — List My Company
+            <button class="btn-gate-outline" onclick="openSupApply()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="13" height="13" style="margin-right:8px"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z"/></svg>
+              List Your Company
             </button>
           </div>
-          <p class="gate-note">✓ Cancel anytime &nbsp;·&nbsp; ✓ Instant access &nbsp;·&nbsp; ✓ AED pricing</p>
+          <p class="gate-note" style="margin-top:14px">Free for architects &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; UAE-focused</p>
         </div>
       </div>
     </div>
@@ -3617,80 +3622,48 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="sub-modal" id="sub-modal">
     <div class="sub-modal-header">
       <div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">CLADWISE UAE</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:2px" id="sub-modal-title">Choose Your Plan</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">FAÇADE SPECIFICATION PLATFORM</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="sub-modal-title">CladWise UAE</div>
       </div>
       <button class="sub-modal-close" onclick="closeSubModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="sub-tab-bar">
-      <button class="sub-tab active" onclick="switchSubTab('access')"><i class="fai" style="margin-right:6px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></i>For Specifiers &amp; Architects</button>
+      <button class="sub-tab active" onclick="switchSubTab('access')">For Architects</button>
       <button class="sub-tab" onclick="switchSubTab('list')"><i class="fai" style="margin-right:6px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zM7 19H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm4 4H9v-2h2v2zm0-4H9V9h2v2zm0-4H9V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg></i>For Suppliers</button>
     </div>
     <div class="sub-modal-body">
 
       <!-- SPECIFIER ACCESS PANEL -->
       <div class="sub-panel active" id="sub-panel-access">
-        <div style="text-align:center;margin-bottom:28px">
-          <p style="color:var(--muted);font-size:13px">A curated technical resource for façade specification in the UAE. Compare materials against code requirements, run compliance checks, and connect directly with verified manufacturers.</p>
+        <!-- Value hero for architects — no pricing, no paywall -->
+        <div style="text-align:center;padding:8px 0 28px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--accent);margin-bottom:12px;text-transform:uppercase">Free for Architects & Consultants</div>
+          <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:0.5px;line-height:1.15;margin-bottom:12px">Choose the Right Façade Material<br>for Your Project</h3>
+          <p style="color:var(--muted);font-size:13px;line-height:1.8;max-width:480px;margin:0 auto 28px">Compare systems, review technical data, and connect with suppliers — all in one platform built for architects and consultants in the UAE.</p>
+          <button onclick="closeSubModal();openAuthModal('signup')" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#000;border:none;border-radius:6px;padding:13px 32px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='#00ffb3'" onmouseout="this.style.background='var(--accent)'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            Start Comparing
+          </button>
+          <p style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:10px;letter-spacing:1px">Free to use · No credit card · UAE market data</p>
         </div>
-        <div class="plans-grid">
-          <!-- FREE -->
-          <div class="plan-card">
-            <div class="plan-name">Explorer</div>
-            <div class="plan-price">
-              <span class="plan-price-curr">AED</span><span class="plan-price-num">0</span>
-              <span class="plan-price-period">Free forever</span>
-            </div>
-            <p class="plan-desc">Get started with material data and the advisor wizard. No credit card needed.</p>
-            <ul class="plan-features">
-              <li><span class="fi">✓</span> Material Explorer — GRC &amp; GFRP (live)</li>
-              <li><span class="fi">✓</span> Live Comparison Table</li>
-              <li><span class="fi">✓</span> Advisor Wizard</li>
-              <li class="muted-feat"><span class="fi-no">✗</span> Supplier Directory</li>
-              <li class="muted-feat"><span class="fi-no">✗</span> Direct contact details</li>
-              <li class="muted-feat"><span class="fi-no">✗</span> Quote requests</li>
-            </ul>
-            <button class="btn-plan btn-plan-outline" onclick="showToast('You are on the free plan — upgrade to access suppliers!');closeSubModal()">Current Plan</button>
+        <!-- Feature tiles -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 14px">
+            <div style="font-size:18px;margin-bottom:8px">📐</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Material Explorer</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.5">Full technical specs, compliance data and UAE standards for 6 façade systems</div>
           </div>
-          <!-- PRO -->
-          <div class="plan-card featured">
-            <div class="plan-badge">MOST POPULAR</div>
-            <div class="plan-name">Professional</div>
-            <div class="plan-price">
-              <span class="plan-price-curr">AED</span><span class="plan-price-num">149</span>
-              <span class="plan-price-period">per month · billed monthly</span>
-            </div>
-            <p class="plan-desc">Full access for architects, specifiers and procurement teams actively sourcing façade materials on UAE projects.</p>
-            <ul class="plan-features">
-              <li><span class="fi">✓</span> Everything in Explorer</li>
-              <li><span class="fi">✓</span> Full Verified Supplier Directory</li>
-              <li><span class="fi">✓</span> Direct phone &amp; email contacts</li>
-              <li><span class="fi">✓</span> Unlimited quote requests</li>
-              <li><span class="fi">✓</span> Material filter by emirate</li>
-              <li><span class="fi">✓</span> Export to PDF / Excel</li>
-            </ul>
-            <button class="btn-plan btn-plan-primary" onclick="startCheckout()">Get Professional Access</button>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 14px">
+            <div style="font-size:18px;margin-bottom:8px">⚖️</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Comparison Table</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.5">Compare materials side-by-side on fire rating, weight, cost and programme</div>
           </div>
-          <!-- ENTERPRISE -->
-          <div class="plan-card">
-            <div class="plan-name">Enterprise</div>
-            <div class="plan-price">
-              <span class="plan-price-curr">AED</span><span class="plan-price-num">499</span>
-              <span class="plan-price-period">per month · up to 10 seats</span>
-            </div>
-            <p class="plan-desc">For developer firms, MEP consultants and large design offices needing team access.</p>
-            <ul class="plan-features">
-              <li><span class="fi">✓</span> Everything in Professional</li>
-              <li><span class="fi">✓</span> 10 user seats</li>
-              <li><span class="fi">✓</span> Priority supplier introductions</li>
-              <li><span class="fi">✓</span> Project file management</li>
-              <li><span class="fi">✓</span> Custom compliance reports</li>
-              <li><span class="fi">✓</span> Dedicated account manager</li>
-            </ul>
-            <button class="btn-plan btn-plan-outline" onclick="showToast('Our team will contact you within 24 hours.');closeSubModal()">Contact Sales</button>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 14px">
+            <div style="font-size:18px;margin-bottom:8px">🏭</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Supplier Directory</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.5">Verified UAE manufacturers with direct contacts, compliance docs and RFQ routing</div>
           </div>
         </div>
-        <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">All prices excl. VAT. Annual billing available at 20% discount. Invoiced in AED.</p>
       </div>
 
       <!-- SUPPLIER LIST PANEL -->
@@ -6796,7 +6769,7 @@ function switchSubTab(tab) {
 
 // ─── PROJECT MODAL ──────────────────────────────────────────────────────────
 function openProjectModal() {
-  openSubModal('access');
+  openAuthModal('signup');
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
@@ -7074,7 +7047,8 @@ function cwUpdateSupplierSection() {
 
 
 
-  if (isPremium) {
+  // All logged-in users get full access — supplier directory is free for architects
+  if (isLoggedIn) {
     if (gate) gate.style.display = 'none';
     const grid = document.getElementById('sup-grid-real');
     if (grid) { grid.style.display = 'block'; return; }
@@ -7108,7 +7082,7 @@ function openProjectModal() {
     openAuthModal('login');
     return;
   }
-  openSubModal('access');
+  openAuthModal('signup');
 }
 
 // ─── INIT ON PAGE LOAD ────────────────────────────────────
