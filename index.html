@@ -763,6 +763,79 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 /* SUPPLIERS PREMIUM */
 #suppliers{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.07)}
+
+/* ── Supplier category filter tabs ──────────────────────────────────────── */
+.sup-cat-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sup-cat-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sup-cat-tab:hover { border-color: rgba(0,229,160,0.3); color: var(--text); }
+.sup-cat-tab.active {
+  background: rgba(0,229,160,0.08);
+  border-color: rgba(0,229,160,0.4);
+  color: var(--accent);
+}
+.sup-cat-tab .sup-cat-count {
+  background: rgba(0,229,160,0.12);
+  color: var(--accent);
+  font-size: 8px;
+  padding: 1px 5px;
+  border-radius: 50px;
+  font-weight: 700;
+}
+.sup-cat-tab.active .sup-cat-count { background: rgba(0,229,160,0.2); }
+/* Group heading inside grid */
+.sup-group-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 4px;
+  margin-top: 8px;
+}
+.sup-group-head:first-child { margin-top: 0; }
+.sup-group-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.sup-group-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0,229,160,0.12);
+}
+.sup-group-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
 .sup-section-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
 .sup-list-cta{display:flex;align-items:center;gap:10px;padding:12px 22px;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.06));border:1px solid rgba(245,158,11,0.35);border-radius:10px;cursor:pointer;transition:all 0.25s}
 .sup-list-cta:hover{border-color:var(--amber);background:rgba(245,158,11,0.18);transform:translateY(-1px)}
@@ -3386,9 +3459,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="section-inner">
     <div class="sup-section-head">
       <div>
-        <span class="section-label">GRC &amp; GFRP · Verified Directory</span>
+        <span class="section-label">Facade Material Suppliers · UAE Verified Directory</span>
         <h2 class="section-title">UAE Suppliers</h2>
-        <p class="section-desc">Verified GRC and GFRP manufacturers and specialists across the UAE. Every listing manually reviewed before going live.</p>
+        <p class="section-desc">Verified façade material manufacturers and specialists across the UAE. Every listing manually reviewed before going live.</p>
       </div>
       <button class="sup-list-cta" onclick="openSubModal('list')">
         <span class="sup-list-cta-icon">🏭</span>
@@ -3398,6 +3471,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </div>
         <i class="fai" style="color:var(--amber);font-size:12px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></i>
       </button>
+    </div>
+
+    <!-- Category filter bar -->
+    <div class="sup-cat-bar" id="sup-cat-bar">
+      <button class="sup-cat-tab active" onclick="supSetCat('all',this)">All <span class="sup-cat-count" id="sc-all">18</span></button>
+      <button class="sup-cat-tab" onclick="supSetCat('grc',this)">GRC / GFRC <span class="sup-cat-count" id="sc-grc"></span></button>
+      <button class="sup-cat-tab" onclick="supSetCat('grp',this)">GRP / GFRP <span class="sup-cat-count" id="sc-grp"></span></button>
+      <button class="sup-cat-tab" onclick="supSetCat('precast',this)">Precast <span class="sup-cat-count" id="sc-precast"></span></button>
+      <button class="sup-cat-tab" onclick="supSetCat('aluminum',this)">Aluminium <span class="sup-cat-count" id="sc-aluminum"></span></button>
+      <button class="sup-cat-tab" onclick="supSetCat('stone',this)">Stone <span class="sup-cat-count" id="sc-stone"></span></button>
     </div>
 
     <!-- GATE WRAP: 3D carousel teaser + overlay -->
@@ -6592,12 +6675,99 @@ function supTabSwitch(idx, tab, btn) {
   if (tabs) tabs.querySelectorAll('.sup-gc-tab').forEach((t, i) => t.classList.toggle('active', i === tab));
 }
 
+/* ── Supplier category logic ─────────────────────────────────────────────── */
+const SUP_CATS = {
+  grc:      { label: 'GRC / GFRC Manufacturers',     match: s => s.mats.some(m => m==='GFRC') },
+  grp:      { label: 'GRP / GFRP Specialists',        match: s => s.mats.some(m => m==='GFRP') },
+  precast:  { label: 'Precast Concrete',              match: s => (s.specialisations||[]).some(sp => /precast/i.test(sp)) && s.mats.every(m => m==='GFRC') },
+  aluminum: { label: 'Aluminium & ACM Systems',       match: s => s.mats.some(m => m==='Aluminum'||m==='ACM-FR') },
+  stone:    { label: 'Natural & Engineered Stone',    match: s => s.mats.some(m => m==='Stone') },
+};
+
+/* Assign each supplier its PRIMARY display category */
+function supPrimaryCategory(s) {
+  const specs = (s.specialisations||[]).join(' ').toLowerCase();
+  const about = (s.about||'').toLowerCase();
+  const isPrecastFocused = /precast concrete|precast building|precast factory|precast manufacturer/.test(specs + ' ' + about);
+  if (s.mats.some(m=>m==='Aluminum'||m==='ACM-FR')) return 'aluminum';
+  if (s.mats.some(m=>m==='Stone'))                   return 'stone';
+  if (isPrecastFocused && !s.mats.some(m=>m==='GFRP')) return 'precast';
+  if (s.mats.some(m=>m==='GFRP'))                    return 'grp';
+  if (s.mats.some(m=>m==='GFRC'))                    return 'grc';
+  return 'grc';
+}
+
+function supFilterByCat(cat) {
+  if (cat === 'all') return SUPPLIERS;
+  const fn = SUP_CATS[cat]?.match;
+  return fn ? SUPPLIERS.filter(fn) : SUPPLIERS;
+}
+
+let supActiveCat = 'all';
+
+function supSetCat(cat, btn) {
+  supActiveCat = cat;
+  document.querySelectorAll('.sup-cat-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // re-render whichever view is showing
+  const realGrid = document.getElementById('sup-grid-real');
+  if (realGrid && realGrid.style.display !== 'none') {
+    supRenderGrid(realGrid);
+  } else {
+    buildSuppliers();
+  }
+}
+
+function supUpdateCounts() {
+  const total = document.getElementById('sc-all');
+  if (total) total.textContent = SUPPLIERS.length;
+  Object.keys(SUP_CATS).forEach(cat => {
+    const el = document.getElementById('sc-' + cat);
+    if (el) el.textContent = supFilterByCat(cat).length;
+  });
+}
+
+/* Build grouped HTML for the grid */
+function supBuildGroupedHTML(suppliers, locked) {
+  if (supActiveCat !== 'all') {
+    // Single category — no group header needed
+    const sorted = [...suppliers].sort((a,b) => {
+      const tier = {featured:0, verified_pro:1, standard:2};
+      return (tier[a.tier]||2) - (tier[b.tier]||2);
+    });
+    return sorted.map((s,i) => supGridCardHTML(s, locked, false)).join('');
+  }
+
+  // All — group by primary category with headers
+  const ORDER = ['grc','grp','precast','aluminum','stone'];
+  let html = '';
+  ORDER.forEach(cat => {
+    const group = suppliers.filter(s => supPrimaryCategory(s) === cat);
+    if (!group.length) return;
+    const sorted = [...group].sort((a,b) => {
+      const tier = {featured:0, verified_pro:1, standard:2};
+      return (tier[a.tier]||2) - (tier[b.tier]||2);
+    });
+    html += `<div class="sup-group-head">
+      <span class="sup-group-label">${SUP_CATS[cat].label}</span>
+      <span class="sup-group-line"></span>
+      <span class="sup-group-count">${sorted.length} supplier${sorted.length!==1?'s':''}</span>
+    </div>`;
+    html += sorted.map(s => supGridCardHTML(s, locked, false)).join('');
+  });
+  return html;
+}
+
+function supRenderGrid(gridEl) {
+  const filtered = supFilterByCat(supActiveCat);
+  gridEl.innerHTML = supBuildGroupedHTML(filtered, false);
+}
+
 function buildSuppliers() {
+  supUpdateCounts();
   const container = document.getElementById('sup-teaser');
-  container.innerHTML = SUPPLIERS.slice(0, 8).map(s => {
-    const isLive = s.mats.some(m => m === 'GFRC' || m === 'GFRP');
-    return supGridCardHTML(s, true, !isLive /* dimLocked */);
-  }).join('');
+  const preview = SUPPLIERS.slice(0, 8);
+  container.innerHTML = supBuildGroupedHTML(preview, true);
   const gateWrap = document.querySelector('.sup-gate-wrap');
   gateWrap.style.minHeight = '520px';
 }
@@ -6919,10 +7089,7 @@ function cwUpdateSupplierSection() {
     const realGrid = document.createElement('div');
     realGrid.id = 'sup-grid-real';
     realGrid.className = 'sup-grid-wrap';
-    realGrid.innerHTML = SUPPLIERS.map(s => {
-      const isLive = s.mats.some(m => m === 'GFRC' || m === 'GFRP');
-      return supGridCardHTML(s, !isLive);
-    }).join('');
+    supRenderGrid(realGrid);
     section.appendChild(realGrid);
   } else {
     if (gate) gate.style.display = '';
