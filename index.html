@@ -837,12 +837,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 }
 
 .sup-section-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
-.sup-list-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.35);border-radius:50px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.sup-list-cta:hover{border-color:var(--amber);background:rgba(245,158,11,0.16);transform:translateY(-1px)}
-.sup-list-cta-icon{font-size:15px}
-.sup-list-cta-text{text-align:left}
-.sup-list-cta-label{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber)}
-.sup-list-cta-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px}
+.sup-list-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.35);border-radius:50px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber)}
+.sup-list-cta:hover{border-color:var(--amber);background:rgba(245,158,11,0.18);transform:translateY(-1px)}
 
 /* TEASER GRID + GATE */
 .sup-gate-wrap{position:relative;margin-top:36px}
@@ -3463,13 +3459,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 class="section-title">UAE Suppliers</h2>
         <p class="section-desc">Verified façade material manufacturers and specialists across the UAE. Every listing manually reviewed before going live.</p>
       </div>
-      <button class="sup-list-cta" onclick="openSubModal('list')">
-        <span class="sup-list-cta-icon">🏭</span>
-        <div class="sup-list-cta-text">
-          <div class="sup-list-cta-label">List Your Company</div>
-          <div class="sup-list-cta-sub">Claim your free supplier listing</div>
-        </div>
-        <i class="fai" style="color:var(--amber);font-size:12px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></i>
+      <button class="sup-list-cta" onclick="openSupApply()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        List Your Company
       </button>
     </div>
 
