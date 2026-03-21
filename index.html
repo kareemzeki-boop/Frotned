@@ -283,13 +283,11 @@ section{padding:100px 0}
   display: block;
   transition: transform 0.9s ease;
   will-change: transform;
+  opacity: 0.18;
 }
 #explore:hover .explore-hero-bg img { transform: scale(1.04); }
 .explore-hero-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(11,17,13,0.72);
+  content: none;
 }
 #explore .section-inner {
   position: relative;
@@ -308,23 +306,20 @@ section{padding:100px 0}
   will-change: transform;
   pointer-events: none;
   overflow: hidden;
+  z-index: 0;
+  opacity: 0.15;
 }
-.section-bg-img::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(11,17,13,0.72);
-}
-#wizard:hover    .section-bg-img { transform: scale(1.04); }
-#suppliers:hover .section-bg-img { transform: scale(1.04); }
+.section-bg-img::after { content: none; }
+#wizard:hover    .section-bg-img { transform: scale(1.04); opacity: 0.2; }
+#suppliers:hover .section-bg-img { transform: scale(1.04); opacity: 0.2; }
 
-/* Advisor / Wizard — architect consultation, blueprint workflow */
+/* Advisor / Wizard */
 #wizard-bg {
   background-image: url('https://images.pexels.com/photos/834892/pexels-photo-834892.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop');
   background-position: center 30%;
 }
 
-/* Suppliers — modern manufacturing / warehouse / factory */
+/* Suppliers */
 #suppliers-bg {
   background-image: url('https://images.pexels.com/photos/236698/pexels-photo-236698.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop');
   background-position: center 45%;
