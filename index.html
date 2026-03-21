@@ -265,416 +265,289 @@ section{padding:100px 0}
   position: relative;
   margin-top: 48px;
   display: flex;
-  gap: 64px;
+  gap: 48px;
   align-items: flex-start;
 }
 
-/* ── STACK CONTAINER ──────────────────────────────────────────────── */
+/* ── CARD STACK STAGE ─────────────────────────────────────────────── */
 .mat-stack {
   position: relative;
-  width: 680px;
   flex-shrink: 0;
-  height: 440px;
+  width: 500px;
+  height: 480px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  perspective: 1100px;
 }
 
-/* ── EACH STACKED CARD ────────────────────────────────────────────── */
+/* ── INDIVIDUAL CARD ──────────────────────────────────────────────── */
 .mat-card {
   position: absolute;
-  inset: 0;
-  border-radius: 20px;
+  bottom: 0;
+  width: 420px;
+  height: 340px;
+  border-radius: 16px;
   overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  background: #131f14;
-  border: 1px solid rgba(255,255,255,0.07);
-  transform-origin: center center;
-  transition:
-    transform 0.52s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.4s ease,
-    opacity 0.4s ease;
-  will-change: transform, opacity;
-  user-select: none;
+  will-change: transform;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.45s ease,
+              box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
 }
-
-/* back-cards peek stack */
+.mat-card[data-pos="0"] {
+  transform: translateX(0) translateY(-20px) rotateZ(0deg) rotateX(0deg) scale(1.04);
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px var(--mat-accent,#00e5a0)30;
+}
 .mat-card[data-pos="1"] {
-  transform: translateY(-14px) scale(0.97);
-  opacity: 0.7;
-  background: #1a2e1c;
-  border-color: rgba(255,255,255,0.05);
-  z-index: 2;
+  transform: translateX(240px) translateY(8px) rotateZ(20deg) rotateX(10deg) scale(0.93) translateZ(-120px);
+  z-index: 6; cursor: pointer;
 }
 .mat-card[data-pos="2"] {
-  transform: translateY(-26px) scale(0.94);
-  opacity: 0.45;
-  background: #20371f;
-  border-color: rgba(255,255,255,0.04);
-  z-index: 1;
+  transform: translateX(380px) translateY(20px) rotateZ(36deg) rotateX(10deg) scale(0.86) translateZ(-240px);
+  z-index: 4; cursor: pointer;
 }
 .mat-card[data-pos="3"] {
-  transform: translateY(-36px) scale(0.91);
-  opacity: 0.22;
-  background: #243e22;
-  border-color: rgba(255,255,255,0.03);
-  z-index: 0;
+  transform: translateX(-240px) translateY(8px) rotateZ(-20deg) rotateX(10deg) scale(0.93) translateZ(-120px);
+  z-index: 6; cursor: pointer;
 }
-.mat-card[data-pos="4"],
+.mat-card[data-pos="4"] {
+  transform: translateX(-380px) translateY(20px) rotateZ(-36deg) rotateX(10deg) scale(0.86) translateZ(-240px);
+  z-index: 4; cursor: pointer;
+}
 .mat-card[data-pos="5"] {
-  transform: translateY(-42px) scale(0.89);
-  opacity: 0;
-  z-index: 0;
-}
-/* active front card */
-.mat-card[data-pos="0"] {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  z-index: 10;
-  box-shadow:
-    0 32px 64px rgba(0,0,0,0.7),
-    0 8px 24px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,229,160,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-}
-.mat-card[data-pos="0"]:hover {
-  box-shadow:
-    0 40px 80px rgba(0,0,0,0.75),
-    0 0 0 1px rgba(0,229,160,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.08);
+  transform: translateX(0) translateY(36px) rotateZ(0deg) scale(0.8) translateZ(-360px);
+  z-index: 2; opacity: 0;
 }
 
-/* ── IMAGE HALF ────────────────────────────────────────────────────── */
-/* ── IMAGE — full bleed background ─────────────────────────────────────── */
+/* ── CARD IMAGE ────────────────────────────────────────────────────── */
 .mat-card-img {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  background: #0b110d;
-  border-radius: 20px;
 }
 .mat-card-img img {
   width: 100%; height: 100%;
   object-fit: cover;
-  filter: brightness(0.45) saturate(0.7);
-  transition: transform 0.6s ease, filter 0.4s ease;
-  border-radius: 20px;
-}
-.mat-card[data-pos="0"]:hover .mat-card-img img {
-  transform: scale(1.04);
-  filter: brightness(0.55) saturate(0.85);
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 .mat-card-img-overlay {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(to top, rgba(8,14,10,0.97) 0%, rgba(8,14,10,0.6) 50%, rgba(8,14,10,0.15) 100%),
-    linear-gradient(to right, rgba(8,14,10,0.3) 0%, transparent 60%);
-  border-radius: 20px;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    rgba(0,0,0,0.98) 0%,
+    rgba(0,0,0,0.88) 50%,
+    rgba(0,0,0,0.72) 100%
+  );
 }
 
-/* ── CONTENT — floated above image ─────────────────────────────────────── */
-.mat-card-content {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 28px 28px 22px 28px;
-  min-width: 0;
-  justify-content: flex-end;
-}
-.mat-card-ref {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 3px;
-  color: rgba(0,229,160,0.45);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.mat-card-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 38px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  line-height: 0.95;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.mat-card-full {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--muted);
-  letter-spacing: 0.5px;
-  margin-bottom: 14px;
-}
-.mat-card-tagline {
-  font-size: 11px;
-  color: rgba(200,220,205,0.45);
-  line-height: 1.6;
-  margin-bottom: 16px;
-  flex: 1;
-}
-.mat-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 16px;
-}
-.tag {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 2px 7px;
-  font-size: 8px;
-  color: rgba(200,220,205,0.3);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-radius: 2px;
-}
-
-/* ── SCORE BADGE (top-right of content) ───────────────────────────── */
+/* ── SCORE BADGE ───────────────────────────────────────────────────── */
 .mat-card-score-box {
   position: absolute;
-  top: 22px; right: 24px;
-  border: 1px solid rgba(0,229,160,0.2);
-  padding: 7px 12px;
-  text-align: center;
-  background: rgba(0,229,160,0.04);
-  border-radius: 6px;
+  top: 14px; right: 14px;
+  background: rgba(0,0,0,0.97);
+  border: 1px solid var(--mat-accent,#00e5a0);
+  border-radius: 8px;
+  padding: 4px 10px;
+  display: flex; flex-direction: column; align-items: center;
+  backdrop-filter: blur(10px);
 }
 .mat-card-score-num {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 30px;
-  font-weight: 900;
-  color: var(--accent);
+  font-size: 22px; font-weight: 900;
+  color: var(--mat-accent,#00e5a0);
   line-height: 1;
-  display: block;
 }
 .mat-card-score-lbl {
-  font-family: 'DM Mono', monospace;
-  font-size: 7px;
-  letter-spacing: 2px;
-  color: rgba(0,229,160,0.4);
-  text-transform: uppercase;
-  display: block;
-  margin-top: 1px;
+  font-size: 8px; color: rgba(255,255,255,0.9);
+  letter-spacing: 1px;
 }
 
-/* ── DATA ROWS ─────────────────────────────────────────────────────── */
-.mat-card-scores {
+/* ── FIRE BADGE ────────────────────────────────────────────────────── */
+.mat-card-fire-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  background: rgba(0,0,0,0.97);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-size: 9px; color: #fff;
+  letter-spacing: 1px;
+  font-family: 'DM Mono', monospace;
+  backdrop-filter: blur(8px);
+}
+
+/* ── CARD CONTENT ──────────────────────────────────────────────────── */
+.mat-card-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 16px 18px 16px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 12px;
+  gap: 0;
 }
-.score-item { display: flex; align-items: center; gap: 8px; }
-.score-item-lbl {
+.mat-card-tags {
+  display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.mat-card-tags .tag {
+  background: var(--mat-accent,#00e5a0);
+  border-radius: 50px;
+  padding: 2px 8px;
+  font-size: 9px; color: #000;
+  font-weight: 700; letter-spacing: 1px;
   font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 2px;
-  color: rgba(200,220,205,0.28);
-  text-transform: uppercase;
-  width: 44px;
-  flex-shrink: 0;
 }
-.score-bar-wrap { flex: 1; height: 2px; background: rgba(255,255,255,0.05); }
-.score-bar { height: 2px; background: var(--accent); opacity: 0.65; transition: width 0.6s ease; }
-.score-val {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  color: rgba(0,229,160,0.45);
-  width: 26px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-/* ── FOOTER OPEN BUTTON ────────────────────────────────────────────── */
-.mat-card-open-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(0,229,160,0.07);
-  border: 1px solid rgba(0,229,160,0.22);
-  padding: 7px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  align-self: flex-start;
-}
-.mat-card-open-btn:hover {
-  background: rgba(0,229,160,0.14);
-  border-color: rgba(0,229,160,0.4);
-}
-
-/* ── COMING SOON OVERLAY ───────────────────────────────────────────── */
-.mat-card-locked { cursor: default !important; }
-.mat-card-locked .mat-card-img img,
-.mat-card-locked .mat-card-content { filter: grayscale(1); opacity: 0.25; }
-.mat-card-cs-overlay {
-  position: absolute; inset: 0; z-index: 20;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 10px;
-  background: rgba(11,17,13,0.4);
-  backdrop-filter: blur(2px);
-  border-radius: 20px;
-}
-.mat-card-cs-badge {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
-  color: #0b110d; background: rgba(200,200,190,0.78);
-  padding: 4px 12px; border-radius: 2px;
-}
-.mat-card-cs-title {
+.mat-card-name {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 26px; font-weight: 900; text-transform: uppercase;
-  color: rgba(255,255,255,0.5); text-align: center; padding: 0 32px; line-height: 1.1;
+  font-size: 32px; font-weight: 900;
+  color: var(--mat-accent,#00e5a0);
+  line-height: 1; letter-spacing: 1px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
 }
-.mat-card-cs-desc {
-  font-size: 10px; color: rgba(200,220,205,0.3);
-  text-align: center; max-width: 200px; line-height: 1.6;
-  font-family: 'DM Mono', monospace; letter-spacing: 0.3px;
+.mat-card-full {
+  font-size: 11px;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
 }
-.mat-card-cs-btn {
-  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: rgba(0,229,160,0.7);
-  background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.2);
-  padding: 6px 14px; cursor: pointer; border-radius: 4px; transition: all 0.15s;
+/* ── SPEC ROW ──────────────────────────────────────────────────────── */
+.mat-card-specs {
+  display: flex;
+  gap: 18px;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  padding-top: 10px;
+  margin-bottom: 12px;
 }
-.mat-card-cs-btn:hover { background: rgba(0,229,160,0.12); color: var(--accent); border-color: rgba(0,229,160,0.38); }
+.mat-card-spec-item {}
+.mat-card-spec-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; color: rgba(255,255,255,0.7);
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.mat-card-spec-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: #fff;
+}
+/* ── OPEN BUTTON ───────────────────────────────────────────────────── */
+.mat-card-open-btn {
+  display: none;
+  width: 100%; padding: 10px 0;
+  background: var(--mat-accent,#00e5a0);
+  border: none; border-radius: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 900;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #000; cursor: pointer;
+  transition: filter 0.15s;
+}
+.mat-card[data-pos="0"] .mat-card-open-btn { display: block; }
+.mat-card-open-btn:hover { filter: brightness(1.1); }
 
-/* ── DECK NAV (dots + arrows) ──────────────────────────────────────── */
+/* ── LOCKED CARD ───────────────────────────────────────────────────── */
+.mat-card-locked { opacity: 0.5; cursor: default; }
+.mat-card-locked .mat-card-open-btn { display: none !important; }
+
+/* ── NAV ───────────────────────────────────────────────────────────── */
 .mat-deck-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 20px;
 }
 .mat-deck-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,0.12);
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.3s;
+  border: none; padding: 0;
 }
-.mat-deck-dot.active { background: var(--accent); transform: scale(1.35); }
+.mat-deck-dot.active {
+  background: var(--accent);
+  width: 20px; border-radius: 4px;
+}
 .mat-deck-dot:hover { background: rgba(0,229,160,0.5); }
 .mat-deck-arrow {
-  width: 32px; height: 32px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
+  width: 36px; height: 36px;
+  background: rgba(0,229,160,0.06);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 16px;
+  cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 12px; color: var(--muted);
   transition: all 0.15s;
 }
-.mat-deck-arrow:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,0.06); }
+.mat-deck-arrow:hover { border-color: var(--accent); background: rgba(0,229,160,0.1); }
 
-/* ── DECK SIDEBAR (material list) ──────────────────────────────────── */
+/* ── SIDEBAR ───────────────────────────────────────────────────────── */
 .mat-deck-sidebar {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-top: 8px;
+  gap: 4px;
+  flex: 1;
+  padding-top: 16px;
 }
 .mat-deck-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  gap: 10px;
+  padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.18s;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.15s;
 }
-.mat-deck-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.07); }
-.mat-deck-item.active {
-  background: rgba(0,229,160,0.06);
-  border-color: rgba(0,229,160,0.2);
-}
-.mat-deck-item-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  flex-shrink: 0;
-}
-.mat-deck-item-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  color: rgba(255,255,255,0.55);
-  flex: 1;
-}
-.mat-deck-item.active .mat-deck-item-name { color: var(--text); }
-.mat-deck-item-badge {
+.mat-deck-item:hover { background: rgba(0,229,160,0.05); border-color: rgba(0,229,160,0.15); }
+.mat-deck-item.active { background: rgba(0,229,160,0.08); border-color: rgba(0,229,160,0.25); }
+.mat-deck-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.mat-deck-item-name { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; flex: 1; }
+.mat-deck-item-badge { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.mat-deck-item-badge.live { background: rgba(0,229,160,0.12); color: var(--accent); }
+.mat-deck-item-badge.soon { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+/* ── DRAG HINT ─────────────────────────────────────────────────────── */
+.mat-drag-hint {
+  text-align: center;
+  margin-top: 10px;
   font-family: 'DM Mono', monospace;
-  font-size: 7px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 2px;
-}
-.mat-deck-item-badge.live { color: var(--accent); background: rgba(0,229,160,0.1); }
-.mat-deck-item-badge.soon { color: var(--muted); background: rgba(255,255,255,0.05); }
-
-/* ── JIGGLE ────────────────────────────────────────────────────────── */
-@keyframes mat-jiggle {
-  0%,100%{ transform: translateY(0) rotate(0deg) scale(1); }
-  15%    { transform: translateY(-2px) rotate(-1.5deg) scale(1.01); }
-  30%    { transform: translateY(0) rotate(1.5deg) scale(1.01); }
-  45%    { transform: translateY(-2px) rotate(-1deg) scale(1); }
-  60%    { transform: translateY(0) rotate(0.8deg) scale(1); }
-  75%    { transform: translateY(-1px) rotate(-0.4deg) scale(1); }
-  90%    { transform: translateY(0) rotate(0.2deg) scale(1); }
-}
-.mat-card.jiggling {
-  animation: mat-jiggle 0.5s cubic-bezier(0.36,0.07,0.19,0.97) !important;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(200,220,205,0.2);
+  text-transform: uppercase;
 }
 
-/* ── RESPONSIVE ────────────────────────────────────────────────────── */
-/* mat-deck MQ moved to unified responsive block */
+/* ── MQ ────────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .mat-deck-outer { gap: 32px; }
+  .mat-stack { width: 440px; }
+  .mat-card { width: 380px; height: 320px; }
+  .mat-card[data-pos="1"] { transform: translateX(200px) translateY(8px) rotateZ(20deg) rotateX(10deg) scale(0.93) translateZ(-120px); }
+  .mat-card[data-pos="2"] { transform: translateX(320px) translateY(20px) rotateZ(36deg) rotateX(10deg) scale(0.86) translateZ(-240px); }
+  .mat-card[data-pos="3"] { transform: translateX(-200px) translateY(8px) rotateZ(-20deg) rotateX(10deg) scale(0.93) translateZ(-120px); }
+  .mat-card[data-pos="4"] { transform: translateX(-320px) translateY(20px) rotateZ(-36deg) rotateX(10deg) scale(0.86) translateZ(-240px); }
+}
+@media (max-width: 900px) {
+  .mat-deck-outer { flex-direction: column; gap: 32px; align-items: center; }
+  .mat-stack { width: 100%; height: 400px; }
+  .mat-card { width: 320px; height: 300px; }
+  .mat-deck-sidebar { flex-direction: row; flex-wrap: wrap; padding-top: 0; width: 100%; justify-content: center; }
+  .mat-deck-item { padding: 6px 10px; }
+  .mat-card[data-pos="1"] { transform: translateX(170px) translateY(6px) rotateZ(18deg) rotateX(8deg) scale(0.92) translateZ(-100px); }
+  .mat-card[data-pos="2"] { transform: translateX(270px) translateY(18px) rotateZ(32deg) rotateX(8deg) scale(0.84) translateZ(-200px); }
+  .mat-card[data-pos="3"] { transform: translateX(-170px) translateY(6px) rotateZ(-18deg) rotateX(8deg) scale(0.92) translateZ(-100px); }
+  .mat-card[data-pos="4"] { transform: translateX(-270px) translateY(18px) rotateZ(-32deg) rotateX(8deg) scale(0.84) translateZ(-200px); }
+}
 
-
-/* MODAL GALLERY TAB */
-.gallery-hero{position:relative;border-radius:16px;overflow:hidden;height:320px;margin-bottom:20px;background:var(--bg3);cursor:zoom-in}
-.gallery-hero img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease}
-.gallery-hero:hover img{transform:scale(1.02)}
-.gallery-hero-caption{position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);display:flex;justify-content:space-between;align-items:flex-end}
-.gallery-caption-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px}
-.gallery-caption-desc{font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px}
-.gallery-caption-tag{font-family:'DM Mono',monospace;font-size:10px;background:rgba(0,229,160,0.2);border:1px solid rgba(0,229,160,0.4);padding:4px 10px;border-radius:4px;color:var(--accent);white-space:nowrap}
-.variant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
-.variant-card{border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s;background:var(--bg3)}
-.variant-card:hover,.variant-card.active{border-color:var(--accent)}
-.variant-card-img{height:100px;overflow:hidden;position:relative}
-.variant-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
-.variant-card:hover .variant-card-img img{transform:scale(1.08)}
-.variant-card-label{padding:8px 10px}
-.variant-card-name{font-size:11px;font-weight:700;margin-bottom:1px}
-.variant-card-sub{font-size:10px;color:var(--muted);line-height:1.3}
-.gallery-nav{display:flex;gap:8px;justify-content:center;margin-top:16px}
-.gal-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all 0.2s}
-.gal-dot.active{background:var(--accent);border-color:var(--accent)}
-
-/* LIGHTBOX */
-.lightbox{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.96);align-items:center;justify-content:center;flex-direction:column}
-.lightbox.open{display:flex}
-.lightbox-img-wrap{position:relative;max-width:90vw;max-height:80vh;border-radius:12px;overflow:hidden}
-.lightbox-img-wrap img{max-width:90vw;max-height:80vh;object-fit:contain;border-radius:12px;display:block}
-.lightbox-close{position:absolute;top:24px;right:24px;width:44px;height:44px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:18px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
-.lightbox-close:hover{background:rgba(255,255,255,0.2)}
-.lightbox-caption{margin-top:16px;text-align:center;font-size:13px;color:rgba(255,255,255,0.6);font-family:'DM Mono',monospace}
-.lightbox-nav-btns{display:flex;gap:16px;margin-top:16px}
-.lb-btn{padding:10px 24px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.lb-btn:hover{background:rgba(255,255,255,0.15)}
-
-/* COMPARISON */
-#compare{background:var(--bg3);border-top:1px solid rgba(0,229,160,0.07)}
-.compare-controls{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0 24px}
-
-/* ── Compare threads header ── */
 .cmp-threads-header {
   position: relative;
   height: 200px;
@@ -3377,15 +3250,15 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <!-- EXPLORE -->
 <section id="explore">
   <div class="section-inner">
-    <span class="section-label">Launch Cohort · GRC &amp; GFRP Live</span>
+    <span class="section-label">6 Materials · Full Technical Data</span>
     <h2 class="section-title">Material Explorer</h2>
-    <p class="section-desc">GRC and GFRP — live now with full spec data and verified suppliers. Additional façade categories are in development.</p>
+    <p class="section-desc">Full technical specifications, compliance data and UAE supplier connections for every major façade system. Drag or click to explore.</p>
 
     <div class="mat-deck-outer">
       <!-- STACKED CARDS -->
       <div>
         <div class="mat-stack" id="mat-stack"></div>
-        <div style="text-align:center;margin-top:10px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(200,220,205,0.2);text-transform:uppercase">Scroll or drag to navigate</div>
+        <div class="mat-drag-hint">Drag or click to navigate</div>
         <div class="mat-deck-nav" id="mat-deck-nav"></div>
       </div>
       <!-- SIDEBAR LIST -->
@@ -5177,82 +5050,86 @@ const cardHeroImg = {}; // track active hero per card
 function buildMaterialCards() { buildDeck(); }
 
 function buildDeck() {
-  const LIVE = ['GFRC','GFRP'];
-  const CS_LABELS = {
-    Aluminum:'Aluminium Composite', Stone:'Natural Stone',
-    ACM:'ACM-FR Fire-Rated', FibreCement:'Fibre Cement'
-  };
-  const REF = { GFRC:'CW-001',GFRP:'CW-002',Aluminum:'CW-003',Stone:'CW-004',ACM:'CW-005',FibreCement:'CW-006' };
+  const LIVE   = ['GFRC','GFRP','Aluminum','Stone','ACM','FibreCement'];
   const COLORS = { GFRC:'#00e5a0',GFRP:'#60a5fa',Aluminum:'#a3a3a3',Stone:'#f59e0b',ACM:'#c084fc',FibreCement:'#fb923c' };
 
-  const keys = Object.keys(MATERIALS);
-  const stack = document.getElementById('mat-stack');
-  const nav   = document.getElementById('mat-deck-nav');
-  const sidebar = document.getElementById('mat-deck-sidebar');
-  let current = 0;
+  const keys   = Object.keys(MATERIALS);
+  const stack  = document.getElementById('mat-stack');
+  const nav    = document.getElementById('mat-deck-nav');
+  const sidebar= document.getElementById('mat-deck-sidebar');
+  let current  = 0;
 
-  // Build cards — render all, assign data-pos
+  // ── Build cards ─────────────────────────────────────────────────────────
   keys.forEach((key, idx) => {
-    const m = MATERIALS[key];
+    const m    = MATERIALS[key];
     const imgs = MATERIAL_IMAGES[key];
-    const s = m.scores;
     const live = LIVE.includes(key);
+    const acc  = COLORS[key] || '#00e5a0';
 
     const card = document.createElement('div');
     card.className = 'mat-card' + (live ? '' : ' mat-card-locked');
     card.dataset.key = key;
     card.dataset.idx = idx;
+    card.style.setProperty('--mat-accent', acc);
+
     if (live) {
       card.style.cursor = 'pointer';
-      card.addEventListener('click', function(e) {
-        if (e.target.closest('.mat-card-cs-btn')) return;
-        if (card.dataset.pos !== '0') return; // only open when front card
+      card.addEventListener('click', function() {
+        if (card.dataset.pos !== '0') { deckGo(idx, 1); return; }
         openExplorer(key);
+      });
+    } else {
+      // jiggle locked cards on click
+      card.addEventListener('click', function() {
+        if (card.classList.contains('jiggling')) return;
+        card.classList.add('jiggling');
+        card.addEventListener('animationend', () => card.classList.remove('jiggling'), { once: true });
       });
     }
 
-    const scores = [['Heat','heat'],['Fire','fire'],['Weight','weight'],['Cost','cost']].map(([l,k]) => `
-      <div class="score-item">
-        <span class="score-item-lbl">${l}</span>
-        <div class="score-bar-wrap"><div class="score-bar" style="width:${s[k]}%"></div></div>
-        <span class="score-val">${s[k]}%</span>
-      </div>`).join('');
+    // Fire class from specs
+    const fireVal = Object.entries(m.specs||{}).find(([k])=>k.toLowerCase().includes('fire class'))?.[1]?.val || 'Class A1';
+    // Weight and price from specs/MATERIALS
+    const weightVal = Object.entries(m.specs||{}).find(([k])=>k.toLowerCase().includes('weight'))?.[1]?.val || '—';
+    const priceVal  = m.priceRange || '—';
 
     card.innerHTML = `
       <div class="mat-card-img">
-        <img src="${imgs?.hero||''}" alt="${m.name}" onerror="this.style.display='none'">
+        <img src="${imgs?.hero||''}" alt="${m.name}" onerror="this.style.display='none'" draggable="false">
         <div class="mat-card-img-overlay"></div>
       </div>
+      <div class="mat-card-fire-badge">🔥 ${fireVal}</div>
+      <div class="mat-card-score-box">
+        <span class="mat-card-score-num">${m.overall || '—'}</span>
+        <span class="mat-card-score-lbl">/10</span>
+      </div>
       <div class="mat-card-content">
-        <div class="mat-card-ref">${REF[key]} · UAE FAÇADE SPEC</div>
+        <div class="mat-card-tags">${(m.tags||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
         <div class="mat-card-name">${m.name}</div>
         <div class="mat-card-full">${m.full||''}</div>
-        <div class="mat-card-tagline">${m.tagline||''}</div>
-        <div class="mat-card-tags">${(m.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-        <div class="mat-card-scores">${scores}</div>
-        ${live ? `<button class="mat-card-open-btn" onclick="event.stopPropagation();openExplorer('${key}')">Explore →</button>` : ''}
-        <div class="mat-card-score-box">
-          <span class="mat-card-score-num">${live ? m.overall : '—'}</span>
-          <span class="mat-card-score-lbl">Score</span>
+        <div class="mat-card-specs">
+          <div class="mat-card-spec-item">
+            <div class="mat-card-spec-lbl">Weight</div>
+            <div class="mat-card-spec-val">${weightVal}</div>
+          </div>
+          <div class="mat-card-spec-item">
+            <div class="mat-card-spec-lbl">Price Range</div>
+            <div class="mat-card-spec-val">${priceVal}</div>
+          </div>
         </div>
-      </div>
-      ${!live ? `<div class="mat-card-cs-overlay">
-        <div class="mat-card-cs-badge">Coming Soon</div>
-        <div class="mat-card-cs-title">${CS_LABELS[key]||m.name}</div>
-        <div class="mat-card-cs-desc">Expanding to this category. Pre-register to be notified at launch.</div>
-        <button class="mat-card-cs-btn" onclick="csPreReg('${CS_LABELS[key]||m.name}',this)">Pre-register →</button>
-      </div>` : ''}`;
+        <button class="mat-card-open-btn" onclick="event.stopPropagation();openExplorer('${key}')">View Full Specification →</button>
+      </div>`;
 
     stack.appendChild(card);
   });
 
-  // Build nav dots
+  // ── Nav dots ─────────────────────────────────────────────────────────────
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<button class="mat-deck-arrow" onclick="deckPrev()">←</button>` +
+    keys.map((k,i) => `<button class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></button>`).join('') +
+    `<button class="mat-deck-arrow" onclick="deckNext()">→</button>`;
 
-  // Build sidebar
+  // ── Sidebar ───────────────────────────────────────────────────────────────
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
     return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
@@ -5262,19 +5139,18 @@ function buildDeck() {
     </div>`;
   }).join('');
 
-  // Position cards
+  // ── Position cards ────────────────────────────────────────────────────────
   function positionCards() {
     const cards = stack.querySelectorAll('.mat-card');
     cards.forEach((card, idx) => {
       const pos = (idx - current + keys.length) % keys.length;
-      card.dataset.pos = pos < 4 ? pos : 4;
-      card.style.zIndex = pos === 0 ? 10 : Math.max(0, 4 - pos);
-      card.style.pointerEvents = pos === 0 ? 'auto' : 'none';
+      card.dataset.pos = pos <= 4 ? pos : 5;
+      card.style.zIndex = pos === 0 ? 10 : Math.max(0, 5 - pos);
+      card.style.pointerEvents = (pos === 0 || pos <= 4) ? 'auto' : 'none';
     });
-
-    // Update dots
-    nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === current);
+    // Update nav dots
+    nav.querySelectorAll('.mat-deck-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
     });
     // Update sidebar
     sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => {
@@ -5282,113 +5158,52 @@ function buildDeck() {
     });
   }
 
-  let animating = false;
-
-  window.deckGo = function(idx, dir) {
-    if (animating) return;
-    const prev = current;
+  // ── Navigation functions ──────────────────────────────────────────────────
+  window.deckGo = function(idx) {
     current = ((idx % keys.length) + keys.length) % keys.length;
-    if (prev === current) return;
-
-    // Determine roll direction: dir=1 means swipe up (next), dir=-1 means swipe down (prev)
-    if (dir === undefined) dir = (current > prev || (prev === keys.length-1 && current === 0)) ? 1 : -1;
-
-    const cards = stack.querySelectorAll('.mat-card');
-    const prevFront = stack.querySelector('.mat-card[data-pos="0"]');
-    const nextCard  = Array.from(cards).find(c => parseInt(c.dataset.idx) === current);
-
-    animating = true;
-
-    // Snap next card just off screen in the incoming direction (no transition)
-    if (nextCard) {
-      nextCard.style.transition = 'none';
-      nextCard.style.transform  = `translateY(${dir * 100}%) scale(0.96)`;
-      nextCard.style.opacity    = '0';
-      nextCard.style.zIndex     = '9';
-      // Force reflow
-      nextCard.offsetHeight;
-    }
-
-    // Fly out current front card
-    if (prevFront) {
-      prevFront.style.transition = 'transform 0.48s cubic-bezier(0.4,0,0.6,1), opacity 0.48s ease';
-      prevFront.style.transform  = `translateY(${-dir * 100}%) scale(0.96)`;
-      prevFront.style.opacity    = '0';
-    }
-
-    // Roll in next card
-    if (nextCard) {
-      requestAnimationFrame(() => {
-        nextCard.style.transition = 'transform 0.52s cubic-bezier(0.22,1,0.36,1), opacity 0.4s ease';
-        nextCard.style.transform  = 'translateY(0) scale(1)';
-        nextCard.style.opacity    = '1';
-        nextCard.style.zIndex     = '10';
-      });
-    }
-
-    setTimeout(() => {
-      // Clean inline styles, let CSS data-pos take over
-      if (prevFront)  { prevFront.style.cssText  = ''; }
-      if (nextCard)   { nextCard.style.cssText    = ''; }
-      positionCards();
-      animating = false;
-    }, 540);
-
-    // Update dots + sidebar immediately
-    nav.querySelectorAll('.mat-deck-dot').forEach((d, i) => d.classList.toggle('active', i === current));
-    sidebar.querySelectorAll('.mat-deck-item').forEach((item, i) => item.classList.toggle('active', i === current));
+    positionCards();
   };
+  window.deckNext = function() { deckGo((current + 1) % keys.length); };
+  window.deckPrev = function() { deckGo((current - 1 + keys.length) % keys.length); };
 
-  window.deckNext = function() { deckGo(current + 1, 1);  };
-  window.deckPrev = function() { deckGo(current - 1, -1); };
-
-  // ── SWIPE UP / DOWN + MOUSE WHEEL ────────────────────────────────
-  let touchStartY = 0;
-  let mouseStartY = 0;
-  let mouseDragging = false;
-
-  stack.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  stack.addEventListener('touchend', function(e) {
-    const dy = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
-  }, { passive: true });
-
-  stack.addEventListener('mousedown', function(e) {
-    if (e.button !== 0) return;
-    // Don't intercept clicks on buttons/links inside cards
-    if (e.target.closest('button, a')) return;
-    mouseStartY = e.clientY;
-    mouseDragging = true;
+  // ── Drag / swipe ──────────────────────────────────────────────────────────
+  let dragStartX = 0, isDragging = false;
+  stack.addEventListener('mousedown', e => {
+    const card = e.target.closest('.mat-card');
+    if (!card || card.dataset.pos !== '0') return;
+    if (e.target.closest('button')) return;
+    dragStartX = e.clientX; isDragging = true;
     e.preventDefault();
   });
-
-  window.addEventListener('mouseup', function(e) {
-    if (!mouseDragging) return;
-    const dy = mouseStartY - e.clientY;
-    mouseDragging = false;
-    if (Math.abs(dy) > 40) dy > 0 ? deckNext() : deckPrev();
+  window.addEventListener('mouseup', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    const dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 80) dx > 0 ? deckPrev() : deckNext();
   });
+  stack.addEventListener('touchstart', e => {
+    const card = e.target.closest('.mat-card');
+    if (!card || card.dataset.pos !== '0') return;
+    dragStartX = e.touches[0].clientX;
+  }, { passive: true });
+  stack.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - dragStartX;
+    if (Math.abs(dx) > 60) dx > 0 ? deckPrev() : deckNext();
+  }, { passive: true });
 
-  stack.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    if (animating) return;
-    e.deltaY > 0 ? deckNext() : deckPrev();
-  }, { passive: false });
-
-  // ── JIGGLE ON LOCKED CARD CLICK ──────────────────────────────────
-  stack.addEventListener('click', function(e) {
-    const locked = e.target.closest('.mat-card-locked[data-pos="0"]');
-    if (!locked || e.target.closest('.mat-card-cs-btn')) return;
-    if (locked.classList.contains('jiggling')) return;
-    locked.classList.add('jiggling');
-    locked.addEventListener('animationend', () => locked.classList.remove('jiggling'), { once: true });
+  // ── Keyboard ──────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    const sec = document.getElementById('explore');
+    if (!sec) return;
+    const r = sec.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') deckNext();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   deckPrev();
   });
 
   positionCards();
 }
+
 
 function switchCardHero(key, vi) {
   const imgs = MATERIAL_IMAGES[key];
