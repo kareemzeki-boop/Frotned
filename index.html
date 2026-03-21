@@ -31,6 +31,9 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
+/* ACCESSIBILITY: Visible focus states */
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
 
@@ -5248,14 +5251,14 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" onclick="deckPrev()" role="button" tabindex="0" aria-label="Previous material">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})" role="button" tabindex="0" aria-label="Go to slide ${i+1}"></div>`).join('') +
+    `<div class="mat-deck-arrow" onclick="deckNext()" role="button" tabindex="0" aria-label="Next material">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})" role="button" tabindex="0" aria-label="Show ${MATERIALS[key].name}">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
       <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
@@ -6179,12 +6182,28 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('exp-lightbox').classList.contains('open')) closeExpLightbox();
+    else if (document.getElementById('lightbox').classList.contains('open')) closeLightbox();
+    else if (document.getElementById('modal-overlay').classList.contains('open')) closeModal();
+    else if (document.getElementById('mat-explorer-overlay').classList.contains('open')) closeExplorer();
+    else if (document.getElementById('sp-overlay').classList.contains('open')) closeSupProfile();
+    else if (document.getElementById('auth-overlay').classList.contains('open')) closeAuthModal();
+    else if (document.getElementById('sup-apply-overlay').classList.contains('open')) closeSupApply();
+    else if (document.getElementById('sub-modal-overlay').classList.contains('open')) closeSubModal();
+  }
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'Escape') closeLightbox();
-  } else if (document.getElementById('modal-overlay').classList.contains('open')) {
-    if (e.key === 'Escape') closeModal();
+  }
+  // Global delegated listener for Enter/Space on custom buttons
+  if (e.key === 'Enter' || e.key === ' ') {
+    if (e.target instanceof Element && e.target.getAttribute('role') === 'button') {
+      // Don't double-trigger for native interactive elements
+      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+      e.preventDefault();
+      e.target.click();
+    }
   }
 });
 
@@ -6195,7 +6214,7 @@ function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
   controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')" role="button" tabindex="0" aria-label="Toggle ${key} comparison">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
     </div>`).join('');
@@ -9525,8 +9544,8 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 </div>
 
 <!-- Lightbox -->
-<div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+<div id="exp-lightbox" onclick="closeExpLightbox()">
+  <div class="exp-lb-close" onclick="closeExpLightbox()">✕</div>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
@@ -9556,7 +9575,7 @@ function openLightbox(images, startIdx) {
   renderLightbox();
   document.getElementById('exp-lightbox').classList.add('open');
 }
-function closeLightbox() {
+function closeExpLightbox() {
   document.getElementById('exp-lightbox').classList.remove('open');
 }
 function lbNav(dir) {
