@@ -257,8 +257,20 @@ section{padding:100px 0}
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;letter-spacing:-0.5px;line-height:0.95;margin-bottom:16px;text-transform:uppercase}
 .section-desc{color:rgba(200,220,205,0.5);font-size:15px;max-width:560px;line-height:1.8}
 
+/* ── UNIFIED SECTION HEADER ─────────────────────────────────────────── */
+.sec-head {
+  background: var(--bg2);
+  border-bottom: 1px solid rgba(0,229,160,0.08);
+  padding: 64px 0 56px;
+}
+.sec-head .section-inner { padding-bottom: 0; }
+.sec-head .section-label { margin-bottom: 16px; }
+.sec-head .section-title { margin-bottom: 14px; }
+.sec-head .section-desc  { margin-bottom: 0; }
+
 /* ── EXPLORE / STACKED DECK ────────────────────────────────────────── */
 #explore { background: var(--bg2); border-top: 1px solid rgba(0,229,160,0.07); }
+#explore .sec-head { border-top: 1px solid rgba(0,229,160,0.07); }
 
 /* ── DECK WRAPPER ─────────────────────────────────────────────────── */
 .mat-deck-outer {
@@ -2125,6 +2137,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   section         { padding: 72px 0; }
   .section-inner  { padding: 0 24px; }
   .section-title  { font-size: 48px; }
+  .sec-head       { padding: 52px 0 44px; }
 
   /* MATERIAL DECK */
   .mat-deck-outer   { flex-direction: column; align-items: stretch; gap: 0; }
@@ -2209,6 +2222,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   section        { padding: 56px 0; }
   .section-inner { padding: 0 18px; }
   .section-title { font-size: 36px; line-height: 1; }
+  .sec-head       { padding: 40px 0 32px; }
   .section-label { font-size: 9px; letter-spacing: 3px; }
   .section-desc  { font-size: 13px; }
 
@@ -3374,11 +3388,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- EXPLORE -->
 <section id="explore">
-  <div class="section-inner">
-    <span class="section-label">Launch Cohort · GRC &amp; GFRP Live</span>
-    <h2 class="section-title">Material Explorer</h2>
-    <p class="section-desc">GRC and GFRP — live now with full spec data and verified suppliers. Additional façade categories are in development.</p>
-
+  <div class="sec-head">
+    <div class="section-inner">
+      <span class="section-label">6 Materials · Full Technical Data</span>
+      <h2 class="section-title">Material Explorer</h2>
+      <p class="section-desc">Full technical specifications, compliance data and UAE supplier connections for every major façade system.</p>
+    </div>
+  </div>
+  <div class="section-inner" style="padding-top:56px">
     <div class="mat-deck-outer">
       <!-- STACKED CARDS -->
       <div>
@@ -3394,17 +3411,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- COMPARISON -->
 <section id="compare">
-  <!-- Threads header -->
-  <div class="cmp-threads-header">
-    <canvas id="cmp-threads-canvas"></canvas>
-    <div class="cmp-threads-fade"></div>
-    <div class="section-inner cmp-threads-content">
+  <div class="sec-head">
+    <div class="section-inner">
       <span class="section-label">Side-by-Side Analysis</span>
       <h2 class="section-title">Live Comparison</h2>
       <p class="section-desc">Select materials to compare across key performance dimensions for UAE projects.</p>
     </div>
   </div>
-  <div class="section-inner">
+  <div class="section-inner" style="padding-top:56px">
     <div class="compare-controls" id="compare-controls"></div>
     <div class="compare-table-wrap">
       <table id="compare-table">
@@ -3429,14 +3443,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </section>
 
 <!-- AI MATERIAL ADVISOR — MERGED TOOL -->
-<section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07);padding:80px 0">
-  <div class="section-inner" style="text-align:center">
-    <span class="section-label">AI-Powered · 5 Questions</span>
-    <h2 class="section-title">Material Advisor</h2>
-    <p class="section-desc" style="margin:0 auto">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
+<section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07)">
+  <div class="sec-head" style="background:var(--bg)">
+    <div class="section-inner">
+      <span class="section-label">AI-Powered · 5 Questions</span>
+      <h2 class="section-title">Material Advisor</h2>
+      <p class="section-desc">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
+    </div>
   </div>
 
-  <div class="wizard-wrap">
+  <div class="wizard-wrap" style="padding-top:24px">
     <div class="wizard-card">
       <div class="wizard-progress"><div class="wizard-progress-bar" id="wiz-bar" style="width:20%"></div></div>
       <div class="wizard-body" id="wizard-body">
@@ -3450,19 +3466,23 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- SUPPLIERS (PREMIUM GATED) -->
 <section id="suppliers">
-  <div class="section-inner">
-    <div class="sup-section-head">
-      <div>
-        <span class="section-label">Verified Supplier Directory · Free for Architects</span>
-        <h2 class="section-title">UAE Suppliers</h2>
-        <p class="section-desc">Verified façade material manufacturers across the UAE — GRC, GRP, Precast, Aluminium and Stone. Direct contacts and compliance data included. Free for architects and consultants.</p>
+  <div class="sec-head">
+    <div class="section-inner">
+      <div class="sup-section-head">
+        <div>
+          <span class="section-label">Verified Supplier Directory · Free for Architects</span>
+          <h2 class="section-title">UAE Suppliers</h2>
+          <p class="section-desc">Verified façade material manufacturers across the UAE — GRC, GRP, Precast, Aluminium and Stone. Direct contacts and compliance data included. Free for architects and consultants.</p>
+        </div>
+        <button class="sup-list-cta" onclick="openSupApply()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          List Your Company
+        </button>
       </div>
-      <button class="sup-list-cta" onclick="openSupApply()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        List Your Company
-      </button>
-    </div>
 
+    </div><!-- /section-inner in sec-head -->
+  </div><!-- /sec-head -->
+  <div class="section-inner" style="padding-top:40px">
     <!-- Category filter bar -->
     <div class="sup-cat-bar" id="sup-cat-bar">
       <button class="sup-cat-tab active" onclick="supSetCat('all',this)">All <span class="sup-cat-count" id="sc-all">18</span></button>
