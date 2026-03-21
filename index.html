@@ -268,10 +268,11 @@ section{padding:100px 0}
 .explore-hero-bg {
   position: absolute;
   inset: 0;
-  height: 420px;
+  height: 440px;
   width: 100%;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 .explore-hero-bg img {
   width: 100%;
@@ -279,22 +280,69 @@ section{padding:100px 0}
   object-fit: cover;
   object-position: center 40%;
   display: block;
+  transition: transform 0.8s ease;
+  will-change: transform;
 }
+#explore:hover .explore-hero-bg img { transform: scale(1.04); }
 .explore-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(11,17,13,0.55) 0%,
-    rgba(11,17,13,0.70) 50%,
-    rgba(11,17,13,0.96) 85%,
+    rgba(11,17,13,0.45) 0%,
+    rgba(11,17,13,0.65) 55%,
+    rgba(11,17,13,0.97) 88%,
     rgba(11,17,13,1)    100%
   );
 }
 #explore .section-inner {
   position: relative;
   z-index: 1;
+}
+
+/* ── SHARED SECTION BACKGROUND IMAGE SYSTEM ──────────────────────────────── */
+.section-bg-img {
+  position: absolute;
+  inset: 0;
+  height: 340px;          /* image band height — below this fades to bg */
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s ease;
+  will-change: transform;
+  pointer-events: none;
+}
+.section-bg-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(11,17,13,0.42) 0%,
+    rgba(11,17,13,0.68) 55%,
+    rgba(11,17,13,0.97) 90%,
+    rgba(11,17,13,1)    100%
+  );
+}
+#wizard:hover   .section-bg-img { transform: scale(1.04); }
+#suppliers:hover .section-bg-img { transform: scale(1.04); }
+
+/* Advisor / Wizard — architect consultation, blueprint workflow */
+#wizard-bg {
+  background-image: url('https://images.pexels.com/photos/834892/pexels-photo-834892.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop');
+  background-position: center 30%;
+}
+
+/* Suppliers — modern manufacturing / warehouse / factory */
+#suppliers-bg {
+  background-image: url('https://images.pexels.com/photos/236698/pexels-photo-236698.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop');
+  background-position: center 45%;
+}
+
+@media (max-width: 767px) {
+  .section-bg-img { height: 260px; }
+  .explore-hero-bg { height: 320px; }
+  .cmp-threads-header { height: 180px; }
 }
 
 /* ── DECK WRAPPER ─────────────────────────────────────────────────── */
@@ -714,13 +762,23 @@ section{padding:100px 0}
 /* ── Compare threads header ── */
 .cmp-threads-header {
   position: relative;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
   border-bottom: 1px solid rgba(0,229,160,0.08);
-  background:
-    url('https://images.pexels.com/photos/7143883/pexels-photo-7143883.jpeg?auto=compress&cs=tinysrgb&w=1400&h=400&fit=crop')
-    center / cover no-repeat;
 }
+/* Zoom image on section hover */
+.cmp-threads-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.pexels.com/photos/1117452/pexels-photo-1117452.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop');
+  background-size: cover;
+  background-position: center 35%;
+  transition: transform 0.8s ease;
+  will-change: transform;
+  z-index: 0;
+}
+#compare:hover .cmp-threads-header::before { transform: scale(1.04); }
 #cmp-threads-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%; display: block;
@@ -728,15 +786,18 @@ section{padding:100px 0}
 .cmp-threads-fade {
   position: absolute; inset: 0;
   background:
-    linear-gradient(to bottom, rgba(8,14,10,0.7) 0%, rgba(8,14,10,0.85) 60%, var(--bg) 100%);
+    linear-gradient(to bottom, rgba(8,14,10,0.45) 0%, rgba(8,14,10,0.75) 60%, var(--bg) 100%);
   pointer-events: none;
+  z-index: 1;
 }
 .cmp-threads-content {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   justify-content: center;
   padding-top: 48px;
+  z-index: 2;
 }
+#cmp-threads-canvas { z-index: 1; }
 
 .mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase}
 .mat-toggle.active{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.06);color:var(--accent)}
@@ -3414,7 +3475,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <!-- EXPLORE -->
 <section id="explore">
   <div class="explore-hero-bg">
-    <img src="https://source.unsplash.com/Y1UalE7alkY/1800x500" alt="" aria-hidden="true">
+    <img src="https://images.pexels.com/photos/2101137/pexels-photo-2101137.jpeg?auto=compress&cs=tinysrgb&w=1800&h=500&fit=crop" alt="" aria-hidden="true">
   </div>
   <div class="section-inner">
     <span class="section-label">Launch Cohort · GRC &amp; GFRP Live</span>
@@ -3471,8 +3532,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </section>
 
 <!-- AI MATERIAL ADVISOR — MERGED TOOL -->
-<section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07);padding:80px 0">
-  <div class="section-inner" style="text-align:center">
+<section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07);padding:80px 0;position:relative;overflow:hidden">
+  <div class="section-bg-img" id="wizard-bg"></div>
+  <div class="section-inner" style="text-align:center;position:relative;z-index:1">
     <span class="section-label">AI-Powered · 5 Questions</span>
     <h2 class="section-title">Material Advisor</h2>
     <p class="section-desc" style="margin:0 auto">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
@@ -3491,8 +3553,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 
 <!-- SUPPLIERS (PREMIUM GATED) -->
-<section id="suppliers">
-  <div class="section-inner">
+<section id="suppliers" style="position:relative;overflow:hidden">
+  <div class="section-bg-img" id="suppliers-bg"></div>
+  <div class="section-inner" style="position:relative;z-index:1">
     <div class="sup-section-head">
       <div>
         <span class="section-label">Verified Supplier Directory · Free for Architects</span>
