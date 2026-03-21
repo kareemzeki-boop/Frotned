@@ -257,6 +257,25 @@ section{padding:72px 0}
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;letter-spacing:-0.5px;line-height:0.95;margin-bottom:16px;text-transform:uppercase}
 .section-desc{color:rgba(200,220,205,0.5);font-size:15px;max-width:560px;line-height:1.8}
 
+/* ── SECTION CAPABILITY TAGS ──────────────────────────────────────── */
+.sec-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+.sec-tag-acc {
+  color: var(--accent);
+  background: rgba(0,229,160,0.07);
+  border-color: rgba(0,229,160,0.25);
+}
+
 /* ── UNIFIED SECTION HEADER ─────────────────────────────────────────── */
 .sec-head {
   background: var(--bg2);
@@ -1442,8 +1461,8 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   border-color: rgba(0,229,160,0.3);
 }
 /* Hero desc strong */
-.hero-desc strong {
-  color: var(--text);
+.hero-desc strong { color: var(--text); font-weight: 700; }
+.hero-desc strong {  color: var(--text);
   font-weight: 600;
 }
 
@@ -3309,15 +3328,21 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="hero-content-wrap">
     <div class="hero-text-block" style="max-width:780px">
       <span class="hero-eyebrow">UAE Façade Specification Platform</span>
+      <div class="hero-trust" style="opacity:0;animation:fadeUp 0.6s 0.3s ease forwards;display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+        <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:rgba(200,220,205,0.35);display:flex;align-items:center;gap:5px"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' width='10' height='10' style='fill:var(--accent);opacity:.7'><path d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>DCD Aligned</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:rgba(200,220,205,0.35);display:flex;align-items:center;gap:5px"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' width='10' height='10' style='fill:var(--accent);opacity:.7'><path d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>Estidama Ready</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:rgba(200,220,205,0.35);display:flex;align-items:center;gap:5px"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' width='10' height='10' style='fill:var(--accent);opacity:.7'><path d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>UAE Fire Code 2017</span>
+      </div>
       <h1>We Specify<br>Facades<br><span style="color:var(--accent)">For UAE.</span></h1>
 
-      <p class="hero-desc">CladWise UAE launches with a focused cohort: <strong>GRC and GFRP façade systems</strong> — the two most technically complex and compliance-sensitive cladding categories in the UAE market. Specification-grade data, verified suppliers, and compliance documentation, benchmarked against Dubai Building Code, DCD approvals, and Estidama requirements. Additional façade categories are in development and opening for pre-registration.</p>
+      <p class="hero-desc">Specification-grade technical data, verified UAE suppliers, and compliance documentation — all in one place. Built for architects and façade consultants.</p>
 
 
       <div class="hero-btns" style="opacity:0;animation:fadeUp 0.6s 0.65s ease forwards">
         <a href="#wizard" class="btn-primary"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 5.6 10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a1 1 0 0 0-1.41 0L1.29 18.96a1 1 0 0 0 0 1.41l2.34 2.34a1 1 0 0 0 1.41 0L16.7 11.05a1 1 0 0 0 0-1.41l-2.33-2.35zm-1.03 5.49-2.12-2.12 2.44-2.44 2.12 2.12-2.44 2.44z"/></svg></i>&nbsp; Run Advisor Wizard</a>
         <a href="#explore" class="btn-outline">Explore Materials →</a>
       </div>
+      <p style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,220,205,0.3);letter-spacing:1px;margin-top:14px">Free for architects · No credit card</p>
     </div>
 
     <!-- Floating material score cards top right -->
@@ -3340,7 +3365,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </div>
 
       <!-- LOCKED — Aluminum -->
-      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.05);padding:14px;cursor:default;opacity:0.55;position:relative">
+      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.04);padding:14px;cursor:default;opacity:0.28;position:relative">
         <div style="position:absolute;top:6px;right:7px;font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:1px">SOON</div>
         <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">ALUM</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:rgba(255,255,255,0.2);line-height:1">—</div>
@@ -3348,7 +3373,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </div>
 
       <!-- LOCKED — Stone -->
-      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.05);padding:14px;cursor:default;opacity:0.55;position:relative">
+      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.04);padding:14px;cursor:default;opacity:0.28;position:relative">
         <div style="position:absolute;top:6px;right:7px;font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:1px">SOON</div>
         <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">STONE</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:rgba(255,255,255,0.2);line-height:1">—</div>
@@ -3356,7 +3381,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </div>
 
       <!-- LOCKED — ACM-FR -->
-      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.05);padding:14px;cursor:default;opacity:0.55;position:relative">
+      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.04);padding:14px;cursor:default;opacity:0.28;position:relative">
         <div style="position:absolute;top:6px;right:7px;font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:1px">SOON</div>
         <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">ACM-FR</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:rgba(255,255,255,0.2);line-height:1">—</div>
@@ -3364,7 +3389,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       </div>
 
       <!-- LOCKED — Fibre Cement -->
-      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.05);padding:14px;cursor:default;opacity:0.55;position:relative">
+      <div style="background:rgba(9,15,11,0.6);border:1px solid rgba(255,255,255,0.04);padding:14px;cursor:default;opacity:0.28;position:relative">
         <div style="position:absolute;top:6px;right:7px;font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:1px">SOON</div>
         <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">FC</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:rgba(255,255,255,0.2);line-height:1">—</div>
@@ -3377,10 +3402,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <!-- Bottom stats bar -->
   <div class="hero-stats-bar">
     <div class="hero-stats-inner">
-      <div class="stat-box"><span class="stat-num">2</span><span class="stat-label">Live at Launch</span></div>
-      <div class="stat-box"><span class="stat-num">4</span><span class="stat-label">Categories Coming Soon</span></div>
-      <div class="stat-box"><span class="stat-num">7</span><span class="stat-label">UAE Jurisdictions</span></div>
-      <div class="stat-box" style="border-right:none"><span class="stat-num" style="font-size:32px;line-height:1.2">Manually<br>Reviewed</span><span class="stat-label">Every Supplier</span></div>
+      <div class="stat-box"><span class="stat-num">6</span><span class="stat-label">Façade Materials</span></div>
+      <div class="stat-box"><span class="stat-num">18</span><span class="stat-label">Verified Suppliers</span></div>
+      <div class="stat-box"><span class="stat-num">7</span><span class="stat-label">Emirates</span></div>
+      <div class="stat-box" style="border-right:none"><span class="stat-num">100%</span><span class="stat-label">Free for Architects</span></div>
     </div>
   </div>
 </section>
@@ -3389,9 +3414,18 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <section id="explore">
   <div class="sec-head">
     <div class="section-inner">
-      <span class="section-label">6 Materials · Full Technical Data</span>
-      <h2 class="section-title">Material Explorer</h2>
-      <p class="section-desc">Full technical specifications, compliance data and UAE supplier connections for every major façade system.</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+        <div>
+          <span class="section-label">6 Materials · Full Technical Data</span>
+          <h2 class="section-title">Material Explorer</h2>
+          <p class="section-desc">Full technical specifications, compliance data and UAE supplier connections for every major façade system.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:4px">
+          <span class="sec-tag">EN 13501-1</span>
+          <span class="sec-tag">DCD Approved</span>
+          <span class="sec-tag">UAE Fire Code</span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="section-inner" style="padding-top:48px">
@@ -3412,9 +3446,19 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <section id="compare">
   <div class="sec-head">
     <div class="section-inner">
-      <span class="section-label">Side-by-Side Analysis</span>
-      <h2 class="section-title">Live Comparison</h2>
-      <p class="section-desc">Select materials to compare across key performance dimensions for UAE projects.</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+        <div>
+          <span class="section-label">Side-by-Side Analysis</span>
+          <h2 class="section-title">Live Comparison</h2>
+          <p class="section-desc">Select materials to compare across key performance dimensions for UAE projects.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:4px">
+          <span class="sec-tag">Fire Rating</span>
+          <span class="sec-tag">Weight</span>
+          <span class="sec-tag">Cost/m²</span>
+          <span class="sec-tag">Lead Time</span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="section-inner" style="padding-top:48px">
@@ -3445,9 +3489,18 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 <section id="wizard" style="background:var(--bg);border-top:1px solid rgba(0,229,160,0.07);padding-top:0">
   <div class="sec-head" style="background:var(--bg)">
     <div class="section-inner">
-      <span class="section-label">AI-Powered · 5 Questions</span>
-      <h2 class="section-title">Material Advisor</h2>
-      <p class="section-desc">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+        <div>
+          <span class="section-label">AI-Powered · 5 Questions</span>
+          <h2 class="section-title">Material Advisor</h2>
+          <p class="section-desc">Answer 5 targeted questions. Get a ranked material recommendation with UAE compliance context — precise, instant, no login needed.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:4px">
+          <span class="sec-tag">No Login</span>
+          <span class="sec-tag">Instant Result</span>
+          <span class="sec-tag sec-tag-acc">Free</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3471,7 +3524,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div>
           <span class="section-label">Verified Supplier Directory · Free for Architects</span>
           <h2 class="section-title">UAE Suppliers</h2>
-          <p class="section-desc">Verified façade material manufacturers across the UAE — GRC, GRP, Precast, Aluminium and Stone. Direct contacts and compliance data included. Free for architects and consultants.</p>
+          <p class="section-desc">Verified façade material manufacturers across the UAE — GRC, GRP, Precast, Aluminium and Stone. Direct contacts included. Free for architects.</p>
         </div>
         <button class="sup-list-cta" onclick="openSupApply()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -3530,6 +3583,20 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 
 
+
+<!-- CTA STRIP -->
+<section style="background:var(--bg2);border-top:1px solid rgba(0,229,160,0.08);padding:64px 0;text-align:center">
+  <div class="section-inner">
+    <span class="section-label" style="justify-content:center">Start Now · Free for Architects</span>
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:52px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;line-height:1;margin:12px 0 16px">Choose the Right Façade.<br><span style="color:var(--accent)">Before the Wrong One Costs You.</span></h2>
+    <p style="color:rgba(200,220,205,0.5);font-size:14px;max-width:480px;margin:0 auto 32px;line-height:1.8">Compare materials, verify compliance, and connect with UAE-verified suppliers — free for architects and consultants.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="#wizard" class="btn-primary">Run Material Advisor →</a>
+      <a href="#explore" class="btn-outline">Browse Materials</a>
+    </div>
+    <p style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,220,205,0.25);letter-spacing:1px;margin-top:16px">No credit card · No subscription · Built for UAE projects</p>
+  </div>
+</section>
 
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-overlay" onclick="authOverlayClick(event)">
