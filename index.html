@@ -258,7 +258,44 @@ section{padding:100px 0}
 .section-desc{color:rgba(200,220,205,0.5);font-size:15px;max-width:560px;line-height:1.8}
 
 /* ── EXPLORE / STACKED DECK ────────────────────────────────────────── */
-#explore { background: var(--bg2); border-top: 1px solid rgba(0,229,160,0.07); }
+#explore {
+  background: var(--bg2);
+  border-top: 1px solid rgba(0,229,160,0.07);
+  position: relative;
+  overflow: hidden;
+}
+/* Hero image band behind the section header text only */
+.explore-hero-bg {
+  position: absolute;
+  inset: 0;
+  height: 420px;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.explore-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+}
+.explore-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(11,17,13,0.72) 0%,
+    rgba(11,17,13,0.82) 50%,
+    rgba(11,17,13,0.98) 85%,
+    rgba(11,17,13,1)    100%
+  );
+}
+#explore .section-inner {
+  position: relative;
+  z-index: 1;
+}
 
 /* ── DECK WRAPPER ─────────────────────────────────────────────────── */
 .mat-deck-outer {
@@ -3376,6 +3413,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- EXPLORE -->
 <section id="explore">
+  <!-- Unsplash hero background: white facade squares wall (Y1UalE7alkY) -->
+  <div class="explore-hero-bg">
+    <img src="https://images.unsplash.com/photo-Y1UalE7alkY?w=1600&h=420&fit=crop&q=85&auto=format" alt="" aria-hidden="true">
+  </div>
   <div class="section-inner">
     <span class="section-label">Launch Cohort · GRC &amp; GFRP Live</span>
     <h2 class="section-title">Material Explorer</h2>
