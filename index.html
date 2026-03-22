@@ -222,71 +222,6 @@ body { padding-top: 0; }
 .hero-glow{position:absolute;top:20%;right:10%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,229,160,0.06) 0%,transparent 70%);pointer-events:none}
 .hero-inner{max-width:1280px;margin:0 auto;padding:0 32px;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp 0.6s 0.2s ease forwards;display:flex;align-items:center;gap:12px}.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--accent);display:inline-block}
-
-/* ── SHUFFLE BANNER ──────────────────────────────────────────────────── */
-.shuffle-banner {
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0,229,160,0.06);
-  border: 1px solid rgba(0,229,160,0.22);
-  border-radius: 100px;
-  padding: 7px 20px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  overflow: hidden;
-  white-space: nowrap;
-  opacity: 0;
-  animation: fadeUp 0.5s 0.1s ease forwards;
-}
-.shuffle-banner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,229,160,0.08) 50%, transparent 100%);
-  animation: sb-sweep 3.5s ease-in-out infinite;
-  pointer-events: none;
-  border-radius: 100px;
-}
-@keyframes sb-sweep {
-  0%   { transform: translateX(-120%); }
-  100% { transform: translateX(120%); }
-}
-.shuffle-dot {
-  width: 5px; height: 5px;
-  background: #00e5a0;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(0,229,160,0.8);
-  animation: sb-pulse 2s ease-in-out infinite;
-}
-@keyframes sb-pulse {
-  0%,100% { opacity:1; transform:scale(1); box-shadow:0 0 6px rgba(0,229,160,0.8); }
-  50%      { opacity:0.35; transform:scale(0.6); box-shadow:none; }
-}
-#shuffle-text {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: rgba(0,229,160,0.9);
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
-#shuffle-text .sw { display: inline-block; }
-#shuffle-text .sw.scrambling { color: rgba(0,229,160,0.25); }
-#shuffle-text .sw.done       { color: rgba(0,229,160,0.92); }
-#shuffle-text .sw.pending    { color: rgba(0,229,160,0.07); }
-@media (max-width: 767px) {
-  .shuffle-banner { top: 68px; padding: 6px 14px; }
-  #shuffle-text   { font-size: 7.5px; letter-spacing: 1.5px; }
-}
 h1{font-family:'Barlow Condensed',sans-serif;font-size:96px;font-weight:900;line-height:0.9;letter-spacing:-1px;margin-bottom:24px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;text-transform:uppercase}
 h1 span{color:var(--accent)}
 .hero-desc{color:rgba(200,220,205,0.55);font-size:15px;line-height:1.8;max-width:420px;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.5s ease forwards;font-weight:400}
@@ -314,12 +249,6 @@ h1 span{color:var(--accent)}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeRight{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
-@keyframes shuffleSweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-@keyframes shufflePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
-@keyframes shuffleGlow{0%,100%{text-shadow:0 0 8px rgba(0,229,160,0.8)}50%{text-shadow:0 0 20px rgba(0,229,160,0.4)}}
-.shuffle-char{display:inline-block;transition:color .04s}
-.shuffle-char.sc{color:rgba(0,229,160,0.25);animation:shuffleGlow .15s ease-in-out infinite}
-.shuffle-char.sr{color:rgba(0,229,160,1);text-shadow:0 0 12px rgba(0,229,160,0.5)}
 
 /* SECTION COMMONS */
 section{padding:72px 0}
@@ -3385,13 +3314,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- HERO -->
-<!-- SHUFFLE BANNER -->
-<div class="shuffle-banner" id="shuffle-banner">
-  <div class="shuffle-dot"></div>
-  <div id="shuffle-text"></div>
-  <div class="shuffle-dot"></div>
-</div>
-
 <section id="home" style="min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;display:flex;flex-direction:column">
   <!-- Full bleed background image -->
   <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=75');background-size:cover;background-position:center;filter:brightness(0.28) saturate(0.6)"></div>
@@ -3401,21 +3323,6 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="hero-grid"></div>
   <!-- Accent glow -->
   <div style="position:absolute;bottom:20%;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,160,0.05) 0%,transparent 70%);pointer-events:none"></div>
-
-  <!-- SHUFFLE BANNER — sits below the nav pill -->
-  <div class="shuffle-banner" id="shuffle-banner">
-    <div class="shuffle-dot"></div>
-    <div id="shuffle-text"></div>
-    <div class="shuffle-dot"></div>
-  </div>
-
-  <!-- SHUFFLE BANNER -->
-  <div id="shuffle-banner" style="position:relative;z-index:10;width:100%;background:rgba(0,229,160,0.06);border-bottom:1px solid rgba(0,229,160,0.15);padding:9px 24px;display:flex;align-items:center;justify-content:center;gap:14px;overflow:hidden;flex-shrink:0">
-    <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(0,229,160,0.06) 50%,transparent 100%);animation:shuffleSweep 3s ease-in-out infinite;pointer-events:none"></div>
-    <div style="width:5px;height:5px;background:#00e5a0;border-radius:50%;flex-shrink:0;animation:shufflePulse 2s ease-in-out infinite;box-shadow:0 0 8px rgba(0,229,160,0.8)"></div>
-    <div id="shuffle-text" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(0,229,160,0.9);position:relative;z-index:1;text-align:center;min-height:14px"></div>
-    <div style="width:5px;height:5px;background:#00e5a0;border-radius:50%;flex-shrink:0;animation:shufflePulse 2s ease-in-out infinite 1s;box-shadow:0 0 8px rgba(0,229,160,0.8)"></div>
-  </div>
 
   <!-- Main hero content -->
   <div class="hero-content-wrap">
@@ -6955,59 +6862,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCompare();
   buildWizard();
   buildSuppliers();
-  initShuffleBanner();
 });
-
-// ── SHUFFLE BANNER ────────────────────────────────────────────────────────────
-function initShuffleBanner() {
-  const el = document.getElementById('shuffle-text');
-  if (!el) return;
-  const TARGET = 'Early Access Platform  ·  Actively Expanding Materials & Supplier Network';
-  const POOL   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@%&*!?';
-  const chars  = TARGET.split('');
-  const skip   = ch => ch === ' ' || ch === '·';
-  let resolved, raf, loopTimer;
-
-  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-  function render() {
-    el.innerHTML = chars.map((ch, i) => {
-      if (skip(ch)) return `<span class="shuffle-char sr">${ch === ' ' ? '&nbsp;' : ch}</span>`;
-      if (resolved[i]) return `<span class="shuffle-char sr">${ch}</span>`;
-      return `<span class="shuffle-char sc">${rand(POOL)}</span>`;
-    }).join('');
-  }
-
-  function run() {
-    resolved = new Array(chars.length).fill(false);
-    let tick = 0;
-
-    const remaining = () => chars.filter((c, i) => !resolved[i] && !skip(c)).map((_, i) => i);
-    const unresolvedIdxs = () => chars.map((c, i) => !resolved[i] && !skip(c) ? i : -1).filter(i => i >= 0);
-
-    function step() {
-      tick++;
-      // resolve 1 char every 4 ticks (~240ms at 60fps)
-      if (tick % 4 === 0) {
-        const pool = unresolvedIdxs();
-        if (pool.length > 0) {
-          resolved[pool[Math.floor(Math.random() * pool.length)]] = true;
-        }
-      }
-      render();
-      const done = unresolvedIdxs().length === 0;
-      if (!done) {
-        raf = requestAnimationFrame(step);
-      } else {
-        // fully resolved — hold 3.5s then restart
-        loopTimer = setTimeout(run, 3500);
-      }
-    }
-    raf = requestAnimationFrame(step);
-  }
-
-  run();
-}
 
 // ═══════════════════════════════════════════════════════════
 // FULL AUTH + PAYMENT SYSTEM
@@ -10229,53 +10084,5 @@ void main(){
 })();
 </script>
 
-<!-- SHUFFLE BANNER JS -->
-<script>
-(function(){
-  const TARGET = 'Early Access Platform  ·  Actively Expanding Materials & Supplier Network';
-  const CHARS  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@';
-  const el     = document.getElementById('shuffle-text');
-  if (!el) return;
-
-  const words = TARGET.split(' ');
-  let wi = 0, scrambleCount = 0, timer = null;
-
-  function rand(ch) {
-    return /[A-Z0-9#%&@·]/i.test(ch) ? CHARS[Math.floor(Math.random()*CHARS.length)] : ch;
-  }
-
-  function render() {
-    el.innerHTML = words.map((w, i) => {
-      if (i < wi) {
-        return `<span class="sw done">${w}&nbsp;</span>`;
-      }
-      if (i === wi) {
-        const s = w.split('').map(rand).join('');
-        return `<span class="sw scrambling">${s}&nbsp;</span>`;
-      }
-      return `<span class="sw pending">${w}&nbsp;</span>`;
-    }).join('');
-  }
-
-  function step() {
-    render();
-    scrambleCount++;
-    if (scrambleCount >= 9) {
-      scrambleCount = 0;
-      wi++;
-    }
-    if (wi < words.length) {
-      timer = setTimeout(step, 52);
-    } else {
-      // full resolved — pause then restart
-      el.innerHTML = words.map(w => `<span class="sw done">${w}&nbsp;</span>`).join('');
-      timer = setTimeout(() => { wi = 0; scrambleCount = 0; step(); }, 3400);
-    }
-  }
-
-  // small initial delay so page loads first
-  setTimeout(step, 600);
-})();
-</script>
 </body>
 </html>
