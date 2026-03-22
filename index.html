@@ -2894,10 +2894,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* ── VIEW PROFILE BUTTON ─────────────────────────────────────────────── */
 .sup-gc-view-btn {
-  margin: 12px 16px 0;
   background: #0e1c10;
   border: 1px solid rgba(0,229,160,0.18);
-  border-radius: 50px;
+  border-radius: 8px;
   padding: 11px 18px;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 13px; font-weight: 800;
@@ -2907,7 +2906,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: all 0.2s;
-  width: calc(100% - 32px);
+  width: 100%;
 }
 .sup-gc-view-btn:hover {
   background: rgba(0,229,160,0.1);
@@ -3070,10 +3069,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* Claim button — same shape as view-btn, amber colour, below it */
 .sup-gc-claim-btn {
-  margin: 4px 16px 0;
   background: rgba(245,158,11,0.06);
   border: 1px solid rgba(245,158,11,0.25);
-  border-radius: 50px;
+  border-radius: 8px;
   padding: 11px 18px;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 13px; font-weight: 800;
@@ -3083,7 +3081,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: all 0.2s;
-  width: calc(100% - 32px);
+  width: 100%;
 }
 .sup-gc-claim-btn:hover {
   background: rgba(245,158,11,0.14);
@@ -6688,19 +6686,19 @@ function supGridCardHTML(s, blurred, dimLocked) {
       </div>
       <p class="sup-gc-tagline">${s.tagline || s.fullName || ''}</p>
       <div class="sup-gc-mats">${mats}</div>
+
+      <!-- BUTTONS — inside body, clear of card border -->
+      <div class="sup-gc-btns" style="margin-top:auto;padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px">
+        ${isLocked ? '' : `<button class="sup-gc-view-btn" onclick="event.stopPropagation();openSupProfile(${idx})">
+          View Profile
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>`}
+        <button class="sup-gc-claim-btn" onclick="event.stopPropagation();openSupApply()">
+          ★ Claim This Profile
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </div>
-
-    <!-- VIEW PROFILE BUTTON -->
-    ${isLocked ? '' : `<button class="sup-gc-view-btn" onclick="event.stopPropagation();openSupProfile(${idx})">
-      View Profile
-      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>`}
-
-    <!-- CLAIM PROFILE BUTTON -->
-    <button class="sup-gc-claim-btn" onclick="event.stopPropagation();openSupApply()">
-      ★ Claim This Profile
-      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
 
     <!-- EXPANDED PANEL -->
     ${isLocked ? '' : `<div class="sup-gc-panel">
