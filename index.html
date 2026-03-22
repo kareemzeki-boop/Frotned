@@ -225,49 +225,54 @@ body { padding-top: 0; }
 
 /* ── SHUFFLE BANNER ──────────────────────────────────────────────────── */
 .shuffle-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 200;
-  background: rgba(6,12,8,0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,229,160,0.15);
-  padding: 7px 20px;
-  display: flex;
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  gap: 10px;
+  background: rgba(0,229,160,0.06);
+  border: 1px solid rgba(0,229,160,0.22);
+  border-radius: 100px;
+  padding: 7px 20px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.1s ease forwards;
 }
 .shuffle-banner::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,229,160,0.05) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(0,229,160,0.08) 50%, transparent 100%);
   animation: sb-sweep 3.5s ease-in-out infinite;
   pointer-events: none;
+  border-radius: 100px;
 }
 @keyframes sb-sweep {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
 }
 .shuffle-dot {
   width: 5px; height: 5px;
   background: #00e5a0;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0,229,160,0.8);
   animation: sb-pulse 2s ease-in-out infinite;
 }
 @keyframes sb-pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50%      { opacity:0.3; transform:scale(0.65); }
+  0%,100% { opacity:1; transform:scale(1); box-shadow:0 0 6px rgba(0,229,160,0.8); }
+  50%      { opacity:0.35; transform:scale(0.6); box-shadow:none; }
 }
 #shuffle-text {
   font-family: 'DM Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 2px;
+  font-size: 9px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   color: rgba(0,229,160,0.9);
   position: relative;
@@ -275,17 +280,12 @@ body { padding-top: 0; }
   text-align: center;
 }
 #shuffle-text .sw { display: inline-block; }
-#shuffle-text .sw.scrambling { color: rgba(0,229,160,0.28); }
-#shuffle-text .sw.done       { color: rgba(0,229,160,0.9); }
-#shuffle-text .sw.pending    { color: rgba(0,229,160,0.08); }
-/* Offset nav and home section to account for banner height */
-nav { top: 34px !important; }
-#home { padding-top: 34px; }
+#shuffle-text .sw.scrambling { color: rgba(0,229,160,0.25); }
+#shuffle-text .sw.done       { color: rgba(0,229,160,0.92); }
+#shuffle-text .sw.pending    { color: rgba(0,229,160,0.07); }
 @media (max-width: 767px) {
-  .shuffle-banner { padding: 6px 12px; }
-  #shuffle-text   { font-size: 7.5px; letter-spacing: 1px; }
-  nav { top: 30px !important; }
-  #home { padding-top: 30px; }
+  .shuffle-banner { top: 68px; padding: 6px 14px; }
+  #shuffle-text   { font-size: 7.5px; letter-spacing: 1.5px; }
 }
 h1{font-family:'Barlow Condensed',sans-serif;font-size:96px;font-weight:900;line-height:0.9;letter-spacing:-1px;margin-bottom:24px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;text-transform:uppercase}
 h1 span{color:var(--accent)}
@@ -3401,6 +3401,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   <div class="hero-grid"></div>
   <!-- Accent glow -->
   <div style="position:absolute;bottom:20%;left:5%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,160,0.05) 0%,transparent 70%);pointer-events:none"></div>
+
+  <!-- SHUFFLE BANNER — sits below the nav pill -->
+  <div class="shuffle-banner" id="shuffle-banner">
+    <div class="shuffle-dot"></div>
+    <div id="shuffle-text"></div>
+    <div class="shuffle-dot"></div>
+  </div>
 
   <!-- SHUFFLE BANNER -->
   <div id="shuffle-banner" style="position:relative;z-index:10;width:100%;background:rgba(0,229,160,0.06);border-bottom:1px solid rgba(0,229,160,0.15);padding:9px 24px;display:flex;align-items:center;justify-content:center;gap:14px;overflow:hidden;flex-shrink:0">
