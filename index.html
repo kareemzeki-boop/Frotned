@@ -2842,7 +2842,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 /* ── CARD BODY ───────────────────────────────────────────────────────── */
 .sup-gc-body {
-  padding: 14px 16px 0;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .sup-gc-name-row {
   display: flex; align-items: center; gap: 7px;
@@ -5194,6 +5197,27 @@ const SUPPLIERS = [
     about: 'Angel Tech UAE LLC is a UAE-based manufacturer and supplier of GFRC and GRP architectural facade products.',
     specialisations: ['GFRC', 'GRP'],
     contributions: [],
+    photos: [],
+  },
+  {
+    name: 'Notredame',
+    fullName: 'Notredame Fibreglass & Industrial Marble Co. LLC',
+    location: 'Sharjah, UAE',
+    address: 'P.O. Box 22284, Sharjah, UAE',
+    jurisdiction: 'Sharjah, UAE',
+    mats: ['GFRC', 'GFRP'],
+    phone: '+971 6 538 6611',
+    email: 'notredam@emirates.net.ae',
+    website: 'https://notredame.ae',
+    emoji: '🏛️',
+    color: '#1a1200',
+    verified: false,
+    tier: 'standard',
+    established: 1994,
+    tagline: 'Est. 1994 · GFRC, GFRP & Urban Furnishing · Sharjah HQ · Dubai & Abu Dhabi Branches',
+    about: 'Notredame Fibreglass & Industrial Marble Co. LLC, established in 1994 and based in Sharjah, is a pioneer in the Arabian market for GFRC, GFRP and urban furnishing. With nearly three decades of expertise, the company specialises in innovative facades, precision-engineered moulds, pergolas, shelters and GFRP lining solutions, with branches in Dubai and Abu Dhabi.',
+    specialisations: ['GFRC / GRC Facades', 'GFRP Solutions', 'Urban Furnishing', 'Precision Engineered Moulds', 'Pergolas & Shelters'],
+    contributions: ['Est. 1994 — 30 Years UAE Experience', 'Dubai Branch: +971 4 239 1560', 'Abu Dhabi Branch: +971 2 553 5449'],
     photos: [],
   },
 ];
