@@ -6678,15 +6678,6 @@ function supGridCardHTML(s, blurred, dimLocked) {
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
-    <!-- EXPAND TOGGLE -->
-    ${isLocked ? '' : `<div class="sup-gc-divider"></div>
-    <button class="sup-gc-expand-btn" onclick="event.stopPropagation();toggleSupCard(${idx})">
-      <span>Details</span>
-      <span class="expand-chevron">
-        <svg viewBox="0 0 7 7" fill="none"><path d="M1 2.5l2.5 2.5L6 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-    </button>`}
-
     <!-- EXPANDED PANEL -->
     ${isLocked ? '' : `<div class="sup-gc-panel">
       <!-- Tabs -->
