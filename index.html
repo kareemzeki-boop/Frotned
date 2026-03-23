@@ -739,6 +739,11 @@ thead tr{background:var(--bg3);border-bottom:2px solid rgba(0,229,160,0.15)}
 th{padding:16px 20px;text-align:left;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:2px;color:var(--muted);text-transform:uppercase;border-bottom:none}
 td{padding:14px 20px;border-bottom:1px solid var(--border);font-size:13px}
 tr:last-child td{border-bottom:none}
+/* Row label column */
+td:first-child{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(200,220,205,0.5);text-transform:uppercase;border-right:1px solid var(--border);background:rgba(0,0,0,0.2);white-space:nowrap;width:200px}
+/* Section divider rows */
+tr.compare-section-head td{background:rgba(0,229,160,0.04);border-top:1px solid rgba(0,229,160,0.12);border-bottom:1px solid rgba(0,229,160,0.08);padding:8px 20px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(0,229,160,0.5);text-transform:uppercase}
+tr:hover td{background:rgba(0,229,160,0.02)}
 tr:hover td{background:rgba(255,255,255,0.02)}
 .td-label{color:var(--muted);font-weight:500;font-size:12px}
 .star-row{color:var(--amber);font-size:12px;letter-spacing:1px}
@@ -3491,7 +3496,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <tbody id="compare-tbody"></tbody>
       </table>
     </div>
-    <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
+    <!-- Score methodology + export -->
+    <div style="margin-top:16px;padding:14px 18px;background:rgba(0,229,160,0.03);border:1px solid rgba(0,229,160,0.08);border-radius:8px">
+      <p style="font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(200,220,205,0.35);letter-spacing:1px;line-height:1.8;margin:0">
+        SCORE METHODOLOGY — Performance scores (0–100) are weighted composites derived from published test data, UAE climate considerations and GCC project benchmarks.
+        Thermal Performance: steady-state U-value and thermal mass · Fire Performance: EN 13501-1 classification and DCD approval scope ·
+        Lightweight Rating: inverse of self-weight vs category maximum · Cost Efficiency: inverse of indicative supply cost ·
+        Programme Speed: inverse of procurement and installation lead time. Scores are indicative — project-specific conditions apply.
+      </p>
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
       <button onclick="exportComparePDF()" id="pdf-export-btn" style="
         display:inline-flex;align-items:center;gap:10px;
         background:var(--accent);color:#0b110d;
@@ -4985,21 +4999,41 @@ const MATERIAL_IMAGES = {
   },
 };
 const COMPARE_ROWS = [
-  { key: 'full', label: 'Full Name' },
-  { key: 'priceRange', label: 'Price Range (AED/m²)' },
-  { key: 'weight', label: 'Weight', format: m => m.specs?.['Weight']?.val || '—' },
-  { key: 'fire', label: 'Fire Rating', format: m => m.specs?.['Fire Rating']?.val || '—' },
-  { key: 'serviceLife', label: 'Service Life', format: m => m.specs?.['Service Life']?.val || '—' },
-  { key: 'leadTime', label: 'Lead Time', format: m => m.specs?.['Lead Time']?.val || '—' },
-  { key: 'heatScore', label: 'Heat Performance', format: m => stars(m.scores.heat) },
-  { key: 'fireScore', label: 'Fire Performance', format: m => stars(m.scores.fire) },
-  { key: 'weightScore', label: 'Lightweight Score', format: m => stars(m.scores.weight) },
-  { key: 'costScore', label: 'Cost Efficiency', format: m => stars(m.scores.cost) },
-  { key: 'speedScore', label: 'Install Speed', format: m => stars(m.scores.speed) },
-  { key: 'overall', label: 'Overall Score', format: m => `<strong style="color:var(--accent);font-family:'DM Mono',monospace;font-size:16px">${m.overall}/10</strong>` },
-  { key: 'dubaiCD', label: 'Dubai Civil Defence', format: m => badge(m.compliance?.['Dubai Civil Defence']) },
-  { key: 'uaeFire', label: 'UAE Fire Code 2017', format: m => badge(m.compliance?.['UAE Fire Code 2017']) },
-  { key: 'estidama', label: 'Estidama Pearl', format: m => badge(m.compliance?.['Estidama Pearl Rating']) },
+  // ── IDENTIFICATION ──────────────────────────────────────────────────────────
+  { key: 'full',       label: 'Full Material Name',     format: m => `<span style="font-size:12px">${m.full}</span>` },
+  { key: 'priceRange', label: 'Indicative Cost (AED/m²)', format: m => m.priceRange || '—' },
+
+  // ── PHYSICAL PROPERTIES ─────────────────────────────────────────────────────
+  { key: 'weight',     label: 'Self-Weight',            format: m => m.specs?.['Panel Weight']?.val || m.specs?.['Cladding Thickness']?.val || '—' },
+  { key: 'thickness',  label: 'Typical Thickness',      format: m => m.specs?.['Panel Thickness']?.val || m.specs?.['Board Thickness']?.val || m.specs?.['Total Thickness']?.val || m.specs?.['Laminate Thickness']?.val || m.specs?.['Cladding Thickness']?.val || '—' },
+  { key: 'maxspan',    label: 'Max Panel Span',         format: m => m.specs?.['Max Panel Span']?.val || m.specs?.['Max Sheet Size']?.val || m.specs?.['Max Single Panel Size']?.val || '—' },
+
+  // ── FIRE & COMPLIANCE ───────────────────────────────────────────────────────
+  { key: 'fire',       label: 'Fire Classification (EN 13501-1)', format: m => m.specs?.['Fire Classification']?.val || '—' },
+  { key: 'dubaiCD',    label: 'Dubai Civil Defence',    format: m => badge(m.compliance?.['Dubai Civil Defence']) },
+  { key: 'uaeFire',    label: 'UAE Fire Code 2017',     format: m => badge(m.compliance?.['UAE Fire Code 2017']) },
+  { key: 'ecas',       label: 'MoIAT / ECAS Certified', format: m => badge(m.compliance?.['MoIAT / ECAS Certification']) },
+  { key: 'estidama',   label: 'Estidama Pearl Rating',  format: m => badge(m.compliance?.['Estidama Pearl Rating']) },
+  { key: 'alsafat',    label: "Al Sa'fat Green Building", format: m => badge(m.compliance?.["Al Sa'fat Green Building"]) },
+
+  // ── THERMAL & ENERGY ────────────────────────────────────────────────────────
+  { key: 'thermalK',   label: 'Thermal Conductivity',   format: m => m.specs?.['Thermal Conductivity']?.val || '—' },
+  { key: 'thermalExp', label: 'Thermal Expansion',      format: m => m.specs?.['Thermal Expansion']?.val || '—' },
+
+  // ── DURABILITY ──────────────────────────────────────────────────────────────
+  { key: 'serviceLife', label: 'Design Service Life',   format: m => m.specs?.['Service Life']?.val || '—' },
+  { key: 'waterAbs',   label: 'Water Absorption',       format: m => m.specs?.['Water Absorption']?.val || '—' },
+
+  // ── PROGRAMME ───────────────────────────────────────────────────────────────
+  { key: 'leadTime',   label: 'Lead Time (from order)', format: m => m.specs?.['Lead Time']?.val || '—' },
+
+  // ── PERFORMANCE SCORES (derived — see methodology note below) ───────────────
+  { key: 'heatScore',  label: 'Thermal Performance (/100)', format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.heat}</span>` },
+  { key: 'fireScore',  label: 'Fire Performance (/100)',    format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.fire}</span>` },
+  { key: 'weightScore',label: 'Lightweight Rating (/100)',  format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.weight}</span>` },
+  { key: 'costScore',  label: 'Cost Efficiency (/100)',     format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.cost}</span>` },
+  { key: 'speedScore', label: 'Programme Speed (/100)',     format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.speed}</span>` },
+  { key: 'overall',    label: 'Overall Score (/10)',        format: m => `<strong style="color:var(--accent);font-family:'DM Mono',monospace;font-size:16px">${m.overall}/10</strong>` },
 ];
 
 const SUPPLIERS = [
@@ -6345,16 +6379,26 @@ function renderTable() {
   document.getElementById('compare-thead').innerHTML = `
     <th class="td-label">Property</th>
     ${mats.map(m => `<th>${m.name}</th>`).join('')}`;
-  document.getElementById('compare-tbody').innerHTML = COMPARE_ROWS.map(row => `
-    <tr>
-      <td class="td-label">${row.label}</td>
-      ${mats.map(m => {
-        let val;
-        if (row.format) val = row.format(m);
-        else val = m[row.key] || '—';
-        return `<td>${val}</td>`;
-      }).join('')}
-    </tr>`).join('');
+
+  const SECTIONS = {
+    'Full Material Name':              '— Identification',
+    'Self-Weight':                     '— Physical Properties',
+    'Fire Classification (EN 13501-1)':'— Fire & Compliance',
+    'Thermal Conductivity':            '— Thermal & Energy',
+    'Design Service Life':             '— Durability',
+    'Lead Time (from order)':          '— Programme',
+    'Thermal Performance (/100)':      '— Performance Index (0–100)',
+  };
+
+  document.getElementById('compare-tbody').innerHTML = COMPARE_ROWS.map(row => {
+    const sectionHead = SECTIONS[row.label]
+      ? `<tr class="compare-section-head"><td colspan="${mats.length + 1}">${SECTIONS[row.label]}</td></tr>` : '';
+    let cells = mats.map(m => {
+      let val = row.format ? row.format(m) : (m[row.key] || '—');
+      return `<td>${val}</td>`;
+    }).join('');
+    return `${sectionHead}<tr><td class="td-label">${row.label}</td>${cells}</tr>`;
+  }).join('');
 }
 
 // ─── WIZARD ─────────────────────────────────────────────────────────────────
