@@ -3499,10 +3499,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <!-- Score methodology + export -->
     <div style="margin-top:16px;padding:14px 18px;background:rgba(0,229,160,0.03);border:1px solid rgba(0,229,160,0.08);border-radius:8px">
       <p style="font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(200,220,205,0.35);letter-spacing:1px;line-height:1.8;margin:0">
-        SCORE METHODOLOGY — Performance scores (0–100) are weighted composites derived from published test data, UAE climate considerations and GCC project benchmarks.
-        Thermal Performance: steady-state U-value and thermal mass · Fire Performance: EN 13501-1 classification and DCD approval scope ·
-        Lightweight Rating: inverse of self-weight vs category maximum · Cost Efficiency: inverse of indicative supply cost ·
-        Programme Speed: inverse of procurement and installation lead time. Scores are indicative — project-specific conditions apply.
+        SCORE METHODOLOGY — Performance scores (0–100) are weighted composites derived from published test data, UAE climate considerations and GCC project benchmarks. Thermal Performance: steady-state U-value and thermal mass · Fire Performance: EN 13501-1 classification and DCD approval scope · Lightweight Rating: inverse of self-weight vs category maximum · Cost Efficiency: inverse of indicative supply cost · Programme Speed: inverse of procurement and installation lead time. Scores are indicative — project-specific conditions apply. // DATA VERIFIED MARCH 2026 FROM UAE MANUFACTURERS AND DCD-APPROVED SYSTEMS. FINAL VERIFICATION WITH SUPPLIERS REQUIRED BEFORE SPECIFICATION.
       </p>
     </div>
     <div style="margin-top:14px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
@@ -4439,7 +4436,7 @@ const MATERIALS = {
     tags: ['Precast','Non-combustible','Custom moulds','Lightweight concrete','A1 Fire rated'],
     scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 }, overall: 9.2,
     specs: {
-      'Panel Weight':            { val: '75–110 kg/m²',               sub: 'Premix: 75–90 kg/m² · Spray-up: 95–110 kg/m² · vs 180–220 kg/m² for solid concrete' },
+      'Panel Weight':            { val: '30–110 kg/m²',               sub: 'Façade cladding skin (12–20 mm): 30–55 kg/m² · Ribbed backup panel: 75–90 kg/m² · Spray-up: 95–110 kg/m² · vs 180–220 kg/m² for solid concrete' },
       'Panel Thickness':         { val: '10–25 mm face skin',          sub: 'Face skin: 10–15 mm · Ribbed/stiffened backup: up to 25 mm · Sandwich panel: 75–150 mm total' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'Non-combustible — zero contribution to fire or smoke · DCD Technical Approval: all building heights' },
       'Compressive Strength':    { val: '40–80 MPa',                   sub: 'Design minimum 40 MPa per ACI 544 · Spray-up: 60–75 MPa · Premix: 40–60 MPa' },
@@ -4455,6 +4452,9 @@ const MATERIALS = {
       'Surface Finishes':        { val: '12+ factory options',         sub: 'Smooth · Sandblasted · Acid-etched · Exposed aggregate · Ribbed · Stone-look · Terracotta-look' },
       'Service Life':            { val: '50+ years',                   sub: 'UAE climate tested per GRCA Durability Study 2018 · Correct AR-glass and surface treatment required' },
       'Lead Time':               { val: '8–14 weeks',                  sub: 'New mould: 10–14 wks · Repeat mould: 6–10 wks · Express tooling available at cost premium' },
+      'Maintenance Cycle':       { val: 'Low — every 4–7 years',       sub: 'Pressure wash + expansion joint inspection and reseal · No painting cycle required · Sealer reapplication on textured/porous finishes' },
+      'Installation Method':     { val: 'Precast panels, mechanical anchors', sub: 'Heavy subframe (RHS/SHS steel or cast-in brackets) · Engineered fixings per panel weight and wind load · Crane-lifted — minimum 2-point lift per panel' },
+      'GCC Climate Suitability': { val: 'Excellent',                   sub: 'Superior thermal mass buffers peak UAE temperatures · High heat capacity reduces cooling load · Proven 50+ year track record in Gulf climate' },
     },
     compliance: {
       'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
@@ -4547,7 +4547,7 @@ const MATERIALS = {
     tags: ['Solid aluminium','Cassette panels','PVDF coated','Anodised','Recyclable'],
     scores: { heat: 76, fire: 85, weight: 90, cost: 88, speed: 96 }, overall: 8.1,
     specs: {
-      'Panel Weight':            { val: '5–12 kg/m²',                  sub: '3 mm solid Al: 8.1 kg/m² · 4 mm solid: 10.8 kg/m² · Formed cassette: 5–8 kg/m²' },
+      'Panel Weight':            { val: '8–10 kg/m² (3 mm solid)',     sub: '3 mm solid: 8.1 kg/m² · 4 mm solid: 10.8 kg/m² · Formed cassette: 5–8 kg/m² · Lightest non-composite solid-metal facade option' },
       'Panel Thickness':         { val: '2–6 mm',                      sub: 'Solid plate: 2–4 mm · Extruded cassette: up to 6 mm · Perforated screen: 1.5–3 mm' },
       'Alloy Specification':     { val: 'AA 3003-H14 / AA 5005-H34',   sub: 'AA 3003-H14: standard cladding · AA 5005-H34: marine/coastal grade · AA 6082-T6: structural' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',        sub: 'Solid aluminium is inherently A1 — no core, no combustible element · DCD approved all heights' },
@@ -4562,14 +4562,18 @@ const MATERIALS = {
       'Recycled Content':        { val: 'Up to 95% recycled aluminium', sub: 'High scrap value — contributes to Estidama Pearl and Al Sa\'fat recycled content credits' },
       'Service Life':            { val: '30–50 years',                  sub: 'PVDF Kynar 500: 20-year warranty in UAE · Solid Al with AA25 anodise: 40–50+ years confirmed' },
       'Lead Time':               { val: '3–7 weeks',                   sub: 'Fastest of all cladding systems · Standard PVDF stock colours: 3–4 wks · Custom RAL colour: 5–7 wks' },
+      'Maintenance Cycle':       { val: 'Very Low — 1–2×/year',        sub: 'Rain-washable surface · Mild detergent wash 1–2 times per year · PVDF Kynar 500 requires no recoating for 20 years · Inspect sealant joints annually' },
+      'Installation Method':     { val: 'Rainscreen cassette or hook-on system', sub: 'Concealed T-bar or cassette rail system · Lightweight — no crane required for individual panels · Fast-track installation by specialist subcontractor' },
+      'GCC Climate Suitability': { val: 'Excellent',                   sub: 'Lightweight for fast deployment on UAE tower programmes · PVDF Kynar 500 resistant to UAE UV and sand abrasion · Thermal break mandatory in subframe' },
     },
     compliance: {
       'UAE Fire Code 2017': 'yes', 'DCD Technical Approval': 'yes',
-      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence (all hts)': 'yes',
+      'MoIAT / ECAS Certification': 'yes', 'Dubai Civil Defence (all heights — A1)': 'yes',
       "Al Sa'fat Green Building": 'yes', 'Estidama Pearl Rating': 'yes',
       'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A1': 'yes',
       'AAMA 2605 (PVDF Coating)': 'yes', 'BS 8414 Façade System Test': 'partial',
       'ISO 9001 Certified Supply': 'yes',
+      'LEED / Estidama Compatibility': 'yes',
     },
     pros: [
       'Class A1 non-combustible solid aluminium — full DCD approval on all building heights with no restriction, no special approval required',
@@ -4654,7 +4658,7 @@ const MATERIALS = {
     tags: ['Mineral core','A2-s1-d0','High-rise safe','PVDF','ECAS approved'],
     scores: { heat: 78, fire: 95, weight: 88, cost: 80, speed: 90 }, overall: 8.5,
     specs: {
-      'Panel Weight':            { val: '7–14 kg/m²',                  sub: '4 mm ACM-FR: ~7.5 kg/m² · 6 mm ACM-FR: ~11.5 kg/m² · vs PE-core: ~6–9 kg/m²' },
+      'Panel Weight':            { val: '7.5–9 kg/m² (4 mm panel)',    sub: '4 mm ACM-FR: 7.5–8.5 kg/m² · 6 mm ACM-FR: ~11.5 kg/m² · Slightly heavier than PE-core due to mineral fill density · Well within typical façade weight budget' },
       'Panel Construction':      { val: 'Al skin / Mineral core / Al skin', sub: 'Two 0.5 mm aluminium skins bonded to mineral-filled thermoplastic core with ≥ 70% inorganic content' },
       'Total Thickness':         { val: '4–8 mm',                      sub: '4 mm: standard cladding · 6 mm: large panels / high wind zones · 8 mm: structural spandrel applications' },
       'Fire Classification':     { val: 'Class A2-s1-d0 (EN 13501-1)', sub: 'Accepted by Dubai Civil Defence for ALL building heights — no height restriction · Independently certified' },
@@ -4669,6 +4673,9 @@ const MATERIALS = {
       'Thermal Expansion':       { val: '23 × 10⁻⁶ /°C',              sub: 'Same as solid aluminium — UAE ΔT 80°C = 18 mm/m · Expansion joints essential throughout fabrication zones' },
       'Service Life':            { val: '25–40 years',                 sub: 'With PVDF Kynar 500 and sealed cut edges · PE-core (used in Grenfell) not acceptable in UAE' },
       'Lead Time':               { val: '4–8 weeks',                   sub: 'Stock PVDF colours (white, silver, grey, black): 3–4 wks · Custom RAL / NCS: 5–8 wks' },
+      'Maintenance Cycle':       { val: 'Very Low — 1–2×/year',        sub: 'Rain-washable PVDF surface · Mild detergent 1–2 times per year · PVDF Kynar 500: no recoating for 20 years · Inspect cut-edge seals and joints annually' },
+      'Installation Method':     { val: 'Rainscreen tray/cassette system', sub: 'Concealed omega or T-section rail · Fabricated off-site to exact panel dimensions · Fast site installation — no crane for individual panels' },
+      'GCC Climate Suitability': { val: 'Excellent',                   sub: 'Balanced performance: fire-safe, lightweight and fast programme · UAE-proven with major DCD-approved supply chains · A2 certification eliminates height restrictions' },
     },
     compliance: {
       'UAE Fire Code 2017': 'yes', 'DCD Technical Approval (all hts)': 'yes',
@@ -4677,6 +4684,7 @@ const MATERIALS = {
       'Abu Dhabi GSAS / GSAS-CM': 'yes', 'BS EN 13501-1 Class A2-s1-d0': 'yes',
       'EN ISO 13823 (Cone Calorimeter)': 'yes', 'AAMA 2605 (PVDF Coating)': 'yes',
       'BS 8414 Façade System Test': 'yes', 'ISO 9001 Certified Supply': 'yes',
+      'LEED / Estidama Compatibility': 'yes',
     },
     pros: [
       'A2-s1-d0 fire classification accepted by DCD for all UAE building heights — zero approval restriction on any tower project',
@@ -5033,7 +5041,12 @@ const COMPARE_ROWS = [
   { key: 'weightScore',label: 'Lightweight Rating (/100)',  format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.weight}</span>` },
   { key: 'costScore',  label: 'Cost Efficiency (/100)',     format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.cost}</span>` },
   { key: 'speedScore', label: 'Programme Speed (/100)',     format: m => `<span style="font-family:'DM Mono',monospace">${m.scores.speed}</span>` },
-  { key: 'overall',    label: 'Overall Score (/10)',        format: m => `<strong style="color:var(--accent);font-family:'DM Mono',monospace;font-size:16px">${m.overall}/10</strong>` },
+  { key: 'maintenance', label: 'Maintenance Requirement',     format: m => m.specs?.['Maintenance Cycle']?.val || '—' },
+  { key: 'install',     label: 'Installation Method',         format: m => m.specs?.['Installation Method']?.val || '—' },
+  { key: 'gcc',         label: 'GCC Climate Suitability',     format: m => m.specs?.['GCC Climate Suitability']?.val || '—' },
+  { key: 'leed',        label: 'LEED / Estidama Compatibility', format: m => badge(m.compliance?.['LEED / Estidama Compatibility'] || m.compliance?.['Estidama Pearl Rating']) },
+  { key: 'dcd',         label: 'DCD Compliant (all heights)', format: m => badge(m.compliance?.['Dubai Civil Defence (all heights — A1)'] || m.compliance?.['Dubai Civil Defence'] || m.compliance?.['DCD Technical Approval (all hts)']) },
+  { key: 'overall',     label: 'Overall Score (/10)',         format: m => `<strong style="color:var(--accent);font-family:'DM Mono',monospace;font-size:16px">${m.overall}/10</strong>` },
 ];
 
 const SUPPLIERS = [
@@ -6387,6 +6400,7 @@ function renderTable() {
     'Thermal Conductivity':            '— Thermal & Energy',
     'Design Service Life':             '— Durability',
     'Lead Time (from order)':          '— Programme',
+    'Maintenance Requirement':      '— Specification Notes',
     'Thermal Performance (/100)':      '— Performance Index (0–100)',
   };
 
