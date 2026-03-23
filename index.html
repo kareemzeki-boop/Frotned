@@ -8543,18 +8543,7 @@ async function exportComparePDF() {
       });
     }
 
-    // ── Data verification footnote ────────────────────────────────────────────
-    const fnY = SAFE_BOTTOM - 2;
-    line(ML, fnY - 4, ML + CW, fnY - 4, C.dim, 0.1);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(5.5);
-    tc(C.dim);
-    doc.text(
-      'Data verified March 2026 from UAE manufacturers and DCD-approved systems. Performance scores are weighted composites — ' +
-      'Thermal: U-value & thermal mass · Fire: EN 13501-1 & DCD scope · Weight: inverse self-weight · Cost: inverse supply cost · Speed: inverse lead time. ' +
-      'Final verification with suppliers required before specification.',
-      ML, fnY, { maxWidth: CW }
-    );
+    // ── Data verification footnote — in footer only, not inline ──────────────
 
     // ════════════════════════════════════════════════════════════════════════════
     // FOOTERS ON ALL PAGES
