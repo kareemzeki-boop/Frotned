@@ -8308,7 +8308,10 @@ async function exportComparePDF() {
     // ════════════════════════════════════════════════════════════════════════════
     doc.addPage();
     newPage();
-    y = 16; // below 1.5mm accent bar + breathing room
+    // Reset all color state after page 1 to prevent bleed
+    tc(C.white);
+    dc(C.dim);
+    y = 22; // safe distance below 1.5mm accent bar
 
     // Page header
     doc.setFont('helvetica', 'bold');
@@ -8319,9 +8322,9 @@ async function exportComparePDF() {
     doc.setFontSize(6.5);
     tc(C.muted);
     doc.text('Side-by-side technical data · UAE facade specification reference', ML, y + 5);
-    y += 11;
+    y += 12;
     line(ML, y, ML + CW, y, C.dim, 0.15);
-    y += 5;
+    y += 6;
 
     // ── Spec table ────────────────────────────────────────────────────────────
     const specSections = [
@@ -8393,8 +8396,14 @@ async function exportComparePDF() {
     tc(C.muted);
     doc.text('PROPERTY', ML + 3, y + ROW_H - 2.5);
     selectedMats.forEach((key, idx) => {
-      tc(MAT_COL[key] || [100,100,100]);
-      safeText(key.toUpperCase(), ML + PROP_W + idx * DATA_W + 3, y + ROW_H - 2.5, DATA_W - 4);
+      const col = MAT_COL[key] || [160, 160, 160];
+      const cx = ML + PROP_W + idx * DATA_W;
+      // Color dot
+      doc.setFillColor(col[0], col[1], col[2]);
+      doc.circle(cx + 3, y + ROW_H / 2, 1.2, 'F');
+      // Material name in white — no color bleed
+      tc(C.white);
+      safeText(key.toUpperCase(), cx + 6, y + ROW_H - 2.5, DATA_W - 8);
     });
     y += ROW_H;
 
@@ -8459,8 +8468,12 @@ async function exportComparePDF() {
     tc(C.muted);
     doc.text('REGULATION / STANDARD', ML + 3, y + ROW_H - 2.5);
     selectedMats.forEach((key, idx) => {
-      tc(MAT_COL[key] || [100,100,100]);
-      safeText(key.toUpperCase(), ML + PROP_W + idx * DATA_W + 3, y + ROW_H - 2.5, DATA_W - 4);
+      const col = MAT_COL[key] || [160, 160, 160];
+      const cx = ML + PROP_W + idx * DATA_W;
+      doc.setFillColor(col[0], col[1], col[2]);
+      doc.circle(cx + 3, y + ROW_H / 2, 1.2, 'F');
+      tc(C.white);
+      safeText(key.toUpperCase(), cx + 6, y + ROW_H - 2.5, DATA_W - 8);
     });
     y += ROW_H;
 
