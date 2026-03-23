@@ -4436,7 +4436,7 @@ const MATERIALS = {
     tags: ['Precast','Non-combustible','Custom moulds','Lightweight concrete','A1 Fire rated'],
     scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 }, overall: 9.2,
     specs: {
-      'Panel Weight':            { val: '30–110 kg/m²',               sub: 'Façade cladding skin (12–20 mm): 30–55 kg/m² · Ribbed backup panel: 75–90 kg/m² · Spray-up: 95–110 kg/m² · vs 180–220 kg/m² for solid concrete' },
+      'Panel Weight':            { val: '30–55 kg/m² (typical façade)', sub: 'Typical façade cladding skin (12–20 mm): 30–55 kg/m² · Ribbed/stiffened backup: 75–90 kg/m² · Full spray-up structural panel: 95–110 kg/m² · vs 180–220 kg/m² for solid in-situ concrete' },
       'Panel Thickness':         { val: '10–25 mm face skin',          sub: 'Face skin: 10–15 mm · Ribbed/stiffened backup: up to 25 mm · Sandwich panel: 75–150 mm total' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'Non-combustible — zero contribution to fire or smoke · DCD Technical Approval: all building heights' },
       'Compressive Strength':    { val: '40–80 MPa',                   sub: 'Design minimum 40 MPa per ACI 544 · Spray-up: 60–75 MPa · Premix: 40–60 MPa' },
@@ -4559,6 +4559,7 @@ const MATERIALS = {
       'Panel Flatness':          { val: '≤ 1.5 mm / 1,500 mm span',    sub: 'Best-in-class flatness — critical for flush-joint and mirror-finish specification' },
       'Max Single Panel Size':   { val: 'Up to 2,000 × 6,000 mm',      sub: 'Transport constraints typically limit UAE deliveries to 1,500 × 4,000 mm — confirm with fabricator' },
       'Surface Finish Options':  { val: 'Unlimited via PVDF / Anodise', sub: '3-coat PVDF · Anodised silver/bronze/black · Powder coat · Digital print · Mirror/brushed polish' },
+      'Water Absorption':        { val: 'N/A — solid metal', sub: 'Solid aluminium is fully impermeable · No absorption risk · PVDF-coated surface repels water · Sealant at panel joints is the critical water management element' },
       'Recycled Content':        { val: 'Up to 95% recycled aluminium', sub: 'High scrap value — contributes to Estidama Pearl and Al Sa\'fat recycled content credits' },
       'Service Life':            { val: '30–50 years',                  sub: 'PVDF Kynar 500: 20-year warranty in UAE · Solid Al with AA25 anodise: 40–50+ years confirmed' },
       'Lead Time':               { val: '3–7 weeks',                   sub: 'Fastest of all cladding systems · Standard PVDF stock colours: 3–4 wks · Custom RAL colour: 5–7 wks' },
@@ -4665,10 +4666,12 @@ const MATERIALS = {
       'Cone Calorimeter (FIGRA)':{ val: '≤ 120 W/s',                  sub: 'EN ISO 13823 test mandatory for A2 — must be independently certified, not self-declared' },
       'Mineral Core Content':    { val: '≥ 70% inorganic fill by mass', sub: 'DCD requirement: min 70% verified by independent lab test — datasheet alone is NOT sufficient' },
       'Aluminium Skin Alloy':    { val: 'AA 1100 / AA 3003-H14',       sub: '0.5 mm minimum skin thickness per ASTM B209 and EN 485-2 · Thinner skins increase dent risk on site' },
+      'Surface Finish Options':  { val: '3-coat PVDF (Kynar 500) · Anodised · Pearlescent · Metallic', sub: 'Full PVDF RAL/NCS palette identical to solid aluminium · Woodgrain, stone-look and digital-print overlays available · Same aesthetic range as PE-core ACM with mandatory A2 fire performance' },
       'PVDF Coating':            { val: '3-coat 25–35 μm (Kynar 500)', sub: 'Per AAMA 2605 mandatory for UAE external — 20-year warranty on gloss and colour · Not powder coat' },
       'Panel Flatness':          { val: '≤ 1.5 mm / 1,500 mm span',    sub: 'Post-fabrication — verify Omega routing tolerance and fold radius in shop drawing review' },
       'Max Panel Width':         { val: 'Up to 1,575 mm',              sub: 'Standard coil width limit — larger formats require welded construction or special order' },
       'Max Panel Length':        { val: 'Up to 5,800 mm',              sub: 'Transport constraints typically limit UAE deliveries to 4,500 mm — confirm with fabricator' },
+      'Water Absorption':        { val: 'N/A — sealed composite', sub: 'Aluminium skins are impermeable · Mineral core is sealed within factory-fabricated panel · Cut edges must be sealed with manufacturer-approved compound on site' },
       'Thermal Conductivity':    { val: '0.05–0.08 W/m·K (core)',     sub: 'Mineral core provides moderate insulation — aluminium skins still create thermal bridge through panel' },
       'Thermal Expansion':       { val: '23 × 10⁻⁶ /°C',              sub: 'Same as solid aluminium — UAE ΔT 80°C = 18 mm/m · Expansion joints essential throughout fabrication zones' },
       'Service Life':            { val: '25–40 years',                 sub: 'With PVDF Kynar 500 and sealed cut edges · PE-core (used in Grenfell) not acceptable in UAE' },
@@ -8421,7 +8424,7 @@ async function exportComparePDF() {
       { label: 'Estidama Pearl Rating',       key: 'Estidama Pearl Rating' },
       { label: 'LEED / Estidama Compat.',     key2: (m) => m.compliance?.['LEED / Estidama Compatibility'] || m.compliance?.['Estidama Pearl Rating'] },
       { label: 'BS EN 13501-1',               key2: (m) => m.compliance?.['BS EN 13501-1 Class A1'] || m.compliance?.['BS EN 13501-1 Class A2-s1-d0'] || m.compliance?.['BS EN 13501-1 Class B'] },
-      { label: 'BS 8414 Façade System Test',  key: 'BS 8414 Façade System Test' },
+      { label: 'BS 8414 Façade System Test',  key2: (m) => { const v = m.compliance?.['BS 8414 Façade System Test']; return v; }, labelOverride: { yes: '✓  Compliant (system test req.)', partial: '◑  Compliant with system testing', no: '✗  Not applicable' } },
     ];
 
     // Compliance header
@@ -8453,10 +8456,14 @@ async function exportComparePDF() {
         const raw = cr.key2 ? cr.key2(mat) : mat.compliance?.[cr.key];
         const val = (raw || 'unknown').toLowerCase();
         let col, label;
-        if      (val === 'yes')     { col = C.acc;   label = '✓  Compliant'; }
-        else if (val === 'no')      { col = C.red;   label = '✗  Not Applicable'; }
-        else if (val === 'partial') { col = C.amber; label = '◑  Conditional'; }
-        else                        { col = C.dim;   label = '—  Verify'; }
+        if (cr.labelOverride && cr.labelOverride[val]) {
+          const lo = cr.labelOverride[val];
+          col = val === 'yes' ? C.acc : val === 'partial' ? C.amber : val === 'no' ? C.red : C.dim;
+          label = lo;
+        } else if (val === 'yes')     { col = C.acc;   label = '✓  Compliant'; }
+        else if (val === 'no')        { col = C.red;   label = '✗  Not Applicable'; }
+        else if (val === 'partial')   { col = C.amber; label = '◑  Conditional'; }
+        else                          { col = C.dim;   label = '—  Verify'; }
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(6.5);
