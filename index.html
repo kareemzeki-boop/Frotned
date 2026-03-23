@@ -4439,7 +4439,7 @@ const MATERIALS = {
     tags: ['Precast','Non-combustible','Custom moulds','Lightweight concrete','A1 Fire rated'],
     scores: { heat: 94, fire: 98, weight: 78, cost: 70, speed: 72 }, overall: 9.2,
     specs: {
-      'Panel Weight':            { val: '30–55 kg/m² (typical façade)', sub: 'Typical façade cladding skin (12–20 mm): 30–55 kg/m² · Ribbed/stiffened backup: 75–90 kg/m² · Full spray-up structural panel: 95–110 kg/m² · vs 180–220 kg/m² for solid in-situ concrete' },
+      'Panel Weight':            { val: '30–55 kg/m² (typical façade)', sub: 'Density: 1,900–2,100 kg/m³ (GRCA Specification 2021) · Calc: ρ × t → 12 mm: 1,950×0.012 = 23.4 kg/m² · 15 mm: 1,950×0.015 = 29.3 kg/m² · 20 mm: 1,950×0.020 = 39.0 kg/m² · Range 30–55 kg/m² covers 12–28 mm typical UAE façade skins · Ribbed/stiffened backup: 75–90 kg/m²' },
       'Panel Thickness':         { val: '10–25 mm face skin',          sub: 'Face skin: 10–15 mm · Ribbed/stiffened backup: up to 25 mm · Sandwich panel: 75–150 mm total' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'Non-combustible — zero contribution to fire or smoke · DCD Technical Approval: all building heights' },
       'Compressive Strength':    { val: '40–80 MPa',                   sub: 'Design minimum 40 MPa per ACI 544 · Spray-up: 60–75 MPa · Premix: 40–60 MPa' },
@@ -4497,7 +4497,7 @@ const MATERIALS = {
     tags: ['Lightweight','Parametric','FRP composite','Impact resistant','Low thermal bridge'],
     scores: { heat: 80, fire: 72, weight: 96, cost: 65, speed: 80 }, overall: 8.7,
     specs: {
-      'Panel Weight':            { val: '8–25 kg/m²',                  sub: 'Single skin: 8–12 kg/m² · Sandwich (foam/honeycomb core): 16–25 kg/m² · 85% lighter than stone' },
+      'Panel Weight':            { val: '8–25 kg/m²',                  sub: 'Density: 1,600–1,900 kg/m³ laminate (ASTM D792) · Single skin calc: ρ × t → 1,700×0.006 mm = 10.2 kg/m² · 1,700×0.008 = 13.6 kg/m² · Sandwich panel: 8–12 kg/m² laminate + 4–10 kg/m² core (PET foam ~80 kg/m³, Nomex ~48 kg/m³) · Total: 12–22 kg/m² · 85–92% lighter than equivalent stone' },
       'Laminate Thickness':      { val: '4–18 mm',                     sub: 'Single skin: 4–8 mm · Sandwich panel: 30–80 mm total with core · Structural profile: up to 20 mm' },
       'Fire Classification':     { val: 'Class B–C (EN 13501-1)',      sub: 'FR resin achieves B-s1-d0 · DCD Special Approval required for buildings > 23 m height' },
       'Tensile Strength':        { val: '150–350 MPa',                 sub: 'E-glass/polyester: 150–200 · E-glass/vinylester: 200–300 · E-glass/epoxy: 250–350 MPa' },
@@ -4554,7 +4554,7 @@ const MATERIALS = {
     tags: ['Solid aluminium','Cassette panels','PVDF coated','Anodised','Recyclable'],
     scores: { heat: 76, fire: 85, weight: 90, cost: 88, speed: 96 }, overall: 8.1,
     specs: {
-      'Panel Weight':            { val: '8–10 kg/m² (3 mm solid)',     sub: '3 mm solid: 8.1 kg/m² · 4 mm solid: 10.8 kg/m² · Formed cassette: 5–8 kg/m² · Lightest non-composite solid-metal facade option' },
+      'Panel Weight':            { val: '8–10 kg/m² (3 mm solid)',     sub: 'Density: 2,700 kg/m³ (aluminium alloy AA 3003 / AA 5005, BS EN 485) · Calc: ρ × t → 2,700×0.003 = 8.1 kg/m² · 2,700×0.004 = 10.8 kg/m² · 2,700×0.002 = 5.4 kg/m² (2 mm sheet) · Formed cassette system: 5–8 kg/m² (material only, excludes rail) · Structural subframe adds 3–6 kg/m²' },
       'Panel Thickness':         { val: '2–6 mm',                      sub: 'Solid plate: 2–4 mm · Extruded cassette: up to 6 mm · Perforated screen: 1.5–3 mm' },
       'Alloy Specification':     { val: 'AA 3003-H14 / AA 5005-H34',   sub: 'AA 3003-H14: standard cladding · AA 5005-H34: marine/coastal grade · AA 6082-T6: structural' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',        sub: 'Solid aluminium is inherently A1 — no core, no combustible element · DCD approved all heights' },
@@ -4612,7 +4612,7 @@ const MATERIALS = {
     tags: ['Limestone','Travertine','Granite','Sandstone','Engineered stone','A1 rated'],
     scores: { heat: 96, fire: 100, weight: 40, cost: 50, speed: 45 }, overall: 7.6,
     specs: {
-      'Panel Weight':            { val: '54–200 kg/m²',                sub: '20 mm limestone: ~54 kg/m² · 30 mm travertine: ~75 kg/m² · 50 mm granite: ~140 kg/m²' },
+      'Panel Weight':            { val: '54–200 kg/m²',                sub: 'Density by type (BS EN 1936): Limestone 2,200–2,600 kg/m³ · Travertine 2,400–2,600 · Sandstone 2,000–2,400 · Granite 2,600–2,800 · Calc: ρ × t → 20 mm limestone: 2,500×0.020 = 50 kg/m² · 30 mm travertine: 2,500×0.030 = 75 kg/m² · 40 mm granite: 2,700×0.040 = 108 kg/m² · 50 mm granite: 2,700×0.050 = 135 kg/m²' },
       'Cladding Thickness':      { val: '20–50 mm (veneer)',           sub: 'Minimum 30 mm for undercut anchor fixing · 20 mm with kerf only on sheltered low-rise elevations' },
       'Fire Classification':     { val: 'Class A1 (EN 13501-1)',       sub: 'All natural stone is inherently non-combustible — zero contribution to fire, heat or smoke production' },
       'Compressive Strength':    { val: '20–280 MPa (by type)',        sub: 'Sandstone: 20–50 MPa · Limestone: 40–100 MPa · Travertine: 50–80 MPa · Granite: 140–280 MPa' },
@@ -4669,7 +4669,7 @@ const MATERIALS = {
     tags: ['Mineral core','A2-s1-d0','High-rise safe','PVDF','ECAS approved'],
     scores: { heat: 78, fire: 95, weight: 88, cost: 80, speed: 90 }, overall: 8.5,
     specs: {
-      'Panel Weight':            { val: '7.5–9 kg/m² (4 mm panel)',    sub: '4 mm ACM-FR: 7.5–8.5 kg/m² · 6 mm ACM-FR: ~11.5 kg/m² · Slightly heavier than PE-core due to mineral fill density · Well within typical façade weight budget' },
+      'Panel Weight':            { val: '7.5–9 kg/m² (4 mm panel)',    sub: 'Composition calc (4 mm): 2× Al skins 0.5 mm (ρ=2,700 kg/m³) → 2×(2,700×0.0005) = 2.7 kg/m² · Mineral core 3 mm (ρ~1,800 kg/m³) → 1,800×0.003 = 5.4 kg/m² · Total: ~8.1 kg/m² · 6 mm panel (4 mm core): 2.7 + 1,800×0.004 = ~9.9 kg/m² · PE-core ~0.5 kg/m² lighter due to lower core density (ρ~900 kg/m³)' },
       'Panel Construction':      { val: 'Al skin / Mineral core / Al skin', sub: 'Two 0.5 mm aluminium skins bonded to mineral-filled thermoplastic core with ≥ 70% inorganic content' },
       'Total Thickness':         { val: '4–8 mm',                      sub: '4 mm: standard cladding · 6 mm: large panels / high wind zones · 8 mm: structural spandrel applications' },
       'Fire Classification':     { val: 'Class A2-s1-d0 (EN 13501-1)', sub: 'Accepted by Dubai Civil Defence for ALL building heights — no height restriction · Independently certified' },
@@ -4728,7 +4728,7 @@ const MATERIALS = {
     tags: ['Cement board','Wood-look','Class A2','Rainscreen','Low maintenance'],
     scores: { heat: 80, fire: 90, weight: 75, cost: 85, speed: 82 }, overall: 8.2,
     specs: {
-      'Panel Weight':            { val: '14–22 kg/m²',                 sub: '8 mm board: ~14 kg/m² · 12 mm: ~17 kg/m² · 20 mm: ~22 kg/m² · Lighter than stone, heavier than ACM' },
+      'Panel Weight':            { val: '14–22 kg/m²',                 sub: 'Density: 1,550–1,750 kg/m³ autoclaved board (EN 12467 Type NT, Cat A) · Calc: ρ × t → 8 mm: 1,650×0.008 = 13.2 kg/m² · 10 mm: 1,650×0.010 = 16.5 kg/m² · 12 mm: 1,650×0.012 = 19.8 kg/m² · 18 mm: 1,650×0.018 = 29.7 kg/m² · Range 14–22 kg/m² covers standard external cladding thicknesses 8–15 mm' },
       'Board Thickness':         { val: '8–20 mm',                     sub: 'Standard external cladding: 10–12 mm · High-impact podium zones: 15–20 mm · Feature/reveal: 8 mm' },
       'Composition':             { val: 'Portland cement + cellulose + silica', sub: 'Autoclaved curing produces calcium silicate matrix · No asbestos — banned from production since 1980s' },
       'Fire Classification':     { val: 'Class A2-s1-d0 (EN 13501-1)', sub: 'Non-combustible mineral board — accepted by DCD for all building heights without restriction' },
