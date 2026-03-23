@@ -8097,13 +8097,19 @@ async function exportComparePDF() {
     function addContinuationPage() {
       doc.addPage();
       newPage();
-      // Mini-header on continuation pages
-      rect(ML, MT, CW, 6, C.bg3);
+      // Mini-header band — sits below the 1.5mm accent bar
+      const hY = 4;
+      rect(0, hY, PW, 8, C.bg3);
+      line(0, hY + 8, PW, hY + 8, C.dim, 0.15);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(6.5);
-      tc(C.acc);
-      doc.text('CLADWISE UAE  ·  MATERIAL COMPARISON REPORT  ·  CONTINUED', ML + 3, MT + 4);
-      return MT + 10;
+      doc.setFontSize(6);
+      tc(C.muted);
+      doc.text('CLADWISE UAE  ·  MATERIAL COMPARISON REPORT', ML + 3, hY + 5);
+      doc.setFont('helvetica', 'normal');
+      tc(C.dim);
+      const contLabel = 'CONTINUED';
+      doc.text(contLabel, PW - MR - fw(contLabel, 6), hY + 5);
+      return hY + 14; // clear gap below mini-header before first row
     }
 
     // ── SECTION HEADER ────────────────────────────────────────────────────────
@@ -8302,18 +8308,18 @@ async function exportComparePDF() {
     // ════════════════════════════════════════════════════════════════════════════
     doc.addPage();
     newPage();
-    y = MT + 6; // MT=14 + 6 = 20mm — clear of 1.5mm accent bar
+    y = 16; // below 1.5mm accent bar + breathing room
 
     // Page header
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     tc(C.acc);
     doc.text('TECHNICAL SPECIFICATIONS', ML, y);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7);
+    doc.setFontSize(6.5);
     tc(C.muted);
-    doc.text('Side-by-side technical data · UAE façade specification reference', ML, y + 5);
-    y += 12;
+    doc.text('Side-by-side technical data · UAE facade specification reference', ML, y + 5);
+    y += 11;
     line(ML, y, ML + CW, y, C.dim, 0.15);
     y += 5;
 
