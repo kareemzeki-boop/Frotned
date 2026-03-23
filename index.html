@@ -8028,7 +8028,7 @@ async function ensureJsPDF() {
 
 async function exportComparePDF() {
   const btn = document.getElementById('pdf-export-btn');
-  btn.innerHTML = '<i class="fai fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fa-spin"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z" opacity=".5"/><path d="M12 4a8 8 0 0 1 8 8h2A10 10 0 0 0 12 2v2z"/></svg></i> Generating...';
+  btn.textContent = 'Generating…';
   btn.disabled = true;
 
   try {
@@ -8036,284 +8036,379 @@ async function exportComparePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    // ── CONSTANTS ────────────────────────────────────────────────────────────
+    // ── LAYOUT CONSTANTS ─────────────────────────────────────────────────────
     const PW = 210, PH = 297;
-    const ML = 14, MR = 14, MT = 14;
-    const CW = PW - ML - MR;
-    const FOOTER_H = 10;
-    const SAFE_BOTTOM = PH - FOOTER_H - 6;
+    const ML = 14, MR = 14;          // left / right margin — both tables align to these
+    const CW = PW - ML - MR;         // 182 mm usable width
+    const FOOTER_H   = 9;
+    const SAFE       = PH - FOOTER_H - 4;  // last safe y before footer
+    const ACCENT_BAR = 1.5;          // top-of-page green bar height
 
-    // ── PALETTE ──────────────────────────────────────────────────────────────
+    // ── PALETTE — deep midnight green, high contrast ──────────────────────────
     const C = {
-      bg:     [11,  17,  13],
-      bg2:    [17,  26,  19],
-      bg3:    [24,  35,  24],
-      acc:    [0,   229, 160],
-      white:  [255, 255, 255],
-      muted:  [130, 155, 135],
-      dim:    [70,  90,  75],
-      red:    [220, 80,  80],
-      amber:  [220, 160, 50],
+      bg:    [9,  14, 10],   // page background
+      bg2:   [14, 21, 15],   // even rows
+      bg3:   [20, 30, 21],   // odd rows / header bands
+      bg4:   [26, 38, 27],   // section heading bands
+      acc:   [0,  229,160],  // accent green
+      white: [242,248,243],  // near-white text
+      muted: [120,150,125],  // secondary text
+      dim:   [55, 75, 58],   // borders / very muted
+      red:   [210, 65, 65],
+      amber: [210,150, 40],
+      border:[38,  52, 39],  // unified border colour (0.4pt)
     };
+
+    // Material accent colours — used for chips and dots only
     const MAT_COL = {
-      GFRC: [0,229,160], GFRP: [96,165,250], Aluminum: [163,163,163],
-      Stone: [220,160,50], 'ACM-FR': [192,132,252], 'Fibre Cement': [220,120,60]
+      GFRC: [0,229,160], GFRP: [96,165,250], Aluminum: [180,180,180],
+      Stone: [210,155,50], 'ACM-FR': [180,120,240], 'Fibre Cement': [210,110,50],
     };
+
+    const n = selectedMats.length;
+
+    // ── COLUMN GEOMETRY — explicit, never shifts ──────────────────────────────
+    const PROP_W = 38;                        // label column
+    const DATA_W = (CW - PROP_W) / n;         // each material column, equal width
+    const PAD    = 2.8;                        // inner cell padding (mm)
+
+    // ── TYPOGRAPHY ───────────────────────────────────────────────────────────
+    const FONT_LABEL   = 6.0;   // property label
+    const FONT_VALUE   = 6.2;   // cell value
+    const FONT_SECTION = 6.0;   // section band label
+    const FONT_HEADER  = 6.5;   // column header
+    const LH           = 3.6;   // line height per wrapped line (mm)
+    const ROW_PAD      = 2.8;   // top+bottom padding per row (mm total)
+    const MIN_ROW_H    = 7.5;   // minimum row height
 
     // ── HELPERS ──────────────────────────────────────────────────────────────
-    const fc   = c  => doc.setFillColor(c[0], c[1], c[2]);
-    const tc   = c  => doc.setTextColor(c[0], c[1], c[2]);
-    const dc   = c  => doc.setDrawColor(c[0], c[1], c[2]);
-    const rect = (x,y,w,h,col) => { fc(col); doc.rect(x,y,w,h,'F'); };
-    const rnd  = (x,y,w,h,r,col) => { fc(col); doc.roundedRect(x,y,w,h,r,r,'F'); };
-    const line = (x1,y1,x2,y2,col,lw=0.2) => { dc(col); doc.setLineWidth(lw); doc.line(x1,y1,x2,y2); };
-    const fw   = (txt,size) => { doc.setFontSize(size); return doc.getTextWidth(String(txt)); };
+    const fc = cl => doc.setFillColor(cl[0], cl[1], cl[2]);
+    const tc = cl => doc.setTextColor(cl[0], cl[1], cl[2]);
+    const dc = cl => doc.setDrawColor(cl[0], cl[1], cl[2]);
 
-    // Safe text: clips to maxW if needed
-    function safeText(txt, x, y, maxW) {
-      txt = String(txt);
-      if (maxW && fw(txt, doc.getFontSize()) > maxW) {
-        while (txt.length > 1 && fw(txt+'…', doc.getFontSize()) > maxW) txt = txt.slice(0,-1);
-        txt += '…';
-      }
-      doc.text(txt, x, y);
+    function rect(x, y, w, h, col) { fc(col); doc.rect(x, y, w, h, 'F'); }
+    function rnd(x, y, w, h, r, col) { fc(col); doc.roundedRect(x, y, w, h, r, r, 'F'); }
+    function hline(x1, y1, x2, col, lw) {
+      dc(col); doc.setLineWidth(lw || 0.3); doc.line(x1, y1, x2, y1);
+    }
+    function vline(x, y1, y2, col, lw) {
+      dc(col); doc.setLineWidth(lw || 0.3); doc.line(x, y1, x, y2);
     }
 
-    // ── PAGE FOOTER ──────────────────────────────────────────────────────────
+    // Text width at given size
+    function tw(txt, sz) { doc.setFontSize(sz); return doc.getTextWidth(String(txt)); }
+
+    // Wrap text into lines fitting maxW at current font size
+    function wrapLines(txt, maxW, sz) {
+      doc.setFontSize(sz);
+      txt = String(txt || '—');
+      // Use jsPDF built-in split
+      return doc.splitTextToSize(txt, maxW);
+    }
+
+    // Calculate row height from max lines across all cells
+    function calcRowH(labelLines, cellLinesArr) {
+      const maxLines = Math.max(labelLines.length, ...cellLinesArr.map(l => l.length));
+      return Math.max(MIN_ROW_H, maxLines * LH + ROW_PAD);
+    }
+
+    // Draw all lines of text vertically centred in a row
+    function drawCellLines(lines, x, y, rowH, sz, col) {
+      doc.setFontSize(sz);
+      tc(col);
+      const totalH = lines.length * LH;
+      const startY = y + (rowH - totalH) / 2 + LH * 0.8;
+      lines.forEach((line, i) => doc.text(line, x, startY + i * LH));
+    }
+
+    // ── PAGE SETUP ───────────────────────────────────────────────────────────
+    function newPage() {
+      rect(0, 0, PW, PH, C.bg);
+      rect(0, 0, PW, ACCENT_BAR, C.acc);
+    }
+
+    // ── FOOTER — drawn once at end for all pages ──────────────────────────────
     function drawFooter(pageNum, totalPages) {
-      rect(0, PH - FOOTER_H, PW, FOOTER_H, C.bg2);
-      line(0, PH - FOOTER_H, PW, PH - FOOTER_H, C.dim, 0.15);
+      rect(0, PH - FOOTER_H, PW, FOOTER_H, C.bg3);
+      hline(ML, PH - FOOTER_H, PW - MR, C.dim, 0.3);
 
-      // Page number — right side, calculated first to reserve space
+      // Page number — right-aligned to MR margin
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
+      doc.setFontSize(6.5);
       tc(C.acc);
-      const pLabel = `${pageNum} / ${totalPages}`;
-      const pLabelW = fw(pLabel, 7);
-      doc.text(pLabel, PW - MR - pLabelW, PH - 3.5);
+      const pTxt = `${pageNum} / ${totalPages}`;
+      doc.text(pTxt, PW - MR, PH - 3.2, { align: 'right' });
 
-      // Footer text — clipped to avoid overlapping page number
+      // Footer label — left-aligned to ML margin
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(5.5);
       tc(C.dim);
-      const footerText = 'CladWise UAE · Facade Material Intelligence · UAE Edition · Data verified March 2026 · Verify all data with suppliers before procurement.';
-      const maxFooterW = CW - pLabelW - 6;
-      safeText(footerText, ML, PH - 3.5, maxFooterW);
+      const maxW = CW - tw(pTxt, 6.5) - 8;
+      const ftxt = 'CladWise UAE  ·  Façade Material Intelligence  ·  Data verified March 2026  ·  Verify with suppliers before procurement.';
+      doc.text(ftxt, ML, PH - 3.2, { maxWidth: maxW });
     }
 
-    // ── NEW PAGE HELPER — background + top accent bar only ───────────────────
-    function newPage() {
-      rect(0, 0, PW, PH, C.bg);
-      rect(0, 0, PW, 1.5, C.acc);
-    }
-
-    // ── ADD CONTINUATION PAGE ─────────────────────────────────────────────────
-    function addContinuationPage() {
+    // ── CONTINUATION PAGE ────────────────────────────────────────────────────
+    function addPage() {
       doc.addPage();
       newPage();
-      // Mini-header band — sits below the 1.5mm accent bar
-      const hY = 4;
-      rect(0, hY, PW, 8, C.bg3);
-      line(0, hY + 8, PW, hY + 8, C.dim, 0.15);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(6);
-      tc(C.muted);
-      doc.text('CLADWISE UAE  ·  MATERIAL COMPARISON REPORT', ML + 3, hY + 5);
+      tc(C.white); dc(C.dim);  // reset colour state
+      // Slim continuation header
+      rect(0, ACCENT_BAR, PW, 7, C.bg4);
+      hline(ML, ACCENT_BAR + 7, PW - MR, C.dim, 0.3);
       doc.setFont('helvetica', 'normal');
-      tc(C.dim);
-      const contLabel = 'CONTINUED';
-      doc.text(contLabel, PW - MR - fw(contLabel, 6), hY + 5);
-      return hY + 14; // clear gap below mini-header before first row
+      doc.setFontSize(5.5);
+      tc(C.muted);
+      doc.text('CLADWISE UAE  ·  MATERIAL COMPARISON REPORT', ML, ACCENT_BAR + 4.8);
+      doc.text('CONTINUED', PW - MR, ACCENT_BAR + 4.8, { align: 'right' });
+      return ACCENT_BAR + 11;  // y start for first row
     }
 
-    // ── SECTION HEADER ────────────────────────────────────────────────────────
-    function sectionHeader(label, y) {
+    // ── TABLE COLUMN HEADER BAND ─────────────────────────────────────────────
+    function drawColHeader(y) {
+      const H = 8;
+      rect(ML, y, CW, H, C.bg4);
+      hline(ML, y + H, PW - MR, C.acc, 0.4);
+
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      tc(C.acc);
-      doc.text(label, ML, y);
-      line(ML, y + 1.5, ML + CW, y + 1.5, C.dim, 0.15);
-      return y + 5;
+      doc.setFontSize(FONT_HEADER);
+      tc(C.muted);
+      doc.text('PROPERTY', ML + PAD, y + H / 2 + 2.2);
+
+      selectedMats.forEach((key, idx) => {
+        const col = MAT_COL[key] || [160,160,160];
+        const cx  = ML + PROP_W + idx * DATA_W;
+        // Colour dot
+        fc(col); doc.circle(cx + PAD + 1.2, y + H / 2, 1.1, 'F');
+        // Material name — white, clipped
+        tc(C.white);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(FONT_HEADER);
+        const nameLines = wrapLines(key.toUpperCase(), DATA_W - PAD * 2 - 5, FONT_HEADER);
+        doc.text(nameLines[0], cx + PAD + 4.5, y + H / 2 + 2.2);
+      });
+
+      // Right vertical border
+      vline(PW - MR, y, y + H, C.dim, 0.3);
+      vline(ML, y, y + H, C.dim, 0.3);
+      return y + H;
     }
 
-    // ── MATERIAL COLUMN WIDTHS ────────────────────────────────────────────────
-    const n = selectedMats.length;
-    const PROP_W = 36;
-    const DATA_W = (CW - PROP_W) / n;
-    const now = new Date();
+    // ── SECTION BAND ─────────────────────────────────────────────────────────
+    function drawSection(label, y) {
+      const H = 5.5;
+      rect(ML, y, CW, H, C.bg4);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(FONT_SECTION);
+      tc(C.acc);
+      doc.text('— ' + label, ML + PAD, y + H - 1.4);
+      hline(ML, y + H, PW - MR, C.dim, 0.3);
+      return y + H;
+    }
+
+    // ── DATA ROW — dynamic height ─────────────────────────────────────────────
+    function drawRow(labelTxt, valueFns, y, bgCol) {
+      // Measure all cells
+      doc.setFont('helvetica', 'normal');
+      const labelLines = wrapLines(labelTxt, PROP_W - PAD * 2, FONT_LABEL);
+      const cellLines  = valueFns.map(fn => {
+        const v = fn() || '—';
+        return wrapLines(v, DATA_W - PAD * 2, FONT_VALUE);
+      });
+      const H = calcRowH(labelLines, cellLines);
+
+      // Background
+      rect(ML, y, CW, H, bgCol);
+
+      // Column dividers
+      for (let i = 1; i < n; i++) {
+        vline(ML + PROP_W + i * DATA_W, y, y + H, C.dim, 0.2);
+      }
+      vline(ML + PROP_W, y, y + H, C.dim, 0.3);
+      vline(ML, y, y + H, C.dim, 0.3);
+      vline(PW - MR, y, y + H, C.dim, 0.3);
+
+      // Bottom border
+      hline(ML, y + H, PW - MR, C.border, 0.3);
+
+      // Label
+      doc.setFont('helvetica', 'normal');
+      drawCellLines(labelLines, ML + PAD, y, H, FONT_LABEL, C.muted);
+
+      // Values
+      cellLines.forEach((lines, idx) => {
+        doc.setFont('helvetica', 'bold');
+        drawCellLines(lines, ML + PROP_W + idx * DATA_W + PAD, y, H, FONT_VALUE, C.white);
+      });
+
+      return y + H;
+    }
+
+    // ── DATE ─────────────────────────────────────────────────────────────────
+    const now     = new Date();
     const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
 
     // ════════════════════════════════════════════════════════════════════════════
-    // PAGE 1 — COVER + SCORES
+    // PAGE 1 — COVER
     // ════════════════════════════════════════════════════════════════════════════
     newPage();
-    let y = MT;
+    let y = 18;
 
-    // ── Logo row ──────────────────────────────────────────────────────────────
+    // ── Wordmark ──────────────────────────────────────────────────────────────
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
+    doc.setFontSize(20);
     tc(C.acc);
-    doc.text('CLADWISE', ML, y + 8);
-    doc.setFontSize(8);
+    doc.text('CLADWISE', ML, y);
     doc.setFont('helvetica', 'normal');
-    tc(C.muted);
-    doc.text('UAE', ML + fw('CLADWISE', 22) + 2, y + 8);
-
-    // Right-aligned date
     doc.setFontSize(7);
-    tc(C.dim);
-    const dLabel = 'Generated ' + dateStr;
-    doc.text(dLabel, PW - MR - fw(dLabel, 7), y + 8);
-
-    y += 14;
-    line(ML, y, ML + CW, y, C.dim, 0.15);
-    y += 8;
-
-    // ── Report title block ────────────────────────────────────────────────────
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(28);
-    tc(C.white);
-    doc.text('MATERIAL', ML, y + 10);
-    doc.setFontSize(28);
-    tc(C.acc);
-    doc.text('COMPARISON REPORT', ML, y + 22);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
     tc(C.muted);
-    doc.text('Façade cladding analysis for UAE specification · ' + n + ' materials compared', ML, y + 30);
+    doc.text('UAE', ML + tw('CLADWISE', 20) + 1.5, y);
 
-    y += 40;
+    doc.setFontSize(6.5);
+    tc(C.dim);
+    doc.text('Generated ' + dateStr, PW - MR, y, { align: 'right' });
+
+    y += 6;
+    hline(ML, y, PW - MR, C.dim, 0.3);
+    y += 10;
+
+    // ── Title ─────────────────────────────────────────────────────────────────
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(30);
+    tc(C.white);
+    doc.text('MATERIAL', ML, y);
+    y += 11;
+    tc(C.acc);
+    doc.text('COMPARISON REPORT', ML, y);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    tc(C.muted);
+    doc.text('Façade cladding analysis for UAE specification  ·  ' + n + ' materials', ML, y);
+    y += 12;
 
     // ── Material chips ────────────────────────────────────────────────────────
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     tc(C.dim);
     doc.text('SELECTED MATERIALS', ML, y);
-    y += 4;
+    y += 5;
 
-    let chipX = ML;
+    let cx = ML;
     selectedMats.forEach(key => {
-      const col = MAT_COL[key] || [100,100,100];
+      const col   = MAT_COL[key] || [120,120,120];
       const label = MATERIALS[key].name;
-      doc.setFontSize(7.5);
-      const tw = fw(label, 7.5) + 14;
-      rnd(chipX, y - 3.5, tw, 7, 2, C.bg3);
-      rect(chipX, y - 3.5, 2.5, 7, col);
-      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      const chipW = tw(label, 7) + 12;
+      rnd(cx, y - 3, chipW, 6.5, 1.5, C.bg3);
+      rect(cx, y - 3, 2.2, 6.5, col);
       tc(col);
-      doc.text(label, chipX + 5.5, y + 1);
-      chipX += tw + 3;
+      doc.setFont('helvetica', 'bold');
+      doc.text(label, cx + 4.5, y + 0.8);
+      cx += chipW + 3;
     });
-
-    y += 14;
-    line(ML, y, ML + CW, y, C.dim, 0.15);
+    y += 10;
+    hline(ML, y, PW - MR, C.dim, 0.3);
     y += 8;
 
     // ── Overall score cards ───────────────────────────────────────────────────
-    y = sectionHeader('OVERALL PERFORMANCE SCORES', y);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    tc(C.acc);
+    doc.text('OVERALL PERFORMANCE SCORES', ML, y);
+    hline(ML, y + 2, PW - MR, C.dim, 0.2);
+    y += 6;
 
-    const CARD_W = (CW - (n - 1) * 3) / n;
-    const CARD_H = 28;
-
+    const CARD_W = (CW - (n - 1) * 4) / n;
+    const CARD_H = 26;
     selectedMats.forEach((key, i) => {
       const mat = MATERIALS[key];
-      const col = MAT_COL[key] || [100,100,100];
-      const cx = ML + i * (CARD_W + 3);
-
-      rnd(cx, y, CARD_W, CARD_H, 2, C.bg2);
-      rect(cx, y, CARD_W, 2.5, col);
-
-      // Material name — clipped
+      const col = MAT_COL[key] || [120,120,120];
+      const cx2 = ML + i * (CARD_W + 4);
+      rnd(cx2, y, CARD_W, CARD_H, 2, C.bg3);
+      rect(cx2, y, CARD_W, 2.2, col);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
+      doc.setFontSize(6.5);
       tc(col);
-      safeText(mat.name, cx + 4, y + 9, CARD_W - 8);
-
-      // Score
-      const scoreStr = String(mat.overall);
-      doc.setFontSize(18);
+      doc.text(mat.name, cx2 + 3.5, y + 8.5);
+      doc.setFontSize(20);
       tc(C.white);
-      doc.text(scoreStr, cx + 4, y + 21);
-
-      doc.setFontSize(7);
+      doc.text(String(mat.overall), cx2 + 3.5, y + 20);
+      doc.setFontSize(6);
       tc(C.muted);
-      doc.text('/ 10', cx + 4 + fw(scoreStr, 18) + 1.5, y + 21);
+      doc.text('/ 10', cx2 + 3.5 + tw(String(mat.overall), 20) + 1, y + 20);
     });
-
     y += CARD_H + 10;
 
     // ── Performance bars ──────────────────────────────────────────────────────
-    y = sectionHeader('PERFORMANCE DIMENSIONS', y);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    tc(C.acc);
+    doc.text('PERFORMANCE DIMENSIONS', ML, y);
+    hline(ML, y + 2, PW - MR, C.dim, 0.2);
+    y += 6;
 
     const scoreKeys = [
-      { key: 'heat',   label: 'Heat Performance'  },
-      { key: 'fire',   label: 'Fire Resistance'    },
-      { key: 'weight', label: 'Lightweight Score'  },
-      { key: 'cost',   label: 'Cost Efficiency'    },
-      { key: 'speed',  label: 'Install Speed'      },
+      { key: 'heat',   label: 'Thermal Performance' },
+      { key: 'fire',   label: 'Fire Resistance'      },
+      { key: 'weight', label: 'Lightweight Rating'   },
+      { key: 'cost',   label: 'Cost Efficiency'      },
+      { key: 'speed',  label: 'Programme Speed'      },
     ];
 
-    const BAR_ROW_H = 13;
-    const BAR_H     = 3;
-    const BAR_LABEL_W = 34;
-    const BAR_AREA_W  = CW - BAR_LABEL_W;
-    const BAR_W       = (BAR_AREA_W - (n - 1) * 3) / n;
+    const BAR_ROW = 11;
+    const BAR_H   = 2.8;
+    const LBL_W   = 36;
+    const BAR_W   = (CW - LBL_W - (n - 1) * 3) / n;
 
     scoreKeys.forEach((sc, ri) => {
-      const rowBg = ri % 2 === 0 ? C.bg2 : C.bg;
-      rect(ML, y, CW, BAR_ROW_H, rowBg);
-
-      // Row label
+      const bg = ri % 2 === 0 ? C.bg2 : C.bg;
+      rect(ML, y, CW, BAR_ROW, bg);
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
+      doc.setFontSize(6.5);
       tc(C.muted);
-      doc.text(sc.label, ML + 3, y + BAR_ROW_H / 2 + 2.5);
+      doc.text(sc.label, ML + PAD, y + BAR_ROW / 2 + 2);
 
-      // Bars
       selectedMats.forEach((key, idx) => {
-        const mat = MATERIALS[key];
-        const col = MAT_COL[key] || [100,100,100];
-        const pct = mat.scores[sc.key] || 0;
-        const bx  = ML + BAR_LABEL_W + idx * (BAR_W + 3);
-        const by  = y + (BAR_ROW_H - BAR_H) / 2;
-
-        // Track background
-        rect(bx, by, BAR_W, BAR_H, C.bg3);
-        // Fill
-        const fillW = Math.max(1.5, (pct / 100) * BAR_W);
-        rect(bx, by, fillW, BAR_H, col);
-
-        // Percentage below bar
+        const col  = MAT_COL[key] || [120,120,120];
+        const pct  = MATERIALS[key].scores[sc.key] || 0;
+        const bx   = ML + LBL_W + idx * (BAR_W + 3);
+        const by   = y + (BAR_ROW - BAR_H) / 2;
+        rect(bx, by, BAR_W, BAR_H, C.bg4);
+        rect(bx, by, Math.max(1.5, pct / 100 * BAR_W), BAR_H, col);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6);
+        doc.setFontSize(5.5);
         tc(col);
-        const pLabel = pct + '%';
-        const pw2 = fw(pLabel, 6);
-        doc.text(pLabel, bx + (BAR_W / 2) - pw2 / 2, by + BAR_H + 3);
+        const pl = pct + '%';
+        doc.text(pl, bx + BAR_W / 2 - tw(pl, 5.5) / 2, by + BAR_H + 2.8);
       });
 
-      y += BAR_ROW_H;
+      y += BAR_ROW;
     });
-
     y += 10;
 
-    // ── Material column legend (for page 1) ───────────────────────────────────
-    if (y < SAFE_BOTTOM - 20) {
-      y = sectionHeader('MATERIAL LEGEND', y);
+    // ── Material legend ───────────────────────────────────────────────────────
+    if (y < SAFE - 16) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6.5);
+      tc(C.acc);
+      doc.text('MATERIAL LEGEND', ML, y);
+      hline(ML, y + 2, PW - MR, C.dim, 0.2);
+      y += 6;
       selectedMats.forEach((key, i) => {
-        const col = MAT_COL[key] || [100,100,100];
+        const col = MAT_COL[key] || [120,120,120];
         const mat = MATERIALS[key];
-        const lx = ML + i * (CW / n);
-        rect(lx, y, 3, 3, col);
+        const lx  = ML + i * (CW / n);
+        fc(col); doc.rect(lx, y, 2.5, 2.5, 'F');
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
+        doc.setFontSize(6.5);
         tc(col);
-        safeText(key, lx + 5, y + 2.5, CW / n - 8);
+        doc.text(key, lx + 4.5, y + 2.2);
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6);
+        doc.setFontSize(5.5);
         tc(C.dim);
-        safeText(mat.full || '', lx + 5, y + 7, CW / n - 8);
+        const fl = wrapLines(mat.full || '', CW / n - 10, 5.5);
+        doc.text(fl[0] || '', lx + 4.5, y + 6);
       });
     }
 
@@ -8322,257 +8417,184 @@ async function exportComparePDF() {
     // ════════════════════════════════════════════════════════════════════════════
     doc.addPage();
     newPage();
-    // Reset all color state after page 1 to prevent bleed
-    tc(C.white);
-    dc(C.dim);
-    y = 22; // safe distance below 1.5mm accent bar
+    tc(C.white); dc(C.dim);
+    y = ACCENT_BAR + 8;
 
-    // Page header
+    // Page title — aligned to ML
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
+    doc.setFontSize(11);
     tc(C.acc);
     doc.text('TECHNICAL SPECIFICATIONS', ML, y);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(6.5);
+    doc.setFontSize(6);
     tc(C.muted);
-    doc.text('Side-by-side technical data · UAE facade specification reference', ML, y + 5);
-    y += 12;
-    line(ML, y, ML + CW, y, C.dim, 0.15);
-    y += 6;
+    doc.text('Side-by-side technical data  ·  UAE façade specification reference', ML, y + 5);
+    y += 10;
+    hline(ML, y, PW - MR, C.dim, 0.3);
+    y += 4;
 
-    // ── Spec table ────────────────────────────────────────────────────────────
+    // Draw column header
+    y = drawColHeader(y);
+
+    // ── Spec sections ─────────────────────────────────────────────────────────
     const specSections = [
       {
         heading: 'IDENTIFICATION & COST',
         rows: [
-          { label: 'Full Name',            fn: m => m.full || '—' },
-          { label: 'Indicative Cost',      fn: m => m.priceRange || '—' },
+          { label: 'Full Name',       fn: m => m.full },
+          { label: 'Cost (AED/m²)',   fn: m => m.priceRange },
         ]
       },
       {
         heading: 'PHYSICAL PROPERTIES',
         rows: [
-          { label: 'Self-Weight',          fn: m => m.specs?.['Panel Weight']?.val || '—' },
-          { label: 'Typical Thickness',    fn: m => m.specs?.['Panel Thickness']?.val || m.specs?.['Board Thickness']?.val || m.specs?.['Total Thickness']?.val || m.specs?.['Laminate Thickness']?.val || m.specs?.['Cladding Thickness']?.val || '—' },
-          { label: 'Max Panel Span',       fn: m => m.specs?.['Max Panel Span']?.val || m.specs?.['Max Sheet Size']?.val || m.specs?.['Max Single Panel Size']?.val || '—' },
+          { label: 'Self-Weight',         fn: m => m.specs?.['Panel Weight']?.val },
+          { label: 'Typical Thickness',   fn: m => m.specs?.['Panel Thickness']?.val || m.specs?.['Board Thickness']?.val || m.specs?.['Total Thickness']?.val || m.specs?.['Laminate Thickness']?.val || m.specs?.['Cladding Thickness']?.val },
+          { label: 'Max Panel Span',      fn: m => m.specs?.['Max Panel Span']?.val || m.specs?.['Max Sheet Size']?.val || m.specs?.['Max Single Panel Size']?.val },
         ]
       },
       {
         heading: 'FIRE & COMPLIANCE',
         rows: [
-          { label: 'Fire Classification',  fn: m => m.specs?.['Fire Classification']?.val || '—' },
-          { label: 'DCD Approval',         fn: m => {
-            const v = m.compliance?.['Dubai Civil Defence (all heights — A1)'] || m.compliance?.['Dubai Civil Defence'] || m.compliance?.['DCD Technical Approval (all hts)'];
-            if (v === 'yes')     return 'Compliant — all building heights';
-            if (v === 'partial') return 'Conditional — Special Approval req.';
-            return '—';
+          { label: 'Fire Class (EN 13501-1)', fn: m => m.specs?.['Fire Classification']?.val },
+          { label: 'Dubai Civil Defence',     fn: m => {
+            const v = m.compliance?.['Dubai Civil Defence (all heights — A1)'] || m.compliance?.['Dubai Civil Defence'];
+            return v === 'yes' ? 'Compliant — all heights' : v === 'partial' ? 'Conditional — DCD approval req.' : '—';
           }},
-          { label: 'LEED / Estidama',      fn: m => {
+          { label: 'LEED / Estidama',         fn: m => {
             const v = m.compliance?.['LEED / Estidama Compatibility'] || m.compliance?.['Estidama Pearl Rating'];
-            return v === 'yes' ? 'Compatible' : v === 'partial' ? 'Project-specific EPD req.' : '—';
+            return v === 'yes' ? 'Compatible' : 'Project-specific EPD req.';
           }},
         ]
       },
       {
-        heading: 'THERMAL & ENERGY',
+        heading: 'THERMAL PROPERTIES',
         rows: [
-          { label: 'Thermal Conductivity', fn: m => m.specs?.['Thermal Conductivity']?.val || '—' },
-          { label: 'Thermal Expansion',    fn: m => m.specs?.['Thermal Expansion']?.val || '—' },
+          { label: 'Thermal Conductivity', fn: m => m.specs?.['Thermal Conductivity']?.val },
+          { label: 'Thermal Expansion',    fn: m => m.specs?.['Thermal Expansion']?.val },
         ]
       },
       {
         heading: 'DURABILITY & PROGRAMME',
         rows: [
-          { label: 'Design Service Life',  fn: m => m.specs?.['Service Life']?.val || '—' },
-          { label: 'Water Absorption',     fn: m => m.specs?.['Water Absorption']?.val || '—' },
-          { label: 'Lead Time',            fn: m => m.specs?.['Lead Time']?.val || '—' },
+          { label: 'Design Service Life', fn: m => m.specs?.['Service Life']?.val },
+          { label: 'Water Absorption',    fn: m => m.specs?.['Water Absorption']?.val },
+          { label: 'Lead Time',           fn: m => m.specs?.['Lead Time']?.val },
         ]
       },
       {
         heading: 'SPECIFICATION NOTES',
         rows: [
-          { label: 'Maintenance',          fn: m => m.specs?.['Maintenance Cycle']?.val || '—' },
-          { label: 'Install Method',       fn: m => m.specs?.['Installation Method']?.val || '—' },
-          { label: 'GCC Suitability',      fn: m => m.specs?.['GCC Climate Suitability']?.val || '—' },
-          { label: 'Surface Finishes',     fn: m => m.specs?.['Surface Finish Options']?.val || m.specs?.['Surface Finishes']?.val || '—' },
+          { label: 'Maintenance',       fn: m => m.specs?.['Maintenance Cycle']?.val },
+          { label: 'Install Method',    fn: m => m.specs?.['Installation Method']?.val },
+          { label: 'GCC Suitability',   fn: m => m.specs?.['GCC Climate Suitability']?.val },
+          { label: 'Surface Finishes',  fn: m => m.specs?.['Surface Finish Options']?.val },
         ]
       },
     ];
 
-    const ROW_H = 8;
-    const SEC_H = 6;
-
-    // Table column header
-    rect(ML, y, CW, ROW_H, C.bg3);
-    line(ML, y + ROW_H, ML + CW, y + ROW_H, C.acc, 0.2);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(6.5);
-    tc(C.muted);
-    doc.text('PROPERTY', ML + 3, y + ROW_H - 2.5);
-    selectedMats.forEach((key, idx) => {
-      const col = MAT_COL[key] || [160, 160, 160];
-      const cx = ML + PROP_W + idx * DATA_W;
-      // Color dot
-      doc.setFillColor(col[0], col[1], col[2]);
-      doc.circle(cx + 3, y + ROW_H / 2, 1.2, 'F');
-      // Material name in white — no color bleed
-      tc(C.white);
-      safeText(key.toUpperCase(), cx + 6, y + ROW_H - 2.5, DATA_W - 8);
-    });
-    y += ROW_H;
-
-    // Sections + rows
-    let globalRowIdx = 0;
+    let rowParity = 0;
     specSections.forEach(sec => {
-      if (y > SAFE_BOTTOM - 10) { y = addContinuationPage(); }
-
-      // Section heading band
-      rect(ML, y, CW, SEC_H, [14,22,16]);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(6);
-      tc(C.acc);
-      doc.text('— ' + sec.heading, ML + 3, y + SEC_H - 1.5);
-      y += SEC_H;
+      if (y > SAFE - 12) { y = addPage(); y = drawColHeader(y); }
+      y = drawSection(sec.heading, y);
 
       sec.rows.forEach(row => {
-        if (y > SAFE_BOTTOM - 4) { y = addContinuationPage(); }
-        const rowBg = globalRowIdx % 2 === 0 ? C.bg : C.bg2;
-        rect(ML, y, CW, ROW_H, rowBg);
-        line(ML, y + ROW_H, ML + CW, y + ROW_H, C.dim, 0.1);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6.5);
-        tc(C.muted);
-        doc.text(row.label, ML + 3, y + ROW_H - 2.5);
-
-        selectedMats.forEach((key, idx) => {
-          const val = row.fn(MATERIALS[key]) || '—';
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(6.5);
-          tc(C.white);
-          safeText(val, ML + PROP_W + idx * DATA_W + 3, y + ROW_H - 2.5, DATA_W - 5);
-        });
-        y += ROW_H;
-        globalRowIdx++;
+        if (y > SAFE - MIN_ROW_H) { y = addPage(); y = drawColHeader(y); }
+        const bg = rowParity++ % 2 === 0 ? C.bg2 : C.bg;
+        y = drawRow(
+          row.label,
+          selectedMats.map(key => () => row.fn(MATERIALS[key]) || '—'),
+          y, bg
+        );
       });
     });
 
-    y += 8;
+    y += 6;
 
     // ── UAE Compliance table ──────────────────────────────────────────────────
-    if (y > SAFE_BOTTOM - 40) { y = addContinuationPage(); }
-    y = sectionHeader('UAE COMPLIANCE STATUS', y);
-
-    const compRows = [
-      { label: 'UAE Fire Code 2017',          key: 'UAE Fire Code 2017' },
-      { label: 'Dubai Civil Defence',         key2: (m) => m.compliance?.['Dubai Civil Defence (all heights — A1)'] || m.compliance?.['Dubai Civil Defence'] },
-      { label: 'MoIAT / ECAS Certification',  key: 'MoIAT / ECAS Certification' },
-      { label: "Al Sa'fat Green Building",    key: "Al Sa'fat Green Building" },
-      { label: 'Estidama Pearl Rating',       key: 'Estidama Pearl Rating' },
-      { label: 'LEED / Estidama Compat.',     key2: (m) => m.compliance?.['LEED / Estidama Compatibility'] || m.compliance?.['Estidama Pearl Rating'] },
-      { label: 'BS EN 13501-1',               key2: (m) => m.compliance?.['BS EN 13501-1 Class A1'] || m.compliance?.['BS EN 13501-1 Class A2-s1-d0'] || m.compliance?.['BS EN 13501-1 Class B'] },
-      { label: 'BS 8414 Façade System Test',  key2: (m) => { const v = m.compliance?.['BS 8414 Façade System Test']; return v; }, labelOverride: { yes: '✓  Compliant (system test req.)', partial: '◑  Compliant with system testing', no: '✗  Not applicable' } },
-    ];
-
-    // Compliance header
-    rect(ML, y, CW, ROW_H, C.bg3);
-    line(ML, y + ROW_H, ML + CW, y + ROW_H, C.acc, 0.2);
+    if (y > SAFE - 50) { y = addPage(); }
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(6.5);
-    tc(C.muted);
-    doc.text('REGULATION / STANDARD', ML + 3, y + ROW_H - 2.5);
-    selectedMats.forEach((key, idx) => {
-      const col = MAT_COL[key] || [160, 160, 160];
-      const cx = ML + PROP_W + idx * DATA_W;
-      doc.setFillColor(col[0], col[1], col[2]);
-      doc.circle(cx + 3, y + ROW_H / 2, 1.2, 'F');
-      tc(C.white);
-      safeText(key.toUpperCase(), cx + 6, y + ROW_H - 2.5, DATA_W - 8);
-    });
-    y += ROW_H;
+    tc(C.acc);
+    doc.text('UAE & INTERNATIONAL COMPLIANCE', ML, y);
+    hline(ML, y + 2, PW - MR, C.dim, 0.2);
+    y += 5;
+    y = drawColHeader(y);
 
-    compRows.forEach((cr, ri) => {
-      if (y > SAFE_BOTTOM - 4) { y = addContinuationPage(); }
-      const rowBg = ri % 2 === 0 ? C.bg : C.bg2;
-      rect(ML, y, CW, ROW_H, rowBg);
-      line(ML, y + ROW_H, ML + CW, y + ROW_H, C.dim, 0.1);
+    const compRows = [
+      { label: 'UAE Fire Code 2017',         key: 'UAE Fire Code 2017' },
+      { label: 'Dubai Civil Defence',        key2: m => m.compliance?.['Dubai Civil Defence (all heights — A1)'] || m.compliance?.['Dubai Civil Defence'] },
+      { label: 'MoIAT / ECAS',              key: 'MoIAT / ECAS Certification' },
+      { label: "Al Sa'fat Green Building",   key: "Al Sa'fat Green Building" },
+      { label: 'Estidama Pearl',             key: 'Estidama Pearl Rating' },
+      { label: 'LEED Compatibility',         key2: m => m.compliance?.['LEED / Estidama Compatibility'] || m.compliance?.['Estidama Pearl Rating'] },
+      { label: 'BS EN 13501-1',              key2: m => m.compliance?.['BS EN 13501-1 Class A1'] || m.compliance?.['BS EN 13501-1 Class A2-s1-d0'] || m.compliance?.['BS EN 13501-1 Class B'] },
+      { label: 'BS 8414 Facade Test',        key: 'BS 8414 Façade System Test' },
+    ];
 
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(6.5);
-      tc(C.muted);
-      doc.text(cr.label, ML + 3, y + ROW_H - 2.5);
+    let cp = 0;
+    compRows.forEach(cr => {
+      if (y > SAFE - MIN_ROW_H) { y = addPage(); y = drawColHeader(y); }
+      const bg = cp++ % 2 === 0 ? C.bg2 : C.bg;
 
-      selectedMats.forEach((key, idx) => {
-        const mat = MATERIALS[key];
-        const raw = cr.key2 ? cr.key2(mat) : mat.compliance?.[cr.key];
-        const val = (raw || 'unknown').toLowerCase();
-        let col, label;
-        if (cr.labelOverride && cr.labelOverride[val]) {
-          const lo = cr.labelOverride[val];
-          col = val === 'yes' ? C.acc : val === 'partial' ? C.amber : val === 'no' ? C.red : C.dim;
-          label = lo;
-        } else if (val === 'yes')     { col = C.acc;   label = '✓  Compliant'; }
-        else if (val === 'no')        { col = C.red;   label = '✗  Not Applicable'; }
-        else if (val === 'partial')   { col = C.amber; label = '◑  Conditional'; }
-        else                          { col = C.dim;   label = '—  Verify'; }
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.5);
-        tc(col);
-        safeText(label, ML + PROP_W + idx * DATA_W + 3, y + ROW_H - 2.5, DATA_W - 5);
-      });
-      y += ROW_H;
+      y = drawRow(
+        cr.label,
+        selectedMats.map(key => () => {
+          const mat = MATERIALS[key];
+          const raw = cr.key2 ? cr.key2(mat) : mat.compliance?.[cr.key];
+          const v   = (raw || 'unknown').toLowerCase();
+          return v === 'yes' ? '✓  Compliant'
+               : v === 'partial' ? '◑  Conditional'
+               : v === 'no' ? '✗  Not Applicable'
+               : '—  Verify';
+        }),
+        y, bg
+      );
     });
 
     y += 8;
 
-    // ── Key strengths cards ───────────────────────────────────────────────────
-    if (y < SAFE_BOTTOM - 30) {
-      y = sectionHeader('MATERIAL STRENGTHS & KEY TAGS', y);
+    // ── Material tags summary ─────────────────────────────────────────────────
+    if (y < SAFE - 28) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6.5);
+      tc(C.acc);
+      doc.text('KEY MATERIAL CHARACTERISTICS', ML, y);
+      hline(ML, y + 2, PW - MR, C.dim, 0.2);
+      y += 6;
 
-      const STR_CARD_W = (CW - (n - 1) * 3) / n;
-      const TAG_H = 5;
-
+      const tagW = (CW - (n - 1) * 4) / n;
+      const tagH = 10 + 5 * 4.5;
       selectedMats.forEach((key, i) => {
         const mat = MATERIALS[key];
-        const col = MAT_COL[key] || [100,100,100];
-        const cx = ML + i * (STR_CARD_W + 3);
-        const tags = (mat.tags || []).slice(0, 4);
-        const cardH = 10 + tags.length * (TAG_H + 1);
-
-        rnd(cx, y, STR_CARD_W, cardH, 2, C.bg2);
-        rect(cx, y, STR_CARD_W, 2.5, col);
-
+        const col = MAT_COL[key] || [120,120,120];
+        const tx  = ML + i * (tagW + 4);
+        rnd(tx, y, tagW, tagH, 1.5, C.bg3);
+        rect(tx, y, tagW, 2, col);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(6.5);
         tc(col);
-        safeText(mat.name, cx + 4, y + 7.5, STR_CARD_W - 8);
-
-        tags.forEach((tag, ti) => {
+        doc.text(mat.name, tx + 3, y + 6.5);
+        (mat.tags || []).slice(0, 5).forEach((tag, ti) => {
           doc.setFont('helvetica', 'normal');
-          doc.setFontSize(6);
+          doc.setFontSize(5.5);
           tc(C.muted);
-          safeText('· ' + tag, cx + 4, y + 11 + ti * (TAG_H + 1), STR_CARD_W - 8);
+          doc.text('· ' + tag, tx + 3, y + 10.5 + ti * 4.5);
         });
       });
     }
 
-    // ── Data verification footnote — in footer only, not inline ──────────────
-
-    // ════════════════════════════════════════════════════════════════════════════
-    // FOOTERS ON ALL PAGES
-    // ════════════════════════════════════════════════════════════════════════════
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let p = 1; p <= totalPages; p++) {
+    // ── Draw footers on all pages ─────────────────────────────────────────────
+    const total = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= total; p++) {
       doc.setPage(p);
-      drawFooter(p, totalPages);
+      drawFooter(p, total);
     }
 
-    // ── Save ─────────────────────────────────────────────────────────────────
-    const filename = 'CladWise_Comparison_' + selectedMats.join('_') + '_' + dateStr.replace(/ /g,'_') + '.pdf';
-    doc.save(filename);
+    // ── Save ──────────────────────────────────────────────────────────────────
+    doc.save('CladWise_Comparison_' + selectedMats.join('_') + '_' + dateStr.replace(/ /g, '_') + '.pdf');
 
-  } catch(err) {
+  } catch (err) {
     alert('PDF generation failed: ' + err.message);
     console.error(err);
   }
@@ -8582,9 +8604,6 @@ async function exportComparePDF() {
 }
 
 
-/* ─── MATERIAL ADVISORY REPORT ──────────────────────────────────────────── */
-
-// Called from wizard results
 async function exportAdvisoryFromWizard() {
   const btn = document.querySelector('[onclick="exportAdvisoryFromWizard()"]');
   // Build material list from wizard scores (top 3 ranked)
