@@ -3634,6 +3634,73 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
   </div>
 </section>
 
+<!-- RFQ MODAL -->
+<div class="rfq-overlay" id="rfq-overlay" onclick="rfqOverlayClick(event)">
+  <div class="rfq-box" id="rfq-box">
+    <!-- Head -->
+    <div class="rfq-head">
+      <div class="rfq-head-text">
+        <div class="rfq-eyebrow">Request for Quotation</div>
+        <div class="rfq-title">Request Quote</div>
+      </div>
+      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+    </div>
+    <!-- Pre-filled chips -->
+    <div class="rfq-prefill">
+      <span class="rfq-chip supplier-chip" id="rfq-chip-supplier">Supplier</span>
+      <span class="rfq-chip" id="rfq-chip-material">Material</span>
+    </div>
+    <!-- Form -->
+    <div class="rfq-body" id="rfq-form-body">
+      <div class="rfq-row">
+        <div class="rfq-field">
+          <label>Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+        </div>
+        <div class="rfq-field">
+          <label>Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+        </div>
+      </div>
+      <div class="rfq-field">
+        <label>Project Type</label>
+        <select id="rfq-project">
+          <option value="">— Select (optional) —</option>
+          <option>Villa / Residential</option>
+          <option>Tower / High-Rise</option>
+          <option>Commercial / Retail</option>
+          <option>Hospitality / Hotel</option>
+          <option>Government / Civic</option>
+          <option>Mixed-Use</option>
+          <option>Infrastructure</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="rfq-field">
+        <label>Message (optional)</label>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+      </div>
+      <label class="rfq-copy-row">
+        <input type="checkbox" id="rfq-copy" checked>
+        Send me a copy of this RFQ
+      </label>
+    </div>
+    <!-- Footer -->
+    <div class="rfq-foot" id="rfq-foot">
+      <button class="rfq-submit" id="rfq-submit-btn" onclick="submitRFQ()">
+        Send Request →
+      </button>
+    </div>
+    <!-- Success state -->
+    <div class="rfq-success" id="rfq-success" style="display:none">
+      <div class="rfq-success-icon">✓</div>
+      <div class="rfq-success-title">RFQ Sent</div>
+      <div class="rfq-success-sub" id="rfq-success-sub">Your request has been sent to the supplier.</div>
+      <button class="rfq-trigger-btn" onclick="closeRFQ()" style="max-width:180px;margin-top:8px">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-overlay" onclick="authOverlayClick(event)">
   <div class="auth-box">
@@ -6813,6 +6880,10 @@ function supGridCardHTML(s, blurred, dimLocked) {
         <button class="sup-gc-claim-btn" onclick="event.stopPropagation();openSupApply()">
           ★ Claim This Profile
           <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="rfq-trigger-btn" onclick="event.stopPropagation();openRFQ(${idx})">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          Request Quote
         </button>
       </div>
     </div>
@@ -10100,6 +10171,15 @@ function openSupProfile(idx) {
       </div>`).join('')
     : `<div class="sp-empty">No contact info available.</div>`;
 
+  // RFQ button in profile
+  const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
+  if (rfqBtnWrap) {
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      Request Quote from ${s.name}
+    </button>`;
+  }
+
   // Reset to overview tab
   spTab('overview', document.querySelector('.sp-tab'));
 
@@ -10189,6 +10269,7 @@ function spTab(name, btn) {
       <div class="sp-panel" id="sp-panel-contact">
         <div class="sp-sec-label">Contact &amp; Links</div>
         <div id="sp-contact-list"></div>
+          <div id="sp-rfq-wrap"></div>
       </div>
     </div>
   </div>
@@ -10364,7 +10445,92 @@ void main(){
   }, { threshold: 0.1 });
   io.observe(container);
 })();
-</script>
 
+/* ── RFQ SYSTEM ─────────────────────────────────────────────────────────────── */
+let _rfqSupplier = null;
+
+function openRFQ(supplierIdx, materialHint) {
+  const s = SUPPLIERS[supplierIdx];
+  if (!s) return;
+  _rfqSupplier = s;
+
+  // Reset form
+  document.getElementById('rfq-form-body').style.display = '';
+  document.getElementById('rfq-foot').style.display = '';
+  document.getElementById('rfq-success').style.display = 'none';
+  document.getElementById('rfq-submit-btn').disabled = false;
+  document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
+  document.getElementById('rfq-message').value = '';
+  document.getElementById('rfq-project').value = '';
+
+  // Pre-fill user info if logged in
+  if (cwSession?.user?.email) {
+    document.getElementById('rfq-email').value = cwSession.user.email;
+  }
+
+  // Chips
+  document.getElementById('rfq-chip-supplier').textContent = s.name;
+  const mat = materialHint || (s.mats && s.mats[0]) || 'Façade Material';
+  document.getElementById('rfq-chip-material').textContent = mat;
+  document.getElementById('rfq-chip-material').dataset.mat = mat;
+
+  document.getElementById('rfq-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('rfq-name').focus(), 150);
+}
+
+function closeRFQ() {
+  document.getElementById('rfq-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function rfqOverlayClick(e) {
+  if (e.target === document.getElementById('rfq-overlay')) closeRFQ();
+}
+
+async function submitRFQ() {
+  const name  = document.getElementById('rfq-name').value.trim();
+  const email = document.getElementById('rfq-email').value.trim();
+  if (!name || !email) { showToast('Name and email are required.'); return; }
+  if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) { showToast('Please enter a valid email.'); return; }
+
+  const btn = document.getElementById('rfq-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const payload = {
+    supplierName:  _rfqSupplier?.name || '',
+    supplierEmail: _rfqSupplier?.email || '',
+    material:      document.getElementById('rfq-chip-material').dataset.mat || '',
+    projectType:   document.getElementById('rfq-project').value,
+    userName:      name,
+    userEmail:     email,
+    message:       document.getElementById('rfq-message').value.trim(),
+    sendCopy:      document.getElementById('rfq-copy').checked,
+  };
+
+  try {
+    const r = await fetch('https://backend-cladwise-production.up.railway.app/api/rfq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.message || 'Submission failed');
+
+    // Success
+    document.getElementById('rfq-form-body').style.display = 'none';
+    document.getElementById('rfq-foot').style.display = 'none';
+    document.getElementById('rfq-success').style.display = 'flex';
+    document.getElementById('rfq-success-sub').textContent =
+      `Your RFQ #${data.rfqId} has been sent to ${_rfqSupplier?.name}.` +
+      (payload.sendCopy ? ' A copy was sent to your email.' : '');
+  } catch (e) {
+    showToast('Error: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Send Request →';
+  }
+}
+
+</script>
 </body>
-</html>
