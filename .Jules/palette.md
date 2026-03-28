@@ -1,0 +1,3 @@
+## 2025-05-15 - [Centralized Keyboard Navigation & Accessible Custom Components]
+**Learning:** In projects with many custom-built interactive elements (like the Material Deck), relying on `click` listeners alone creates significant accessibility gaps. Centralizing a global `keydown` listener that maps standard keys (Escape, Enter, Space) to actions across all custom UI components is an efficient way to achieve keyboard parity without refactoring the entire DOM structure.
+**Action:** Always check for `role="button"` elements when exploring a new repo and ensure they are backed by a global `Enter`/`Space` listener. Use `*:focus-visible` with `!important` to override legacy `outline: none` styles common in older AutoCAD-style web designs.
