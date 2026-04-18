@@ -33,6 +33,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
@@ -5549,9 +5550,9 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<button type="button" class="mat-deck-arrow" onclick="deckPrev()" aria-label="Previous material">&#8593;</button>` +
+    keys.map((k,i) => `<button type="button" class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})" aria-label="Go to ${MATERIALS[k].name}"></button>`).join('') +
+    `<button type="button" class="mat-deck-arrow" onclick="deckNext()" aria-label="Next material">&#8595;</button>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
@@ -6480,12 +6481,24 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  // Global mapping: Enter/Space triggers click on role="button"
+  if (e.key === 'Enter' || e.key === ' ') {
+    if (e.target.getAttribute('role') === 'button') {
+      e.preventDefault();
+      e.target.click();
+    }
+  }
+
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
     if (e.key === 'Escape') closeLightbox();
   } else if (document.getElementById('modal-overlay').classList.contains('open')) {
     if (e.key === 'Escape') closeModal();
+  } else if (document.getElementById('rfq-overlay').classList.contains('open')) {
+    if (e.key === 'Escape') closeRFQ();
+  } else if (document.getElementById('auth-overlay').classList.contains('open')) {
+    if (e.key === 'Escape') closeAuthModal();
   }
 });
 
