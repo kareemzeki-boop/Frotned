@@ -34,6 +34,9 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
+/* ACCESSIBILITY */
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
 
@@ -5549,14 +5552,14 @@ function buildDeck() {
 
   // Build nav dots
   nav.innerHTML =
-    `<div class="mat-deck-arrow" onclick="deckPrev()">&#8593;</div>` +
-    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
-    `<div class="mat-deck-arrow" onclick="deckNext()">&#8595;</div>`;
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Previous card" onclick="deckPrev()">&#8593;</div>` +
+    keys.map((k,i) => `<div class="mat-deck-dot${i===0?' active':''}" role="button" tabindex="0" aria-label="Go to card ${i+1}" data-i="${i}" onclick="deckGo(${i})"></div>`).join('') +
+    `<div class="mat-deck-arrow" role="button" tabindex="0" aria-label="Next card" onclick="deckNext()">&#8595;</div>`;
 
   // Build sidebar
   sidebar.innerHTML = keys.map((key,i) => {
     const live = LIVE.includes(key);
-    return `<div class="mat-deck-item${i===0?' active':''}" data-i="${i}" onclick="deckGo(${i})">
+    return `<div class="mat-deck-item${i===0?' active':''}" role="button" tabindex="0" aria-label="View ${MATERIALS[key].name}" data-i="${i}" onclick="deckGo(${i})">
       <div class="mat-deck-item-dot" style="background:${COLORS[key]||'#666'};${live?'':'opacity:0.3'}"></div>
       <span class="mat-deck-item-name">${MATERIALS[key].name}</span>
       <span class="mat-deck-item-badge ${live?'live':'soon'}">${live?'Live':'Soon'}</span>
@@ -6480,12 +6483,27 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  // ESC to close any open modal
+  if (e.key === 'Escape') {
+    if (document.getElementById('lightbox').classList.contains('open')) closeLightbox();
+    else if (document.getElementById('modal-overlay').classList.contains('open')) closeModal();
+    else if (document.getElementById('exp-lightbox')?.classList.contains('open')) closeLightbox();
+    else if (document.getElementById('mat-explorer-overlay')?.classList.contains('open')) closeExplorer();
+    else if (document.getElementById('sp-overlay')?.classList.contains('open')) closeSupProfile();
+    else if (document.getElementById('auth-overlay')?.classList.contains('open')) closeAuthModal();
+    else if (document.getElementById('sup-apply-overlay')?.classList.contains('open')) closeSupApply();
+    else if (document.getElementById('sub-modal-overlay')?.classList.contains('open')) closeSubModal();
+  }
+
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'Escape') closeLightbox();
-  } else if (document.getElementById('modal-overlay').classList.contains('open')) {
-    if (e.key === 'Escape') closeModal();
+  }
+
+  // Keyboard parity for custom role="button" elements
+  if ((e.key === 'Enter' || e.key === ' ') && e.target instanceof Element && e.target.getAttribute('role') === 'button') {
+    e.preventDefault();
+    e.target.click();
   }
 });
 
