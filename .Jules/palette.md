@@ -1,0 +1,3 @@
+## 2026-03-29 - [Keyboard Accessibility & Focus Visibility]
+**Learning:** Core interactive components (e.g., .mat-deck-dot, .mat-deck-arrow, .exp-close) in this application are frequently built using non-semantic <div> elements, making them invisible to keyboard users and screen readers. Additionally, the dark theme and custom crosshair cursor make standard focus states hard to see.
+**Action:** Always implement a global delegated keydown listener to map Enter/Space to click for role="button" elements, and use !important in global CSS to ensure *:focus-visible outlines are prominent against dark backgrounds and inline 'outline: none' styles.
