@@ -31,6 +31,7 @@
   --green-mid: #1e3322;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
@@ -3709,7 +3710,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -3812,7 +3813,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">FAÇADE SPECIFICATION PLATFORM</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="sub-modal-title">CladWise UAE</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')">For Architects</button>
@@ -4467,7 +4468,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -4476,7 +4477,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -7749,7 +7750,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">List Your Business</div>
         <div class="sap-subtitle">Get found by architects, specifiers & developers across the UAE</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()">
+      <button class="sap-close" onclick="closeSupApply()" aria-label="Close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
       </button>
     </div>
@@ -10211,7 +10212,7 @@ function spTab(name, btn) {
       <div class="sp-hero-gradient"></div>
       <div class="sp-hero-top">
         <span class="sp-tier-pill" id="sp-tier-pill"></span>
-        <button class="sp-close" onclick="closeSupProfile()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+        <button class="sp-close" onclick="closeSupProfile()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
       </div>
     </div>
 
