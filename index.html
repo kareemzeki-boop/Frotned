@@ -3643,7 +3643,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3654,16 +3654,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3677,7 +3677,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
+        <label for="rfq-message">Message (optional)</label>
         <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
       </div>
       <label class="rfq-copy-row">
