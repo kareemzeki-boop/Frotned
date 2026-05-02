@@ -48,6 +48,25 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .page-formula .formula-line{color:var(--text);font-size:13px}
 .page-formula .formula-title{color:var(--accent);font-size:10px;letter-spacing:2px;margin-bottom:8px}
 
+/* ── PROJECT META BAR ── */
+.project-meta-bar{max-width:1200px;margin:0 auto 16px;padding:0 40px}
+.project-meta-inner{background:var(--bg2);border:1px solid var(--border);padding:16px 20px;display:grid;grid-template-columns:repeat(4,1fr) auto;gap:12px;align-items:end}
+.meta-field label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px}
+.meta-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:12px;padding:7px 10px;outline:none;width:100%;transition:border-color 0.15s}
+.meta-input:focus{border-color:rgba(0,229,160,0.4)}
+.meta-select{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:12px;padding:7px 10px;outline:none;width:100%;cursor:pointer;transition:border-color 0.15s}
+.meta-select:focus{border-color:rgba(0,229,160,0.4)}
+.meta-select option{background:var(--bg2)}
+.meta-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px}
+
+/* ── ELEMENT SELECTOR ── */
+.element-selector{max-width:1200px;margin:0 auto 16px;padding:0 40px}
+.element-tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);padding:4px}
+.element-tab{flex:1;background:transparent;border:none;color:var(--muted);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.element-tab:hover{color:var(--text)}
+.element-tab.active{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.25);color:var(--accent)}
+.element-tab i{font-size:11px}
+
 /* ── MAIN LAYOUT ── */
 .main{max-width:1200px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
 
@@ -64,6 +83,9 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .surface-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--blue)}
 .surface-unit{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
 
+/* ventilated cavity warning */
+.vent-warning{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);padding:10px 16px;margin:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);display:none;align-items:center;gap:8px;line-height:1.5}
+
 /* ── LAYER TABLE ── */
 .layer-table{width:100%;border-collapse:collapse}
 .layer-table thead tr{background:var(--bg3);border-bottom:2px solid rgba(0,229,160,0.12)}
@@ -74,22 +96,26 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .layer-row:hover{background:rgba(255,255,255,0.02)}
 .layer-row td{padding:10px 14px;vertical-align:middle}
 .layer-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:28px}
-.layer-drag{color:var(--muted);opacity:0.4;cursor:grab;font-size:12px;padding-right:4px}
+.layer-warn-cell{width:20px;text-align:center}
+.layer-warn-icon{color:var(--amber);font-size:11px;cursor:help}
 
 /* Inputs inside table */
 .layer-select,.layer-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color 0.15s;width:100%}
 .layer-select:focus,.layer-input:focus{border-color:rgba(0,229,160,0.4)}
+.layer-input.input-error{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.05)}
+.layer-input.input-warn{border-color:rgba(245,158,11,0.4)}
 .layer-select{cursor:pointer}
 .layer-select option{background:var(--bg2)}
 .layer-input{text-align:right;font-family:'DM Mono',monospace}
 .layer-lambda{color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;text-align:right}
 .layer-r{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-align:right;color:var(--accent);min-width:70px}
 .layer-r.zero{color:var(--muted)}
+.layer-r.negligible{color:var(--amber);font-size:13px}
 .btn-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:6px;transition:color 0.15s;opacity:0.5}
 .btn-del:hover{color:var(--red);opacity:1}
 
 /* ── ADD LAYER ROW ── */
-.add-row{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.add-row{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .btn-add{display:flex;align-items:center;gap:8px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.15s}
 .btn-add:hover{background:rgba(0,229,160,0.15);border-color:var(--accent)}
 .btn-preset{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.15s}
@@ -133,6 +159,8 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .ref-name{color:var(--muted)}
 .ref-val{font-family:'DM Mono',monospace;color:var(--text);font-size:11px}
 .ref-val.highlight{color:var(--accent)}
+.ref-val.active-limit{color:var(--accent);font-weight:700;position:relative}
+.ref-val.active-limit::after{content:'◀';font-size:9px;margin-left:4px;opacity:0.6}
 
 /* Export button */
 .btn-export{width:100%;background:var(--accent);color:#000;border:none;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px}
@@ -141,10 +169,18 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .btn-reset:hover{border-color:var(--red);color:var(--red)}
 
 /* ── PRESETS ── */
-.presets-strip{max-width:1200px;margin:0 auto 16px;padding:0 40px;display:flex;gap:8px;flex-wrap:wrap}
+.presets-strip{max-width:1200px;margin:0 auto 16px;padding:0 40px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .preset-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:8px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px}
 .preset-btn:hover{border-color:var(--accent);color:var(--accent)}
 .preset-btn i{font-size:10px}
+
+/* ── VALIDATION NOTICE ── */
+.validation-notice{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;color:var(--red);display:none;align-items:center;gap:8px;margin-bottom:2px}
+
+/* ── TOOLTIP ── */
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-wrap .tooltip{visibility:hidden;background:var(--bg3);border:1px solid rgba(245,158,11,0.3);color:var(--amber);font-family:'DM Mono',monospace;font-size:10px;padding:6px 10px;position:absolute;z-index:10;bottom:125%;left:50%;transform:translateX(-50%);width:220px;text-align:left;line-height:1.5;pointer-events:none;opacity:0;transition:opacity 0.15s}
+.tooltip-wrap:hover .tooltip{visibility:visible;opacity:1}
 
 /* ── MOBILE ── */
 @media(max-width:900px){
@@ -153,13 +189,16 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
   .page-header{grid-template-columns:1fr;gap:20px}
   .page-title{font-size:52px}
   nav{padding:0 20px}
-  .main,.presets-strip,.page-header{padding-left:20px;padding-right:20px}
+  .main,.presets-strip,.page-header,.project-meta-bar,.element-selector{padding-left:20px;padding-right:20px}
+  .project-meta-inner{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  .element-tab span{display:none}
 }
 @media(max-width:600px){
   .page-title{font-size:40px}
   .u-value-num{font-size:60px}
   .surface-row{grid-template-columns:1fr}
-  .layer-table th:nth-child(3),.layer-row td:nth-child(3){display:none}
+  .layer-table th:nth-child(4),.layer-row td:nth-child(4){display:none}
+  .project-meta-inner{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -175,18 +214,71 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div>
-    <div class="page-eyebrow">Thermal Performance · ISO 6946</div>
+    <div class="page-eyebrow">Thermal Performance · ISO 6946:2017</div>
     <h1 class="page-title">Facade<br>U-Value<br><span>Calculator</span></h1>
-    <p class="page-desc">Build a wall assembly layer by layer. Real-time calculation of R-values, total U-value, and UAE / ASHRAE 90.1 compliance check. Based on ISO 6946 methodology.</p>
+    <p class="page-desc">Build a wall, roof or floor assembly layer by layer. Real-time R-value and U-value calculation with full UAE compliance checking across ASHRAE 90.1, Dubai Green Building Regs, Estidama Pearl, and LEED v4. Based on ISO 6946:2017 methodology.</p>
   </div>
   <div class="page-formula">
-    <div class="formula-title">ENGINEERING FORMULAE</div>
+    <div class="formula-title">ENGINEERING FORMULAE · ISO 6946:2017</div>
     <div class="formula-line">R<sub>layer</sub> = d (m) / λ (W/m·K)</div>
     <div style="margin:4px 0;color:var(--muted)">─────────────────────</div>
     <div class="formula-line">R<sub>total</sub> = R<sub>si</sub> + ΣR<sub>layers</sub> + R<sub>se</sub></div>
     <div style="margin:4px 0;color:var(--muted)">─────────────────────</div>
     <div class="formula-line">U = 1 / R<sub>total</sub> &nbsp;&nbsp;(W/m²K)</div>
-    <div style="margin-top:10px;color:var(--muted);font-size:10px">R<sub>si</sub> = 0.13 · R<sub>se</sub> = 0.04 m²K/W</div>
+    <div style="margin-top:10px;color:var(--muted);font-size:10px">R<sub>si</sub> = 0.13 · R<sub>se</sub> = 0.04 m²K/W (horizontal heat flow)</div>
+    <div style="color:var(--muted);font-size:10px;margin-top:4px">Ventilated cavity: R<sub>se</sub> shifts to 0.13 (ISO 6946 Annex D)</div>
+  </div>
+</div>
+
+<!-- PROJECT METADATA -->
+<div class="project-meta-bar">
+  <div class="project-meta-inner">
+    <div class="meta-field">
+      <label>Project Name</label>
+      <input class="meta-input" id="meta-project" type="text" placeholder="e.g. Tower A, Dubai Marina">
+    </div>
+    <div class="meta-field">
+      <label>Architect / Engineer</label>
+      <input class="meta-input" id="meta-architect" type="text" placeholder="Your name or firm">
+    </div>
+    <div class="meta-field">
+      <label>Location / Emirate</label>
+      <select class="meta-select" id="meta-location">
+        <option value="Dubai">Dubai</option>
+        <option value="Abu Dhabi">Abu Dhabi</option>
+        <option value="Sharjah">Sharjah</option>
+        <option value="Ajman">Ajman</option>
+        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+        <option value="Fujairah">Fujairah</option>
+        <option value="Umm Al Quwain">Umm Al Quwain</option>
+      </select>
+    </div>
+    <div class="meta-field">
+      <label>Reference / Drawing No.</label>
+      <input class="meta-input" id="meta-ref" type="text" placeholder="e.g. FA-001-REV2">
+    </div>
+    <div style="align-self:end">
+      <div class="meta-label">Date</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);padding:8px 0" id="meta-date"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BUILDING ELEMENT SELECTOR -->
+<div class="element-selector">
+  <div class="element-tabs">
+    <button class="element-tab active" onclick="setElement('wall')" id="tab-wall">
+      <i class="fa-solid fa-building"></i> <span>External Wall</span>
+    </button>
+    <button class="element-tab" onclick="setElement('roof')" id="tab-roof">
+      <i class="fa-solid fa-house-chimney"></i> <span>Flat Roof</span>
+    </button>
+    <button class="element-tab" onclick="setElement('floor')" id="tab-floor">
+      <i class="fa-solid fa-layer-group"></i> <span>Ground Floor</span>
+    </button>
+    <button class="element-tab" onclick="setElement('glazing')" id="tab-glazing">
+      <i class="fa-solid fa-border-none"></i> <span>Glazing (CW)</span>
+    </button>
   </div>
 </div>
 
@@ -195,9 +287,18 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
   <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;align-self:center">LOAD PRESET:</span>
   <button class="preset-btn" onclick="loadPreset('rainscreen')"><i class="fa-solid fa-layer-group"></i> Ventilated Rainscreen</button>
   <button class="preset-btn" onclick="loadPreset('insulated')"><i class="fa-solid fa-layer-group"></i> Insulated Concrete Wall</button>
-  <button class="preset-btn" onclick="loadPreset('gfrc')"><i class="fa-solid fa-layer-group"></i> GFRC Facade Assembly</button>
+  <button class="preset-btn" onclick="loadPreset('gfrc')"><i class="fa-solid fa-layer-group"></i> GFRC Facade</button>
   <button class="preset-btn" onclick="loadPreset('acm')"><i class="fa-solid fa-layer-group"></i> ACM-FR Curtain Wall</button>
   <button class="preset-btn" onclick="loadPreset('stone')"><i class="fa-solid fa-layer-group"></i> Stone Cladding</button>
+  <button class="preset-btn" onclick="loadPreset('roof_flat')"><i class="fa-solid fa-house-chimney"></i> Flat Roof (UAE)</button>
+</div>
+
+<!-- VALIDATION NOTICE -->
+<div style="max-width:1200px;margin:0 auto;padding:0 40px">
+  <div class="validation-notice" id="validation-notice">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span id="validation-text"></span>
+  </div>
 </div>
 
 <!-- MAIN -->
@@ -208,34 +309,40 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     <div class="panel">
       <div class="panel-header">
         <div>
-          <div class="panel-title">Wall Assembly</div>
+          <div class="panel-title" id="assembly-title">Wall Assembly</div>
           <div class="panel-sub">Outside → Inside · Add layers in order</div>
         </div>
         <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count">0 LAYERS</div>
       </div>
 
       <!-- Surface resistances -->
-      <div class="surface-row">
+      <div class="surface-row" id="surface-row">
         <div class="surface-cell">
           <div>
             <div class="surface-label">External Surface (R<sub>se</sub>)</div>
-            <div class="surface-unit">ISO 6946 · Exposed facade</div>
+            <div class="surface-unit" id="rse-note">ISO 6946 · Exposed facade</div>
           </div>
           <div style="text-align:right">
-            <div class="surface-val">0.04</div>
+            <div class="surface-val" id="rse-display">0.04</div>
             <div class="surface-unit">m²K/W</div>
           </div>
         </div>
         <div class="surface-cell">
           <div>
             <div class="surface-label">Internal Surface (R<sub>si</sub>)</div>
-            <div class="surface-unit">ISO 6946 · Horizontal heat flow</div>
+            <div class="surface-unit" id="rsi-note">ISO 6946 · Horizontal heat flow</div>
           </div>
           <div style="text-align:right">
-            <div class="surface-val">0.13</div>
+            <div class="surface-val" id="rsi-display">0.13</div>
             <div class="surface-unit">m²K/W</div>
           </div>
         </div>
+      </div>
+
+      <!-- Ventilated cavity ISO warning -->
+      <div class="vent-warning" id="vent-warning">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>ISO 6946 Annex D: A ventilated air layer is detected. Layers between the ventilated cavity and the external surface contribute negligible thermal resistance. R<sub>se</sub> has been adjusted to 0.13 m²K/W and external cladding layers are excluded from the R-sum per ISO 6946:2017.</span>
       </div>
 
       <!-- Layer table -->
@@ -248,11 +355,11 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
               <th style="width:110px">Thickness (mm)</th>
               <th style="width:130px" class="r-align">λ (W/m·K)</th>
               <th style="width:90px" class="r-align">R (m²K/W)</th>
+              <th style="width:24px"></th>
               <th style="width:36px"></th>
             </tr>
           </thead>
           <tbody id="layers-tbody">
-            <!-- Rows injected by JS -->
           </tbody>
         </table>
       </div>
@@ -262,7 +369,8 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
         <button class="btn-add" onclick="addLayer()">
           <i class="fa-solid fa-plus"></i> Add Layer
         </button>
-        <button class="btn-preset" onclick="addAirCavity()">+ Air Cavity</button>
+        <button class="btn-preset" onclick="addAirCavity()">+ Unventilated Cavity</button>
+        <button class="btn-preset" onclick="addVentCavity()">+ Ventilated Cavity</button>
         <button class="btn-preset" onclick="addInsulation()">+ Insulation</button>
       </div>
     </div>
@@ -273,7 +381,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 
     <!-- U-Value display -->
     <div class="u-display">
-      <div class="u-label">U-Value Result</div>
+      <div class="u-label">U-Value Result · <span id="element-label-small" style="color:var(--accent)">External Wall</span></div>
       <div class="u-value-num" id="u-value-display">—</div>
       <div class="u-value-unit">W/m²·K</div>
       <div class="compliance-badge-wrap">
@@ -299,29 +407,10 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
     </div>
 
-    <!-- UAE Reference values -->
+    <!-- UAE Reference values — dynamic per element -->
     <div class="ref-panel">
-      <div class="ref-title">UAE / Gulf Thermal Reference</div>
-      <div class="ref-row">
-        <span class="ref-name">ASHRAE 90.1 · Gulf Climate Zone 1</span>
-        <span class="ref-val highlight">U ≤ 0.70</span>
-      </div>
-      <div class="ref-row">
-        <span class="ref-name">Dubai Green Building Regs</span>
-        <span class="ref-val highlight">U ≤ 0.57</span>
-      </div>
-      <div class="ref-row">
-        <span class="ref-name">Abu Dhabi Estidama Pearl</span>
-        <span class="ref-val highlight">U ≤ 0.45</span>
-      </div>
-      <div class="ref-row">
-        <span class="ref-name">LEED v4 Gulf Baseline</span>
-        <span class="ref-val highlight">U ≤ 0.40</span>
-      </div>
-      <div class="ref-row">
-        <span class="ref-name">Passive House (reference)</span>
-        <span class="ref-val">U ≤ 0.15</span>
-      </div>
+      <div class="ref-title" id="ref-title">UAE / Gulf Thermal Reference · External Wall</div>
+      <div id="ref-rows"></div>
     </div>
 
     <!-- Actions -->
@@ -336,80 +425,153 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 </div>
 
 <script>
-// ── MATERIALS DATABASE ───────────────────────────────────────────────────────
+// ── MATERIALS DATABASE ──────────────────────────────────────────────────────
+// λ values per ISO 10456 / manufacturer declared averages; notes for PDF
 const MATERIALS_DB = [
-  { id: 'gfrc',         name: 'GFRC Panel',              lambda: 0.75,  note: 'Glass Fibre Reinforced Concrete' },
-  { id: 'gfrp',         name: 'GFRP Panel',              lambda: 0.35,  note: 'Glass Fibre Reinforced Polymer' },
-  { id: 'aluminum',     name: 'Aluminum Sheet',          lambda: 160,   note: 'Solid aluminium alloy' },
-  { id: 'acm',          name: 'ACM Panel (mineral)',     lambda: 0.20,  note: 'Aluminium Composite Mineral Core' },
-  { id: 'fibrecement',  name: 'Fibre Cement Board',      lambda: 0.35,  note: 'Fibre cement cladding panel' },
-  { id: 'concrete',     name: 'Dense Concrete',          lambda: 1.70,  note: '2300 kg/m³ concrete' },
-  { id: 'lwconcrete',   name: 'Lightweight Concrete',    lambda: 0.70,  note: '1200 kg/m³' },
-  { id: 'blockwork',    name: 'Concrete Blockwork',      lambda: 1.13,  note: 'Hollow core 200mm block' },
-  { id: 'brick',        name: 'Clay Brick',              lambda: 0.77,  note: 'Common clay brick' },
-  { id: 'rockwool',     name: 'Rockwool / Mineral Wool', lambda: 0.036, note: 'Mineral wool insulation' },
-  { id: 'pir',          name: 'PIR Insulation',          lambda: 0.022, note: 'Polyisocyanurate foam board' },
-  { id: 'eps',          name: 'EPS Insulation',          lambda: 0.038, note: 'Expanded polystyrene' },
-  { id: 'xps',          name: 'XPS Insulation',          lambda: 0.032, note: 'Extruded polystyrene' },
-  { id: 'aircavity',    name: 'Unventilated Air Cavity', lambda: null,  r: 0.18, note: 'ISO 6946 Table 2' },
-  { id: 'aircavityv',   name: 'Ventilated Air Cavity',   lambda: null,  r: 0.13, note: 'ISO 6946 ventilated' },
-  { id: 'gypsumboard',  name: 'Gypsum Board',            lambda: 0.25,  note: 'Standard plasterboard' },
-  { id: 'stone',        name: 'Natural Stone',           lambda: 2.30,  note: 'Limestone / granite avg' },
-  { id: 'marble',       name: 'Marble',                  lambda: 2.90,  note: 'Dense marble' },
-  { id: 'ceramic',      name: 'Ceramic / Porcelain',     lambda: 1.30,  note: 'Fired ceramic tile' },
-  { id: 'timber',       name: 'Timber / Wood',           lambda: 0.14,  note: 'Softwood average' },
-  { id: 'glass',        name: 'Glass (solid)',            lambda: 1.00,  note: 'Dense soda-lime glass' },
-  { id: 'custom',       name: '— Custom Material —',     lambda: null,  note: 'Enter λ manually' },
+  // Cladding / Facade
+  { id: 'gfrc',         name: 'GFRC Panel',              lambda: 0.75,  note: 'Glass Fibre Reinforced Concrete — ISO 10456', category: 'Cladding' },
+  { id: 'gfrp',         name: 'GFRP Panel',              lambda: 0.28,  note: 'Glass Fibre Reinforced Polymer — mfr. declared avg.', category: 'Cladding' },
+  { id: 'aluminum',     name: 'Aluminium Sheet',         lambda: 160,   note: 'Solid aluminium alloy — structural/weathering layer only, negligible thermal resistance', category: 'Cladding', warn: 'Aluminium has near-zero thermal resistance (R ≈ 0). It is a structural/weathering layer only and does not contribute meaningfully to the assembly U-value.' },
+  { id: 'acm',          name: 'ACM Panel (mineral core)',lambda: 0.20,  note: 'Aluminium Composite — mineral core composite λ', category: 'Cladding', warn: 'λ applies to the full ACM composite panel assembly. The mineral core alone has λ ≈ 0.19 W/mK; aluminium skins dominate at thin gauges.' },
+  { id: 'fibrecement',  name: 'Fibre Cement Board',      lambda: 0.35,  note: 'Fibre cement cladding panel', category: 'Cladding' },
+  { id: 'stone',        name: 'Natural Stone',           lambda: 2.30,  note: 'Limestone / granite average — ISO 10456', category: 'Cladding' },
+  { id: 'marble',       name: 'Marble',                  lambda: 2.90,  note: 'Dense marble — ISO 10456', category: 'Cladding' },
+  { id: 'ceramic',      name: 'Ceramic / Porcelain',     lambda: 1.30,  note: 'Fired ceramic tile', category: 'Cladding' },
+  { id: 'timber',       name: 'Timber / Hardwood',       lambda: 0.18,  note: 'Hardwood average — ISO 10456', category: 'Cladding' },
+  // Structure
+  { id: 'concrete',     name: 'Dense Concrete',          lambda: 1.70,  note: '2300 kg/m³ — ISO 10456', category: 'Structure' },
+  { id: 'lwconcrete',   name: 'Lightweight Concrete',    lambda: 0.70,  note: '1200 kg/m³ — ISO 10456', category: 'Structure' },
+  { id: 'blockwork',    name: 'Concrete Blockwork',      lambda: 1.13,  note: 'Hollow core 200mm block', category: 'Structure' },
+  { id: 'brick',        name: 'Clay Brick',              lambda: 0.77,  note: 'Common clay brick — ISO 10456', category: 'Structure' },
+  { id: 'glass',        name: 'Glass (solid)',            lambda: 1.00,  note: 'Dense soda-lime glass — ISO 10456', category: 'Structure' },
+  // Insulation
+  { id: 'rockwool',     name: 'Rockwool / Mineral Wool', lambda: 0.036, note: 'Mineral wool insulation — ISO 10456', category: 'Insulation' },
+  { id: 'pir',          name: 'PIR Insulation',          lambda: 0.022, note: 'Polyisocyanurate foam board', category: 'Insulation' },
+  { id: 'eps',          name: 'EPS Insulation',          lambda: 0.038, note: 'Expanded polystyrene — ISO 10456', category: 'Insulation' },
+  { id: 'xps',          name: 'XPS Insulation',          lambda: 0.032, note: 'Extruded polystyrene — ISO 10456', category: 'Insulation' },
+  { id: 'glasswool',    name: 'Glass Wool',              lambda: 0.034, note: 'Glass wool batts — ISO 10456', category: 'Insulation' },
+  // Air / Cavity
+  { id: 'aircavity',    name: 'Unventilated Air Cavity', lambda: null,  r: 0.18, note: 'ISO 6946:2017 Table 2 — d ≥ 25mm', category: 'Air', isVentilated: false },
+  { id: 'aircavityv',   name: 'Ventilated Air Cavity',   lambda: null,  r: 0.13, note: 'ISO 6946:2017 Annex D — adjusts Rse to 0.13', category: 'Air', isVentilated: true },
+  // Finish
+  { id: 'gypsumboard',  name: 'Gypsum Board',            lambda: 0.25,  note: 'Standard plasterboard — ISO 10456', category: 'Finish' },
+  { id: 'plaster',      name: 'Cement Plaster / Render', lambda: 1.00,  note: 'Sand cement render', category: 'Finish' },
+  { id: 'custom',       name: '— Custom Material —',     lambda: null,  note: 'Enter λ value manually', category: 'Custom' },
 ];
 
-// Surface resistances (ISO 6946)
-const RSI = 0.13;
-const RSE = 0.04;
+// ── SURFACE RESISTANCES (ISO 6946:2017) ────────────────────────────────────
+// Horizontal heat flow (external wall); updated for roof/floor in setElement()
+let RSI = 0.13;
+let RSE = 0.04;
 
+// ── BUILDING ELEMENT CONFIG ─────────────────────────────────────────────────
+// Limits per element: [ASHRAE90.1 Zone1B, Dubai Green, Estidama, LEED v4, GSAS]
+const ELEMENTS = {
+  wall: {
+    label: 'External Wall',
+    rsi: 0.13, rse: 0.04,
+    standards: [
+      { name: 'ASHRAE 90.1 · Zone 1B (Hot-Dry)', limit: 0.701 },
+      { name: 'Dubai Green Building Regs', limit: 0.57 },
+      { name: 'Abu Dhabi Estidama Pearl', limit: 0.45 },
+      { name: 'LEED v4 · Gulf Baseline', limit: 0.40 },
+      { name: 'GSAS · Gulf Sustainable', limit: 0.35 },
+      { name: 'Passive House Gulf (PHPP)', limit: 0.10 },
+    ]
+  },
+  roof: {
+    label: 'Flat Roof',
+    rsi: 0.10, rse: 0.04,
+    standards: [
+      { name: 'ASHRAE 90.1 · Zone 1B (Hot-Dry)', limit: 0.426 },
+      { name: 'Dubai Green Building Regs', limit: 0.30 },
+      { name: 'Abu Dhabi Estidama Pearl', limit: 0.20 },
+      { name: 'LEED v4 · Gulf Baseline', limit: 0.18 },
+      { name: 'GSAS · Gulf Sustainable', limit: 0.18 },
+      { name: 'Passive House Gulf (PHPP)', limit: 0.10 },
+    ]
+  },
+  floor: {
+    label: 'Ground Floor',
+    rsi: 0.17, rse: 0.04,
+    standards: [
+      { name: 'ASHRAE 90.1 · Zone 1B', limit: 1.408 },
+      { name: 'Dubai Green Building Regs', limit: 0.60 },
+      { name: 'Abu Dhabi Estidama Pearl', limit: 0.50 },
+      { name: 'LEED v4 · Gulf Baseline', limit: 0.45 },
+      { name: 'GSAS · Gulf Sustainable', limit: 0.40 },
+      { name: 'Passive House Gulf (PHPP)', limit: 0.15 },
+    ]
+  },
+  glazing: {
+    label: 'Glazing / Curtain Wall',
+    rsi: 0.13, rse: 0.04,
+    standards: [
+      { name: 'ASHRAE 90.1 · Zone 1B', limit: 3.24 },
+      { name: 'Dubai Green Building Regs', limit: 1.90 },
+      { name: 'Abu Dhabi Estidama Pearl', limit: 1.60 },
+      { name: 'LEED v4 · Gulf Baseline', limit: 1.50 },
+      { name: 'GSAS · Gulf Sustainable', limit: 1.40 },
+      { name: 'Passive House Gulf (PHPP)', limit: 0.80 },
+    ]
+  },
+};
+
+let currentElement = 'wall';
 let layers = [];
 let layerIdCounter = 0;
+let hasVentilatedCavity = false;
+let ventCavityIndex = -1;
 
-// ── PRESET ASSEMBLIES ────────────────────────────────────────────────────────
+// ── PRESETS ─────────────────────────────────────────────────────────────────
 const PRESETS = {
   rainscreen: [
-    { matId: 'gfrc',       thickness: 20,  lambda: 0.75 },
-    { matId: 'aircavityv', thickness: 50,  lambda: null  },
-    { matId: 'rockwool',   thickness: 80,  lambda: 0.036 },
-    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
-    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+    { matId: 'gfrc',       thickness: 20  },
+    { matId: 'aircavityv', thickness: 50  },
+    { matId: 'rockwool',   thickness: 80  },
+    { matId: 'concrete',   thickness: 200 },
+    { matId: 'gypsumboard',thickness: 12  },
   ],
   insulated: [
-    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
-    { matId: 'pir',        thickness: 60,  lambda: 0.022 },
-    { matId: 'aircavity',  thickness: 25,  lambda: null  },
-    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+    { matId: 'concrete',   thickness: 200 },
+    { matId: 'pir',        thickness: 60  },
+    { matId: 'aircavity',  thickness: 25  },
+    { matId: 'gypsumboard',thickness: 12  },
   ],
   gfrc: [
-    { matId: 'gfrc',       thickness: 25,  lambda: 0.75  },
-    { matId: 'aircavityv', thickness: 40,  lambda: null  },
-    { matId: 'rockwool',   thickness: 100, lambda: 0.036 },
-    { matId: 'blockwork',  thickness: 200, lambda: 1.13  },
-    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+    { matId: 'gfrc',       thickness: 25  },
+    { matId: 'aircavityv', thickness: 40  },
+    { matId: 'rockwool',   thickness: 100 },
+    { matId: 'blockwork',  thickness: 200 },
+    { matId: 'gypsumboard',thickness: 12  },
   ],
   acm: [
-    { matId: 'acm',        thickness: 4,   lambda: 0.20  },
-    { matId: 'aircavityv', thickness: 50,  lambda: null  },
-    { matId: 'pir',        thickness: 80,  lambda: 0.022 },
-    { matId: 'concrete',   thickness: 200, lambda: 1.70  },
-    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+    { matId: 'acm',        thickness: 4   },
+    { matId: 'aircavityv', thickness: 50  },
+    { matId: 'pir',        thickness: 80  },
+    { matId: 'concrete',   thickness: 200 },
+    { matId: 'gypsumboard',thickness: 12  },
   ],
   stone: [
-    { matId: 'stone',      thickness: 30,  lambda: 2.30  },
-    { matId: 'aircavity',  thickness: 40,  lambda: null  },
-    { matId: 'rockwool',   thickness: 80,  lambda: 0.036 },
-    { matId: 'blockwork',  thickness: 200, lambda: 1.13  },
-    { matId: 'gypsumboard',thickness: 12,  lambda: 0.25  },
+    { matId: 'stone',      thickness: 30  },
+    { matId: 'aircavity',  thickness: 40  },
+    { matId: 'rockwool',   thickness: 80  },
+    { matId: 'blockwork',  thickness: 200 },
+    { matId: 'gypsumboard',thickness: 12  },
+  ],
+  roof_flat: [
+    { matId: 'concrete',   thickness: 200 },
+    { matId: 'eps',        thickness: 100 },
+    { matId: 'aircavity',  thickness: 25  },
+    { matId: 'gypsumboard',thickness: 12  },
   ],
 };
 
 function loadPreset(key) {
   layers = [];
   layerIdCounter = 0;
+  // Auto-switch element for roof preset
+  if (key === 'roof_flat') setElement('roof');
   const preset = PRESETS[key];
   preset.forEach(p => {
     const mat = MATERIALS_DB.find(m => m.id === p.matId) || MATERIALS_DB[0];
@@ -418,31 +580,76 @@ function loadPreset(key) {
       matId: p.matId,
       name: mat.name,
       thickness: p.thickness,
-      lambda: p.lambda !== null ? p.lambda : (mat.lambda || ''),
+      lambda: mat.lambda !== null && mat.lambda !== undefined ? mat.lambda : '',
       fixedR: mat.r || null,
+      isVentilated: mat.isVentilated || false,
+      warn: mat.warn || null,
     });
   });
   renderTable();
   calculate();
 }
 
-// ── ADD / REMOVE LAYERS ───────────────────────────────────────────────────────
+// ── SET ELEMENT TYPE ────────────────────────────────────────────────────────
+function setElement(el) {
+  currentElement = el;
+  const cfg = ELEMENTS[el];
+  RSI = cfg.rsi;
+  RSE = cfg.rse;
+
+  // Update tabs
+  ['wall','roof','floor','glazing'].forEach(e => {
+    document.getElementById('tab-'+e).classList.toggle('active', e === el);
+  });
+  document.getElementById('assembly-title').textContent = cfg.label + ' Assembly';
+  document.getElementById('element-label-small').textContent = cfg.label;
+  document.getElementById('ref-title').textContent = 'UAE / Gulf Thermal Reference · ' + cfg.label;
+
+  // Update Rsi display note
+  const rsiNotes = { wall: 'ISO 6946 · Horizontal heat flow', roof: 'ISO 6946 · Upward heat flow', floor: 'ISO 6946 · Downward heat flow', glazing: 'ISO 6946 · Horizontal heat flow' };
+  document.getElementById('rsi-display').textContent = RSI.toFixed(2);
+  document.getElementById('rse-display').textContent = RSE.toFixed(2);
+  document.getElementById('rsi-note').textContent = rsiNotes[el];
+
+  renderRefPanel();
+  calculate();
+}
+
+// ── RENDER REFERENCE PANEL ──────────────────────────────────────────────────
+function renderRefPanel(uVal) {
+  const cfg = ELEMENTS[currentElement];
+  const rows = cfg.standards.map(s => {
+    const isActive = uVal !== undefined && Math.abs(uVal - s.limit) < 0.001;
+    const passed = uVal !== undefined && uVal <= s.limit;
+    const valClass = isActive ? 'ref-val active-limit' : (passed ? 'ref-val highlight' : 'ref-val');
+    return `<div class="ref-row">
+      <span class="ref-name">${s.name}</span>
+      <span class="${valClass}">U ≤ ${s.limit.toFixed(2)}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('ref-rows').innerHTML = rows;
+}
+
+// ── ADD / REMOVE LAYERS ─────────────────────────────────────────────────────
 function addLayer(matId = 'concrete', thickness = 100) {
-  const mat = MATERIALS_DB.find(m => m.id === matId) || MATERIALS_DB[2];
+  const mat = MATERIALS_DB.find(m => m.id === matId) || MATERIALS_DB[0];
   layers.push({
     id: ++layerIdCounter,
     matId: mat.id,
     name: mat.name,
     thickness,
-    lambda: mat.lambda || '',
+    lambda: mat.lambda !== null && mat.lambda !== undefined ? mat.lambda : '',
     fixedR: mat.r || null,
+    isVentilated: mat.isVentilated || false,
+    warn: mat.warn || null,
   });
   renderTable();
   calculate();
 }
 
-function addAirCavity() { addLayer('aircavity', 25); }
-function addInsulation() { addLayer('rockwool', 80); }
+function addAirCavity()  { addLayer('aircavity',  25); }
+function addVentCavity() { addLayer('aircavityv', 50); }
+function addInsulation() { addLayer('rockwool',   80); }
 
 function removeLayer(id) {
   layers = layers.filter(l => l.id !== id);
@@ -450,57 +657,80 @@ function removeLayer(id) {
   calculate();
 }
 
-// ── RENDER TABLE ─────────────────────────────────────────────────────────────
+// ── RENDER TABLE ────────────────────────────────────────────────────────────
 function renderTable() {
   const tbody = document.getElementById('layers-tbody');
   document.getElementById('layer-count').textContent = `${layers.length} LAYER${layers.length !== 1 ? 'S' : ''}`;
 
   if (layers.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="padding:32px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">No layers yet — add a layer or load a preset above ↑</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="padding:32px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">No layers yet — add a layer or load a preset above ↑</td></tr>`;
     return;
   }
 
-  const matOptions = MATERIALS_DB.map(m =>
-    `<option value="${m.id}">${m.name}${m.note ? ' — ' + m.note : ''}</option>`
-  ).join('');
+  // Detect ventilated cavity index
+  ventCavityIndex = layers.findIndex(l => l.isVentilated);
+  hasVentilatedCavity = ventCavityIndex !== -1;
 
   tbody.innerHTML = layers.map((l, i) => {
-    const r = calcLayerR(l);
+    const r = calcLayerR(l, i);
     const rDisplay = r !== null ? r.toFixed(3) : '—';
     const isAirCavity = l.fixedR !== null;
+    const isNegligible = hasVentilatedCavity && i < ventCavityIndex;
+    const rClass = isNegligible ? 'layer-r negligible' : (r === 0 || r === null ? 'layer-r zero' : 'layer-r');
+
+    // Input validation
+    const thicknessOk = l.thickness > 0 && l.thickness <= 2000;
+    const lambdaOk = isAirCavity || (parseFloat(l.lambda) > 0);
+    const thickClass = !thicknessOk && !isAirCavity ? 'layer-input input-error' : 'layer-input';
+
+    const warnIcon = l.warn ? `
+      <div class="tooltip-wrap">
+        <i class="fa-solid fa-circle-exclamation layer-warn-icon"></i>
+        <div class="tooltip">${l.warn}</div>
+      </div>` : '';
 
     return `
-    <tr class="layer-row" id="layer-row-${l.id}">
+    <tr class="layer-row" id="layer-row-${l.id}" ${isNegligible ? 'style="opacity:0.45"' : ''}>
       <td class="layer-num">${i + 1}</td>
       <td>
         <select class="layer-select" onchange="onMatChange(${l.id}, this.value)">
-          ${MATERIALS_DB.map(m => `<option value="${m.id}" ${m.id === l.matId ? 'selected' : ''}>${m.name}</option>`).join('')}
+          ${['Cladding','Structure','Insulation','Air','Finish','Custom'].map(cat => `
+            <optgroup label="── ${cat} ──">
+              ${MATERIALS_DB.filter(m=>m.category===cat).map(m =>
+                `<option value="${m.id}" ${m.id === l.matId ? 'selected' : ''}>${m.name}</option>`
+              ).join('')}
+            </optgroup>`).join('')}
         </select>
       </td>
       <td>
-        <input class="layer-input" type="number" min="0.1" step="1"
-               value="${l.thickness}"
-               onchange="onThicknessChange(${l.id}, this.value)"
-               ${isAirCavity ? 'disabled style="opacity:0.4"' : ''}
-               placeholder="mm">
+        ${isAirCavity
+          ? `<div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);padding:8px 0;text-align:right">N/A</div>`
+          : `<input class="${thickClass}" type="number" min="0.1" max="2000" step="1"
+                   value="${l.thickness}"
+                   onchange="onThicknessChange(${l.id}, this.value)"
+                   placeholder="mm">`
+        }
       </td>
       <td class="layer-lambda" style="text-align:right;padding:10px 14px">
         ${isAirCavity
-          ? `<span style="color:var(--blue)">R = ${l.fixedR} fixed</span>`
-          : `<input class="layer-input" type="number" min="0.001" step="0.001"
+          ? `<span style="color:var(--blue);font-family:'DM Mono',monospace;font-size:12px">R = ${l.fixedR} fixed</span>`
+          : `<input class="layer-input" type="number" min="0.001" max="500" step="0.001"
                     value="${l.lambda}"
                     onchange="onLambdaChange(${l.id}, this.value)"
                     placeholder="λ"
                     style="max-width:90px">`
         }
       </td>
-      <td class="layer-r ${r === 0 || r === null ? 'zero' : ''}">${rDisplay}</td>
+      <td class="${rClass}">
+        ${isNegligible ? '<span title="Excluded per ISO 6946 Annex D ventilated cavity rule">excl.</span>' : rDisplay}
+      </td>
+      <td class="layer-warn-cell">${warnIcon}</td>
       <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer"><i class="fa-solid fa-xmark"></i></button></td>
     </tr>`;
   }).join('');
 }
 
-// ── LAYER CHANGE HANDLERS ─────────────────────────────────────────────────────
+// ── LAYER CHANGE HANDLERS ───────────────────────────────────────────────────
 function onMatChange(id, matId) {
   const mat = MATERIALS_DB.find(m => m.id === matId);
   const layer = layers.find(l => l.id === id);
@@ -508,6 +738,8 @@ function onMatChange(id, matId) {
   layer.matId = mat.id;
   layer.name = mat.name;
   layer.fixedR = mat.r || null;
+  layer.isVentilated = mat.isVentilated || false;
+  layer.warn = mat.warn || null;
   if (mat.lambda !== null && mat.lambda !== undefined) layer.lambda = mat.lambda;
   else if (!mat.r) layer.lambda = '';
   renderTable();
@@ -516,34 +748,78 @@ function onMatChange(id, matId) {
 
 function onThicknessChange(id, val) {
   const layer = layers.find(l => l.id === id);
-  if (layer) { layer.thickness = parseFloat(val) || 0; calculate(); }
+  if (!layer) return;
+  const v = parseFloat(val);
+  if (v <= 0 || v > 2000) {
+    showValidation(`Thickness ${v}mm is out of range (0.1–2000mm). Check layer ${layers.findIndex(l=>l.id===id)+1}.`);
+  } else {
+    hideValidation();
+  }
+  layer.thickness = v || 0;
+  calculate();
 }
 
 function onLambdaChange(id, val) {
   const layer = layers.find(l => l.id === id);
-  if (layer) { layer.lambda = parseFloat(val) || 0; calculate(); }
+  if (!layer) return;
+  const v = parseFloat(val);
+  if (v <= 0) {
+    showValidation(`λ value must be greater than 0 W/mK.`);
+  } else {
+    hideValidation();
+  }
+  layer.lambda = v || 0;
+  calculate();
 }
 
-// ── CALCULATE ────────────────────────────────────────────────────────────────
-function calcLayerR(layer) {
+function showValidation(msg) {
+  const el = document.getElementById('validation-notice');
+  document.getElementById('validation-text').textContent = msg;
+  el.style.display = 'flex';
+}
+function hideValidation() {
+  document.getElementById('validation-notice').style.display = 'none';
+}
+
+// ── CALCULATE ───────────────────────────────────────────────────────────────
+function calcLayerR(layer, index) {
+  // If this layer is before a ventilated cavity, exclude per ISO 6946 Annex D
+  if (hasVentilatedCavity && index < ventCavityIndex) return null;
   if (layer.fixedR !== null) return layer.fixedR;
-  const d = (layer.thickness || 0) / 1000; // mm → m
+  const d = (layer.thickness || 0) / 1000;
   const lambda = parseFloat(layer.lambda) || 0;
   if (!d || !lambda) return null;
   return d / lambda;
 }
 
 function calculate() {
-  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
+  // Detect ventilated cavity
+  ventCavityIndex = layers.findIndex(l => l.isVentilated);
+  hasVentilatedCavity = ventCavityIndex !== -1;
+
+  // Adjust Rse if ventilated cavity present (ISO 6946 Annex D)
+  const effectiveRSE = hasVentilatedCavity ? 0.13 : RSE;
+  document.getElementById('rse-display').textContent = effectiveRSE.toFixed(2);
+  document.getElementById('rse-note').textContent = hasVentilatedCavity
+    ? 'ISO 6946 Annex D · Ventilated cavity detected'
+    : 'ISO 6946 · Exposed facade';
+
+  const ventWarn = document.getElementById('vent-warning');
+  ventWarn.style.display = hasVentilatedCavity ? 'flex' : 'none';
+
+  const layerRs = layers.map((l, i) => ({ layer: l, r: calcLayerR(l, i), excluded: hasVentilatedCavity && i < ventCavityIndex }));
   const sumR = layerRs.reduce((acc, { r }) => acc + (r || 0), 0);
-  const totalR = RSE + sumR + RSI;
+  const totalR = effectiveRSE + sumR + RSI;
   const uValue = totalR > 0 ? 1 / totalR : null;
 
-  // Update U display
+  // U display
   const uDisplay = document.getElementById('u-value-display');
   const chip = document.getElementById('compliance-chip');
   const chipText = document.getElementById('compliance-text');
   const desc = document.getElementById('compliance-desc');
+
+  const cfg = ELEMENTS[currentElement];
+  const limits = cfg.standards;
 
   if (uValue === null || layers.length === 0) {
     uDisplay.textContent = '—';
@@ -551,35 +827,51 @@ function calculate() {
     chip.className = 'compliance-chip chip-warn';
     chipText.textContent = 'ADD LAYERS';
     desc.textContent = 'Add cladding layers to begin thermal analysis.';
+    renderRefPanel();
   } else {
     uDisplay.textContent = uValue.toFixed(3);
-    // UAE compliance check
-    if (uValue <= 0.40) {
-      uDisplay.style.color = 'var(--accent)';
-      chip.className = 'compliance-chip chip-pass';
-      chipText.textContent = 'LEED / ESTIDAMA ✓';
-      desc.textContent = `Excellent — meets Estidama Pearl (≤0.45) and LEED v4 (≤0.40). Superior Gulf climate performance.`;
-    } else if (uValue <= 0.45) {
-      uDisplay.style.color = 'var(--accent)';
-      chip.className = 'compliance-chip chip-pass';
-      chipText.textContent = 'ESTIDAMA PASS ✓';
-      desc.textContent = `Meets Abu Dhabi Estidama Pearl requirement (U ≤ 0.45 W/m²K). Add more insulation for LEED.`;
-    } else if (uValue <= 0.57) {
-      uDisplay.style.color = 'var(--accent)';
-      chip.className = 'compliance-chip chip-pass';
-      chipText.textContent = 'DUBAI GREEN PASS ✓';
-      desc.textContent = `Meets Dubai Green Building Regulations (U ≤ 0.57 W/m²K). Does not meet Estidama.`;
-    } else if (uValue <= 0.70) {
-      uDisplay.style.color = 'var(--amber)';
-      chip.className = 'compliance-chip chip-warn';
-      chipText.textContent = 'ASHRAE 90.1 PASS ⚠';
-      desc.textContent = `Meets ASHRAE 90.1 Gulf minimum (U ≤ 0.70). Below Dubai Green standard — improve insulation.`;
-    } else {
+
+    // Find the strictest standard met
+    const met = limits.filter(s => uValue <= s.limit);
+    const strictest = met.length > 0 ? met[met.length - 1] : null;
+
+    if (!strictest) {
       uDisplay.style.color = 'var(--red)';
       chip.className = 'compliance-chip chip-fail';
       chipText.textContent = 'NON-COMPLIANT ✗';
-      desc.textContent = `U-value exceeds all UAE and Gulf standards. Significant additional insulation required.`;
+      desc.textContent = `U-value exceeds all UAE and Gulf standards for ${cfg.label.toLowerCase()}. Significant additional insulation is required.`;
+    } else if (strictest.name.includes('Passive')) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'PASSIVE HOUSE GULF ✓';
+      desc.textContent = `Outstanding — meets Gulf Passive House standard (PHPP). Exceeds all UAE requirements for ${cfg.label.toLowerCase()}.`;
+    } else if (strictest.name.includes('GSAS')) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'GSAS / LEED ✓';
+      desc.textContent = `Meets GSAS Gulf Sustainable (U ≤ ${strictest.limit}) and LEED v4 for ${cfg.label.toLowerCase()}.`;
+    } else if (strictest.name.includes('LEED')) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'LEED v4 PASS ✓';
+      desc.textContent = `Meets LEED v4 Gulf baseline for ${cfg.label.toLowerCase()} (U ≤ ${strictest.limit} W/m²K).`;
+    } else if (strictest.name.includes('Estidama')) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'ESTIDAMA PASS ✓';
+      desc.textContent = `Meets Abu Dhabi Estidama Pearl (U ≤ ${strictest.limit}). Add more insulation to reach LEED v4.`;
+    } else if (strictest.name.includes('Dubai')) {
+      uDisplay.style.color = 'var(--accent)';
+      chip.className = 'compliance-chip chip-pass';
+      chipText.textContent = 'DUBAI GREEN PASS ✓';
+      desc.textContent = `Meets Dubai Green Building Regulations (U ≤ ${strictest.limit}) for ${cfg.label.toLowerCase()}. Does not yet meet Estidama.`;
+    } else {
+      uDisplay.style.color = 'var(--amber)';
+      chip.className = 'compliance-chip chip-warn';
+      chipText.textContent = 'ASHRAE 90.1 PASS ⚠';
+      desc.textContent = `Meets ASHRAE 90.1 Zone 1B minimum (U ≤ ${strictest.limit}). Below Dubai Green standard — improve insulation.`;
     }
+    renderRefPanel(uValue);
   }
 
   // R breakdown
@@ -588,24 +880,25 @@ function calculate() {
   const totalDisplay = document.getElementById('r-total-display');
 
   const allRows = [
-    { label: 'R_se (External surface)', r: RSE, fixed: true },
-    ...layerRs.map(({ layer, r }) => ({
-      label: `${layer.name} (${layer.thickness}mm)`,
+    { label: 'R_se (External surface)', r: effectiveRSE, fixed: true, excluded: false },
+    ...layerRs.map(({ layer, r, excluded }) => ({
+      label: `${layer.name} (${layer.fixedR !== null ? 'fixed' : layer.thickness + 'mm'})`,
       r: r || 0,
       fixed: false,
+      excluded,
     })),
-    { label: 'R_si (Internal surface)', r: RSI, fixed: true },
+    { label: 'R_si (Internal surface)', r: RSI, fixed: true, excluded: false },
   ];
 
-  const maxR = Math.max(...allRows.map(row => row.r));
+  const maxR = Math.max(...allRows.filter(r => !r.excluded).map(row => row.r));
 
   breakdownEl.innerHTML = allRows.map(row => `
-    <div class="r-row">
-      <div class="r-row-label" title="${row.label}">${row.label}</div>
+    <div class="r-row" ${row.excluded ? 'style="opacity:0.35"' : ''}>
+      <div class="r-row-label" title="${row.label}">${row.label}${row.excluded ? ' ⊘' : ''}</div>
       <div class="r-row-bar-wrap">
-        <div class="r-row-bar" style="width:${maxR > 0 ? (row.r / maxR * 100) : 0}%;${row.fixed ? 'background:var(--blue)' : ''}"></div>
+        <div class="r-row-bar" style="width:${maxR > 0 && !row.excluded ? (row.r / maxR * 100) : 0}%;${row.fixed ? 'background:var(--blue)' : ''}"></div>
       </div>
-      <div class="r-row-val" style="${row.fixed ? 'color:var(--blue)' : ''}">${row.r.toFixed(3)}</div>
+      <div class="r-row-val" style="${row.fixed ? 'color:var(--blue)' : row.excluded ? 'color:var(--muted);font-size:12px' : ''}">${row.excluded ? 'excl.' : row.r.toFixed(3)}</div>
     </div>`).join('');
 
   if (layers.length > 0) {
@@ -616,239 +909,266 @@ function calculate() {
   }
 }
 
-// ── EXPORT REPORT ────────────────────────────────────────────────────────────
-function exportReport(){
-  if(layers.length === 0){ alert('Add at least one layer first.'); return; }
-  if(!window.jspdf){ alert('PDF library not loaded — check internet connection.'); return; }
+// ── PDF EXPORT ──────────────────────────────────────────────────────────────
+function exportReport() {
+  if (layers.length === 0) { alert('Add at least one layer first.'); return; }
+  if (!window.jspdf) { alert('PDF library not loaded — check internet connection.'); return; }
 
-  const layerRs = layers.map(l=>({ layer:l, r:calcLayerR(l) }));
-  const sumR    = layerRs.reduce((acc,{r})=>acc+(r||0), 0);
-  const totalR  = RSE + sumR + RSI;
-  const uVal    = totalR > 0 ? 1/totalR : 0;
+  // Re-calculate with ventilated cavity logic
+  ventCavityIndex = layers.findIndex(l => l.isVentilated);
+  hasVentilatedCavity = ventCavityIndex !== -1;
+  const effectiveRSE = hasVentilatedCavity ? 0.13 : RSE;
 
-  const standards = [
-    {name:'ASHRAE 90.1  ·  Gulf Climate Zone 1', limit:0.70, pass:uVal<=0.70},
-    {name:'Dubai Green Building Regulations',    limit:0.57, pass:uVal<=0.57},
-    {name:'Abu Dhabi Estidama Pearl Rating',     limit:0.45, pass:uVal<=0.45},
-    {name:'LEED v4  ·  Gulf Baseline',          limit:0.40, pass:uVal<=0.40},
-    {name:'GSAS (Qatar/Gulf) Façade',           limit:0.35, pass:uVal<=0.35},
-    {name:'Passive House (PHPP)',               limit:0.15, pass:uVal<=0.15},
-  ];
+  const layerRs = layers.map((l, i) => ({ layer: l, r: calcLayerR(l, i), excluded: hasVentilatedCavity && i < ventCavityIndex }));
+  const sumR    = layerRs.reduce((acc, { r }) => acc + (r || 0), 0);
+  const totalR  = effectiveRSE + sumR + RSI;
+  const uVal    = totalR > 0 ? 1 / totalR : 0;
 
-  const {jsPDF} = window.jspdf;
-  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
-  const PW=210, PH=297, M=16, IW=PW-M*2;
+  const cfg = ELEMENTS[currentElement];
+  const standards = cfg.standards.map(s => ({ ...s, pass: uVal <= s.limit }));
+
+  const projectName  = document.getElementById('meta-project').value || 'Untitled Project';
+  const architect    = document.getElementById('meta-architect').value || '—';
+  const location     = document.getElementById('meta-location').value || 'UAE';
+  const refNo        = document.getElementById('meta-ref').value || '—';
+  const dateStr      = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const PW = 210, PH = 297, M = 16, IW = PW - M * 2;
   let y = 0;
 
-  /* ── palette ── */
-  const BG   = [10,17,13], BG2=[17,26,19], BG3=[24,36,26];
-  const ACCT = [0,229,160], TEXT=[237,242,237], MUT=[107,125,109];
-  const PASS_C=[0,229,160], FAIL_C=[239,68,68], WARN_C=[245,158,11];
+  const BG   = [10, 17, 13], BG2 = [17, 26, 19], BG3 = [24, 36, 26];
+  const ACCT = [0, 229, 160], TEXT = [237, 242, 237], MUT = [107, 125, 109];
+  const PASS_C = [0, 200, 140], FAIL_C = [220, 60, 60], WARN_C = [220, 150, 30];
 
-  const sf = (r,g,b)=>doc.setFillColor(r,g,b);
-  const st = (r,g,b)=>doc.setTextColor(r,g,b);
-  const sd = (r,g,b)=>doc.setDrawColor(r,g,b);
-  const B  = sz=>{ doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
-  const N  = sz=>{ doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
-  const MN = sz=>{ doc.setFont('courier','normal');   doc.setFontSize(sz); };
+  const sf  = (r, g, b) => doc.setFillColor(r, g, b);
+  const st  = (r, g, b) => doc.setTextColor(r, g, b);
+  const sd  = (r, g, b) => doc.setDrawColor(r, g, b);
+  const B   = sz => { doc.setFont('helvetica', 'bold');   doc.setFontSize(sz); };
+  const N   = sz => { doc.setFont('helvetica', 'normal'); doc.setFontSize(sz); };
+  const MN  = sz => { doc.setFont('courier', 'normal');   doc.setFontSize(sz); };
 
-  function newPage(){
+  function newPage() {
     doc.addPage();
-    sf(...BG); doc.rect(0,0,PW,PH,'F');
-    sf(...ACCT); doc.rect(0,0,PW,1.5,'F'); doc.rect(0,PH-1.5,PW,1.5,'F');
+    sf(...BG); doc.rect(0, 0, PW, PH, 'F');
+    sf(...ACCT); doc.rect(0, 0, PW, 1.5, 'F'); doc.rect(0, PH - 1.5, PW, 1.5, 'F');
     N(7); st(...MUT);
-    doc.text('CladWise UAE  ·  U-Value Thermal Calculation Report  ·  ISO 6946 / ASHRAE 90.1', PW/2, PH-4, {align:'center'});
+    doc.text(`CladWise UAE  ·  U-Value Report  ·  ${projectName}  ·  ${dateStr}`, PW / 2, PH - 4, { align: 'center' });
     y = 14;
   }
-  function checkY(need){ if(y+need>PH-18) newPage(); }
-  function sectionLabel(txt){
+  function checkY(need) { if (y + need > PH - 18) newPage(); }
+  function sectionLabel(txt) {
     checkY(12);
     B(8); st(...ACCT); doc.text(txt, M, y);
     sd(...ACCT); doc.setLineWidth(0.2);
-    doc.line(M+doc.getTextWidth(txt)+3, y-0.5, PW-M, y-0.5);
+    doc.line(M + doc.getTextWidth(txt) + 3, y - 0.5, PW - M, y - 0.5);
     y += 7;
   }
 
-  /* ════════════════════════════════════════════════════
-     PAGE 1
-     ════════════════════════════════════════════════════ */
-  sf(...BG); doc.rect(0,0,PW,PH,'F');
-  sf(...ACCT); doc.rect(0,0,PW,2,'F'); doc.rect(0,PH-1.5,PW,1.5,'F');
+  /* ── PAGE 1 ── */
+  sf(...BG); doc.rect(0, 0, PW, PH, 'F');
+  sf(...ACCT); doc.rect(0, 0, PW, 2, 'F'); doc.rect(0, PH - 1.5, PW, 1.5, 'F');
 
-  /* ── header band ── */
-  sf(...BG2); doc.rect(0,2,PW,42,'F');
+  /* Header band */
+  sf(...BG2); doc.rect(0, 2, PW, 46, 'F');
   B(26); st(...TEXT); doc.text('CLADWISE', M, 22);
-  st(...ACCT);  doc.text(' UAE', M+doc.getTextWidth('CLADWISE'), 22);
+  st(...ACCT); doc.text(' UAE', M + doc.getTextWidth('CLADWISE'), 22);
   N(10); st(...MUT); doc.text('FACADE U-VALUE THERMAL CALCULATION REPORT', M, 31);
-  MN(7.5); st(60,80,65); doc.text('ISO 6946  ·  ASHRAE 90.1  ·  UAE / Gulf Compliance Verification', M, 37);
-  MN(7.5); st(...MUT); doc.text(`Generated: ${new Date().toLocaleString()}`, PW-M, 37, {align:'right'});
+  MN(7.5); st(60, 80, 65); doc.text(`ISO 6946:2017  ·  ASHRAE 90.1  ·  UAE / Gulf Compliance  ·  ${cfg.label.toUpperCase()}`, M, 37);
+  MN(7.5); st(...MUT); doc.text(`Generated: ${new Date().toLocaleString()}`, PW - M, 37, { align: 'right' });
 
-  /* ── big U-value result box ── */
-  y = 54;
-  const topCol = uVal<=0.40?PASS_C : uVal<=0.70?WARN_C : FAIL_C;
-  const topLabel = uVal<=0.40?'LEED v4 COMPLIANT' : uVal<=0.45?'ESTIDAMA COMPLIANT' : uVal<=0.57?'DUBAI GREEN COMPLIANT' : uVal<=0.70?'ASHRAE COMPLIANT' : 'NON-COMPLIANT';
-
-  sf(...BG2); doc.rect(M,y,IW,32,'F');
-  sf(...topCol); doc.rect(M,y,3,32,'F');
-
-  /* u-value */
-  N(9); st(...MUT); doc.text('CALCULATED U-VALUE (W/m²K)', M+8, y+9);
-  B(36); st(...topCol); doc.text(uVal.toFixed(3), M+8, y+25);
-  N(12); st(...TEXT); doc.text('W/m²K', M+8+doc.getTextWidth(uVal.toFixed(3))+3, y+25);
-
-  /* R-value on right */
-  N(9); st(...MUT); doc.text('TOTAL R-VALUE', M+IW-70, y+9);
-  B(18); st(...TEXT); doc.text(totalR.toFixed(3)+' m²K/W', M+IW-70, y+22);
-  N(7.5); st(...MUT);
-  doc.text(`Rse ${RSE.toFixed(3)}  +  Σ layers ${sumR.toFixed(3)}  +  Rsi ${RSI.toFixed(3)}`, M+IW-70, y+28);
-
-  /* compliance label */
-  sf(...topCol); doc.roundedRect(M+8, y+26, 52, 6, 1.5, 1.5, 'F');
-  B(7.5); st(0,0,0); doc.text(topLabel, M+34, y+30, {align:'center'});
-
-  y += 40;
-
-  /* ── layer assembly table ── */
-  sectionLabel('WALL ASSEMBLY  —  OUTSIDE → INSIDE');
-
-  /* column x positions */
-  const T=[M, M+7, M+68, M+97, M+120, M+143, PW-M];
-
-  /* header */
-  sf(...BG3); doc.rect(M,y,IW,8,'F');
+  /* Project info band */
+  sf(...BG3); doc.rect(0, 48, PW, 18, 'F');
   MN(7.5); st(...MUT);
-  ['#','Material','d (mm)','λ (W/mK)','R (m²K/W)','R share',''].forEach((h,i)=>{ if(i<6) doc.text(h, T[i]+1, y+5.5); });
+  const projFields = [
+    ['PROJECT', projectName],
+    ['ARCHITECT / ENGINEER', architect],
+    ['LOCATION', location],
+    ['DRAWING REF.', refNo],
+    ['DATE', dateStr],
+  ];
+  const colW = IW / projFields.length;
+  projFields.forEach(([label, val], i) => {
+    const x = M + i * colW;
+    MN(7); st(...MUT); doc.text(label, x, 54);
+    N(8); st(...TEXT); doc.text(val.length > 18 ? val.slice(0, 17) + '…' : val, x, 60);
+  });
+
+  /* Big U-value result */
+  y = 76;
+  const topCol = uVal <= standards[3].limit ? PASS_C : uVal <= standards[0].limit ? WARN_C : FAIL_C;
+  const topLabel = standards.filter(s => s.pass).pop()?.name || 'NON-COMPLIANT';
+
+  sf(...BG2); doc.rect(M, y, IW, 32, 'F');
+  sf(...topCol); doc.rect(M, y, 3, 32, 'F');
+
+  N(9); st(...MUT); doc.text(`CALCULATED U-VALUE (W/m²K)  ·  ${cfg.label.toUpperCase()}`, M + 8, y + 9);
+  B(36); st(...topCol); doc.text(uVal.toFixed(3), M + 8, y + 25);
+  N(12); st(...TEXT); doc.text('W/m²K', M + 8 + doc.getTextWidth(uVal.toFixed(3)) + 3, y + 25);
+
+  N(9); st(...MUT); doc.text('TOTAL R-VALUE', M + IW - 70, y + 9);
+  B(18); st(...TEXT); doc.text(totalR.toFixed(3) + ' m²K/W', M + IW - 70, y + 22);
+  N(7.5); st(...MUT);
+  doc.text(`Rse ${effectiveRSE.toFixed(3)}  +  Σ layers ${sumR.toFixed(3)}  +  Rsi ${RSI.toFixed(3)}`, M + IW - 70, y + 28);
+
+  sf(...topCol); doc.roundedRect(M + 8, y + 26, 70, 6, 1.5, 1.5, 'F');
+  B(7.5); st(0, 0, 0);
+  const shortLabel = topLabel.length > 35 ? topLabel.slice(0, 34) + '…' : topLabel;
+  doc.text(shortLabel, M + 43, y + 30, { align: 'center' });
+
+  y += 42;
+
+  /* Ventilated cavity note if applicable */
+  if (hasVentilatedCavity) {
+    checkY(14);
+    sf(40, 60, 45); doc.rect(M, y, IW, 12, 'F');
+    sf(...WARN_C); doc.rect(M, y, 2.5, 12, 'F');
+    B(8); st(...WARN_C); doc.text('ISO 6946 ANNEX D — VENTILATED AIR LAYER DETECTED', M + 6, y + 5);
+    N(7.5); st(...MUT); doc.text('External cladding layers before the ventilated cavity are excluded from R-sum. Rse adjusted to 0.13 m²K/W per ISO 6946:2017.', M + 6, y + 10);
+    y += 16;
+  }
+
+  /* Layer assembly table */
+  sectionLabel('WALL ASSEMBLY  —  OUTSIDE → INSIDE');
+  const T = [M, M + 7, M + 70, M + 100, M + 125, M + 150, PW - M];
+
+  sf(...BG3); doc.rect(M, y, IW, 8, 'F');
+  MN(7.5); st(...MUT);
+  ['#', 'Material', 'd (mm)', 'λ (W/mK)', 'R (m²K/W)', 'R share', ''].forEach((h, i) => { if (i < 6) doc.text(h, T[i] + 1, y + 5.5); });
   y += 8;
 
-  /* Rse */
-  sf(...BG2); doc.rect(M,y,IW,7,'F');
+  sf(...BG2); doc.rect(M, y, IW, 7, 'F');
   MN(8); st(...MUT);
-  doc.text('—', T[0]+1, y+4.8);
-  doc.text('External surface resistance (Rse)', T[1]+1, y+4.8);
-  doc.text('—', T[2]+1, y+4.8); doc.text('—', T[3]+1, y+4.8);
-  st(...ACCT); doc.text(RSE.toFixed(3), T[4]+1, y+4.8);
-  const rseShare = RSE/totalR;
-  sf(0,100,70); doc.rect(T[5], y+1.5, rseShare*20, 4, 'F');
+  doc.text('—', T[0] + 1, y + 4.8);
+  doc.text('External surface resistance (Rse)' + (hasVentilatedCavity ? ' [Annex D]' : ''), T[1] + 1, y + 4.8);
+  doc.text('—', T[2] + 1, y + 4.8); doc.text('—', T[3] + 1, y + 4.8);
+  st(...ACCT); doc.text(effectiveRSE.toFixed(3), T[4] + 1, y + 4.8);
+  const rseShare = effectiveRSE / totalR;
+  sf(0, 100, 70); doc.rect(T[5], y + 1.5, rseShare * 20, 4, 'F');
   y += 7;
 
-  /* layers */
-  const maxLayerR = Math.max(...layerRs.map(lr=>lr.r||0), 0.001);
-  layerRs.forEach(({layer:l, r}, i)=>{
+  const maxLayerR = Math.max(...layerRs.map(lr => lr.r || 0), 0.001);
+  layerRs.forEach(({ layer: l, r, excluded }, i) => {
     checkY(8);
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,7.5,'F');
-    MN(8); st(...TEXT);
-    doc.text(String(i+1), T[0]+1, y+5.2);
-    const nm = l.name.length>32 ? l.name.slice(0,30)+'…' : l.name;
-    doc.text(nm, T[1]+1, y+5.2);
+    sf(...(i % 2 === 0 ? BG2 : BG3)); doc.rect(M, y, IW, 7.5, 'F');
+    if (excluded) { sf(15, 22, 16); doc.rect(M, y, IW, 7.5, 'F'); }
+    MN(8); st(...(excluded ? MUT : TEXT));
+    doc.text(String(i + 1), T[0] + 1, y + 5.2);
+    const nm = l.name.length > 34 ? l.name.slice(0, 32) + '…' : l.name;
+    doc.text(nm + (excluded ? ' [excl. ISO 6946]' : ''), T[1] + 1, y + 5.2);
     st(...MUT);
-    doc.text(String(l.thickness), T[2]+1, y+5.2);
-    doc.text(l.fixedR!==null?'(fixed)':String(l.lambda), T[3]+1, y+5.2);
-    st(...ACCT);
-    const rStr = r!=null ? r.toFixed(3) : '—';
-    doc.text(rStr, T[4]+1, y+5.2);
-    /* R share bar */
-    if(r && totalR>0){
-      const share = r/totalR;
-      sf(...ACCT); doc.setGState && doc.setGState(doc.GState({opacity:0.5}));
-      doc.rect(T[5], y+1.8, share*20, 3.5, 'F');
-      if(doc.setGState) doc.setGState(doc.GState({opacity:1}));
-      N(7); st(...MUT); doc.text((share*100).toFixed(0)+'%', T[5]+22, y+5.2);
+    doc.text(l.fixedR !== null ? 'N/A' : String(l.thickness), T[2] + 1, y + 5.2);
+    doc.text(l.fixedR !== null ? '(fixed)' : String(l.lambda), T[3] + 1, y + 5.2);
+    st(...(excluded ? MUT : ACCT));
+    doc.text(excluded ? 'excl.' : (r != null ? r.toFixed(3) : '—'), T[4] + 1, y + 5.2);
+    if (r && totalR > 0 && !excluded) {
+      const share = r / totalR;
+      sf(...ACCT);
+      try { doc.setGState && doc.setGState(doc.GState({ opacity: 0.5 })); } catch(e){}
+      doc.rect(T[5], y + 1.8, share * 20, 3.5, 'F');
+      try { doc.setGState && doc.setGState(doc.GState({ opacity: 1 })); } catch(e){}
+      N(7); st(...MUT); doc.text((share * 100).toFixed(0) + '%', T[5] + 22, y + 5.2);
     }
     y += 7.5;
   });
 
-  /* Rsi */
   checkY(8);
-  sf(...BG2); doc.rect(M,y,IW,7,'F');
+  sf(...BG2); doc.rect(M, y, IW, 7, 'F');
   MN(8); st(...MUT);
-  doc.text('—', T[0]+1, y+4.8);
-  doc.text('Internal surface resistance (Rsi)', T[1]+1, y+4.8);
-  doc.text('—', T[2]+1, y+4.8); doc.text('—', T[3]+1, y+4.8);
-  st(...ACCT); doc.text(RSI.toFixed(3), T[4]+1, y+4.8);
-  const rsiShare = RSI/totalR;
-  sf(0,100,70); doc.rect(T[5], y+1.5, rsiShare*20, 4, 'F');
+  doc.text('—', T[0] + 1, y + 4.8);
+  doc.text('Internal surface resistance (Rsi)', T[1] + 1, y + 4.8);
+  doc.text('—', T[2] + 1, y + 4.8); doc.text('—', T[3] + 1, y + 4.8);
+  st(...ACCT); doc.text(RSI.toFixed(3), T[4] + 1, y + 4.8);
+  const rsiShare = RSI / totalR;
+  sf(0, 100, 70); doc.rect(T[5], y + 1.5, rsiShare * 20, 4, 'F');
   y += 7;
 
-  /* totals row */
   checkY(10);
-  sf(30,52,36); doc.rect(M,y,IW,9,'F');
-  sf(...ACCT); doc.rect(M,y,3,9,'F');
+  sf(30, 52, 36); doc.rect(M, y, IW, 9, 'F');
+  sf(...ACCT); doc.rect(M, y, 3, 9, 'F');
   B(9); st(...ACCT);
-  doc.text('TOTAL R', T[1]+1, y+6.2);
-  doc.text(totalR.toFixed(3), T[4]+1, y+6.2);
-  st(...TEXT); doc.text('U = '+uVal.toFixed(3)+' W/m²K', PW-M-2, y+6.2, {align:'right'});
-  y += 16;
+  doc.text('TOTAL R', T[1] + 1, y + 6.2);
+  doc.text(totalR.toFixed(3), T[4] + 1, y + 6.2);
+  st(...TEXT); doc.text('U = ' + uVal.toFixed(3) + ' W/m²K', PW - M - 2, y + 6.2, { align: 'right' });
+  y += 18;
 
-  /* ── compliance table ── */
-  checkY(20);
-  sectionLabel('UAE / GULF COMPLIANCE VERIFICATION');
+  /* Compliance table */
+  sectionLabel('UAE / GULF COMPLIANCE VERIFICATION  —  ' + cfg.label.toUpperCase());
 
-  /* header */
-  sf(...BG3); doc.rect(M,y,IW,8,'F');
+  sf(...BG3); doc.rect(M, y, IW, 8, 'F');
   MN(7.5); st(...MUT);
-  doc.text('Standard', M+2, y+5.5);
-  doc.text('Limit (W/m²K)', M+IW-80, y+5.5);
-  doc.text('Status', PW-M-18, y+5.5);
+  doc.text('Standard', M + 2, y + 5.5);
+  doc.text('Limit (W/m²K)', M + IW - 80, y + 5.5);
+  doc.text('Your U-value', M + IW - 40, y + 5.5);
+  doc.text('Status', PW - M - 15, y + 5.5);
   y += 8;
 
-  standards.forEach((s,i)=>{
+  standards.forEach((s, i) => {
     checkY(12);
-    sf(...(i%2===0?BG2:BG3)); doc.rect(M,y,IW,11,'F');
-    /* pass/fail badge */
-    const bc = s.pass?PASS_C:FAIL_C;
-    sf(...bc); doc.roundedRect(PW-M-18, y+2, 15, 7, 1.5, 1.5, 'F');
-    B(7.5); st(0,0,0); doc.text(s.pass?'PASS':'FAIL', PW-M-10.5, y+6.8, {align:'center'});
-    /* standard name */
-    N(8.5); st(...TEXT); doc.text(s.name, M+3, y+5.5);
-    /* limit value */
-    MN(8.5); st(...(s.pass?ACCT:FAIL_C)); doc.text('≤ '+s.limit.toFixed(2), M+IW-80, y+5.5);
-    /* U-value progress bar — shows your value vs limit */
-    const barX=M+3, barY2=y+7.5, barW=IW-100, barH=2;
-    const limitFrac = Math.min(s.limit/0.80, 1);
-    const uFrac     = Math.min(uVal/0.80,    1);
-    sf(...BG3); doc.rect(barX,barY2,barW,barH,'F');
-    sf(...(s.pass?[0,120,90]:[140,40,40])); doc.rect(barX,barY2,uFrac*barW,barH,'F');
-    /* limit tick */
-    sf(...WARN_C); doc.rect(barX+limitFrac*barW-0.4, barY2-1, 0.8, barH+2, 'F');
+    sf(...(i % 2 === 0 ? BG2 : BG3)); doc.rect(M, y, IW, 11, 'F');
+    const bc = s.pass ? PASS_C : FAIL_C;
+    sf(...bc); doc.roundedRect(PW - M - 18, y + 2, 15, 7, 1.5, 1.5, 'F');
+    B(7.5); st(0, 0, 0); doc.text(s.pass ? 'PASS' : 'FAIL', PW - M - 10.5, y + 6.8, { align: 'center' });
+    N(8.5); st(...TEXT); doc.text(s.name, M + 3, y + 5.5);
+    MN(8.5); st(...(s.pass ? ACCT : FAIL_C)); doc.text('≤ ' + s.limit.toFixed(3), M + IW - 80, y + 5.5);
+    MN(8.5); st(...TEXT); doc.text(uVal.toFixed(3), M + IW - 40, y + 5.5);
+    const barX = M + 3, barY2 = y + 7.5, barW = IW - 110, barH = 2;
+    const limitFrac = Math.min(s.limit / (standards[0].limit * 1.2), 1);
+    const uFrac     = Math.min(uVal   / (standards[0].limit * 1.2), 1);
+    sf(...BG3); doc.rect(barX, barY2, barW, barH, 'F');
+    sf(...(s.pass ? [0, 140, 100] : [160, 40, 40])); doc.rect(barX, barY2, uFrac * barW, barH, 'F');
+    sf(...WARN_C); doc.rect(barX + limitFrac * barW - 0.4, barY2 - 1, 0.8, barH + 2, 'F');
     y += 11;
   });
 
-  /* legend */
   y += 3; checkY(10);
   N(7.5); st(...MUT);
   doc.text('▲ Orange tick = standard limit   ■ Coloured bar = your U-value', M, y);
-  y += 10;
+  y += 12;
 
-  /* ── method note ── */
-  checkY(26);
-  sf(...BG2); doc.rect(M,y,IW,22,'F');
-  sf(...ACCT); doc.rect(M,y,2.5,22,'F');
-  B(8); st(...ACCT); doc.text('CALCULATION METHOD', M+6, y+7);
+  /* Method note */
+  checkY(34);
+  sf(...BG2); doc.rect(M, y, IW, 30, 'F');
+  sf(...ACCT); doc.rect(M, y, 2.5, 30, 'F');
+  B(8); st(...ACCT); doc.text('CALCULATION METHOD', M + 6, y + 7);
   N(7.5); st(...MUT);
-  const methodTxt='Calculated per ISO 6946:2017. Combined method used for thermal bridges. Surface resistances: Rse = 0.04 m²K/W (external, horizontal), Rsi = 0.13 m²K/W (internal, horizontal). U-value = 1 / (Rse + ΣR_layers + Rsi). Fixed-R layers use manufacturer-declared resistance values. Results are for horizontal heat flow (typical external wall). Verify against project-specific boundary conditions with a qualified thermal engineer.';
-  const mLines = doc.splitTextToSize(methodTxt, IW-10);
-  doc.text(mLines, M+6, y+13);
-  y += 26;
+  const methodLines = [
+    'Calculated per ISO 6946:2017 using the combined method.',
+    `Surface resistances: Rse = ${effectiveRSE.toFixed(3)} m²K/W, Rsi = ${RSI.toFixed(3)} m²K/W (${cfg.label}).`,
+    hasVentilatedCavity ? 'Ventilated air layer detected — ISO 6946:2017 Annex D applied. Layers external to ventilated cavity excluded from R-sum; Rse set to 0.13.' : '',
+    'U-value = 1 / (Rse + ΣR_layers + Rsi). Fixed-R layers use ISO 6946 Table 2 declared values.',
+    'λ values per ISO 10456 or manufacturer declarations. Results are for guidance only.',
+    'Verify all results against project-specific conditions with a qualified thermal engineer.',
+    'This report does not constitute a certified compliance submission.',
+  ].filter(Boolean);
+  methodLines.forEach((line, i) => {
+    doc.text(line, M + 6, y + 14 + i * 5);
+  });
+  y += 36;
 
-  /* footer p1 */
+  /* Footer p1 */
   N(7); st(...MUT);
-  doc.text('CladWise UAE  ·  Facade Intelligence Platform  ·  For guidance only — verify with a qualified thermal engineer', PW/2, PH-4, {align:'center'});
+  doc.text('CladWise UAE  ·  Facade Intelligence Platform  ·  cladwise.ae  ·  For guidance only — verify with a qualified thermal engineer.', PW / 2, PH - 4, { align: 'center' });
 
-  /* ── save ── */
-  const dateStr = new Date().toISOString().slice(0,10);
-  doc.save(`CladWise_UValue_${dateStr}.pdf`);
+  const fileDateStr = new Date().toISOString().slice(0, 10);
+  doc.save(`CladWise_UValue_${cfg.label.replace(/ /g,'_')}_${fileDateStr}.pdf`);
 }
 
-
-// ── RESET ────────────────────────────────────────────────────────────────────
+// ── RESET ───────────────────────────────────────────────────────────────────
 function resetAll() {
   layers = [];
   layerIdCounter = 0;
+  hasVentilatedCavity = false;
+  ventCavityIndex = -1;
+  hideValidation();
   renderTable();
   calculate();
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('meta-date').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+renderRefPanel();
 loadPreset('gfrc');
 </script>
 </body>
