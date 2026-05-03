@@ -3636,14 +3636,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- RFQ MODAL -->
 <div class="rfq-overlay" id="rfq-overlay" onclick="rfqOverlayClick(event)">
-  <div class="rfq-box" id="rfq-box">
+  <div class="rfq-box" id="rfq-box" role="dialog" aria-modal="true" aria-labelledby="rfq-title">
     <!-- Head -->
     <div class="rfq-head">
       <div class="rfq-head-text">
         <div class="rfq-eyebrow">Request for Quotation</div>
-        <div class="rfq-title">Request Quote</div>
+        <div class="rfq-title" id="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3654,16 +3654,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3677,10 +3677,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
+        <label for="rfq-message">Message (optional)</label>
         <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
       </div>
-      <label class="rfq-copy-row">
+      <label class="rfq-copy-row" for="rfq-copy">
         <input type="checkbox" id="rfq-copy" checked>
         Send me a copy of this RFQ
       </label>
@@ -4488,7 +4488,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- Supplier pending banner -->
 <div id="pending-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:490;background:rgba(245,158,11,0.12);border-top:1px solid rgba(245,158,11,0.3);backdrop-filter:blur(8px);padding:12px 24px;display:none;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
