@@ -3643,7 +3643,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -7782,19 +7782,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Company Name <span class="req">*</span></label>
-            <input type="text" id="sap-company-name" placeholder="e.g. ABM Group of Companies">
+            <label for="sap-company-name">Company Name <span class="req">*</span></label>
+            <input type="text" id="sap-company-name" placeholder="e.g. ABM Group of Companies" aria-required="true">
           </div>
           <div class="sap-field">
-            <label>Trade Licence No. <span class="req">*</span></label>
-            <input type="text" id="sap-license-num" placeholder="e.g. CN-1234567">
+            <label for="sap-license-num">Trade Licence No. <span class="req">*</span></label>
+            <input type="text" id="sap-license-num" placeholder="e.g. CN-1234567" aria-required="true">
           </div>
         </div>
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Emirate <span class="req">*</span></label>
-            <select id="sap-license-emirate">
+            <label for="sap-license-emirate">Emirate <span class="req">*</span></label>
+            <select id="sap-license-emirate" aria-required="true">
               <option value="">— Select —</option>
               <option>Dubai</option>
               <option>Abu Dhabi</option>
@@ -7807,33 +7807,33 @@ document.addEventListener('DOMContentLoaded', function() {
             </select>
           </div>
           <div class="sap-field">
-            <label>Year Established</label>
+            <label for="sap-est-year">Year Established</label>
             <input type="number" id="sap-est-year" placeholder="e.g. 2012" min="1960" max="2025">
           </div>
         </div>
 
         <div class="sap-grid cols-1">
           <div class="sap-field">
-            <label>One-Line Tagline <span class="req">*</span></label>
-            <input type="text" id="sap-tagline" placeholder="e.g. Leading GFRC manufacturer — Sharjah, est. 2013" maxlength="90">
-            <div class="hint">Shown on your directory card — max 90 characters</div>
+            <label for="sap-tagline">One-Line Tagline <span class="req">*</span></label>
+            <input type="text" id="sap-tagline" placeholder="e.g. Leading GFRC manufacturer — Sharjah, est. 2013" maxlength="90" aria-required="true" oninput="updateTaglineCounter(this)">
+            <div class="hint">Shown on your directory card — <span id="sap-tagline-count">0</span> / 90 characters</div>
           </div>
         </div>
 
         <div class="sap-grid cols-1">
           <div class="sap-field">
-            <label>Company Description <span class="req">*</span></label>
-            <textarea id="sap-about" placeholder="Describe your specialisation, key markets and what sets you apart in the UAE facade industry..." rows="3"></textarea>
+            <label for="sap-about">Company Description <span class="req">*</span></label>
+            <textarea id="sap-about" placeholder="Describe your specialisation, key markets and what sets you apart in the UAE facade industry..." rows="3" aria-required="true"></textarea>
           </div>
         </div>
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Website</label>
+            <label for="sap-website">Website</label>
             <input type="url" id="sap-website" placeholder="https://yourcompany.ae">
           </div>
           <div class="sap-field">
-            <label>Annual Turnover (AED)</label>
+            <label for="sap-turnover">Annual Turnover (AED)</label>
             <select id="sap-turnover">
               <option value="">— Select —</option>
               <option>Under AED 1M</option>
@@ -7853,42 +7853,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Your Name <span class="req">*</span></label>
-            <input type="text" id="sap-contact-name" placeholder="Full name">
+            <label for="sap-contact-name">Your Name <span class="req">*</span></label>
+            <input type="text" id="sap-contact-name" placeholder="Full name" aria-required="true">
           </div>
           <div class="sap-field">
-            <label>Your Role <span class="req">*</span></label>
-            <input type="text" id="sap-contact-title" placeholder="e.g. Sales Director">
+            <label for="sap-contact-title">Your Role <span class="req">*</span></label>
+            <input type="text" id="sap-contact-title" placeholder="e.g. Sales Director" aria-required="true">
           </div>
         </div>
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Your Mobile / WhatsApp <span class="req">*</span></label>
-            <input type="tel" id="sap-contact-phone" placeholder="+971 50 000 0000">
+            <label for="sap-contact-phone">Your Mobile / WhatsApp <span class="req">*</span></label>
+            <input type="tel" id="sap-contact-phone" placeholder="+971 50 000 0000" aria-required="true">
           </div>
           <div class="sap-field">
-            <label>Your Email <span class="req">*</span></label>
-            <input type="email" id="sap-contact-email" placeholder="you@yourcompany.ae">
+            <label for="sap-contact-email">Your Email <span class="req">*</span></label>
+            <input type="email" id="sap-contact-email" placeholder="you@yourcompany.ae" aria-required="true">
             <div class="hint">For verification only — not shown publicly</div>
           </div>
         </div>
 
         <div class="sap-grid">
           <div class="sap-field">
-            <label>Public Phone (on listing) <span class="req">*</span></label>
-            <input type="tel" id="sap-public-phone" placeholder="+971 6 531 0000">
+            <label for="sap-public-phone">Public Phone (on listing) <span class="req">*</span></label>
+            <input type="tel" id="sap-public-phone" placeholder="+971 6 531 0000" aria-required="true">
           </div>
           <div class="sap-field">
-            <label>Public Email (on listing) <span class="req">*</span></label>
-            <input type="email" id="sap-public-email" placeholder="info@yourcompany.ae">
+            <label for="sap-public-email">Public Email (on listing) <span class="req">*</span></label>
+            <input type="email" id="sap-public-email" placeholder="info@yourcompany.ae" aria-required="true">
           </div>
         </div>
 
         <div class="sap-grid cols-1">
           <div class="sap-field">
-            <label>Office / Factory Address <span class="req">*</span></label>
-            <input type="text" id="sap-address" placeholder="e.g. Sajja Industrial Area, Sharjah, UAE">
+            <label for="sap-address">Office / Factory Address <span class="req">*</span></label>
+            <input type="text" id="sap-address" placeholder="e.g. Sajja Industrial Area, Sharjah, UAE" aria-required="true">
           </div>
         </div>
       </div>
@@ -7968,6 +7968,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 /* ─── SUPPLIER APPLICATION FORM (5 STEPS) ───────────────────────────── */
 
+function updateTaglineCounter(el) {
+  const count = document.getElementById('sap-tagline-count');
+  if (count) count.textContent = el.value.length;
+}
+
 function openSupApply() {
   sapStep = 1
   sapReset()
@@ -7986,6 +7991,8 @@ function sapReset() {
   document.getElementById('sap-form-body').style.display = ''
   document.getElementById('sap-footer').style.display = ''
   document.getElementById('sap-success').style.display = 'none'
+  const tagline = document.getElementById('sap-tagline');
+  if (tagline) updateTaglineCounter(tagline);
 }
 const SAP_TOTAL = 3;
 let sapStep = 1;
@@ -9946,7 +9953,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
         <div class="exp-title" id="exp-title"></div>
         <div class="exp-intro" id="exp-intro"></div>
       </div>
-      <div class="exp-close" onclick="closeExplorer()">✕</div>
+      <button type="button" class="exp-close" onclick="closeExplorer()" aria-label="Close">✕</button>
     </div>
     <div class="exp-hero" id="exp-hero">
       <img id="exp-hero-img" src="" alt="">
@@ -9963,7 +9970,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 
 <!-- Lightbox -->
 <div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+  <button type="button" class="exp-lb-close" onclick="closeLightbox()" aria-label="Close" style="background:none;border:none;">✕</button>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
