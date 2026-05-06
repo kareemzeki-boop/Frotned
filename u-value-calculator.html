@@ -26,6 +26,7 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
+*:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
 
@@ -169,7 +170,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <nav>
   <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
   <span class="nav-badge">ENGINEERING TOOLS</span>
-  <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+  <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to App</a>
 </nav>
 
 <!-- PAGE HEADER -->
@@ -193,11 +194,11 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <!-- ASSEMBLY PRESETS -->
 <div class="presets-strip">
   <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;align-self:center">LOAD PRESET:</span>
-  <button class="preset-btn" onclick="loadPreset('rainscreen')"><i class="fa-solid fa-layer-group"></i> Ventilated Rainscreen</button>
-  <button class="preset-btn" onclick="loadPreset('insulated')"><i class="fa-solid fa-layer-group"></i> Insulated Concrete Wall</button>
-  <button class="preset-btn" onclick="loadPreset('gfrc')"><i class="fa-solid fa-layer-group"></i> GFRC Facade Assembly</button>
-  <button class="preset-btn" onclick="loadPreset('acm')"><i class="fa-solid fa-layer-group"></i> ACM-FR Curtain Wall</button>
-  <button class="preset-btn" onclick="loadPreset('stone')"><i class="fa-solid fa-layer-group"></i> Stone Cladding</button>
+  <button class="preset-btn" onclick="loadPreset('rainscreen')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Ventilated Rainscreen</button>
+  <button class="preset-btn" onclick="loadPreset('insulated')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Insulated Concrete Wall</button>
+  <button class="preset-btn" onclick="loadPreset('gfrc')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> GFRC Facade Assembly</button>
+  <button class="preset-btn" onclick="loadPreset('acm')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> ACM-FR Curtain Wall</button>
+  <button class="preset-btn" onclick="loadPreset('stone')"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Stone Cladding</button>
 </div>
 
 <!-- MAIN -->
@@ -211,7 +212,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="panel-title">Wall Assembly</div>
           <div class="panel-sub">Outside → Inside · Add layers in order</div>
         </div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count">0 LAYERS</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count" aria-live="polite">0 LAYERS</div>
       </div>
 
       <!-- Surface resistances -->
@@ -260,7 +261,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       <!-- Add layer -->
       <div class="add-row">
         <button class="btn-add" onclick="addLayer()">
-          <i class="fa-solid fa-plus"></i> Add Layer
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> Add Layer
         </button>
         <button class="btn-preset" onclick="addAirCavity()">+ Air Cavity</button>
         <button class="btn-preset" onclick="addInsulation()">+ Insulation</button>
@@ -274,12 +275,12 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     <!-- U-Value display -->
     <div class="u-display">
       <div class="u-label">U-Value Result</div>
-      <div class="u-value-num" id="u-value-display">—</div>
+      <div class="u-value-num" id="u-value-display" aria-live="polite">—</div>
       <div class="u-value-unit">W/m²·K</div>
       <div class="compliance-badge-wrap">
         <div class="compliance-chip chip-warn" id="compliance-chip">
-          <i class="fa-solid fa-circle-half-stroke"></i>
-          <span id="compliance-text">ADD LAYERS</span>
+          <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
+          <span id="compliance-text" aria-live="polite">ADD LAYERS</span>
         </div>
         <div class="compliance-desc" id="compliance-desc">Add cladding layers to begin thermal analysis.</div>
       </div>
@@ -326,10 +327,10 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 
     <!-- Actions -->
     <button class="btn-export" onclick="exportReport()">
-      <i class="fa-solid fa-file-pdf"></i> Export PDF Report
+      <i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Export PDF Report
     </button>
     <button class="btn-reset" onclick="resetAll()">
-      <i class="fa-solid fa-rotate-left"></i> Reset Assembly
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset Assembly
     </button>
 
   </div>
@@ -473,7 +474,7 @@ function renderTable() {
     <tr class="layer-row" id="layer-row-${l.id}">
       <td class="layer-num">${i + 1}</td>
       <td>
-        <select class="layer-select" onchange="onMatChange(${l.id}, this.value)">
+        <select class="layer-select" onchange="onMatChange(${l.id}, this.value)" aria-label="Material for layer ${i + 1}">
           ${MATERIALS_DB.map(m => `<option value="${m.id}" ${m.id === l.matId ? 'selected' : ''}>${m.name}</option>`).join('')}
         </select>
       </td>
@@ -482,7 +483,7 @@ function renderTable() {
                value="${l.thickness}"
                onchange="onThicknessChange(${l.id}, this.value)"
                ${isAirCavity ? 'disabled style="opacity:0.4"' : ''}
-               placeholder="mm">
+               placeholder="mm" aria-label="Thickness for layer ${i + 1} in mm">
       </td>
       <td class="layer-lambda" style="text-align:right;padding:10px 14px">
         ${isAirCavity
@@ -491,11 +492,11 @@ function renderTable() {
                     value="${l.lambda}"
                     onchange="onLambdaChange(${l.id}, this.value)"
                     placeholder="λ"
-                    style="max-width:90px">`
+                    style="max-width:90px" aria-label="Thermal conductivity for layer ${i + 1}">`
         }
       </td>
       <td class="layer-r ${r === 0 || r === null ? 'zero' : ''}">${rDisplay}</td>
-      <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer"><i class="fa-solid fa-xmark"></i></button></td>
+      <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer" aria-label="Remove layer ${i + 1}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></td>
     </tr>`;
   }).join('');
 }
