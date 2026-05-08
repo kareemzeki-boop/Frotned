@@ -33,6 +33,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+*:focus-visible{outline:2px solid var(--accent) !important;outline-offset:2px}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
@@ -733,7 +734,7 @@ section{padding:72px 0}
   padding-top: 48px;
 }
 
-.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;color:inherit;text-align:left}
 .mat-toggle.active{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.06);color:var(--accent)}
 .mat-toggle .dot{width:10px;height:10px;border-radius:50%}
 .compare-table-wrap{overflow-x:auto;border-radius:0;border:1px solid rgba(0,229,160,0.1)}
@@ -6496,10 +6497,10 @@ function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
   controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+    <button type="button" class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')" aria-pressed="${selectedMats.includes(key)}">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
-    </div>`).join('');
+    </button>`).join('');
   renderTable();
 }
 
