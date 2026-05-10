@@ -3109,6 +3109,36 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 .sup-gc-claim:hover { background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.6); color: #fbbf24; }
 
+/* ── RFQ BUTTONS ─────────────────────────────────────────────────────────── */
+.rfq-trigger-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  background: rgba(0,229,160,0.07);
+  border: 1px solid rgba(0,229,160,0.22);
+  border-radius: 50px;
+  padding: 6px 13px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: #00e5a0; cursor: pointer;
+  transition: all 0.18s; white-space: nowrap;
+}
+.rfq-trigger-btn:hover {
+  background: rgba(0,229,160,0.15);
+  border-color: rgba(0,229,160,0.48);
+  color: #00ffb3;
+}
+.rfq-trigger-btn svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+.rfq-submit {
+  width: 100%; padding: 11px 24px;
+  background: var(--accent); border: none; border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 900;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #0b110d; cursor: pointer; transition: all 0.18s;
+}
+.rfq-submit:hover { background: #00ffb3; transform: translateY(-1px); }
+.rfq-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 </style>
 <script defer data-domain="cladwise.ae" src="https://plausible.io/js/script.js"></script>
