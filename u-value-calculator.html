@@ -211,7 +211,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="panel-title">Wall Assembly</div>
           <div class="panel-sub">Outside → Inside · Add layers in order</div>
         </div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count">0 LAYERS</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="layer-count" aria-live="polite">0 LAYERS</div>
       </div>
 
       <!-- Surface resistances -->
@@ -274,12 +274,12 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     <!-- U-Value display -->
     <div class="u-display">
       <div class="u-label">U-Value Result</div>
-      <div class="u-value-num" id="u-value-display">—</div>
+      <div class="u-value-num" id="u-value-display" aria-live="polite">—</div>
       <div class="u-value-unit">W/m²·K</div>
       <div class="compliance-badge-wrap">
         <div class="compliance-chip chip-warn" id="compliance-chip">
           <i class="fa-solid fa-circle-half-stroke"></i>
-          <span id="compliance-text">ADD LAYERS</span>
+          <span id="compliance-text" aria-live="polite">ADD LAYERS</span>
         </div>
         <div class="compliance-desc" id="compliance-desc">Add cladding layers to begin thermal analysis.</div>
       </div>
@@ -473,7 +473,7 @@ function renderTable() {
     <tr class="layer-row" id="layer-row-${l.id}">
       <td class="layer-num">${i + 1}</td>
       <td>
-        <select class="layer-select" onchange="onMatChange(${l.id}, this.value)">
+        <select class="layer-select" onchange="onMatChange(${l.id}, this.value)" aria-label="Layer ${i + 1} Material">
           ${MATERIALS_DB.map(m => `<option value="${m.id}" ${m.id === l.matId ? 'selected' : ''}>${m.name}</option>`).join('')}
         </select>
       </td>
@@ -482,7 +482,8 @@ function renderTable() {
                value="${l.thickness}"
                onchange="onThicknessChange(${l.id}, this.value)"
                ${isAirCavity ? 'disabled style="opacity:0.4"' : ''}
-               placeholder="mm">
+               placeholder="mm"
+               aria-label="Layer ${i + 1} Thickness (mm)">
       </td>
       <td class="layer-lambda" style="text-align:right;padding:10px 14px">
         ${isAirCavity
@@ -491,7 +492,8 @@ function renderTable() {
                     value="${l.lambda}"
                     onchange="onLambdaChange(${l.id}, this.value)"
                     placeholder="λ"
-                    style="max-width:90px">`
+                    style="max-width:90px"
+                    aria-label="Layer ${i + 1} Thermal Conductivity (λ)">`
         }
       </td>
       <td class="layer-r ${r === 0 || r === null ? 'zero' : ''}">${rDisplay}</td>
@@ -842,6 +844,7 @@ function exportReport(){
 
 // ── RESET ────────────────────────────────────────────────────────────────────
 function resetAll() {
+  if (layers.length > 0 && !confirm('Are you sure you want to clear the entire wall assembly? This action cannot be undone.')) return;
   layers = [];
   layerIdCounter = 0;
   renderTable();
