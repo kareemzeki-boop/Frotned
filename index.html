@@ -733,7 +733,7 @@ section{padding:72px 0}
   padding-top: 48px;
 }
 
-.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;color:inherit}
 .mat-toggle.active{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.06);color:var(--accent)}
 .mat-toggle .dot{width:10px;height:10px;border-radius:50%}
 .compare-table-wrap{overflow-x:auto;border-radius:0;border:1px solid rgba(0,229,160,0.1)}
@@ -767,7 +767,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .wizard-q{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;letter-spacing:0px;margin-bottom:6px;text-transform:uppercase;line-height:1.05}
 .wizard-hint{color:var(--muted);font-size:12px;margin-bottom:28px;font-family:'DM Mono',monospace;letter-spacing:0.5px}
 .wizard-options{display:grid;gap:8px}
-.wiz-opt{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;font-size:14px;font-weight:500}
+.wiz-opt{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:8px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;font-size:14px;font-weight:500;width:100%;text-align:left;font-family:inherit;color:inherit}
 .wiz-opt:hover{border-color:rgba(0,229,160,0.35);background:rgba(0,229,160,0.03);transform:translateX(3px)}
 .wiz-opt.selected{border-color:var(--accent);background:rgba(0,229,160,0.07);color:#e8f0ea}
 .wiz-opt.selected .wiz-icon{background:rgba(0,229,160,0.15);border-color:rgba(0,229,160,0.3)}
@@ -6496,10 +6496,10 @@ function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
   controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+    <button type="button" class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')" aria-pressed="${selectedMats.includes(key)?'true':'false'}">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
-    </div>`).join('');
+    </button>`).join('');
   renderTable();
 }
 
@@ -6577,11 +6577,11 @@ function renderWizStep() {
       <div class="wizard-hint">${step.hint}</div>
       <div class="wizard-options" id="wiz-opts">
         ${step.opts.map((o, i) => `
-          <div class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})">
+          <button type="button" class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})" aria-pressed="false">
             <div class="wiz-icon">${o.icon}</div>
             <span style="flex:1">${o.label}</span>
             <div class="wiz-opt-check">✓</div>
-          </div>`).join('')}
+          </button>`).join('')}
       </div>
       <div class="wizard-nav">
         ${wizStep > 0 ? `<button class="btn-wiz btn-wiz-back" onclick="wizBack()">← Back</button>` : '<div></div>'}
@@ -6590,15 +6590,22 @@ function renderWizStep() {
     </div>`;
 
   if (wizAnswers[wizStep] !== undefined) {
-    document.getElementById(`wiz-opt-${wizAnswers[wizStep]}`).classList.add('selected');
+    const selectedOpt = document.getElementById(`wiz-opt-${wizAnswers[wizStep]}`);
+    selectedOpt.classList.add('selected');
+    selectedOpt.setAttribute('aria-pressed', 'true');
     const btn = document.getElementById('wiz-next');
     btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = '';
   }
 }
 
 function selectWizOpt(i) {
-  document.querySelectorAll('.wiz-opt').forEach(el => el.classList.remove('selected'));
-  document.getElementById(`wiz-opt-${i}`).classList.add('selected');
+  document.querySelectorAll('.wiz-opt').forEach(el => {
+    el.classList.remove('selected');
+    el.setAttribute('aria-pressed', 'false');
+  });
+  const opt = document.getElementById(`wiz-opt-${i}`);
+  opt.classList.add('selected');
+  opt.setAttribute('aria-pressed', 'true');
   wizAnswers[wizStep] = i;
   const btn = document.getElementById('wiz-next');
   btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = '';
