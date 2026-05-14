@@ -1,0 +1,3 @@
+## 2026-04-02 - Accessible Close Buttons & Semantic Refactoring
+**Learning:** Icon-only buttons in this project frequently use <div> elements and lack ARIA labels, making them inaccessible to screen readers and keyboard-only users. Converting these to semantic <button> elements provides native focus management and keyboard support without breaking the custom AutoCAD-style crosshair UI.
+**Action:** Always add aria-label="Close" to icon-only close buttons and prefer semantic <button> elements over <div> for interactive components. Verify that conversion from <div> to <button> doesn't introduce default browser styling regressions.
