@@ -1,0 +1,3 @@
+## 2025-03-05 - [Accessibility & Keyboard Support for Overlays]
+**Learning:** In static HTML projects with many custom overlays, inconsistent keyboard support (Escape key) and non-semantic interactive elements (divs as buttons) create significant accessibility barriers. Centralizing the 'Escape' key handler with a priority sequence ensures a predictable user experience.
+**Action:** When working with overlays, always ensure a global 'Escape' listener exists, use semantic <button> tags for all triggers, and provide explicit aria-labels for icon-only buttons. Use CSS resets for converted buttons to prevent layout shifts.
