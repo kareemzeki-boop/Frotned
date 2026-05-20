@@ -7059,7 +7059,7 @@ function supGridCardHTML(s, blurred, dimLocked) {
           ★ Claim This Profile
           <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="rfq-trigger-btn" onclick="event.stopPropagation();openRFQ(${idx})">
+        <button class="rfq-trigger-btn" onmouseenter="event.stopPropagation();openRFQ(${idx})" onclick="event.stopPropagation();openRFQ(${idx})">
           <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="22px" width="22px" style="transform:scaleX(-1)"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
           <span class="rfq-label">Request Quote</span>
         </button>
@@ -10352,7 +10352,7 @@ function openSupProfile(idx) {
   // RFQ button in profile
   const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
   if (rfqBtnWrap) {
-    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onmouseenter="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
       <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="22px" width="22px" style="transform:scaleX(-1)"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
       <span class="rfq-label">Request Quote</span>
     </button>`;
@@ -10630,6 +10630,7 @@ let _rfqSupplier = null;
 function openRFQ(supplierIdx, materialHint) {
   const s = SUPPLIERS[supplierIdx];
   if (!s) return;
+  if (document.getElementById("rfq-overlay").classList.contains("open")) return;
   _rfqSupplier = s;
 
   // Reset form
