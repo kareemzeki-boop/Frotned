@@ -3109,48 +3109,53 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 .sup-gc-claim:hover { background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.6); color: #fbbf24; }
 
-/* ── REQUEST QUOTE SLIDE BUTTON ──────────────────────────────── */
+/* ── REQUEST QUOTE BUTTON (Uiverse by nikk7007) ─────────────── */
 .rfq-trigger-btn {
-  background: white;
-  text-align: center;
-  width: 100%;
-  border-radius: 8px;
-  height: 44px;
-  position: relative;
-  color: #000;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  font-family: 'Barlow Condensed', sans-serif;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.rfq-trigger-btn .rfq-pill {
-  background: #4ade80;
+  --color: #00A97F;
+  --color2: rgb(10, 25, 30);
+  padding: 11px 18px;
+  background-color: transparent;
   border-radius: 6px;
-  height: 36px;
-  width: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  z-index: 10;
-  transition: width 500ms;
-}
-.rfq-trigger-btn:hover .rfq-pill { width: calc(100% - 8px); }
-.rfq-trigger-btn .rfq-label {
+  border: .3px solid var(--color);
+  transition: .5s;
   position: relative;
+  overflow: hidden;
+  cursor: pointer;
   z-index: 1;
-  white-space: nowrap;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color);
+  width: 100%;
 }
+.rfq-trigger-btn::after, .rfq-trigger-btn::before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: skew(90deg) translate(-50%, -50%);
+  position: absolute;
+  inset: 50%;
+  left: 25%;
+  z-index: -1;
+  transition: .5s ease-out;
+  background-color: var(--color);
+}
+.rfq-trigger-btn::before {
+  top: -50%;
+  left: -25%;
+  transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
+}
+.rfq-trigger-btn:hover::before {
+  transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
+}
+.rfq-trigger-btn:hover::after {
+  transform: skew(45deg) translate(-50%, -50%);
+}
+.rfq-trigger-btn:hover { color: var(--color2); }
+.rfq-trigger-btn:active { filter: brightness(.7); transform: scale(.98); }
 
 /* ── RFQ MODAL OVERLAY ─────────────────────────────────────────── */
 .rfq-overlay {
@@ -3871,10 +3876,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <div class="rfq-success-icon">✓</div>
       <div class="rfq-success-title">RFQ Sent</div>
       <div class="rfq-success-sub" id="rfq-success-sub">Your request has been sent to the supplier.</div>
-      <button class="rfq-trigger-btn" onclick="closeRFQ()" style="margin-top:8px">
-        <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="22px" width="22px" style="transform:scaleX(-1)"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
-        <span class="rfq-label">Go Back</span>
-      </button>
+      <button class="rfq-trigger-btn" onclick="closeRFQ()" style="margin-top:8px">Close</button>
     </div>
   </div>
 </div>
@@ -7059,10 +7061,7 @@ function supGridCardHTML(s, blurred, dimLocked) {
           ★ Claim This Profile
           <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="rfq-trigger-btn" onmouseenter="event.stopPropagation();openRFQ(${idx})" onclick="event.stopPropagation();openRFQ(${idx})">
-          <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="22px" width="22px" style="transform:scaleX(-1)"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
-          <span class="rfq-label">Request Quote</span>
-        </button>
+        <button class="rfq-trigger-btn" onmouseenter="event.stopPropagation();openRFQ(${idx})" onclick="event.stopPropagation();openRFQ(${idx})">Request Quote</button>
       </div>
     </div>
 
@@ -10352,10 +10351,7 @@ function openSupProfile(idx) {
   // RFQ button in profile
   const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
   if (rfqBtnWrap) {
-    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onmouseenter="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
-      <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="22px" width="22px" style="transform:scaleX(-1)"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
-      <span class="rfq-label">Request Quote</span>
-    </button>`;
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onmouseenter="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">Request Quote</button>`;
   }
 
   // Reset to overview tab
