@@ -3109,6 +3109,49 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 }
 .sup-gc-claim:hover { background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.6); color: #fbbf24; }
 
+/* ── UIVERSE REQUEST QUOTE BUTTON ──────────────────────────────── */
+.rfq-trigger-btn {
+  background: white;
+  text-align: center;
+  width: 192px;
+  border-radius: 1rem;
+  height: 56px;
+  position: relative;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: 'Barlow', sans-serif;
+  flex-shrink: 0;
+}
+.rfq-trigger-btn .rfq-pill {
+  background: #4ade80;
+  border-radius: 0.75rem;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  z-index: 10;
+  transition: width 500ms;
+}
+.rfq-trigger-btn:hover .rfq-pill { width: 184px; }
+.rfq-trigger-btn .rfq-label {
+  transform: translateX(8px);
+  position: relative;
+  z-index: 1;
+  line-height: 56px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 </style>
 <script defer data-domain="cladwise.ae" src="https://plausible.io/js/script.js"></script>
@@ -3696,7 +3739,10 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
       <div class="rfq-success-icon">✓</div>
       <div class="rfq-success-title">RFQ Sent</div>
       <div class="rfq-success-sub" id="rfq-success-sub">Your request has been sent to the supplier.</div>
-      <button class="rfq-trigger-btn" onclick="closeRFQ()" style="max-width:180px;margin-top:8px">Close</button>
+      <button class="rfq-trigger-btn" onclick="closeRFQ()" style="margin-top:8px">
+        <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="25px" width="25px"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
+        <span class="rfq-label">Go Back</span>
+      </button>
     </div>
   </div>
 </div>
@@ -6882,8 +6928,8 @@ function supGridCardHTML(s, blurred, dimLocked) {
           <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button class="rfq-trigger-btn" onclick="event.stopPropagation();openRFQ(${idx})">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          Request Quote
+          <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="25px" width="25px"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
+          <span class="rfq-label">Request Quote</span>
         </button>
       </div>
     </div>
@@ -10174,9 +10220,9 @@ function openSupProfile(idx) {
   // RFQ button in profile
   const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
   if (rfqBtnWrap) {
-    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-      Request Quote from ${s.name}
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px;width:220px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">
+      <div class="rfq-pill"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="25px" width="25px"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000000"></path></svg></div>
+      <span class="rfq-label">Request Quote</span>
     </button>`;
   }
 
