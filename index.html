@@ -193,6 +193,7 @@ nav {
   display: flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 700; color: #000;
   cursor: pointer; flex-shrink: 0;
+  border: none; padding: 0; font-family: inherit;
 }
 .nav-user-email {
   font-size: 11px; color: var(--muted);
@@ -1182,7 +1183,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 
 /* ── NAV AUTH STATE ──────────────────────────────────────────────────────── */
 .nav-user{display:flex;align-items:center;gap:10px}
-.nav-avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;cursor:pointer;flex-shrink:0}
+.nav-avatar{width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;cursor:pointer;flex-shrink:0;border:none;padding:0;font-family:inherit}
 .nav-user-info{display:flex;flex-direction:column;line-height:1.2}
 .nav-user-email{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-user-role{font-size:10px;color:var(--accent);font-family:'DM Mono',monospace;letter-spacing:1px}
@@ -3498,7 +3499,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           <div class="nav-user-email" id="nav-email"></div>
           <div class="nav-user-role"  id="nav-role"></div>
         </div>
-        <div class="nav-avatar" id="nav-avatar" onclick="openAuthModal('login')">?</div>
+        <button type="button" class="nav-avatar" id="nav-avatar" onclick="openAuthModal('login')" aria-label="Account menu">?</button>
         <span class="nav-premium-badge" id="nav-premium" style="display:none">PRO</span>
         <button class="nav-logout" onclick="authLogout()">Out</button>
       </div>
@@ -3834,16 +3835,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3857,8 +3858,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <label for="rfq-message">Message (optional)</label>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…" maxlength="1000"></textarea>
+        <div class="rfq-counter" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;margin-top:4px"><span id="rfq-count">0</span> / 1000</div>
       </div>
       <label class="rfq-copy-row">
         <input type="checkbox" id="rfq-copy" checked>
@@ -10636,6 +10638,7 @@ function openRFQ(supplierIdx, materialHint) {
   document.getElementById('rfq-submit-btn').disabled = false;
   document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
   document.getElementById('rfq-message').value = '';
+  document.getElementById('rfq-count').textContent = '0';
   document.getElementById('rfq-project').value = '';
 
   // Pre-fill user info if logged in
@@ -10706,6 +10709,12 @@ async function submitRFQ() {
     btn.textContent = 'Send Request →';
   }
 }
+
+document.getElementById('rfq-message')?.addEventListener('input', e => {
+  const count = e.target.value.length;
+  const countEl = document.getElementById('rfq-count');
+  if (countEl) countEl.textContent = count;
+});
 
 </script>
 </body>
