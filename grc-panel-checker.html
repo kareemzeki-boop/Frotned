@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GRC Panel Checker · CladWise UAE</title>
+<title>GRC Panel Checker Pro · CladWise UAE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --bg:     #0b110d;
@@ -25,7 +26,6 @@
   --fail:   #ef4444;
   --warn:   #f59e0b;
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
@@ -53,44 +53,56 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 /* ── MAIN LAYOUT ── */
 .main{max-width:1200px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
 
+/* ── PANEL TYPE TABS ── */
+.type-tabs{display:flex;gap:2px;margin-bottom:2px}
+.type-tab{flex:1;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.type-tab:hover{border-color:rgba(0,229,160,0.3);color:var(--text)}
+.type-tab.active{background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.4);color:var(--accent)}
+
 /* ── INPUT PANELS ── */
 .input-panel{background:var(--bg2);border:1px solid var(--border);margin-bottom:2px}
-.input-panel-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.input-panel-icon{width:28px;height:28px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:12px}
-.input-panel-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.input-panel-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-left:auto}
+.input-panel-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.input-panel-icon{width:26px;height:26px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:11px;flex-shrink:0}
+.input-panel-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.input-panel-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-left:auto}
 
-.input-grid{display:grid;gap:1px;background:var(--border)}
-.input-grid.cols-2{grid-template-columns:1fr 1fr}
-.input-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+.igrid{display:grid;gap:1px;background:var(--border)}
+.igrid.c2{grid-template-columns:1fr 1fr}
+.igrid.c3{grid-template-columns:1fr 1fr 1fr}
+.igrid.c4{grid-template-columns:1fr 1fr 1fr 1fr}
 
-.field{background:var(--bg2);padding:16px 20px;display:flex;flex-direction:column;gap:6px;transition:background 0.15s}
+.field{background:var(--bg2);padding:14px 18px;display:flex;flex-direction:column;gap:5px;transition:background 0.15s}
 .field:focus-within{background:var(--bg3)}
 .field.locked{background:var(--bg3);pointer-events:none}
 .field label{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.field input,.field select{background:transparent;border:none;outline:none;font-family:'DM Mono',monospace;font-size:22px;font-weight:400;color:var(--text);width:100%;padding:0;appearance:none;-webkit-appearance:none}
+.field input,.field select{background:transparent;border:none;outline:none;font-family:'DM Mono',monospace;font-size:20px;font-weight:400;color:var(--text);width:100%;padding:0;appearance:none;-webkit-appearance:none}
 .field input::-webkit-inner-spin-button{-webkit-appearance:none}
-.field select{font-size:16px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7d6d'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center;padding-right:18px}
+.field select{font-size:14px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7d6d'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center;padding-right:16px}
 .field select option{background:var(--bg2)}
-.field-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.5px}
-.field-locked-val{font-family:'DM Mono',monospace;font-size:22px;color:var(--muted)}
-.lock-tag{font-family:'DM Mono',monospace;font-size:8px;color:var(--accent);letter-spacing:1px;border:1px solid rgba(0,229,160,0.3);padding:1px 6px;margin-left:6px}
+.field-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.field-locked-val{font-family:'DM Mono',monospace;font-size:20px;color:var(--muted)}
+.lock-tag{font-family:'DM Mono',monospace;font-size:8px;color:var(--accent);letter-spacing:1px;border:1px solid rgba(0,229,160,0.3);padding:1px 5px;margin-left:5px}
 
-/* Fixed constants strip */
-.constants-strip{background:var(--bg3);border:1px solid var(--border);padding:14px 20px;margin-bottom:2px;display:flex;align-items:flex-start;gap:16px}
-.constants-tag{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0;margin-top:1px}
-.constants-text{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.8}
+/* hidden field */
+.field-hidden{display:none}
 
-/* Check button */
-.check-btn{width:100%;padding:16px;background:var(--accent);color:#000;border:none;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:2px}
+/* constants strip */
+.constants-strip{background:var(--bg3);border:1px solid var(--border);padding:12px 18px;margin-bottom:2px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.constants-tag{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0;padding-top:1px}
+.constants-text{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);line-height:1.9}
+
+/* buttons */
+.btn-row{display:flex;gap:2px;margin-top:2px}
+.check-btn{flex:1;padding:16px;background:var(--accent);color:#000;border:none;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .check-btn:hover{background:#00ffb3}
-.check-btn:active{transform:scale(0.99)}
+.export-btn{padding:16px 22px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
+.export-btn:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── RESULTS SIDEBAR ── */
 .result-panel{position:sticky;top:80px;display:flex;flex-direction:column;gap:2px}
 
-/* Verdict */
-.verdict-card{padding:24px;position:relative;overflow:hidden}
+/* verdict */
+.verdict-card{padding:22px;position:relative;overflow:hidden}
 .verdict-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .verdict-card.pass::before{background:linear-gradient(90deg,transparent,var(--pass),transparent)}
 .verdict-card.fail::before{background:linear-gradient(90deg,transparent,var(--fail),transparent)}
@@ -98,71 +110,85 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .verdict-card.pass{background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.2)}
 .verdict-card.fail{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2)}
 .verdict-card.idle{background:var(--bg2);border:1px solid var(--border)}
-.verdict-icon{font-size:36px;line-height:1;margin-bottom:8px}
-.verdict-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:-0.5px;line-height:1}
-.verdict-sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+.verdict-icon{font-size:32px;line-height:1;margin-bottom:8px}
+.verdict-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;letter-spacing:-0.5px;line-height:1}
+.verdict-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6}
 .verdict-card.pass .verdict-title{color:var(--pass)}
 .verdict-card.fail .verdict-title{color:var(--fail)}
 .verdict-card.idle .verdict-title{color:var(--muted)}
 
-/* Metrics strip */
+/* metrics */
 .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
-.metric-cell{background:var(--bg2);padding:16px 14px}
-.metric-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.metric-value{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--text);line-height:1}
+.metric-cell{background:var(--bg2);padding:14px 14px}
+.metric-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.metric-value{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--text);line-height:1}
 .metric-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:3px}
 
-/* Check items */
+/* weight breakdown */
+.wbreak{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+.wcell{background:var(--bg2);padding:12px 14px}
+.wcell-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.wcell-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.wcell-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px}
+
+/* assumptions table */
+.assume-panel{background:var(--bg2);border:1px solid var(--border)}
+.assume-grid{display:grid;grid-template-columns:1fr 1fr}
+.asm-row{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:9px;border-bottom:1px solid rgba(255,255,255,0.04);padding:7px 14px}
+.asm-row:last-child{border-bottom:none}
+.asm-k{color:var(--muted)}
+.asm-v{color:var(--accent)}
+
+/* check items */
 .checks-panel{background:var(--bg2);border:1px solid var(--border)}
-.checks-panel-header{padding:12px 16px;border-bottom:1px solid var(--border)}
+.checks-panel-header{padding:11px 16px;border-bottom:1px solid var(--border)}
 .checks-panel-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
 
-.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.check-item:last-child{border-bottom:none}
-.check-item.ok{border-left:2px solid var(--pass)}
-.check-item.fail{border-left:2px solid var(--fail)}
-.check-item.warn{border-left:2px solid var(--warn)}
-.check-item.idle{border-left:2px solid var(--border)}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.chk:last-child{border-bottom:none}
+.chk.ok{border-left:2px solid var(--pass)}
+.chk.fail{border-left:2px solid var(--fail)}
+.chk.warn{border-left:2px solid var(--warn)}
+.chk.idle{border-left:2px solid rgba(255,255,255,0.1)}
 
-.check-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px}
-.check-dot.ok{background:var(--pass);color:#000}
-.check-dot.fail{background:var(--fail);color:#fff}
-.check-dot.warn{background:var(--warn);color:#000}
-.check-dot.idle{background:var(--border);color:var(--muted)}
+.cdot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px}
+.cdot.ok{background:var(--pass);color:#000}
+.cdot.fail{background:var(--fail);color:#fff}
+.cdot.warn{background:var(--warn);color:#000}
+.cdot.idle{background:rgba(255,255,255,0.08);color:var(--muted)}
 
-.check-body{flex:1;min-width:0}
-.check-name{font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px}
-.check-val{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:1.6}
-.check-fix{font-family:'DM Mono',monospace;font-size:9px;color:var(--fail);margin-top:4px;line-height:1.5;display:flex;gap:5px;align-items:flex-start}
-.check-fix::before{content:'→';flex-shrink:0}
-.check-warn-note{font-family:'DM Mono',monospace;font-size:9px;color:var(--warn);margin-top:4px;display:flex;gap:5px;align-items:flex-start}
-.check-warn-note::before{content:'!';flex-shrink:0;font-weight:700}
+.cbody{flex:1;min-width:0}
+.cname{font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cval{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:1.6}
+.cfix{font-family:'DM Mono',monospace;font-size:9px;color:var(--fail);margin-top:4px;display:flex;gap:5px;align-items:flex-start;line-height:1.5}
+.cfix::before{content:'→';flex-shrink:0}
+.cwarn{font-family:'DM Mono',monospace;font-size:9px;color:var(--warn);margin-top:4px;display:flex;gap:5px;align-items:flex-start}
+.cwarn::before{content:'!';flex-shrink:0;font-weight:700}
+.cutil{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;flex-shrink:0;margin-top:1px;min-width:42px;text-align:right}
 
-.check-util{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;flex-shrink:0;margin-top:1px;min-width:44px;text-align:right}
-
-/* Summary table */
+/* summary */
 .summary-panel{background:var(--bg2);border:1px solid var(--border)}
-.summary-row{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,0.04);gap:8px}
-.summary-row:last-child{border-bottom:none}
-.summary-name{font-size:11px;color:var(--muted);flex:1}
-.summary-badge{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:3px 10px;letter-spacing:1.5px;flex-shrink:0}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.04);gap:8px}
+.sum-row:last-child{border-bottom:none}
+.sum-name{font-size:11px;color:var(--muted);flex:1}
+.sum-badge{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:3px 9px;letter-spacing:1.5px;flex-shrink:0}
 .sb-pass{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--pass)}
 .sb-fail{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--fail)}
 .sb-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--warn)}
 .sb-idle{background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
 
-/* Section labels */
-.sec-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:16px 16px 10px;display:flex;align-items:center;gap:10px}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* Reco panel */
+/* reco */
 .reco-panel{background:var(--bg2);border:1px solid var(--border)}
-.reco-item{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;line-height:1.55}
+.reco-item{display:flex;gap:12px;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;line-height:1.55}
 .reco-item:last-child{border-bottom:none}
 .reco-num{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0;min-width:20px}
 
-/* Reset btn */
-.btn-reset{width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;margin-top:2px}
+/* sec label */
+.sec-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:14px 0 8px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* reset */
+.btn-reset{width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.15s;margin-top:2px}
 .btn-reset:hover{border-color:var(--fail);color:var(--fail)}
 
 /* ── RESPONSIVE ── */
@@ -176,9 +202,15 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 }
 @media(max-width:600px){
   .page-title{font-size:38px}
-  .input-grid.cols-3{grid-template-columns:1fr 1fr}
-  .input-grid.cols-2{grid-template-columns:1fr}
-  .metrics-grid{grid-template-columns:1fr 1fr}
+  .igrid.c3,.igrid.c4{grid-template-columns:1fr 1fr}
+  .igrid.c2{grid-template-columns:1fr}
+  .metrics-grid,.wbreak,.assume-grid{grid-template-columns:1fr 1fr}
+  .type-tabs{flex-direction:column}
+  nav{padding:0 16px}
+}
+@media print{
+  nav,.btn-row,.btn-reset,.type-tabs,.no-print{display:none!important}
+  body{background:#fff;color:#000}
 }
 </style>
 </head>
@@ -194,20 +226,19 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div>
-    <div class="page-eyebrow">Structural Compliance · UAE DBC 2023 · GRCA</div>
-    <h1 class="page-title">GRC Panel<br><span>Checker</span></h1>
-    <p class="page-desc">Assess GRC/GFRC cladding panels against UAE structural codes. Checks skin bending, deflection, anchor capacity, and GRCA geometry minimums. Inputs recalculate live.</p>
+    <div class="page-eyebrow">Structural Compliance · UAE DBC 2023 · GRCA · EN 1990</div>
+    <h1 class="page-title">GRC Panel<br>Checker <span>Pro</span></h1>
+    <p class="page-desc">Composite T-section analysis for GRC/GFRC cladding. Directional ribs, perimeter edge members, seismic zones, thermal stress, and five fixing accessory types — all checked against UAE structural codes.</p>
   </div>
   <div class="page-formula">
     <div class="formula-title">Applied Standards</div>
-    <div class="formula-line">GRCA Specification (2006 rev.)</div>
-    <div class="formula-line">EN 1990 + EN 1991-1-4</div>
-    <div class="formula-line">UAE DBC 2023 · AD UBBL 2022</div>
-    <div class="formula-line">BS EN 1169:1999</div>
+    <div class="formula-line">GRCA Specification + Designers Guide</div>
+    <div class="formula-line">EN 1990 · EN 1991-1-4 · BS EN 1169</div>
+    <div class="formula-line">UAE DBC 2023 · Abu Dhabi UBBL 2022</div>
     <div class="formula-sub">
-      ρ = 2000 kg/m³ · MOR = 8 MPa<br>
-      γ_m = 2.0 · E = 10 GPa<br>
-      γ_G = 1.35 · γ_Q = 1.5 · L/250
+      ρ = 2000 kg/m³ &nbsp;·&nbsp; MOR = 8 MPa<br>
+      γ_m = 2.0 &nbsp;·&nbsp; E = 10 GPa<br>
+      γ_G = 1.35 &nbsp;·&nbsp; γ_Q = 1.5 &nbsp;·&nbsp; L/250
     </div>
   </div>
 </div>
@@ -218,14 +249,20 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
   <!-- LEFT: INPUTS -->
   <div>
 
+    <!-- Panel Type -->
+    <div class="type-tabs no-print">
+      <button class="type-tab active" id="tab-standard" onclick="selectType('standard',this)">Standard Panel</button>
+      <button class="type-tab" id="tab-corner" onclick="selectType('corner',this)">⌞ Corner Panel</button>
+    </div>
+
     <!-- Location -->
     <div class="input-panel">
       <div class="input-panel-header">
         <div class="input-panel-icon"><i class="fa-solid fa-location-dot"></i></div>
-        <div class="input-panel-title">Location</div>
-        <div class="input-panel-sub">auto wind speed</div>
+        <div class="input-panel-title">Location &amp; Wind</div>
+        <div class="input-panel-sub">EN 1991-1-4 terrain cat. III</div>
       </div>
-      <div class="input-grid cols-3">
+      <div class="igrid c3">
         <div class="field">
           <label>Emirate</label>
           <select id="emirate" onchange="onEmirate()">
@@ -233,16 +270,16 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
             <option value="auh">Abu Dhabi</option>
             <option value="rak">RAK / Fujairah</option>
           </select>
-          <div class="field-unit">sets basic wind speed</div>
+          <div class="field-unit">wind zone</div>
         </div>
         <div class="field locked">
-          <label>Basic Wind Speed <span class="lock-tag">AUTO</span></label>
-          <div class="field-locked-val" id="vbDisplay">38</div>
-          <div class="field-unit">m/s · 10-min · 50yr return</div>
+          <label>Basic Wind Speed v_b <span class="lock-tag">AUTO</span></label>
+          <div class="field-locked-val" id="vbDisp">38</div>
+          <div class="field-unit">m/s · 10-min · 50yr</div>
         </div>
         <div class="field">
-          <label>Height above ground</label>
-          <input type="number" id="zH" value="10" min="1" max="300" step="1" oninput="calc()">
+          <label>Height above grade z</label>
+          <input type="number" id="zH" value="10" min="1" max="300" step="1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
       </div>
@@ -255,36 +292,96 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
         <div class="input-panel-title">Panel Geometry</div>
         <div class="input-panel-sub">GRC / GFRC section</div>
       </div>
-      <div class="input-grid cols-2">
+      <div class="igrid c2">
         <div class="field">
-          <label>Width</label>
-          <input type="number" id="W" value="1.2" min="0.1" max="10" step="0.1" oninput="calc()">
+          <label>Width W</label>
+          <input type="number" id="W" value="1.2" min="0.1" max="10" step="0.1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
         <div class="field">
-          <label>Height</label>
-          <input type="number" id="H" value="3.0" min="0.1" max="20" step="0.1" oninput="calc()">
+          <label>Height H</label>
+          <input type="number" id="H" value="3.0" min="0.1" max="20" step="0.1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
         <div class="field">
-          <label>Skin Thickness</label>
-          <input type="number" id="ts" value="13" min="1" max="100" step="1" oninput="calc()">
-          <div class="field-unit">mm · GRCA min 12 mm</div>
+          <label>Skin thickness t_s</label>
+          <input type="number" id="ts" value="13" min="8" max="100" step="1" oninput="autoCalc()">
+          <div class="field-unit">mm · GRCA min 13 mm</div>
         </div>
         <div class="field">
-          <label>Number of Ribs</label>
-          <input type="number" id="nr" value="3" min="0" max="20" step="1" oninput="calc()">
-          <div class="field-unit">stiffening ribs across width</div>
-        </div>
-        <div class="field">
-          <label>Rib Depth</label>
-          <input type="number" id="hr" value="75" min="10" max="500" step="5" oninput="calc()">
-          <div class="field-unit">mm</div>
-        </div>
-        <div class="field">
-          <label>Rib Thickness</label>
-          <input type="number" id="tr" value="25" min="10" max="150" step="5" oninput="calc()">
+          <label>Rib web thickness t_r</label>
+          <input type="number" id="tr" value="25" min="10" max="150" step="5" oninput="autoCalc()">
           <div class="field-unit">mm · GRCA min 25 mm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corner (conditional) -->
+    <div class="input-panel" id="cornerPanel" style="margin-top:2px;display:none">
+      <div class="input-panel-header">
+        <div class="input-panel-icon"><i class="fa-solid fa-angles-right"></i></div>
+        <div class="input-panel-title">Corner Configuration</div>
+      </div>
+      <div class="igrid c2">
+        <div class="field">
+          <label>Corner angle</label>
+          <select id="cornerAngle" onchange="autoCalc()">
+            <option value="90">90°</option>
+            <option value="135">135°</option>
+            <option value="45">45°</option>
+          </select>
+          <div class="field-unit">interior angle</div>
+        </div>
+        <div class="field">
+          <label>Leg width (each side)</label>
+          <input type="number" id="legW" value="0.5" min="0.1" max="5" step="0.1" oninput="autoCalc()">
+          <div class="field-unit">metres</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ribs (directional) -->
+    <div class="input-panel" style="margin-top:2px">
+      <div class="input-panel-header">
+        <div class="input-panel-icon"><i class="fa-solid fa-table-cells-large"></i></div>
+        <div class="input-panel-title">Stiffening Ribs</div>
+        <div class="input-panel-sub">directional — H and V separate</div>
+      </div>
+      <div class="igrid c4">
+        <div class="field">
+          <label>Horizontal ribs n_H</label>
+          <input type="number" id="nrH" value="2" min="0" max="20" step="1" oninput="autoCalc()">
+          <div class="field-unit">count (between edges)</div>
+        </div>
+        <div class="field">
+          <label>H-rib depth d_H</label>
+          <input type="number" id="hrH" value="75" min="10" max="500" step="5" oninput="autoCalc()">
+          <div class="field-unit">mm excl. skin</div>
+        </div>
+        <div class="field">
+          <label>Vertical ribs n_V</label>
+          <input type="number" id="nrV" value="1" min="0" max="20" step="1" oninput="autoCalc()">
+          <div class="field-unit">count (between edges)</div>
+        </div>
+        <div class="field">
+          <label>V-rib depth d_V</label>
+          <input type="number" id="hrV" value="50" min="10" max="500" step="5" oninput="autoCalc()">
+          <div class="field-unit">mm excl. skin</div>
+        </div>
+      </div>
+      <div class="igrid c2">
+        <div class="field">
+          <label>Perimeter rib</label>
+          <select id="perimRib" onchange="autoCalc()">
+            <option value="no">None</option>
+            <option value="yes">Yes — all four edges</option>
+          </select>
+          <div class="field-unit">edge reinforcement</div>
+        </div>
+        <div class="field">
+          <label>Perimeter rib depth d_P</label>
+          <input type="number" id="hrP" value="50" min="10" max="500" step="5" oninput="autoCalc()">
+          <div class="field-unit">mm excl. skin</div>
         </div>
       </div>
     </div>
@@ -293,71 +390,110 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     <div class="input-panel" style="margin-top:2px">
       <div class="input-panel-header">
         <div class="input-panel-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-        <div class="input-panel-title">Fixings &amp; Anchors</div>
+        <div class="input-panel-title">Fixings &amp; Accessories</div>
         <div class="input-panel-sub">supplier ETA values</div>
       </div>
-      <div class="input-grid cols-3">
+      <div class="igrid c2">
         <div class="field">
-          <label>No. of Fixings</label>
-          <input type="number" id="nf" value="4" min="2" max="50" step="1" oninput="calc()">
+          <label>No. of fixings n_f</label>
+          <input type="number" id="nf" value="4" min="2" max="50" step="1" oninput="autoCalc()">
           <div class="field-unit">per panel</div>
         </div>
         <div class="field">
-          <label>Shear Capacity</label>
-          <input type="number" id="ancS" value="5.0" min="0.5" max="100" step="0.5" oninput="calc()">
-          <div class="field-unit">kN per anchor</div>
+          <label>Fixing type</label>
+          <select id="fixingType" onchange="updateFixing()">
+            <option value="face">Face Fixing (direct)</option>
+            <option value="bracket">Structural Bracket</option>
+            <option value="hidden">Hidden Anchor</option>
+            <option value="adjustable">Adjustable Fixing</option>
+            <option value="seismic">Seismic Bracket</option>
+          </select>
+          <div class="field-unit">accessory type</div>
+        </div>
+        <div class="field" id="ancDiaField">
+          <label>Anchor diameter ø</label>
+          <input type="number" id="ancDia" value="12" min="6" max="30" step="2" oninput="autoCalc()">
+          <div class="field-unit">mm</div>
+        </div>
+        <div class="field" id="bktThkField" style="display:none">
+          <label>Bracket plate thickness</label>
+          <input type="number" id="bktThk" value="8" min="3" max="25" step="1" oninput="autoCalc()">
+          <div class="field-unit">mm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced -->
+    <div class="input-panel" style="margin-top:2px">
+      <div class="input-panel-header">
+        <div class="input-panel-icon"><i class="fa-solid fa-sliders"></i></div>
+        <div class="input-panel-title">Advanced Options</div>
+      </div>
+      <div class="igrid c3">
+        <div class="field">
+          <label>Thermal expansion</label>
+          <select id="thermal" onchange="autoCalc()">
+            <option value="no">Not included</option>
+            <option value="yes">Include (±50°C UAE)</option>
+          </select>
+          <div class="field-unit">α = 12 × 10⁻⁶ /°C</div>
         </div>
         <div class="field">
-          <label>Tension Capacity</label>
-          <input type="number" id="ancT" value="4.0" min="0.5" max="100" step="0.5" oninput="calc()">
-          <div class="field-unit">kN per anchor</div>
+          <label>Seismic zone</label>
+          <select id="seismic" onchange="autoCalc()">
+            <option value="none">None</option>
+            <option value="low">Low — Zone 1 (0.08g)</option>
+            <option value="med">Medium — Zone 2 (0.15g)</option>
+          </select>
+          <div class="field-unit">Iran proximity</div>
+        </div>
+        <div class="field">
+          <label>Section analysis</label>
+          <select id="analysis" onchange="autoCalc()">
+            <option value="skin">Skin-strip (conservative)</option>
+            <option value="composite">Full composite T-section</option>
+          </select>
+          <div class="field-unit">bending stiffness method</div>
         </div>
       </div>
     </div>
 
-    <!-- Constants notice -->
-    <div class="constants-strip" style="margin-top:2px">
-      <div class="constants-tag">Fixed Constants</div>
+    <!-- Constants strip -->
+    <div class="constants-strip">
+      <div class="constants-tag">Fixed</div>
       <div class="constants-text">
-        GRC density 2000 kg/m³ &nbsp;·&nbsp; Aged MOR 8 MPa (char.) &nbsp;·&nbsp; γ_m = 2.0 &nbsp;·&nbsp; E = 10 GPa<br>
-        γ_G = 1.35 &nbsp;·&nbsp; γ_Q = 1.5 &nbsp;·&nbsp; c_p = 1.0 &nbsp;·&nbsp; Deflection limit L/250
+        ρ = 2000 kg/m³ &nbsp;·&nbsp; MOR = 8 MPa &nbsp;·&nbsp; γ_m = 2.0 &nbsp;·&nbsp; E = 10 GPa &nbsp;·&nbsp;
+        γ_G = 1.35 &nbsp;·&nbsp; γ_Q = 1.5 &nbsp;·&nbsp; c_p = 1.0 &nbsp;·&nbsp; L/250 &nbsp;·&nbsp; ρ_air = 1.20 kg/m³
       </div>
     </div>
 
-    <button class="check-btn" onclick="calc()">
-      <i class="fa-solid fa-circle-check"></i> CHECK STRUCTURAL COMPLIANCE
-    </button>
+    <div class="btn-row no-print">
+      <button class="check-btn" onclick="check()"><i class="fa-solid fa-circle-check"></i> CHECK COMPLIANCE</button>
+      <button class="export-btn" onclick="exportPDF()"><i class="fa-solid fa-file-arrow-down"></i> PDF</button>
+    </div>
 
-    <!-- Detailed checks (below inputs on mobile, shown after calc) -->
+    <!-- Detail checks (shown below inputs on mobile after calc) -->
     <div id="detailsBlock" style="display:none;margin-top:24px">
-
-      <!-- GRCA Geometry -->
-      <div class="sec-label" style="padding-left:0">GRCA / UAE DBC Geometry</div>
+      <div class="sec-label">Load Cases</div>
+      <div class="checks-panel" id="loadPanel"></div>
+      <div class="sec-label" style="margin-top:16px">GRCA / UAE DBC Geometry</div>
       <div class="checks-panel" id="grcaPanel"></div>
-
-      <!-- Structural -->
-      <div class="sec-label" style="padding-left:0;margin-top:16px">Structural — EN 1990 / EN 1991-1-4</div>
+      <div class="sec-label" style="margin-top:16px">Structural — EN 1990 / EN 1991-1-4</div>
       <div class="checks-panel" id="structPanel"></div>
-
-      <!-- Remediation -->
       <div id="recoBlock" style="margin-top:16px"></div>
-
-      <!-- Summary -->
-      <div class="sec-label" style="padding-left:0;margin-top:16px">Summary</div>
+      <div class="sec-label" style="margin-top:16px">Summary</div>
       <div class="summary-panel" id="summaryPanel"></div>
-
     </div>
 
   </div>
 
-  <!-- RIGHT: RESULTS (sticky sidebar) -->
+  <!-- RIGHT: STICKY SIDEBAR -->
   <div class="result-panel">
 
-    <!-- Verdict -->
     <div class="verdict-card idle" id="verdictCard">
       <div class="verdict-icon" id="verdictIcon">◎</div>
       <div class="verdict-title" id="verdictTitle">Awaiting Input</div>
-      <div class="verdict-sub" id="verdictSub">Adjust values and hit Check — or just edit any field above for live results.</div>
+      <div class="verdict-sub" id="verdictSub">Edit any field above for live results, or hit Check Compliance.</div>
     </div>
 
     <!-- Key metrics -->
@@ -373,38 +509,60 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
         <div class="metric-unit">kg/m²</div>
       </div>
       <div class="metric-cell">
-        <div class="metric-label">Rib Spacing</div>
-        <div class="metric-value" id="mSpan">—</div>
-        <div class="metric-unit">m between ribs</div>
+        <div class="metric-label">Moment of Inertia I</div>
+        <div class="metric-value" id="mI">—</div>
+        <div class="metric-unit">× 10⁶ mm⁴</div>
       </div>
       <div class="metric-cell">
-        <div class="metric-label">Panel Area</div>
-        <div class="metric-value" id="mArea">—</div>
-        <div class="metric-unit">m²</div>
+        <div class="metric-label">Critical Span</div>
+        <div class="metric-value" id="mSpan">—</div>
+        <div class="metric-unit">metres</div>
       </div>
     </div>
 
-    <!-- GRCA Checks (sidebar, desktop) -->
-    <div class="checks-panel" id="sideGrcaPanel">
-      <div class="checks-panel-header"><div class="checks-panel-title">GRCA / UAE DBC</div></div>
-      <div id="sideGrcaItems">
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Skin thickness ≥ 12 mm</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Rib thickness ≥ 25 mm</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Rib slenderness ≤ 5:1</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Panel area ≤ 15 m²</div></div></div>
+    <!-- Weight breakdown -->
+    <div class="wbreak">
+      <div class="wcell" style="border-left:2px solid var(--accent)">
+        <div class="wcell-label">Skin</div>
+        <div class="wcell-val" id="wSkin">—</div>
+        <div class="wcell-unit">kg</div>
+      </div>
+      <div class="wcell" style="border-left:2px solid var(--blue)">
+        <div class="wcell-label">H-Ribs</div>
+        <div class="wcell-val" id="wRibH">—</div>
+        <div class="wcell-unit">kg</div>
+      </div>
+      <div class="wcell" style="border-left:2px solid var(--pass)">
+        <div class="wcell-label">V-Ribs</div>
+        <div class="wcell-val" id="wRibV">—</div>
+        <div class="wcell-unit">kg</div>
+      </div>
+      <div class="wcell" style="border-left:2px solid var(--amber)">
+        <div class="wcell-label">Perimeter</div>
+        <div class="wcell-val" id="wPerim">—</div>
+        <div class="wcell-unit">kg</div>
       </div>
     </div>
 
-    <!-- Structural Checks (sidebar, desktop) -->
-    <div class="checks-panel" id="sideSructPanel">
-      <div class="checks-panel-header"><div class="checks-panel-title">Structural Checks</div></div>
-      <div id="sideStructItems">
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Skin bending ULS</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Deflection SLS (L/250)</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Anchor shear (gravity)</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Anchor tension (wind)</div></div></div>
-        <div class="check-item idle"><div class="check-dot idle">·</div><div class="check-body"><div class="check-name">Anchor interaction</div></div></div>
+    <!-- Assumptions -->
+    <div class="assume-panel">
+      <div class="checks-panel-header"><div class="checks-panel-title">Calculation Assumptions</div></div>
+      <div class="assume-grid" id="assumeGrid">
+        <div class="asm-row"><span class="asm-k">v_b</span><span class="asm-v">—</span></div>
+        <div class="asm-row"><span class="asm-k">c_e(z)</span><span class="asm-v">—</span></div>
+        <div class="asm-row"><span class="asm-k">q_p</span><span class="asm-v">—</span></div>
+        <div class="asm-row"><span class="asm-k">f_Rd</span><span class="asm-v">—</span></div>
       </div>
+    </div>
+
+    <!-- Quick checks (sidebar) -->
+    <div class="checks-panel">
+      <div class="checks-panel-header"><div class="checks-panel-title">GRCA Geometry</div></div>
+      <div id="sideGrca"></div>
+    </div>
+    <div class="checks-panel">
+      <div class="checks-panel-header"><div class="checks-panel-title">Structural</div></div>
+      <div id="sideStruct"></div>
     </div>
 
     <button class="btn-reset" onclick="resetAll()"><i class="fa-solid fa-rotate-left"></i> &nbsp;Reset to Defaults</button>
@@ -415,304 +573,384 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <!-- FOOTER -->
 <div style="max-width:1200px;margin:0 auto;padding:0 40px 40px">
   <div style="height:1px;background:var(--border);margin-bottom:16px"></div>
-  <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:2;letter-spacing:0.5px">
-    Standards: GRCA Specification (2006 rev.) · GRCA Designers Guide · BS EN 1169:1999 · EN 1990:2002+A1 · EN 1991-1-4:2005 · UAE DBC 2023 · Abu Dhabi UBBL 2022 · ASTM C1228/C1229<br>
-    Simplified unit-width skin-strip analysis. Full design requires composite section analysis, thermal, seismic, and site-specific wind study. Not a substitute for a licensed structural engineer.
+  <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:2;letter-spacing:0.4px">
+    GRCA Specification (2006 rev.) · GRCA Designers Guide · BS EN 1169:1999 · EN 1990:2002+A1 · EN 1991-1-4:2005 · UAE DBC 2023 · Abu Dhabi UBBL 2022<br>
+    Composite T-section analysis with parallel-axis theorem. Full design requires site-specific wind study, FEA for complex geometry, and sign-off by a licensed structural engineer.
+  </div>
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(0,229,160,0.12);display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Developed by</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;letter-spacing:-0.5px;color:var(--text);line-height:1">Kareem Elzeki</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;margin-top:4px">GRC · GFRC Specialist</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Tool version</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text)">v2.0 — 2026</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px">UAE Standards Compliant</div>
+    </div>
   </div>
 </div>
 
 <script>
-// ── Constants ──
+/* ── CONSTANTS (SI: Pa, m, kg, N) ── */
 var C = {
   rho:     2000,
-  fcrk:    8.0,
+  MOR_k:   8e6,
   gm:      2.0,
-  Egrc:    10e9,
+  E:       10e9,
   gG:      1.35,
-  gQ:      1.5,
+  gQ:      1.50,
   cp:      1.0,
+  rhoAir:  1.20,
+  alpha:   12e-6,
+  dT:      50,
   deflLim: 250,
-  airRho:  1.20
+  g:       9.81
 };
-var ED = { dxb:{vb:38,ce:2.0}, auh:{vb:35,ce:2.0}, rak:{vb:40,ce:2.1} };
-var vb = 38, ce = 2.0;
 
-function g(id){ var e=document.getElementById(id); if(!e) return 0; var v=parseFloat(e.value); return isNaN(v)?0:v; }
-function f(n,d){ if(!isFinite(n)||isNaN(n)) return '—'; return n.toFixed(d); }
+var ED = {
+  dxb: { vb: 38 },
+  auh: { vb: 35 },
+  rak: { vb: 40 }
+};
+
+var SEISMIC = { none: 0, low: 0.08, med: 0.15 };
+
+var FIXING = {
+  face:       { name: 'Face Fixing',        Vrd: 5.0, Nrd: 4.0 },
+  bracket:    { name: 'Structural Bracket', Vrd: 8.0, Nrd: 6.5 },
+  hidden:     { name: 'Hidden Anchor',      Vrd: 4.5, Nrd: 3.5 },
+  adjustable: { name: 'Adjustable Fixing',  Vrd: 6.0, Nrd: 5.0 },
+  seismic:    { name: 'Seismic Bracket',    Vrd:10.0, Nrd: 8.0 }
+};
+
+var currentVb = 38;
+var panelType = 'standard';
+
+function g(id){ var e=document.getElementById(id); if(!e) return 0; var n=parseFloat(e.value); return isNaN(n)?0:n; }
+function f(n,d){ if(n===null||n===undefined||!isFinite(n)) return '—'; return n.toFixed(d); }
+function pct(r){ return f(r*100,0)+'%'; }
 function set(id,t){ var e=document.getElementById(id); if(e) e.textContent=String(t); }
 function html(id,h){ var e=document.getElementById(id); if(e) e.innerHTML=h; }
 
+function ce(z){
+  z=Math.max(2,Math.min(300,z));
+  if(z<=5)  return 1.6;
+  if(z<=10) return 2.0;
+  if(z<=20) return 2.4;
+  if(z<=50) return 2.9;
+  return 3.4;
+}
+
+function selectType(type, btn){
+  panelType = type;
+  document.querySelectorAll('.type-tab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('cornerPanel').style.display = type==='corner' ? '' : 'none';
+  autoCalc();
+}
+
 function onEmirate(){
   var em = ED[document.getElementById('emirate').value] || ED.dxb;
-  vb = em.vb; ce = em.ce;
-  set('vbDisplay', em.vb);
-  calc();
+  currentVb = em.vb;
+  set('vbDisp', em.vb);
+  autoCalc();
 }
 
-function calc(){
+function updateFixing(){
+  var ft = document.getElementById('fixingType').value;
+  var isBkt = (ft==='bracket'||ft==='seismic');
+  document.getElementById('ancDiaField').style.display = isBkt ? 'none' : '';
+  document.getElementById('bktThkField').style.display = isBkt ? '' : 'none';
+  autoCalc();
+}
+
+function autoCalc(){
+  if(document.getElementById('detailsBlock').style.display==='block') check();
+}
+
+/* ── COMPOSITE SECTION ── */
+function compositeI(ts,tr,dH,dV,dP,nrH,nrV,hasPerim,W,H){
+  var eps=1e-9;
+  var As=W*ts, zs=ts/2, Is=(W*ts*ts*ts)/12;
+  var lH=Math.max(0,W-nrV*tr);
+  var ArH=nrH*W*tr, zrH=ts+dH/2, IrH=(nrH*(W*tr*tr*tr))/12;
+  var lV=Math.max(0,H-nrH*tr);
+  var ArV=nrV*H*tr, zrV=ts+dV/2, IrV=(nrV*(H*tr*tr*tr))/12;
+  var ApH=0,ApV=0,IpH=0,IpV=0,zp=ts+dP/2;
+  if(hasPerim){ ApH=2*W*tr; IpH=2*(W*tr*tr*tr)/12; ApV=2*H*tr; IpV=2*(H*tr*tr*tr)/12; }
+  var Ap=ApH+ApV, Ip=IpH+IpV;
+  var Atot=As+ArH+ArV+Ap;
+  if(Atot<eps) return {I_m4:eps,I_mm4:eps,yNA:ts/2,yOuter:ts/2,yInner:ts/2,A:eps};
+  var yNA=(As*zs+ArH*zrH+ArV*zrV+Ap*zp)/Atot;
+  var I_m4=Is+As*(zs-yNA)*(zs-yNA)
+          +IrH+ArH*(zrH-yNA)*(zrH-yNA)
+          +IrV+ArV*(zrV-yNA)*(zrV-yNA)
+          +Ip +Ap *(zp -yNA)*(zp -yNA);
+  var dMax=Math.max(dH,dV,hasPerim?dP:0);
+  return { I_m4:I_m4, I_mm4:I_m4*1e12, yNA:yNA, yOuter:yNA, yInner:ts+dMax-yNA, A:Atot };
+}
+
+function skinI(ts,W){ return (W*ts*ts*ts)/12; }
+
+/* ── MAIN CHECK ── */
+function check(){
   try {
-    var W   = Math.max(0.1, Math.min(10,  g('W')));
-    var H   = Math.max(0.1, Math.min(20,  g('H')));
-    var ts  = Math.max(1,   Math.min(100, g('ts'))) / 1000;
-    var nr  = Math.max(0,   Math.min(20,  Math.round(g('nr'))));
-    var hr  = Math.max(10,  Math.min(500, g('hr'))) / 1000;
-    var tr  = Math.max(10,  Math.min(150, g('tr'))) / 1000;
-    var nf  = Math.max(2,   Math.min(50,  Math.round(g('nf'))));
-    var ancS = Math.max(0.5, Math.min(100, g('ancS')));
-    var ancT = Math.max(0.5, Math.min(100, g('ancT')));
-
-    var fRd   = C.fcrk / C.gm;
-    var qp    = ce * 0.5 * C.airRho * vb * vb / 1000;
-    var qw    = isFinite(qp) ? qp * C.cp : 0;
-    var Ap    = W * H;
-    var ribSp = nr > 0 ? W / (nr + 1) : W;
-    var Vs    = Ap * ts;
-    var Vr    = nr * tr * hr * H;
-    var Wp    = (Vs + Vr) * C.rho;
-    var wm2   = Ap > 0 ? Wp / Ap : 0;
-
-    // Bending ULS
-    var qULS  = C.gQ * qw;
-    var MEd   = qULS * ribSp * ribSp / 8;
-    var Z     = ts * ts / 6;
-    var sigEd = Z > 0 ? MEd / Z / 1000 : 0;
-    var ubend = fRd > 0 ? sigEd / fRd : 999;
-    if (!isFinite(ubend) || ubend < 0) ubend = 999;
-
-    // Deflection SLS
-    var I     = ts * ts * ts / 12;
-    var EI    = C.Egrc * I;
-    var qSLS  = qw * 1000;
-    var delta = EI > 0 ? 5 * qSLS * Math.pow(ribSp, 4) / (384 * EI) : 999;
-    var dAllow= ribSp / C.deflLim;
-    var udefl = dAllow > 0 ? delta / dAllow : 999;
-    if (!isFinite(udefl) || udefl < 0) udefl = 999;
-
-    // Fixing forces
-    var Wd   = Wp * 9.81 / 1000 * C.gG;
-    var Fw   = C.gQ * qw * Ap;
-    var Ng   = nf > 0 ? Wd / nf : 999;
-    var Nw   = nf > 0 ? Fw / nf : 999;
-    var inter= (ancS > 0 && ancT > 0) ? Math.pow(Ng / ancS, 2) + Math.pow(Nw / ancT, 2) : 999;
-    if (!isFinite(inter) || inter < 0) inter = 999;
-
-    // ── GRCA Checks ──
-    var grca = [
-      {
-        name: 'Skin thickness ≥ 12 mm',
-        ok: ts >= 0.012,
-        val: 'Provided: ' + f(ts*1000,0) + ' mm · Required: ≥ 12 mm',
-        fix: ts < 0.012 ? 'Increase skin to minimum 12 mm.' : null
-      },
-      {
-        name: 'Rib thickness ≥ 25 mm',
-        ok: tr >= 0.025,
-        val: 'Provided: ' + f(tr*1000,0) + ' mm · Required: ≥ 25 mm',
-        fix: tr < 0.025 ? 'Increase rib thickness to 25 mm minimum.' : null
-      },
-      {
-        name: 'Rib slenderness h_r/t_r ≤ 5:1',
-        ok: tr > 0 && hr/tr <= 5,
-        val: 'Ratio: ' + f(tr>0?hr/tr:0,2) + ':1 · Limit: 5:1',
-        fix: tr > 0 && hr/tr > 5 ? 'Reduce rib depth to ≤ '+f(tr*5*1000,0)+' mm, or increase rib thickness to ≥ '+f(hr/5*1000,0)+' mm.' : null
-      },
-      {
-        name: 'Panel area ≤ 15 m²',
-        ok: Ap <= 15,
-        val: 'Area: ' + f(Ap,2) + ' m² · Limit: 15 m²',
-        warn: Ap > 12 && Ap <= 15 ? 'Area approaching 15 m² limit — review handling and craneage.' : null,
-        fix: Ap > 15 ? 'Reduce panel width or height — area must be below 15 m².' : null
-      }
-    ];
-
-    // ── Structural Checks ──
-    var struct = [
-      {
-        name: 'Skin bending — ULS wind',
-        ok: ubend <= 1.0,
-        marginal: ubend > 0.9 && ubend <= 1.0,
-        util: f(ubend*100,0) + '%',
-        utilOk: ubend <= 1.0,
-        val: 'σ_Ed = '+f(sigEd,2)+' MPa · f_Rd = '+f(fRd,2)+' MPa · U = '+f(ubend*100,0)+'%',
-        fix: ubend > 1.0 ? bendFix(ubend, ts, ribSp, nr, W, qULS, fRd) : null,
-        warn: ubend > 0.9 && ubend <= 1.0 ? 'Utilisation >90% — consider one extra rib for margin.' : null
-      },
-      {
-        name: 'Deflection — SLS wind (L/250)',
-        ok: udefl <= 1.0,
-        marginal: udefl > 0.9 && udefl <= 1.0,
-        util: f(udefl*100,0) + '%',
-        utilOk: udefl <= 1.0,
-        val: 'δ = '+f(delta*1000,2)+' mm · Limit = '+f(dAllow*1000,2)+' mm · U = '+f(udefl*100,0)+'%',
-        fix: udefl > 1.0 ? deflFix(udefl, ribSp, nr, W, ts) : null,
-        warn: udefl > 0.9 && udefl <= 1.0 ? 'Nearing deflection limit — review façade joint tolerances.' : null
-      },
-      {
-        name: 'Anchor shear — gravity ULS',
-        ok: Ng <= ancS,
-        util: f(ancS>0?Ng/ancS*100:0,0) + '%',
-        utilOk: Ng <= ancS,
-        val: 'Demand: '+f(Ng,2)+' kN · Capacity: '+f(ancS,2)+' kN/fixing',
-        fix: Ng > ancS ? 'Add '+(Math.ceil(Wd/ancS)-nf)+' more fixing(s) (total '+Math.ceil(Wd/ancS)+'), or use anchors ≥ '+f(Ng,1)+' kN shear.' : null
-      },
-      {
-        name: 'Anchor tension — wind ULS',
-        ok: Nw <= ancT,
-        util: f(ancT>0?Nw/ancT*100:0,0) + '%',
-        utilOk: Nw <= ancT,
-        val: 'Demand: '+f(Nw,2)+' kN · Capacity: '+f(ancT,2)+' kN/fixing',
-        fix: Nw > ancT ? 'Add more fixings or use anchors ≥ '+f(Nw,1)+' kN tension. Min fixings: '+Math.ceil(Fw/ancT)+'.' : null
-      },
-      {
-        name: 'Anchor interaction (V²+N²)',
-        ok: inter <= 1.0,
-        util: f(inter*100,0) + '%',
-        utilOk: inter <= 1.0,
-        val: '('+f(Ng,2)+'/'+f(ancS,2)+')² + ('+f(Nw,2)+'/'+f(ancT,2)+')² = '+f(inter,3)+' · Limit 1.0',
-        fix: inter > 1.0 ? 'Increase fixings to '+Math.ceil(nf*Math.sqrt(inter))+' or upgrade anchor capacity.' : null
-      }
-    ];
-
-    var allGrca   = grca.every(function(c){ return c.ok; });
-    var allStruct = struct.every(function(c){ return c.ok; });
-    var allPass   = allGrca && allStruct;
-
-    // ── Metrics ──
-    set('mWeight', f(Wp,0));
-    set('mWm2',    f(wm2,0));
-    set('mSpan',   f(ribSp,3));
-    set('mArea',   f(Ap,2));
-
-    // ── Verdict ──
-    var vc = document.getElementById('verdictCard');
-    if (vc) {
-      vc.className = 'verdict-card ' + (allPass ? 'pass' : 'fail');
+    var W   = Math.max(0.1,Math.min(10, g('W')));
+    var H   = Math.max(0.1,Math.min(20, g('H')));
+    var ts  = Math.max(0.005, g('ts')/1000);
+    var tr  = Math.max(0.005, g('tr')/1000);
+    var nrH = Math.max(0,Math.round(g('nrH')));
+    var dH  = Math.max(0.005, g('hrH')/1000);
+    var nrV = Math.max(0,Math.round(g('nrV')));
+    var dV  = Math.max(0.005, g('hrV')/1000);
+    var hasPerim = document.getElementById('perimRib').value==='yes';
+    var dP  = Math.max(0.005, g('hrP')/1000);
+    var nf  = Math.max(2,Math.round(g('nf')));
+    var ftKey = document.getElementById('fixingType').value;
+    var ft  = FIXING[ftKey];
+    var isBkt = (ftKey==='bracket'||ftKey==='seismic');
+    var Vrd, Nrd, fixLabel;
+    if(isBkt){
+      var bkt=Math.max(3,g('bktThk'));
+      Vrd=ft.Vrd*(bkt/8); Nrd=ft.Nrd*(bkt/8); fixLabel=bkt+' mm '+ft.name;
+    } else {
+      var dia=Math.max(6,g('ancDia'));
+      Vrd=ft.Vrd*(dia/12)*(dia/12); Nrd=ft.Nrd*(dia/12)*(dia/12); fixLabel='ø'+dia+' mm · '+ft.name;
     }
-    set('verdictIcon',  allPass ? '✓' : '✗');
-    set('verdictTitle', allPass ? 'Panel Complies' : 'Does Not Comply');
-    var failN = grca.concat(struct).filter(function(c){ return !c.ok; }).length;
-    set('verdictSub', allPass
-      ? 'All GRCA minimums and UAE structural checks satisfied. Panel is fit for purpose as designed.'
-      : failN + ' check' + (failN>1?'s':'') + ' failed. See remediation items below.');
+    var useThermal = document.getElementById('thermal').value==='yes';
+    var seismicKey = document.getElementById('seismic').value;
+    var ag = SEISMIC[seismicKey];
+    var useComposite = document.getElementById('analysis').value==='composite';
+    var z  = Math.max(1,g('zH'));
+    var Ce = ce(z);
+    var fRd = C.MOR_k/C.gm;
 
-    // ── Sidebar quick checks ──
-    html('sideGrcaItems',  grca.map(renderSideCheck).join(''));
-    html('sideStructItems', struct.map(renderSideCheck).join(''));
+    var Ap = panelType==='corner' ? 2*Math.max(0.1,g('legW'))*H : W*H;
 
-    // ── Detail panels (mobile / below inputs) ──
-    html('grcaPanel',   grca.map(renderFullCheck).join(''));
-    html('structPanel', struct.map(renderFullCheck).join(''));
+    var spanH = W/(nrV+1), spanV = H/(nrH+1);
+    var L_crit = Math.max(spanH,spanV);
 
-    // ── Remediation ──
-    var fixes = grca.concat(struct).filter(function(c){ return !c.ok && c.fix; }).map(function(c){ return c.fix; });
-    var rb = document.getElementById('recoBlock');
-    if (rb) {
-      if (fixes.length) {
-        var rh = '<div class="sec-label" style="padding-left:0;margin-top:0">Remediation Required</div>';
-        rh += '<div class="reco-panel">';
-        fixes.forEach(function(f2, i){
-          rh += '<div class="reco-item"><div class="reco-num">'+(i+1)+'.</div><div>'+f2+'</div></div>';
-        });
-        rh += '</div>';
-        rb.innerHTML = rh;
-      } else {
-        rb.innerHTML = '<div class="reco-panel"><div class="reco-item"><div class="reco-num">✓</div><div>No remediation required. Proceed with fabrication drawings.</div></div></div>';
-      }
-    }
+    var qb = 0.5*C.rhoAir*currentVb*currentVb;
+    var qp = Ce*qb;
+    var we_SLS = C.cp*qp, we_ULS = C.gQ*we_SLS;
 
-    // ── Summary ──
-    var all = grca.concat(struct);
-    html('summaryPanel', all.map(function(c){
-      var warn = c.marginal || c.warn;
-      var cls = !c.ok ? 'sb-fail' : warn ? 'sb-warn' : 'sb-pass';
-      var lbl = !c.ok ? 'FAIL'   : warn ? 'MARGINAL' : 'PASS';
-      return '<div class="summary-row"><span class="summary-name">'+c.name+'</span><span class="summary-badge '+cls+'">'+lbl+'</span></div>';
+    var comp = compositeI(ts,tr,dH,dV,dP,nrH,nrV,hasPerim,W,H);
+    var I_m4 = useComposite ? comp.I_m4 : skinI(ts,W);
+    var yEx  = useComposite ? comp.yOuter : ts/2;
+    var EI   = C.E*I_m4;
+
+    var w_ULS = we_ULS*W, w_SLS = we_SLS*W;
+    var M_Ed = w_ULS*L_crit*L_crit/8;
+    var sigma_wind = EI>0 ? (M_Ed*yEx)/I_m4 : Infinity;
+    var u_bend = sigma_wind/fRd;
+
+    var delta_m = EI>0 ? (5*w_SLS*Math.pow(L_crit,4))/(384*EI) : Infinity;
+    var delta_allow = L_crit/C.deflLim;
+    var u_defl = delta_m/delta_allow;
+
+    var sigma_T = C.E*C.alpha*C.dT;
+    var u_thermal = sigma_T/fRd;
+
+    /* Weight */
+    var V_skin  = Ap*ts;
+    var V_ribH  = nrH*Math.max(0,W-nrV*tr)*tr*dH;
+    var V_ribV  = nrV*Math.max(0,H-nrH*tr)*tr*dV;
+    var V_perim = hasPerim ? (2*(W+H)-4*tr)*tr*dP : 0;
+    var Wp = (V_skin+V_ribH+V_ribV+V_perim)*C.rho;
+    var wm2 = Ap>0 ? Wp/Ap : 0;
+
+    /* Fixings */
+    var G_kN = Wp*C.g/1000;
+    var Fw_kN = we_ULS*Ap/1000;
+    var F_seis = ag*Wp*C.g/1000;
+    var V_Ed = (C.gG*G_kN+C.gQ*F_seis)/nf;
+    var N_Ed = (C.gQ*Fw_kN)/nf;
+    var interact = (Vrd>0&&Nrd>0) ? Math.pow(V_Ed/Vrd,2)+Math.pow(N_Ed/Nrd,2) : Infinity;
+
+    /* ── Metrics ── */
+    set('mWeight', f(Wp,1));
+    set('mWm2',    f(wm2,1));
+    set('mI',      f(comp.I_mm4/1e6,2));
+    set('mSpan',   f(L_crit,3));
+    set('wSkin',   f(V_skin*C.rho,1));
+    set('wRibH',   f(V_ribH*C.rho,1));
+    set('wRibV',   f(V_ribV*C.rho,1));
+    set('wPerim',  f(V_perim*C.rho,1));
+
+    /* Assumptions */
+    var asmData=[
+      ['v_b', currentVb+' m/s'], ['c_e('+z+'m)', f(Ce,2)],
+      ['q_p', f(qp/1000,3)+' kPa'], ['w_e ULS', f(we_ULS/1000,3)+' kPa'],
+      ['L_crit', f(L_crit,3)+' m'], ['I ('+(useComposite?'comp':'skin')+')', f(comp.I_mm4/1e6,2)+' ×10⁶mm⁴'],
+      ['EI', f(EI,0)+' N·m²'], ['f_Rd', f(fRd/1e6,2)+' MPa'],
+      ['M_Ed', f(M_Ed,1)+' N·m'], ['σ_wind', f(sigma_wind/1e6,3)+' MPa'],
+      ['δ_max', f(delta_m*1000,2)+' mm'], ['δ_allow', f(delta_allow*1000,2)+' mm']
+    ];
+    html('assumeGrid', asmData.map(function(r){
+      return '<div class="asm-row"><span class="asm-k">'+r[0]+'</span><span class="asm-v">'+r[1]+'</span></div>';
     }).join(''));
 
-    // Show detail block
-    document.getElementById('detailsBlock').style.display = 'block';
+    /* ── Checks ── */
+    var loadChecks = [{
+      name:'Wind pressure q_p (peak)', ok:true,
+      val:'q_b='+f(qb/1000,3)+'kPa · c_e='+f(Ce,2)+' · q_p='+f(qp/1000,3)+'kPa · w_e,ULS='+f(we_ULS/1000,3)+'kPa'
+    }];
+    if(useThermal) loadChecks.push({
+      name:'Thermal stress — restrained (±50°C)', ok:u_thermal<=1.0,
+      marginal:u_thermal>0.7&&u_thermal<=1.0, util:pct(u_thermal),
+      val:'σ_T = E·α·ΔT = '+f(sigma_T/1e6,2)+' MPa · f_Rd = '+f(fRd/1e6,2)+' MPa',
+      fix:u_thermal>1.0?'Thermal stress exceeds design strength. Specify movement joints or adjustable fixings.':null
+    });
+    if(ag>0) loadChecks.push({
+      name:'Seismic — Zone '+(seismicKey==='low'?'1':'2')+' ('+f(ag*100,0)+'%g)',
+      ok:V_Ed<=Vrd, util:pct(V_Ed/Vrd),
+      val:'F_E='+f(F_seis,2)+' kN · V_Ed/fixing='+f(V_Ed,2)+' kN',
+      fix:V_Ed>Vrd?'Upgrade fixing type or increase n_f. Consider seismic bracket.':null
+    });
 
-  } catch(e) {
-    console.error('calc error', e);
-  }
+    var grcaChecks = [
+      { name:'Skin thickness ≥ 13 mm', ok:ts>=0.013,
+        val:'Provided t_s = '+f(ts*1000,0)+' mm',
+        fix:ts<0.013?'Increase skin to ≥ 13 mm per GRCA Spec. §4':null },
+      { name:'Rib web thickness ≥ 25 mm', ok:tr>=0.025,
+        val:'Provided t_r = '+f(tr*1000,0)+' mm',
+        fix:tr<0.025?'Increase rib web to ≥ 25 mm per GRCA §4':null },
+      { name:'H-rib slenderness d_H/t_r ≤ 5', ok:nrH===0||dH/tr<=5,
+        val:nrH===0?'No horizontal ribs':'d_H/t_r = '+f(dH/tr,2),
+        fix:nrH>0&&dH/tr>5?'Reduce d_H to ≤ '+f(tr*5*1000,0)+' mm or increase t_r.':null },
+      { name:'V-rib slenderness d_V/t_r ≤ 5', ok:nrV===0||dV/tr<=5,
+        val:nrV===0?'No vertical ribs':'d_V/t_r = '+f(dV/tr,2),
+        fix:nrV>0&&dV/tr>5?'Reduce d_V or increase t_r.':null },
+      { name:'Panel area ≤ 15 m²', ok:Ap<=15,
+        val:'A_p = '+f(Ap,2)+' m²',
+        warn:Ap>12&&Ap<=15?'Approaching 15 m² limit — review craneage and handling.':null,
+        fix:Ap>15?'Reduce panel dimensions. GRCA max 15 m² for façade panels.':null },
+      { name:'Weight/m² ≤ 90 kg/m²', ok:wm2<=90,
+        marginal:wm2>75&&wm2<=90,
+        val:'w = '+f(wm2,1)+' kg/m²',
+        fix:wm2>90?'Reduce rib density or skin thickness.':null }
+    ];
+
+    var structChecks = [
+      { name:'Bending stress — ULS wind', ok:u_bend<=1.0,
+        marginal:u_bend>0.85&&u_bend<=1.0, util:pct(u_bend),
+        val:'M_Ed='+f(M_Ed,1)+'N·m · σ_Ed='+f(sigma_wind/1e6,2)+'MPa · f_Rd='+f(fRd/1e6,2)+'MPa · L='+f(L_crit,3)+'m',
+        fix:u_bend>1.0?'Add intermediate ribs to reduce L_crit, increase rib depth, or switch to composite analysis.':null,
+        warn:u_bend>0.85&&u_bend<=1.0?'Utilisation >85% — add one rib for margin.':null },
+      { name:'Deflection — SLS wind (L/250)', ok:u_defl<=1.0,
+        marginal:u_defl>0.85&&u_defl<=1.0, util:pct(u_defl),
+        val:'δ='+f(delta_m*1000,2)+'mm · δ_allow='+f(delta_allow*1000,2)+'mm (L/250)',
+        fix:u_defl>1.0?'Shorten critical span by adding ribs, or increase section stiffness.':null,
+        warn:u_defl>0.85&&u_defl<=1.0?'Nearing deflection limit — review façade joint tolerances.':null },
+      { name:'Fixing shear V_Ed — '+fixLabel, ok:V_Ed<=Vrd, util:pct(V_Ed/Vrd),
+        val:'V_Ed='+f(V_Ed,3)+'kN · V_Rd='+f(Vrd,2)+'kN/fixing',
+        fix:V_Ed>Vrd?'Increase n_f or upgrade fixing type/diameter.':null },
+      { name:'Fixing tension N_Ed — '+fixLabel, ok:N_Ed<=Nrd, util:pct(N_Ed/Nrd),
+        val:'N_Ed='+f(N_Ed,3)+'kN · N_Rd='+f(Nrd,2)+'kN/fixing',
+        fix:N_Ed>Nrd?'Increase n_f or upgrade fixing type/diameter.':null },
+      { name:'Fixing interaction (V/Vrd)²+(N/Nrd)² ≤ 1.0', ok:interact<=1.0,
+        marginal:interact>0.85&&interact<=1.0, util:pct(interact),
+        val:'Interaction = '+f(interact,3),
+        fix:interact>1.0?'Combined shear+tension exceeds capacity. Increase n_f or upgrade fixings.':null }
+    ];
+
+    var allChecks = loadChecks.concat(grcaChecks).concat(structChecks);
+    var allPass   = allChecks.every(function(c){ return c.ok; });
+    var failCount = allChecks.filter(function(c){ return !c.ok; }).length;
+
+    /* ── Verdict ── */
+    var vc = document.getElementById('verdictCard');
+    vc.className = 'verdict-card '+(allPass?'pass':'fail');
+    set('verdictIcon',  allPass?'✓':'✗');
+    set('verdictTitle', allPass?'Panel Complies':'Does Not Comply');
+    set('verdictSub',   allPass
+      ? 'All '+allChecks.length+' checks passed · '+fixLabel+' · '+f(Wp,0)+' kg · '+f(wm2,1)+' kg/m²'
+      : failCount+' check'+(failCount>1?'s':'')+' failed · '+fixLabel+' · Review remediation below.');
+
+    /* ── Render ── */
+    html('loadPanel',  loadChecks.map(renderFull).join(''));
+    html('grcaPanel',  grcaChecks.map(renderFull).join(''));
+    html('structPanel',structChecks.map(renderFull).join(''));
+    html('sideGrca',   grcaChecks.map(renderSide).join(''));
+    html('sideStruct', structChecks.map(renderSide).join(''));
+
+    /* Remediation */
+    var fixes = allChecks.filter(function(c){ return !c.ok&&c.fix; }).map(function(c){ return c.fix; });
+    var rb = document.getElementById('recoBlock');
+    if(fixes.length){
+      rb.innerHTML='<div class="sec-label" style="margin-top:0">Remediation Required</div>'
+        +'<div class="reco-panel">'+fixes.map(function(f2,i){
+          return '<div class="reco-item"><div class="reco-num">'+(i+1)+'.</div><div>'+f2+'</div></div>';
+        }).join('')+'</div>';
+    } else {
+      rb.innerHTML='<div class="reco-panel"><div class="reco-item"><div class="reco-num">✓</div><div>No remediation required. Proceed with detailed design drawings.</div></div></div>';
+    }
+
+    /* Summary */
+    html('summaryPanel', allChecks.map(function(c){
+      var w=c.marginal||(c.warn&&c.ok);
+      var cls=!c.ok?'sb-fail':w?'sb-warn':'sb-pass';
+      var lbl=!c.ok?'FAIL':w?'MARGINAL':'PASS';
+      return '<div class="sum-row"><span class="sum-name">'+c.name+'</span><span class="sum-badge '+cls+'">'+lbl+'</span></div>';
+    }).join(''));
+
+    document.getElementById('detailsBlock').style.display='block';
+
+  } catch(e){ console.error('check()',e); }
 }
 
-function renderSideCheck(c) {
-  var warn = c.marginal || (c.warn && c.ok);
-  var cls  = !c.ok ? 'fail' : warn ? 'warn' : 'ok';
-  var dCls = !c.ok ? 'fail' : warn ? 'warn' : 'ok';
-  var icon = !c.ok ? '✗'   : warn ? '!'    : '✓';
-  var util = c.util ? '<span class="check-util" style="color:'+(!c.ok?'var(--fail)':warn?'var(--warn)':'var(--pass)')+'">'+c.util+'</span>' : '';
-  return '<div class="check-item '+cls+'">'
-    + '<div class="check-dot '+dCls+'">'+icon+'</div>'
-    + '<div class="check-body"><div class="check-name">'+c.name+'</div></div>'
-    + util
-    + '</div>';
+function renderSide(c){
+  var w=c.marginal||(c.warn&&c.ok);
+  var cls=!c.ok?'fail':w?'warn':'ok';
+  var icon=!c.ok?'✗':w?'!':'✓';
+  var uCol=!c.ok?'var(--fail)':w?'var(--warn)':'var(--pass)';
+  var util=c.util?'<span class="cutil" style="color:'+uCol+'">'+c.util+'</span>':'';
+  return '<div class="chk '+cls+'"><div class="cdot '+cls+'">'+icon+'</div>'
+    +'<div class="cbody"><div class="cname">'+c.name+'</div></div>'+util+'</div>';
 }
 
-function renderFullCheck(c) {
-  var warn = c.marginal || (c.warn && c.ok);
-  var cls  = !c.ok ? 'fail' : warn ? 'warn' : 'ok';
-  var dCls = !c.ok ? 'fail' : warn ? 'warn' : 'ok';
-  var icon = !c.ok ? '✗'   : warn ? '!'    : '✓';
-  var util = c.util ? '<span class="check-util" style="color:'+(!c.ok?'var(--fail)':warn?'var(--warn)':'var(--pass)')+'">'+c.util+'</span>' : '';
-  var fixHtml  = c.fix              ? '<div class="check-fix">'+c.fix+'</div>' : '';
-  var warnHtml = c.warn && c.ok     ? '<div class="check-warn-note">'+c.warn+'</div>' : '';
-  return '<div class="check-item '+cls+'">'
-    + '<div class="check-dot '+dCls+'">'+icon+'</div>'
-    + '<div class="check-body">'
-    +   '<div class="check-name">'+c.name+'</div>'
-    +   '<div class="check-val">'+c.val+'</div>'
-    +   fixHtml + warnHtml
-    + '</div>'
-    + util
-    + '</div>';
+function renderFull(c){
+  var w=c.marginal||(c.warn&&c.ok);
+  var cls=!c.ok?'fail':w?'warn':'ok';
+  var icon=!c.ok?'✗':w?'!':'✓';
+  var uCol=!c.ok?'var(--fail)':w?'var(--warn)':'var(--pass)';
+  var util=c.util?'<span class="cutil" style="color:'+uCol+'">'+c.util+'</span>':'';
+  var fixH=c.fix?'<div class="cfix">'+c.fix+'</div>':'';
+  var warnH=c.warn&&c.ok?'<div class="cwarn">'+c.warn+'</div>':'';
+  return '<div class="chk '+cls+'"><div class="cdot '+cls+'">'+icon+'</div>'
+    +'<div class="cbody"><div class="cname">'+c.name+'</div>'
+    +'<div class="cval">'+c.val+'</div>'+fixH+warnH+'</div>'+util+'</div>';
 }
 
-function bendFix(ubend, ts, ribSp, nr, W, qULS, fRd) {
-  var maxSpan = Math.sqrt(8 * fRd * (ts*ts/6) / (qULS/1000));
-  if (!isFinite(maxSpan) || maxSpan <= 0) maxSpan = W;
-  var ribsNeeded = Math.max(0, Math.ceil(W/maxSpan) - 1);
-  var tsNeeded   = Math.sqrt(3*(qULS/1000)*ribSp*ribSp/(4*fRd));
-  if (!isFinite(tsNeeded) || tsNeeded <= 0) tsNeeded = ts;
-  var tsMm = Math.ceil(tsNeeded*1000/2)*2;
-  var msgs = [];
-  if (ribsNeeded > nr) msgs.push('<strong>Add '+(ribsNeeded-nr)+' rib(s)</strong> (total: '+ribsNeeded+' ribs, spacing: '+f(W/(ribsNeeded+1),3)+' m).');
-  msgs.push('<strong>Or increase skin to '+tsMm+' mm</strong> to satisfy bending at current rib spacing.');
-  return msgs.join(' ');
+function exportPDF(){
+  var el = document.getElementById('detailsBlock');
+  if(!el||el.style.display==='none'){ alert('Run the check first to generate a report.'); return; }
+  html2pdf().set({
+    margin:10, filename:'GRC_Panel_Analysis_CladWise.pdf',
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2},
+    jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}
+  }).from(el).save();
 }
 
-function deflFix(udefl, ribSp, nr, W, ts) {
-  var qSLS = (ce * 0.5 * C.airRho * vb * vb / 1000) * C.cp * 1000;
-  if (!isFinite(qSLS) || qSLS <= 0) qSLS = 1000;
-  var tsNeeded = Math.pow(5*qSLS*Math.pow(ribSp,3)*250*12/(384*C.Egrc), 1/3);
-  if (!isFinite(tsNeeded) || tsNeeded <= 0) tsNeeded = ts;
-  var tsMm = Math.ceil(tsNeeded*1000/2)*2;
-  var maxSpan = Math.pow(384*C.Egrc*(ts*ts*ts/12)/(1250*qSLS), 1/3);
-  if (!isFinite(maxSpan) || maxSpan <= 0) maxSpan = W;
-  var ribsNeeded = Math.max(0, Math.ceil(W/maxSpan) - 1);
-  var msgs = [];
-  if (ribsNeeded > nr) msgs.push('<strong>Add '+(ribsNeeded-nr)+' rib(s)</strong> (total: '+ribsNeeded+' ribs) to reduce span to ≤ '+f(maxSpan,3)+' m.');
-  msgs.push('<strong>Or increase skin to '+tsMm+' mm</strong> to satisfy deflection at current rib spacing.');
-  return msgs.join(' ');
-}
-
-function resetAll() {
-  document.getElementById('emirate').value = 'dxb';
-  document.getElementById('zH').value  = '10';
-  document.getElementById('W').value   = '1.2';
-  document.getElementById('H').value   = '3.0';
-  document.getElementById('ts').value  = '13';
-  document.getElementById('nr').value  = '3';
-  document.getElementById('hr').value  = '75';
-  document.getElementById('tr').value  = '25';
-  document.getElementById('nf').value  = '4';
-  document.getElementById('ancS').value= '5.0';
-  document.getElementById('ancT').value= '4.0';
+function resetAll(){
+  document.getElementById('emirate').value='dxb';
+  ['zH','W','H'].forEach(function(id,i){ document.getElementById(id).value=['10','1.2','3.0'][i]; });
+  ['ts','tr','nrH','hrH','nrV','hrV','hrP','nf','ancDia','bktThk'].forEach(function(id,i){
+    document.getElementById(id).value=['13','25','2','75','1','50','50','4','12','8'][i];
+  });
+  document.getElementById('perimRib').value='no';
+  document.getElementById('fixingType').value='face';
+  document.getElementById('thermal').value='no';
+  document.getElementById('seismic').value='none';
+  document.getElementById('analysis').value='skin';
+  updateFixing();
   onEmirate();
 }
 
-// Auto-run on load
+// Init
+updateFixing();
 onEmirate();
 </script>
 </body>
