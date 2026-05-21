@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root {
   --bg:      #0b110d;
@@ -161,9 +162,66 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
   .surface-row{grid-template-columns:1fr}
   .layer-table th:nth-child(3),.layer-row td:nth-child(3){display:none}
 }
+/* ── AUTH GATE ── */
+.gate-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px}
+.gate-overlay.open{display:flex}
+.gate-box{background:var(--bg2);border:1px solid rgba(0,229,160,0.15);width:100%;max-width:420px;animation:gateIn 0.35s cubic-bezier(0.16,1,0.3,1)}
+@keyframes gateIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.gate-head{padding:36px 36px 0;text-align:center}
+.gate-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.gate-eyebrow::before,.gate-eyebrow::after{content:'';width:20px;height:1px;background:rgba(0,229,160,0.4)}
+.gate-title{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;text-transform:uppercase;letter-spacing:1px;line-height:1}
+.gate-sub{font-size:12px;color:var(--muted);margin-top:8px}
+.gate-free-badge{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.25);padding:6px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.gate-free-badge::before{content:'✓';font-weight:900}
+.gate-body{padding:28px 36px 36px;display:flex;flex-direction:column;gap:12px}
+.gate-google{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,0.12);color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;width:100%}
+.gate-google:hover{border-color:rgba(0,229,160,0.4);background:var(--bg4)}
+.gate-divider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px}
+.gate-divider::before,.gate-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+.gate-field{display:flex;flex-direction:column;gap:5px}
+.gate-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.gate-field input{background:var(--bg3);border:1px solid rgba(255,255,255,0.07);padding:11px 13px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.gate-field input:focus{border-color:rgba(0,229,160,0.5)}
+.gate-field input::placeholder{color:var(--muted)}
+.gate-submit{background:var(--accent);color:#000;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s;letter-spacing:2px;text-transform:uppercase;width:100%}
+.gate-submit:hover{background:#00ffb3}
+.gate-submit:disabled{opacity:0.5;cursor:not-allowed}
+.gate-tabs{display:flex;gap:0;background:var(--bg3);border:1px solid rgba(255,255,255,0.06);padding:3px;margin-bottom:4px}
+.gate-tab{flex:1;padding:8px;border:none;background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s}
+.gate-tab.active{background:rgba(0,229,160,0.1);color:var(--accent);border-bottom:2px solid var(--accent)}
+.gate-err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);padding:9px 13px;font-size:12px;color:#f87171;display:none}
+.gate-err.show{display:block}
 </style>
 </head>
 <body>
+
+<!-- AUTH GATE OVERLAY -->
+<div class="gate-overlay open" id="gate-overlay">
+  <div class="gate-box">
+    <div class="gate-head">
+      <div class="gate-eyebrow">Free Tool</div>
+      <div class="gate-title">U-Value<br>Calculator</div>
+      <div class="gate-sub">Sign in to access this engineering tool.</div>
+      <div class="gate-free-badge">Always free for architects &amp; specifiers</div>
+    </div>
+    <div class="gate-body">
+      <div class="gate-err" id="gate-err"></div>
+      <button class="gate-google" onclick="gateGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+      <div class="gate-divider">or</div>
+      <div class="gate-tabs">
+        <button class="gate-tab active" id="gate-tab-login" onclick="gateTab('login')">Login</button>
+        <button class="gate-tab" id="gate-tab-register" onclick="gateTab('register')">Create Account</button>
+      </div>
+      <div class="gate-field"><label>Email</label><input type="email" id="gate-email" placeholder="you@company.com"/></div>
+      <div class="gate-field"><label>Password</label><input type="password" id="gate-password" placeholder="Password" onkeydown="if(event.key==='Enter')gateSubmit()"/></div>
+      <button class="gate-submit" id="gate-submit" onclick="gateSubmit()">Login</button>
+    </div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -850,6 +908,95 @@ function resetAll() {
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 loadPreset('gfrc');
+</script>
+
+<script>
+// ── AUTH GATE ────────────────────────────────────────────────────────────────
+const GATE_API = 'https://backend-cladwise-production.up.railway.app/api';
+const GATE_GOOGLE_CLIENT_ID = '691153756780-8f0h1v56ke3kqoahp9f3qv1n5g0b7k2s.apps.googleusercontent.com';
+let gateMode = 'login';
+
+function checkToolAuth() {
+  if (localStorage.getItem('cw_token')) {
+    document.getElementById('gate-overlay').classList.remove('open');
+  }
+}
+
+function gateTab(mode) {
+  gateMode = mode;
+  document.getElementById('gate-tab-login').classList.toggle('active', mode === 'login');
+  document.getElementById('gate-tab-register').classList.toggle('active', mode === 'register');
+  document.getElementById('gate-submit').textContent = mode === 'login' ? 'Login' : 'Create Account';
+}
+
+function gateShowErr(msg) {
+  const el = document.getElementById('gate-err');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function gateFetch(method, path, body) {
+  const headers = { 'Content-Type': 'application/json' };
+  const token = localStorage.getItem('cw_token');
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(GATE_API + path, opts);
+  let data;
+  try { data = await res.json(); } catch { data = {}; }
+  if (!res.ok) throw data;
+  return data;
+}
+
+async function gateSubmit() {
+  const btn = document.getElementById('gate-submit');
+  const email = document.getElementById('gate-email').value.trim();
+  const pw = document.getElementById('gate-password').value;
+  document.getElementById('gate-err').classList.remove('show');
+  if (!email || !pw) { gateShowErr('Please enter your email and password.'); return; }
+  btn.disabled = true;
+  btn.textContent = 'Please wait…';
+  try {
+    if (gateMode === 'login') {
+      const data = await gateFetch('POST', '/auth/login', { email, password: pw });
+      localStorage.setItem('cw_token', data.token);
+    } else {
+      await gateFetch('POST', '/auth/register', { email, password: pw, role: 'ARCHITECT', profile: { companyName: '', licenseNumber: '' } });
+      const data = await gateFetch('POST', '/auth/login', { email, password: pw });
+      localStorage.setItem('cw_token', data.token);
+    }
+    document.getElementById('gate-overlay').classList.remove('open');
+  } catch (err) {
+    gateShowErr(err.message || 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = gateMode === 'login' ? 'Login' : 'Create Account';
+  }
+}
+
+function gateGoogleSignIn() {
+  try {
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: GATE_GOOGLE_CLIENT_ID,
+      scope: 'openid email profile',
+      callback: async (resp) => {
+        if (resp.error) { gateShowErr('Google sign-in failed. Please try again.'); return; }
+        try {
+          const data = await gateFetch('POST', '/auth/google', { access_token: resp.access_token });
+          localStorage.setItem('cw_token', data.token);
+          document.getElementById('gate-overlay').classList.remove('open');
+        } catch (err) {
+          gateShowErr(err.message || 'Google sign-in failed.');
+        }
+      }
+    });
+    client.requestAccessToken({ prompt: 'consent' });
+  } catch (e) {
+    gateShowErr('Google Sign-In is not available right now.');
+  }
+}
+
+checkToolAuth();
 </script>
 </body>
 </html>
