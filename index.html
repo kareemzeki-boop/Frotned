@@ -35,6 +35,12 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
+/* Focus visible styling */
+*:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
 
@@ -3840,16 +3846,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3863,8 +3869,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <label for="rfq-message">Message (optional)</label>
+          <span id="rfq-char-counter" style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">0 / 1000</span>
+        </div>
+        <textarea id="rfq-message" maxlength="1000" placeholder="Project details, quantity estimate, timeline…" oninput="document.getElementById('rfq-char-counter').textContent = this.value.length + ' / 1000'" aria-describedby="rfq-char-counter"></textarea>
       </div>
       <label class="rfq-copy-row">
         <input type="checkbox" id="rfq-copy" checked>
@@ -6673,6 +6682,12 @@ function closeLightboxOnBg(e) {
 
 // Keyboard nav
 document.addEventListener('keydown', e => {
+  // Global Keyboard Parity for role="button"
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute('role') === 'button') {
+    e.preventDefault();
+    e.target.click();
+  }
+
   if (document.getElementById('lightbox').classList.contains('open')) {
     if (e.key === 'ArrowRight') lightboxNav(1);
     if (e.key === 'ArrowLeft') lightboxNav(-1);
@@ -10688,6 +10703,7 @@ function openRFQ(supplierIdx, materialHint) {
   document.getElementById('rfq-submit-btn').disabled = false;
   document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
   document.getElementById('rfq-message').value = '';
+  document.getElementById('rfq-char-counter').textContent = '0 / 1000';
   document.getElementById('rfq-project').value = '';
 
   // Pre-fill user info if logged in
