@@ -3829,7 +3829,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3840,16 +3840,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3863,8 +3863,9 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <label for="rfq-message">Message (optional)</label>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…" maxlength="1000" aria-describedby="rfq-char-counter"></textarea>
+        <div id="rfq-char-counter" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:right;margin-top:4px">0 / 1000</div>
       </div>
       <label class="rfq-copy-row">
         <input type="checkbox" id="rfq-copy" checked>
@@ -3895,7 +3896,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -4005,7 +4006,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">FAÇADE SPECIFICATION PLATFORM</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="sub-modal-title">CladWise UAE</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')">For Architects</button>
@@ -4660,7 +4661,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -4669,7 +4670,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -7074,7 +7075,7 @@ function supGridCardHTML(s, blurred, dimLocked) {
           ★ Claim This Profile
           <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="rfq-trigger-btn" onmouseenter="event.stopPropagation();openRFQ(${idx})" onclick="event.stopPropagation();openRFQ(${idx})">Request Quote</button>
+        <button class="rfq-trigger-btn" onclick="event.stopPropagation();openRFQ(${idx})">Request Quote</button>
       </div>
     </div>
 
@@ -7973,7 +7974,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">List Your Business</div>
         <div class="sap-subtitle">Get found by architects, specifiers & developers across the UAE</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()">
+      <button class="sap-close" onclick="closeSupApply()" aria-label="Close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
       </button>
     </div>
@@ -9767,6 +9768,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   max-width: 560px;
 }
 .exp-close {
+  font: inherit;
   width: 44px; height: 44px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
@@ -9930,6 +9932,9 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
   color: rgba(255,255,255,0.4);
 }
 .exp-lb-close {
+  background: none;
+  border: none;
+  padding: 0;
   position: absolute;
   top: 20px; right: 24px;
   font-size: 28px;
@@ -10170,7 +10175,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
         <div class="exp-title" id="exp-title"></div>
         <div class="exp-intro" id="exp-intro"></div>
       </div>
-      <div class="exp-close" onclick="closeExplorer()">✕</div>
+      <button type="button" class="exp-close" onclick="closeExplorer()" aria-label="Close">✕</button>
     </div>
     <div class="exp-hero" id="exp-hero">
       <img id="exp-hero-img" src="" alt="">
@@ -10187,7 +10192,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 
 <!-- Lightbox -->
 <div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+  <button type="button" class="exp-lb-close" onclick="closeLightbox()" aria-label="Close">✕</button>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
@@ -10398,7 +10403,7 @@ function openSupProfile(idx) {
   // RFQ button in profile
   const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
   if (rfqBtnWrap) {
-    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onmouseenter="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">Request Quote</button>`;
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">Request Quote</button>`;
   }
 
   // Reset to overview tab
@@ -10432,7 +10437,7 @@ function spTab(name, btn) {
       <div class="sp-hero-gradient"></div>
       <div class="sp-hero-top">
         <span class="sp-tier-pill" id="sp-tier-pill"></span>
-        <button class="sp-close" onclick="closeSupProfile()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+        <button class="sp-close" onclick="closeSupProfile()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
       </div>
     </div>
 
@@ -10688,6 +10693,7 @@ function openRFQ(supplierIdx, materialHint) {
   document.getElementById('rfq-submit-btn').disabled = false;
   document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
   document.getElementById('rfq-message').value = '';
+  document.getElementById('rfq-char-counter').textContent = '0 / 1000';
   document.getElementById('rfq-project').value = '';
 
   // Pre-fill user info if logged in
@@ -10714,6 +10720,11 @@ function closeRFQ() {
 function rfqOverlayClick(e) {
   if (e.target === document.getElementById('rfq-overlay')) closeRFQ();
 }
+
+document.getElementById('rfq-message').addEventListener('input', function() {
+  const len = this.value.length;
+  document.getElementById('rfq-char-counter').textContent = len + ' / 1000';
+});
 
 async function submitRFQ() {
   const name  = document.getElementById('rfq-name').value.trim();
