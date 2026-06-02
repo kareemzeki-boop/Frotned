@@ -1,0 +1,3 @@
+## 2025-05-15 - [U-Value Calculator UX Polish]
+**Learning:** Browser `alert()` calls break the immersive dark-theme aesthetic of the CladWise application. A custom toast system using existing CSS variables (`--accent`, `--bg3`) provides a significantly more integrated feel. Additionally, switching from `onchange` to `oninput` for numerical inputs in a static JS calculator provides immediate "spreadsheet-like" reactive feedback that users expect.
+**Action:** Always replace standard `alert()` with the application's toast system in new tools. Prefer `oninput` for real-time mathematical feedback on client-side calculators.
