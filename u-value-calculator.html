@@ -192,6 +192,11 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .gate-tab.active{background:rgba(0,229,160,0.1);color:var(--accent);border-bottom:2px solid var(--accent)}
 .gate-err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);padding:9px 13px;font-size:12px;color:#f87171;display:none}
 .gate-err.show{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--bg3);border:1px solid rgba(0,229,160,0.4);border-left:3px solid var(--accent);border-radius:0;padding:14px 22px;font-size:13px;z-index:9999;transform:translateX(120%);transition:transform 0.3s ease;font-family:'Barlow',sans-serif}
+.toast.show{transform:translateX(0)}
+@media(max-width:600px){.toast{right:16px;left:16px;bottom:24px;text-align:center}}
 </style>
 </head>
 <body>
@@ -383,7 +388,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     </div>
 
     <!-- Actions -->
-    <button class="btn-export" onclick="exportReport()">
+    <button class="btn-export" id="btn-export" onclick="exportReport()">
       <i class="fa-solid fa-file-pdf"></i> Export PDF Report
     </button>
     <button class="btn-reset" onclick="resetAll()">
@@ -538,7 +543,7 @@ function renderTable() {
       <td>
         <input class="layer-input" type="number" min="0.1" step="1"
                value="${l.thickness}"
-               onchange="onThicknessChange(${l.id}, this.value)"
+               oninput="onThicknessChange(${l.id}, this.value)"
                ${isAirCavity ? 'disabled style="opacity:0.4"' : ''}
                placeholder="mm">
       </td>
@@ -547,13 +552,13 @@ function renderTable() {
           ? `<span style="color:var(--blue)">R = ${l.fixedR} fixed</span>`
           : `<input class="layer-input" type="number" min="0.001" step="0.001"
                     value="${l.lambda}"
-                    onchange="onLambdaChange(${l.id}, this.value)"
+                    oninput="onLambdaChange(${l.id}, this.value)"
                     placeholder="λ"
                     style="max-width:90px">`
         }
       </td>
       <td class="layer-r ${r === 0 || r === null ? 'zero' : ''}">${rDisplay}</td>
-      <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer"><i class="fa-solid fa-xmark"></i></button></td>
+      <td><button class="btn-del" onclick="removeLayer(${l.id})" title="Remove layer" aria-label="Remove layer ${i + 1}: ${l.name}"><i class="fa-solid fa-xmark"></i></button></td>
     </tr>`;
   }).join('');
 }
@@ -675,9 +680,14 @@ function calculate() {
 }
 
 // ── EXPORT REPORT ────────────────────────────────────────────────────────────
-function exportReport(){
-  if(layers.length === 0){ alert('Add at least one layer first.'); return; }
-  if(!window.jspdf){ alert('PDF library not loaded — check internet connection.'); return; }
+async function exportReport(){
+  if(layers.length === 0){ showToast('Add at least one layer first.'); return; }
+  if(!window.jspdf){ showToast('PDF library not loaded — check internet connection.'); return; }
+
+  const btn = document.getElementById('btn-export');
+  const origHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
 
   const layerRs = layers.map(l=>({ layer:l, r:calcLayerR(l) }));
   const sumR    = layerRs.reduce((acc,{r})=>acc+(r||0), 0);
@@ -895,6 +905,10 @@ function exportReport(){
   /* ── save ── */
   const dateStr = new Date().toISOString().slice(0,10);
   doc.save(`CladWise_UValue_${dateStr}.pdf`);
+
+  btn.disabled = false;
+  btn.innerHTML = origHtml;
+  showToast('PDF Report Downloaded');
 }
 
 
@@ -996,7 +1010,15 @@ function gateGoogleSignIn() {
   }
 }
 
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
 checkToolAuth();
 </script>
+<div class="toast" id="toast"></div>
 </body>
 </html>
