@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CladWise — UAE Specs Advisor</title>
+<title>Façade Technical Specs Advisor · CladWise UAE</title>
+<meta name="description" content="Generate UAE-specific façade specification summaries for GFRC, aluminium, stone cladding and more. Covers fire ratings, U-values, wind loading and code compliance for Dubai and Abu Dhabi projects.">
+<meta name="theme-color" content="#0b110d">
+<link rel="canonical" href="https://cladwise.ae/specs-advisor.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b110d'/%3E%3Cpath d='M21.5 11.5a6.5 6.5 0 1 0 0 9' stroke='%2300e5a0' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CladWise UAE">
+<meta property="og:title" content="Façade Technical Specs Advisor · CladWise UAE">
+<meta property="og:description" content="Generate UAE-specific façade specification summaries — fire ratings, U-values, wind loading and code compliance.">
+<meta property="og:url" content="https://cladwise.ae/specs-advisor.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -23,7 +32,7 @@
   --amber:#f59e0b;
   --blue:#3b82f6;
 }
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;display:flex;flex-direction:column}
 
 /* ── HEADER ── */
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
@@ -131,6 +140,13 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-
   .hero-title{font-size:28px}
   .main{padding:16px 12px 80px}
   .msg-bubble{max-width:95%}
+}
+
+/* ── KEYBOARD FOCUS & REDUCED MOTION ── */
+:focus-visible{outline:2px solid var(--accent,#00e5a0);outline-offset:2px;border-radius:2px}
+:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
 }
 </style>
 </head>

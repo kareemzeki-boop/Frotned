@@ -186,10 +186,11 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .gate-field{display:flex;flex-direction:column;gap:5px}
 .gate-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .gate-field input{background:var(--bg3);border:1px solid rgba(255,255,255,0.07);padding:11px 13px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
-.gate-field input:focus{border-color:rgba(0,229,160,0.5)}
+.gate-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,160,0.12)}
 .gate-field input::placeholder{color:var(--muted)}
 .gate-submit{background:var(--accent);color:#000;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s;letter-spacing:2px;text-transform:uppercase;width:100%}
-.gate-submit:hover{background:#00ffb3}
+.gate-submit:hover{background:#00ffb3;box-shadow:0 4px 20px rgba(0,229,160,0.3);transform:translateY(-1px)}
+.gate-submit:active{transform:translateY(0);transition-duration:80ms}
 .gate-submit:disabled{opacity:0.5;cursor:not-allowed}
 .gate-tabs{display:flex;gap:0;background:var(--bg3);border:1px solid rgba(255,255,255,0.06);padding:3px;margin-bottom:4px}
 .gate-tab{flex:1;padding:8px;border:none;background:transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s}

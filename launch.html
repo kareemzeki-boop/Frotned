@@ -6,6 +6,15 @@
 <title>CladWise UAE — Façade Material Intelligence for UAE Architects</title>
 <meta name="description" content="CladWise is the UAE's first façade material intelligence platform. Compare GFRC, GFRP, Aluminum and more. Built for architects and specifiers across Dubai, Abu Dhabi and the GCC.">
 <link rel="canonical" href="https://cladwise.ae/launch.html">
+<meta name="theme-color" content="#0b110d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b110d'/%3E%3Cpath d='M21.5 11.5a6.5 6.5 0 1 0 0 9' stroke='%2300e5a0' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CladWise UAE">
+<meta property="og:title" content="CladWise UAE — Façade Material Intelligence Platform">
+<meta property="og:description" content="The UAE's first façade material intelligence platform. Compare GFRC, GFRP, aluminium, stone and more for UAE and GCC construction projects.">
+<meta property="og:url" content="https://cladwise.ae/">
+<meta property="og:image" content="https://cladwise.ae/stone-facade.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -269,6 +278,13 @@ footer a { color: var(--accent); text-decoration: none; }
   .email-form button { border-radius: 0 0 10px 10px; }
   .app-cta { padding: 32px 20px; }
   header { flex-direction: column; gap: 16px; align-items: flex-start; }
+}
+
+/* ── KEYBOARD FOCUS & REDUCED MOTION ── */
+:focus-visible{outline:2px solid var(--accent,#00e5a0);outline-offset:2px;border-radius:2px}
+:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
 }
 </style>
 </head>
