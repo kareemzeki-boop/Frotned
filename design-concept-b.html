@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CladWise UAE — Design Concept B: Sage Light</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f2ed;
+      --surface1: #ffffff;
+      --surface2: #ede9e2;
+      --border: rgba(0,0,0,0.08);
+      --accent: #1a4d35;
+      --accent-light: #d4efe4;
+      --accent-mid: #2d7a56;
+      --text: #1a1a1a;
+      --muted: #888880;
+      --highlight: #00c97d;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface1);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+      padding: 0 60px;
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-monogram {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .nav-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .nav-wordmark span {
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 13.5px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1px;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 9px 20px;
+      border-radius: 4px;
+      font-weight: 500 !important;
+      font-size: 13.5px !important;
+      transition: background 0.15s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-mid) !important;
+      color: #fff !important;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 60px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      min-height: calc(100vh - 68px);
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: linear-gradient(160deg, #e8dfd1 0%, #d4c9b5 40%, #c5b89a 100%);
+    }
+
+    .hero-image-wrap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-image-label {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(26,77,53,0.85);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 3px;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      padding-left: 12px;
+      border-left: 2px solid var(--accent-mid);
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(48px, 6vw, 88px);
+      line-height: 1.0;
+      letter-spacing: -2px;
+      color: var(--text);
+    }
+
+    .hero-headline .accent-word {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 420px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 13px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: 0.1px;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-mid);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      background: transparent;
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 12px 28px;
+      border-radius: 4px;
+      border: 1.5px solid var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.1px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      padding-top: 8px;
+    }
+
+    .hero-stat {}
+
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 30px;
+      color: var(--highlight);
+      line-height: 1;
+    }
+
+    .hero-stat-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ─── VALUE BAND ───────────────────────────────────────── */
+    .value-band {
+      background: var(--accent);
+      padding: 32px 60px;
+    }
+
+    .value-band-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .value-band-text {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: clamp(18px, 2vw, 24px);
+      color: #fff;
+      line-height: 1.4;
+      letter-spacing: -0.3px;
+    }
+
+    .value-band-text em {
+      font-style: italic;
+      opacity: 0.75;
+    }
+
+    .value-band-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    /* ─── SECTION COMMON ───────────────────────────────────── */
+    .section {
+      padding: 100px 60px;
+    }
+
+    .section-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 60px;
+    }
+
+    .section-header .section-label {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      max-width: 600px;
+    }
+
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-top: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── MATERIALS SECTION ────────────────────────────────── */
+    .materials-section {
+      background: var(--bg);
+    }
+
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .material-card {
+      background: var(--surface1);
+      border-radius: 8px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: box-shadow 0.22s, transform 0.22s;
+    }
+
+    .material-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+    }
+
+    .material-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .material-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .material-abbr {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .material-score-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .material-score-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 34px;
+      color: var(--highlight);
+      line-height: 1;
+    }
+
+    .material-score-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .material-bar-wrap {
+      margin-bottom: 28px;
+    }
+
+    .material-bar-track {
+      height: 4px;
+      background: var(--accent-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .material-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-mid), var(--highlight));
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .material-specs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .material-spec {
+      padding: 12px;
+      background: var(--surface2);
+      border-radius: 6px;
+    }
+
+    .material-spec-value {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .material-spec-key {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Span for 5th card to start in 2nd column of row 2 in a 3-col grid */
+    .material-card:last-child {
+      grid-column: 2;
+    }
+
+    /* ─── COMPARISON SECTION ───────────────────────────────── */
+    .compare-section {
+      background: var(--surface2);
+    }
+
+    .compare-table-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .compare-table thead tr {
+      background: var(--accent);
+    }
+
+    .compare-table thead th {
+      padding: 16px 22px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .compare-table thead th:first-child {
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+    }
+
+    .compare-table tbody tr:nth-child(even) {
+      background: var(--bg);
+    }
+
+    .compare-table tbody tr:nth-child(odd) {
+      background: var(--surface1);
+    }
+
+    .compare-table tbody tr:hover {
+      background: var(--accent-light);
+    }
+
+    .compare-table tbody td {
+      padding: 16px 22px;
+      font-size: 14px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tbody td:first-child {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .compare-table .score-cell {
+      font-weight: 600;
+      color: var(--highlight);
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+    }
+
+    .fire-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .fire-a1 { background: #d4efe4; color: #1a4d35; }
+    .fire-a2 { background: #e8f5d8; color: #3a6b1a; }
+    .fire-b { background: #fef3cd; color: #7a5c00; }
+    .fire-c { background: #fde8e8; color: #8b1a1a; }
+
+    .check {
+      color: var(--highlight);
+      font-size: 16px;
+    }
+
+    .cross {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ─── TOOLS SECTION ────────────────────────────────────── */
+    .tools-section {
+      background: var(--bg);
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .tool-card {
+      background: var(--surface1);
+      border-radius: 8px;
+      padding: 48px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: box-shadow 0.22s, transform 0.22s;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .tool-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+    }
+
+    .tool-icon {
+      width: 56px;
+      height: 56px;
+      color: var(--accent);
+    }
+
+    .tool-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .tool-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.1px;
+      margin-top: auto;
+      transition: gap 0.15s;
+    }
+
+    .tool-link:hover {
+      gap: 10px;
+    }
+
+    .tool-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tool-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .tool-feature::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--highlight);
+      flex-shrink: 0;
+    }
+
+    /* ─── TESTIMONIALS / TRUST SECTION ─────────────────────── */
+    .trust-section {
+      background: var(--surface2);
+      padding: 80px 60px;
+    }
+
+    .trust-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .trust-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .trust-header .section-label {
+      justify-content: center;
+      padding-left: 0;
+      border-left: none;
+      border-bottom: 2px solid var(--accent-mid);
+      padding-bottom: 6px;
+      display: inline-block;
+    }
+
+    .trust-header .section-title {
+      max-width: 100%;
+      text-align: center;
+      margin: 16px auto 0;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .trust-card {
+      background: var(--surface1);
+      border-radius: 8px;
+      padding: 36px;
+      border: 1px solid var(--border);
+    }
+
+    .trust-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .trust-quote::before {
+      content: '\201C';
+      font-size: 40px;
+      color: var(--accent-light);
+      line-height: 0;
+      vertical-align: -14px;
+      margin-right: 4px;
+    }
+
+    .trust-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .trust-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .trust-avatar-1 { background: var(--accent); }
+    .trust-avatar-2 { background: var(--accent-mid); }
+    .trust-avatar-3 { background: #4a7c6b; }
+
+    .trust-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .trust-role {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ─── CTA BAND ──────────────────────────────────────────── */
+    .cta-band {
+      background: var(--bg);
+      padding: 100px 60px;
+    }
+
+    .cta-band-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .cta-band-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+    }
+
+    .cta-band-title .accent-word {
+      color: var(--accent);
+    }
+
+    .cta-band-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 16px;
+      max-width: 460px;
+      line-height: 1.7;
+    }
+
+    .cta-band-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .cta-note {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    .footer {
+      background: var(--accent);
+      padding: 72px 60px 48px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+
+    .footer-brand {}
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-monogram {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .footer-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .footer-wordmark span {
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .footer-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    .footer-col-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-copy {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .footer-badges {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-badge {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+
+    /* ─── RESPONSIVE ADJUSTMENTS ────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 60px 32px 80px;
+        min-height: unset;
+      }
+      .hero-image-wrap {
+        aspect-ratio: 16/9;
+      }
+      .materials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .material-card:last-child {
+        grid-column: auto;
+      }
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+      .section {
+        padding: 72px 32px;
+      }
+      .nav {
+        padding: 0 32px;
+      }
+      .cta-band {
+        padding: 72px 32px;
+      }
+      .cta-band-inner {
+        grid-template-columns: 1fr;
+      }
+      .cta-band-actions {
+        align-items: flex-start;
+      }
+      .footer {
+        padding: 60px 32px 40px;
+      }
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+      .value-band {
+        padding: 28px 32px;
+      }
+      .value-band-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-monogram">CW</div>
+        <div class="nav-wordmark">CladWise <span>UAE</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Materials</a></li>
+        <li><a href="#">Compare</a></li>
+        <li><a href="#">Suppliers</a></li>
+        <li><a href="#">Tools</a></li>
+        <li><a href="#">Guides</a></li>
+        <li><a href="#" class="nav-cta">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ──────────────────────────────────────────── -->
+  <section>
+    <div class="hero">
+
+      <!-- Left: image placeholder with SVG cladding texture -->
+      <div class="hero-image-wrap">
+        <svg viewBox="0 0 500 625" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <!-- Base warm gradient handled via CSS -->
+          <defs>
+            <pattern id="clad-grid" x="0" y="0" width="50" height="30" patternUnits="userSpaceOnUse">
+              <!-- Horizontal cladding panels -->
+              <rect x="1" y="1" width="48" height="27" rx="1" fill="none" stroke="rgba(150,125,90,0.18)" stroke-width="0.8"/>
+            </pattern>
+            <pattern id="clad-stagger" x="0" y="0" width="50" height="60" patternUnits="userSpaceOnUse">
+              <!-- Row 1 -->
+              <rect x="1"  y="1"  width="48" height="27" rx="1" fill="rgba(180,155,115,0.12)" stroke="rgba(140,115,80,0.22)" stroke-width="0.8"/>
+              <!-- Row 2, offset -->
+              <rect x="-24" y="31" width="48" height="27" rx="1" fill="rgba(160,135,98,0.09)"  stroke="rgba(140,115,80,0.18)" stroke-width="0.8"/>
+              <rect x="26"  y="31" width="48" height="27" rx="1" fill="rgba(160,135,98,0.09)"  stroke="rgba(140,115,80,0.18)" stroke-width="0.8"/>
+            </pattern>
+            <!-- Vertical reveals -->
+            <pattern id="clad-reveals" x="0" y="0" width="50" height="30" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="30" stroke="rgba(100,80,50,0.1)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <!-- Base fill -->
+          <rect width="500" height="625" fill="url(#clad-stagger)"/>
+          <rect width="500" height="625" fill="url(#clad-grid)" opacity="0.5"/>
+          <rect width="500" height="625" fill="url(#clad-reveals)" opacity="0.4"/>
+          <!-- Subtle vignette overlay -->
+          <defs>
+            <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stop-color="transparent"/>
+              <stop offset="100%" stop-color="rgba(100,80,50,0.25)"/>
+            </radialGradient>
+          </defs>
+          <rect width="500" height="625" fill="url(#vignette)"/>
+          <!-- Accent stripe: thin green line element -->
+          <rect x="0" y="0" width="4" height="625" fill="rgba(26,77,53,0.35)"/>
+          <!-- Measurement / technical annotation lines -->
+          <line x1="40" y1="60" x2="40" y2="200" stroke="rgba(26,77,53,0.25)" stroke-width="0.8" stroke-dasharray="3 4"/>
+          <line x1="36" y1="60" x2="44" y2="60"   stroke="rgba(26,77,53,0.25)" stroke-width="0.8"/>
+          <line x1="36" y1="200" x2="44" y2="200"  stroke="rgba(26,77,53,0.25)" stroke-width="0.8"/>
+          <text x="50" y="135" fill="rgba(26,77,53,0.45)" font-size="9" font-family="Inter, sans-serif" letter-spacing="1">600mm</text>
+        </svg>
+        <div class="hero-image-label">UAE Façade Reference · GFRC Panel System</div>
+      </div>
+
+      <!-- Right: headline content -->
+      <div class="hero-content">
+        <div class="section-label">Material Intelligence Platform</div>
+
+        <h1 class="hero-headline">
+          The Intelligent<br>
+          Façade Material<br>
+          <span class="accent-word">Selector</span>
+        </h1>
+
+        <p class="hero-sub">
+          Compare GFRC, GRC, aluminium, stone and more — costs, fire ratings, U-values, and verified UAE suppliers in one platform.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary">Explore Materials</a>
+          <a href="#" class="btn-secondary">Compare Now →</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num">47</div>
+            <div class="hero-stat-label">Materials</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">120+</div>
+            <div class="hero-stat-label">Suppliers</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">6</div>
+            <div class="hero-stat-label">Emirates</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── VALUE BAND ─────────────────────────────────────── -->
+  <div class="value-band">
+    <div class="value-band-inner">
+      <p class="value-band-text">
+        From specification to supplier — <em>engineered decisions</em> for UAE façade projects.
+      </p>
+      <span class="value-band-sub">Trusted by 340+ design firms</span>
+    </div>
+  </div>
+
+  <!-- ─── MATERIALS SECTION ──────────────────────────────── -->
+  <section class="section materials-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Material Library</div>
+        <h2 class="section-title">Top-rated façade materials for UAE climate</h2>
+        <p class="section-desc">Every material scored against UAE-specific criteria: thermal performance, fire compliance, humidity resistance, and sourcing availability across all six emirates.</p>
+      </div>
+
+      <div class="materials-grid">
+
+        <!-- GFRC -->
+        <div class="material-card">
+          <div class="material-card-top">
+            <div>
+              <div class="material-name">Glass Fibre Reinforced Concrete</div>
+              <div class="material-abbr">GFRC</div>
+            </div>
+            <div class="material-score-badge">
+              <div class="material-score-num">94</div>
+              <div class="material-score-label">Score</div>
+            </div>
+          </div>
+          <div class="material-bar-wrap">
+            <div class="material-bar-track">
+              <div class="material-bar-fill" style="width: 94%"></div>
+            </div>
+          </div>
+          <div class="material-specs">
+            <div class="material-spec">
+              <div class="material-spec-value">A1</div>
+              <div class="material-spec-key">Fire Rating</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">0.28</div>
+              <div class="material-spec-key">U-Value</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">AED 420</div>
+              <div class="material-spec-key">Per m²</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRC -->
+        <div class="material-card">
+          <div class="material-card-top">
+            <div>
+              <div class="material-name">Glass Reinforced Concrete</div>
+              <div class="material-abbr">GRC</div>
+            </div>
+            <div class="material-score-badge">
+              <div class="material-score-num">88</div>
+              <div class="material-score-label">Score</div>
+            </div>
+          </div>
+          <div class="material-bar-wrap">
+            <div class="material-bar-track">
+              <div class="material-bar-fill" style="width: 88%"></div>
+            </div>
+          </div>
+          <div class="material-specs">
+            <div class="material-spec">
+              <div class="material-spec-value">A1</div>
+              <div class="material-spec-key">Fire Rating</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">0.32</div>
+              <div class="material-spec-key">U-Value</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">AED 310</div>
+              <div class="material-spec-key">Per m²</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aluminium Composite -->
+        <div class="material-card">
+          <div class="material-card-top">
+            <div>
+              <div class="material-name">Aluminium Composite</div>
+              <div class="material-abbr">ACM / ACP</div>
+            </div>
+            <div class="material-score-badge">
+              <div class="material-score-num">91</div>
+              <div class="material-score-label">Score</div>
+            </div>
+          </div>
+          <div class="material-bar-wrap">
+            <div class="material-bar-track">
+              <div class="material-bar-fill" style="width: 91%"></div>
+            </div>
+          </div>
+          <div class="material-specs">
+            <div class="material-spec">
+              <div class="material-spec-value">A2</div>
+              <div class="material-spec-key">Fire Rating</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">0.41</div>
+              <div class="material-spec-key">U-Value</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">AED 280</div>
+              <div class="material-spec-key">Per m²</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Natural Stone -->
+        <div class="material-card">
+          <div class="material-card-top">
+            <div>
+              <div class="material-name">Natural Stone</div>
+              <div class="material-abbr">Travertine / Limestone</div>
+            </div>
+            <div class="material-score-badge">
+              <div class="material-score-num">76</div>
+              <div class="material-score-label">Score</div>
+            </div>
+          </div>
+          <div class="material-bar-wrap">
+            <div class="material-bar-track">
+              <div class="material-bar-fill" style="width: 76%"></div>
+            </div>
+          </div>
+          <div class="material-specs">
+            <div class="material-spec">
+              <div class="material-spec-value">A1</div>
+              <div class="material-spec-key">Fire Rating</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">1.40</div>
+              <div class="material-spec-key">U-Value</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">AED 650</div>
+              <div class="material-spec-key">Per m²</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GFRP -->
+        <div class="material-card">
+          <div class="material-card-top">
+            <div>
+              <div class="material-name">Glass Fibre Reinforced Polymer</div>
+              <div class="material-abbr">GFRP</div>
+            </div>
+            <div class="material-score-badge">
+              <div class="material-score-num">82</div>
+              <div class="material-score-label">Score</div>
+            </div>
+          </div>
+          <div class="material-bar-wrap">
+            <div class="material-bar-track">
+              <div class="material-bar-fill" style="width: 82%"></div>
+            </div>
+          </div>
+          <div class="material-specs">
+            <div class="material-spec">
+              <div class="material-spec-value">B</div>
+              <div class="material-spec-key">Fire Rating</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">0.35</div>
+              <div class="material-spec-key">U-Value</div>
+            </div>
+            <div class="material-spec">
+              <div class="material-spec-value">AED 380</div>
+              <div class="material-spec-key">Per m²</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COMPARISON SECTION ────────────────────────────── -->
+  <section class="section compare-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Side-by-Side Comparison</div>
+        <h2 class="section-title">Compare materials at a glance</h2>
+        <p class="section-desc">Quantified metrics against UAE building code requirements. All data sourced from verified manufacturer test reports and Dubai Municipality guidelines.</p>
+      </div>
+
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Overall Score</th>
+              <th>Fire Rating</th>
+              <th>U-Value (W/m²K)</th>
+              <th>Est. Cost / m²</th>
+              <th>UAE Suppliers</th>
+              <th>DM Approved</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GFRC</td>
+              <td class="score-cell">94</td>
+              <td><span class="fire-badge fire-a1">A1</span></td>
+              <td>0.28</td>
+              <td>AED 420</td>
+              <td>18</td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Aluminium Composite</td>
+              <td class="score-cell">91</td>
+              <td><span class="fire-badge fire-a2">A2</span></td>
+              <td>0.41</td>
+              <td>AED 280</td>
+              <td>34</td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>GRC</td>
+              <td class="score-cell">88</td>
+              <td><span class="fire-badge fire-a1">A1</span></td>
+              <td>0.32</td>
+              <td>AED 310</td>
+              <td>12</td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>GFRP</td>
+              <td class="score-cell">82</td>
+              <td><span class="fire-badge fire-b">B</span></td>
+              <td>0.35</td>
+              <td>AED 380</td>
+              <td>8</td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Natural Stone</td>
+              <td class="score-cell">76</td>
+              <td><span class="fire-badge fire-a1">A1</span></td>
+              <td>1.40</td>
+              <td>AED 650</td>
+              <td>22</td>
+              <td><span class="check">✓</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TOOLS SECTION ─────────────────────────────────── -->
+  <section class="section tools-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Engineering Tools</div>
+        <h2 class="section-title">Precision tools for specification work</h2>
+        <p class="section-desc">Free, browser-based calculators built around UAE climate data, Dubai Municipality standards, and Estidama Pearl requirements.</p>
+      </div>
+
+      <div class="tools-grid">
+
+        <!-- U-Value Calculator -->
+        <div class="tool-card">
+          <!-- SVG icon: thermometer / heat flow -->
+          <svg class="tool-icon" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="56" height="56" rx="12" fill="#d4efe4"/>
+            <rect x="26" y="10" width="4" height="22" rx="2" fill="#1a4d35"/>
+            <circle cx="28" cy="37" r="6" fill="#1a4d35"/>
+            <circle cx="28" cy="37" r="3.5" fill="#00c97d"/>
+            <line x1="34" y1="16" x2="38" y2="16" stroke="#2d7a56" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="34" y1="20" x2="36" y2="20" stroke="#2d7a56" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="34" y1="24" x2="38" y2="24" stroke="#2d7a56" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+
+          <div>
+            <div class="tool-title">U-Value Calculator</div>
+            <p class="tool-desc">
+              Calculate the thermal transmittance of any multi-layer façade assembly. Optimised for UAE climate zones and Estidama Pearl Rating compliance thresholds.
+            </p>
+          </div>
+
+          <div class="tool-feature-list">
+            <div class="tool-feature">Supports up to 8 material layers</div>
+            <div class="tool-feature">UAE climate zone presets (Zone 1–3)</div>
+            <div class="tool-feature">Estidama Pearl 1–4 benchmarking</div>
+            <div class="tool-feature">Exports to PDF specification sheet</div>
+          </div>
+
+          <a href="#" class="tool-link">Try Tool →</a>
+        </div>
+
+        <!-- GRC Panel Checker -->
+        <div class="tool-card">
+          <!-- SVG icon: grid / panel checker -->
+          <svg class="tool-icon" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="56" height="56" rx="12" fill="#d4efe4"/>
+            <!-- Panel grid -->
+            <rect x="12" y="12" width="13" height="13" rx="1.5" fill="none" stroke="#1a4d35" stroke-width="1.5"/>
+            <rect x="31" y="12" width="13" height="13" rx="1.5" fill="#1a4d35" opacity="0.2" stroke="#1a4d35" stroke-width="1.5"/>
+            <rect x="12" y="31" width="13" height="13" rx="1.5" fill="#1a4d35" opacity="0.2" stroke="#1a4d35" stroke-width="1.5"/>
+            <rect x="31" y="31" width="13" height="13" rx="1.5" fill="none" stroke="#1a4d35" stroke-width="1.5"/>
+            <!-- Checkmark overlay -->
+            <circle cx="37.5" cy="37.5" r="7" fill="#00c97d"/>
+            <polyline points="34,37.5 36.5,40 41,35" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <div>
+            <div class="tool-title">GRC Panel Checker</div>
+            <p class="tool-desc">
+              Validate GRC panel specifications against UAE fire safety regulations, Dubai Municipality approval requirements, and structural load limits for high-rise applications.
+            </p>
+          </div>
+
+          <div class="tool-feature-list">
+            <div class="tool-feature">Dubai Municipality FM 4.1 compliance check</div>
+            <div class="tool-feature">Panel thickness vs. wind load validator</div>
+            <div class="tool-feature">Fire rating classification (EN 13501-1)</div>
+            <div class="tool-feature">Supplier shortlist output by emirate</div>
+          </div>
+
+          <a href="#" class="tool-link">Try Tool →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ──────────────────────────────────── -->
+  <section class="trust-section">
+    <div class="trust-inner">
+      <div class="trust-header">
+        <div class="section-label">Trusted by Professionals</div>
+        <h2 class="section-title">What UAE design teams say</h2>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-card">
+          <p class="trust-quote">CladWise cut our material research phase from three weeks to two days. The supplier verification alone saved us from a costly procurement mistake on a Downtown Dubai project.</p>
+          <div class="trust-author">
+            <div class="trust-avatar trust-avatar-1">AM</div>
+            <div>
+              <div class="trust-name">Ahmed M. Al-Rashidi</div>
+              <div class="trust-role">Senior Façade Consultant, Atkins Middle East</div>
+            </div>
+          </div>
+        </div>
+        <div class="trust-card">
+          <p class="trust-quote">The U-Value calculator is the most accurate tool I've found for UAE climate zones. We use it on every Estidama submission — Pearl 3 compliance in a fraction of the time.</p>
+          <div class="trust-author">
+            <div class="trust-avatar trust-avatar-2">SC</div>
+            <div>
+              <div class="trust-name">Sara Christodoulou</div>
+              <div class="trust-role">Technical Director, Perkins&amp;Will Abu Dhabi</div>
+            </div>
+          </div>
+        </div>
+        <div class="trust-card">
+          <p class="trust-quote">Finally a platform that understands the UAE regulatory landscape. The DM approval status and emirate-level supplier data is something we couldn't find anywhere else.</p>
+          <div class="trust-author">
+            <div class="trust-avatar trust-avatar-3">KN</div>
+            <div>
+              <div class="trust-name">Khalid N. Behbehani</div>
+              <div class="trust-role">Project Architect, HOK Dubai</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA BAND ───────────────────────────────────────── -->
+  <section class="cta-band">
+    <div class="cta-band-inner">
+      <div>
+        <h2 class="cta-band-title">
+          Start specifying<br>
+          with <span class="accent-word">confidence</span>
+        </h2>
+        <p class="cta-band-sub">Join 340+ UAE design firms who use CladWise to make faster, better-evidenced façade material decisions. Free for individual architects.</p>
+      </div>
+      <div class="cta-band-actions">
+        <a href="#" class="btn-primary" style="font-size: 15px; padding: 15px 36px;">Create Free Account</a>
+        <a href="#" class="btn-secondary" style="font-size: 15px; padding: 14px 36px;">View Pricing</a>
+        <span class="cta-note">No credit card required &nbsp;·&nbsp; Free tier includes 5 material comparisons/month</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-monogram">CW</div>
+            <div class="footer-wordmark">CladWise <span>UAE</span></div>
+          </div>
+          <p class="footer-tagline">The intelligent façade material intelligence platform for the UAE construction industry.</p>
+        </div>
+
+        <!-- Platform -->
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <ul class="footer-links">
+            <li><a href="#">Material Library</a></li>
+            <li><a href="#">Comparison Tool</a></li>
+            <li><a href="#">Supplier Directory</a></li>
+            <li><a href="#">U-Value Calculator</a></li>
+            <li><a href="#">GRC Panel Checker</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <div class="footer-col-title">Resources</div>
+          <ul class="footer-links">
+            <li><a href="#">Guides &amp; Specs</a></li>
+            <li><a href="#">UAE Regulations</a></li>
+            <li><a href="#">Estidama Guide</a></li>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#">About CladWise</a></li>
+            <li><a href="#">For Suppliers</a></li>
+            <li><a href="#">API Access</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 CladWise UAE. All rights reserved. Dubai, United Arab Emirates.</span>
+        <div class="footer-badges">
+          <span class="footer-badge">Dubai Municipality</span>
+          <span class="footer-badge">Estidama</span>
+          <span class="footer-badge">GSAS Certified</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

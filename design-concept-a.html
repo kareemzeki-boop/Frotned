@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CladWise UAE — Design Concept A: Obsidian Editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:         #080808;
+      --surface-1:  #101010;
+      --surface-2:  #161616;
+      --border:     rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(200, 240, 255, 0.25);
+      --accent:     #c8f0ff;
+      --accent-glow: rgba(200, 240, 255, 0.15);
+      --text:       #f0f0f0;
+      --muted:      #686868;
+      --label:      #3a3a3a;
+
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .fade-1 { animation: fadeIn 0.6s ease forwards; opacity: 0; animation-delay: 0.1s; }
+    .fade-2 { animation: fadeIn 0.6s ease forwards; opacity: 0; animation-delay: 0.25s; }
+    .fade-3 { animation: fadeIn 0.6s ease forwards; opacity: 0; animation-delay: 0.4s; }
+    .fade-4 { animation: fadeIn 0.6s ease forwards; opacity: 0; animation-delay: 0.55s; }
+
+    /* ── Layout Helpers ── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── Section Label ── */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .section-label::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ═══════════════════════════
+       NAV
+    ═══════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(8, 8, 8, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      padding: 0 40px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #080808;
+      background: var(--accent);
+      border: none;
+      padding: 9px 20px;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: opacity 0.2s ease;
+      display: inline-block;
+    }
+
+    .nav-cta:hover {
+      opacity: 0.85;
+    }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .hero {
+      padding: 140px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 55% 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(48px, 8.5vw, 120px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .hero-headline .accent {
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 440px;
+      margin-bottom: 44px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .btn-primary {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #080808;
+      background: var(--accent);
+      border: none;
+      padding: 14px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: opacity 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn-ghost {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 13px 28px;
+      border-radius: 2px;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+    }
+
+    /* ── Hero Right: Material Tiles ── */
+    .hero-tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .material-tile {
+      background: var(--surface-1);
+      padding: 24px 22px;
+      border-left: 3px solid var(--label);
+      transition: border-color 0.2s ease, background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .material-tile:hover {
+      background: var(--surface-2);
+      border-left-color: var(--accent);
+    }
+
+    .material-tile--gfrc { border-left-color: #c8f0ff; }
+    .material-tile--aluminium { border-left-color: #8eb8d4; }
+    .material-tile--grc { border-left-color: #6a9ab4; }
+    .material-tile--stone { border-left-color: #4a7a94; }
+
+    .tile-score {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .tile-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .tile-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #080808;
+      background: var(--accent);
+      padding: 2px 6px;
+      border-radius: 2px;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+
+    /* ═══════════════════════════
+       STATS ROW
+    ═══════════════════════════ */
+    .stats-row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-item {
+      padding: 36px 40px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════
+       MATERIALS SECTION
+    ═══════════════════════════ */
+    .section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Comparison Table ── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .comparison-table thead tr {
+      background: var(--surface-1);
+    }
+
+    .comparison-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .comparison-table th.col-material {
+      color: var(--text);
+    }
+
+    .comparison-table tbody tr {
+      background: var(--bg);
+      transition: background 0.15s ease;
+    }
+
+    .comparison-table tbody tr:nth-child(even) {
+      background: var(--surface-1);
+    }
+
+    .comparison-table tbody tr:hover {
+      background: var(--surface-2);
+    }
+
+    .comparison-table td.row-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .comparison-table td.val {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .val-accent {
+      color: var(--accent);
+    }
+
+    .val-good {
+      color: #7ed4a0;
+    }
+
+    .val-warn {
+      color: #e8c97a;
+    }
+
+    .val-muted {
+      color: var(--muted);
+    }
+
+    /* Score bar */
+    .score-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-bar-bg {
+      flex: 1;
+      height: 3px;
+      background: var(--label);
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .score-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      min-width: 28px;
+    }
+
+    /* ═══════════════════════════
+       SUPPLIERS SECTION
+    ═══════════════════════════ */
+    .suppliers-scroll {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .supplier-card {
+      background: var(--surface-1);
+      padding: 32px 28px 28px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      border: 1px solid transparent;
+      margin: -1px;
+      position: relative;
+    }
+
+    .supplier-card:hover {
+      background: var(--surface-2);
+      border-color: var(--border-hover);
+      z-index: 1;
+    }
+
+    .supplier-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .supplier-country {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #080808;
+      background: var(--muted);
+      padding: 3px 8px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+
+    .supplier-caps {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .supplier-caps li {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .supplier-caps li::before {
+      content: '—';
+      color: var(--label);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .supplier-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s ease;
+    }
+
+    .supplier-link:hover {
+      opacity: 0.75;
+    }
+
+    /* ═══════════════════════════
+       MATERIALS GRID (Full list)
+    ═══════════════════════════ */
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .mat-card {
+      background: var(--surface-1);
+      padding: 28px 22px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      border: 1px solid transparent;
+      margin: -1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mat-card:hover {
+      background: var(--surface-2);
+      border-color: var(--border-hover);
+      z-index: 1;
+    }
+
+    .mat-score-large {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .mat-name {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .mat-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .mat-tag--fire   { background: rgba(232, 80, 80, 0.15); color: #e88080; border: 1px solid rgba(232, 80, 80, 0.2); }
+    .mat-tag--weight { background: rgba(200, 240, 255, 0.10); color: var(--accent); border: 1px solid rgba(200, 240, 255, 0.15); }
+    .mat-tag--cost   { background: rgba(126, 212, 160, 0.10); color: #7ed4a0; border: 1px solid rgba(126, 212, 160, 0.15); }
+
+    .mat-accent-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--label);
+    }
+
+    .mat-card:hover .mat-accent-bar {
+      background: var(--accent);
+    }
+
+    /* ═══════════════════════════
+       FOOTER
+    ═══════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--label);
+      letter-spacing: 0.04em;
+    }
+
+    /* ═══════════════════════════
+       DIVIDER LINE
+    ═══════════════════════════ */
+    .h-rule {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ═══════════════════════════
+       FEATURE CALLOUT STRIP
+    ═══════════════════════════ */
+    .callout-strip {
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+    }
+
+    .callout-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .callout-item {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .callout-item:last-child {
+      border-right: none;
+    }
+
+    .callout-icon {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .callout-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .callout-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════
+       NAV
+  ═══════════════════════════ -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Clad<span>Wise</span></a>
+      <ul class="nav-links">
+        <li><a href="#">Materials</a></li>
+        <li><a href="#">Compare</a></li>
+        <li><a href="#">Suppliers</a></li>
+        <li><a href="#">Tools</a></li>
+        <li><a href="#">Guides</a></li>
+      </ul>
+      <a href="#" class="nav-cta">Start Free</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════
+       HERO
+  ═══════════════════════════ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- Left: text -->
+        <div>
+          <p class="hero-eyebrow fade-1">[01] — Facade Intelligence Platform — UAE</p>
+
+          <h1 class="hero-headline fade-2">
+            Facade Cladding /
+            <span class="accent">Intelligence</span>
+          </h1>
+
+          <p class="hero-sub fade-3">
+            Engineering decisions for UAE facades — costs, fire ratings,
+            U-values, verified suppliers.
+          </p>
+
+          <div class="hero-actions fade-4">
+            <a href="#" class="btn-primary">Explore Materials</a>
+            <a href="#" class="btn-ghost">View Comparison →</a>
+          </div>
+        </div>
+
+        <!-- Right: material tiles -->
+        <div class="fade-4">
+          <div class="hero-tiles">
+
+            <div class="material-tile material-tile--gfrc">
+              <div class="tile-badge">Top Rated</div>
+              <div class="tile-score">94</div>
+              <div class="tile-name">GFRC</div>
+            </div>
+
+            <div class="material-tile material-tile--aluminium">
+              <div class="tile-score">91</div>
+              <div class="tile-name">Aluminium</div>
+            </div>
+
+            <div class="material-tile material-tile--grc">
+              <div class="tile-score">88</div>
+              <div class="tile-name">GRC</div>
+            </div>
+
+            <div class="material-tile material-tile--stone">
+              <div class="tile-score">76</div>
+              <div class="tile-name">Stone</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════
+       STATS ROW
+  ═══════════════════════════ -->
+  <div class="stats-row">
+    <div class="stats-inner container" style="padding-left:0;padding-right:0;max-width:100%;">
+      <div class="stat-item">
+        <div class="stat-number">47</div>
+        <div class="stat-label">Materials Catalogued</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">120+</div>
+        <div class="stat-label">Verified Suppliers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Emirates Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════
+       CALLOUT STRIP
+  ═══════════════════════════ -->
+  <div class="callout-strip">
+    <div class="callout-strip-inner container" style="padding-left:0;padding-right:0;max-width:100%;">
+      <div class="callout-item">
+        <div class="callout-icon">▦</div>
+        <div class="callout-title">Live Cost Data</div>
+        <div class="callout-desc">Material cost per m² updated from UAE distributor pricing.</div>
+      </div>
+      <div class="callout-item">
+        <div class="callout-icon">◈</div>
+        <div class="callout-title">Fire Compliance</div>
+        <div class="callout-desc">BS 8414, UAE Civil Defense ratings mapped per material.</div>
+      </div>
+      <div class="callout-item">
+        <div class="callout-icon">◇</div>
+        <div class="callout-title">Thermal U-Values</div>
+        <div class="callout-desc">Gulf climate performance metrics for every cladding type.</div>
+      </div>
+      <div class="callout-item">
+        <div class="callout-icon">◎</div>
+        <div class="callout-title">Supplier Matching</div>
+        <div class="callout-desc">Request quotes from 120+ vetted UAE suppliers directly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════
+       MATERIALS OVERVIEW GRID
+  ═══════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">[02] — All Materials</div>
+
+      <div class="materials-grid">
+
+        <div class="mat-card">
+          <div class="mat-score-large">94</div>
+          <div class="mat-name">GFRC</div>
+          <div>
+            <span class="mat-tag mat-tag--fire">Class A</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--weight">Lightweight</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--cost">AED 280/m²</span>
+          </div>
+          <div class="mat-accent-bar"></div>
+        </div>
+
+        <div class="mat-card">
+          <div class="mat-score-large">91</div>
+          <div class="mat-name">Aluminium</div>
+          <div>
+            <span class="mat-tag mat-tag--fire">Class A</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--weight">Ultra Light</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--cost">AED 320/m²</span>
+          </div>
+          <div class="mat-accent-bar"></div>
+        </div>
+
+        <div class="mat-card">
+          <div class="mat-score-large">88</div>
+          <div class="mat-name">GRC</div>
+          <div>
+            <span class="mat-tag mat-tag--fire">Class A</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--weight">Medium</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--cost">AED 240/m²</span>
+          </div>
+          <div class="mat-accent-bar"></div>
+        </div>
+
+        <div class="mat-card">
+          <div class="mat-score-large">82</div>
+          <div class="mat-name">GFRP</div>
+          <div>
+            <span class="mat-tag mat-tag--fire">Class B</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--weight">Lightweight</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--cost">AED 390/m²</span>
+          </div>
+          <div class="mat-accent-bar"></div>
+        </div>
+
+        <div class="mat-card">
+          <div class="mat-score-large">76</div>
+          <div class="mat-name">Stone</div>
+          <div>
+            <span class="mat-tag mat-tag--fire">Class A</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--weight">Heavy</span>
+          </div>
+          <div>
+            <span class="mat-tag mat-tag--cost">AED 520/m²</span>
+          </div>
+          <div class="mat-accent-bar"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════
+       COMPARISON TABLE
+  ═══════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">[03] — Technical Comparison</div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th class="col-material" style="min-width:160px;">Attribute</th>
+            <th>GFRC</th>
+            <th>GRC</th>
+            <th>Aluminium</th>
+            <th>Stone</th>
+            <th>GFRP</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td class="row-label">Weight (kg/m²)</td>
+            <td class="val"><span class="val-good">12–18</span></td>
+            <td class="val">18–25</td>
+            <td class="val"><span class="val-accent">3–6</span></td>
+            <td class="val"><span class="val-warn">60–100</span></td>
+            <td class="val">6–10</td>
+          </tr>
+
+          <tr>
+            <td class="row-label">Cost (AED/m²)</td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:54%;"></div></div>
+                <span class="score-num">280</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:46%;"></div></div>
+                <span class="score-num">240</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:62%;"></div></div>
+                <span class="score-num">320</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:100%;background:#e88080;"></div></div>
+                <span class="score-num" style="color:#e88080;">520</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:75%;"></div></div>
+                <span class="score-num">390</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="row-label">Fire Rating</td>
+            <td class="val"><span class="val-good">Class A1</span></td>
+            <td class="val"><span class="val-good">Class A1</span></td>
+            <td class="val"><span class="val-good">Class A2</span></td>
+            <td class="val"><span class="val-good">Class A1</span></td>
+            <td class="val"><span class="val-warn">Class B</span></td>
+          </tr>
+
+          <tr>
+            <td class="row-label">U-Value (W/m²K)</td>
+            <td class="val"><span class="val-accent">0.28</span></td>
+            <td class="val">0.35</td>
+            <td class="val">0.31</td>
+            <td class="val"><span class="val-muted">0.48</span></td>
+            <td class="val">0.26</td>
+          </tr>
+
+          <tr>
+            <td class="row-label">CladWise Score</td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:94%;"></div></div>
+                <span class="score-num">94</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:88%;"></div></div>
+                <span class="score-num">88</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:91%;"></div></div>
+                <span class="score-num">91</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:76%;"></div></div>
+                <span class="score-num">76</span>
+              </div>
+            </td>
+            <td class="val">
+              <div class="score-bar-wrap">
+                <div class="score-bar-bg"><div class="score-bar-fill" style="width:82%;"></div></div>
+                <span class="score-num">82</span>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════
+       SUPPLIERS SECTION
+  ═══════════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">[04] — Verified Suppliers</div>
+
+      <div class="suppliers-scroll">
+
+        <div class="supplier-card">
+          <div class="supplier-name">Gulf Clad Systems</div>
+          <span class="supplier-country">Dubai, UAE</span>
+          <ul class="supplier-caps">
+            <li>GFRC & GRC facade panels</li>
+            <li>Custom mold fabrication</li>
+            <li>Nationwide installation</li>
+          </ul>
+          <a href="#" class="supplier-link">Get Quote &rarr;</a>
+        </div>
+
+        <div class="supplier-card">
+          <div class="supplier-name">AlFa Facade Engineering</div>
+          <span class="supplier-country">Abu Dhabi, UAE</span>
+          <ul class="supplier-caps">
+            <li>Aluminium composite panels</li>
+            <li>Fire-rated cladding systems</li>
+            <li>Civil Defense certification</li>
+          </ul>
+          <a href="#" class="supplier-link">Get Quote &rarr;</a>
+        </div>
+
+        <div class="supplier-card">
+          <div class="supplier-name">Emirates Stone Works</div>
+          <span class="supplier-country">Sharjah, UAE</span>
+          <ul class="supplier-caps">
+            <li>Natural & engineered stone</li>
+            <li>Wet & dry installation</li>
+            <li>Hospitality & residential</li>
+          </ul>
+          <a href="#" class="supplier-link">Get Quote &rarr;</a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════
+       FOOTER
+  ═══════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">Clad<span>Wise</span></div>
+        <ul class="footer-links">
+          <li><a href="#">Materials</a></li>
+          <li><a href="#">Compare</a></li>
+          <li><a href="#">Suppliers</a></li>
+          <li><a href="#">Tools</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+        <span class="footer-copy">&copy; 2026 CladWise UAE. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
