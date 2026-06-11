@@ -4,11 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GRC Panel Checker Pro · CladWise UAE</title>
+<meta name="description" content="Free GRC/GFRC façade panel feasibility checker for UAE projects. Wind load, composite rib section, fixing, seismic and thermal checks to EN 1990/1991 and GRCA guidance.">
+<meta name="theme-color" content="#0b110d">
+<link rel="canonical" href="https://cladwise.ae/grc-panel-checker.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b110d'/%3E%3Cpath d='M21.5 11.5a6.5 6.5 0 1 0 0 9' stroke='%2300e5a0' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CladWise UAE">
+<meta property="og:title" content="GRC Panel Checker Pro · CladWise UAE">
+<meta property="og:description" content="Free GRC/GFRC panel feasibility checker — wind, section, fixing, seismic and thermal checks for UAE façades.">
+<meta property="og:url" content="https://cladwise.ae/grc-panel-checker.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --bg:     #0b110d;
@@ -21,14 +30,14 @@
   --red:    #ef4444;
   --blue:   #60a5fa;
   --text:   #edf2ed;
-  --muted:  #6b7d6d;
+  --muted:  #7a8d7f;
   --pass:   #00e5a0;
   --fail:   #ef4444;
   --warn:   #f59e0b;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* ── NAV ── */
 nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,0.08);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -221,33 +230,36 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 .gate-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#00e5a0;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
 .gate-eyebrow::before,.gate-eyebrow::after{content:'';width:20px;height:1px;background:rgba(0,229,160,0.4)}
 .gate-title{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;text-transform:uppercase;letter-spacing:1px;line-height:1;color:#edf2ed}
-.gate-sub{font-size:12px;color:#6b7d6d;margin-top:8px}
+.gate-sub{font-size:12px;color:#7a8d7f;margin-top:8px}
 .gate-free-badge{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.25);padding:6px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:#00e5a0;text-transform:uppercase}
 .gate-free-badge::before{content:'✓';font-weight:900}
 .gate-body{padding:28px 36px 36px;display:flex;flex-direction:column;gap:12px}
-.gate-google{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:#182318;border:1px solid rgba(255,255,255,0.12);color:#edf2ed;font-family:'Barlow',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;width:100%}
-.gate-google:hover{border-color:rgba(0,229,160,0.4);background:#1f2e20}
-.gate-divider{display:flex;align-items:center;gap:10px;color:#6b7d6d;font-size:11px}
-.gate-divider::before,.gate-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
 .gate-field{display:flex;flex-direction:column;gap:5px}
-.gate-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:#6b7d6d;text-transform:uppercase}
+.gate-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:#7a8d7f;text-transform:uppercase}
 .gate-field input{background:#182318;border:1px solid rgba(255,255,255,0.07);padding:11px 13px;font-family:'Barlow',sans-serif;font-size:14px;color:#edf2ed;outline:none;transition:border-color 0.2s;width:100%}
 .gate-field input:focus{border-color:rgba(0,229,160,0.5)}
-.gate-field input::placeholder{color:#6b7d6d}
+.gate-field input::placeholder{color:#7a8d7f}
 .gate-submit{background:#00e5a0;color:#000;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s;letter-spacing:2px;text-transform:uppercase;width:100%}
 .gate-submit:hover{background:#00ffb3}
 .gate-submit:disabled{opacity:0.5;cursor:not-allowed}
 .gate-tabs{display:flex;gap:0;background:#182318;border:1px solid rgba(255,255,255,0.06);padding:3px;margin-bottom:4px}
-.gate-tab{flex:1;padding:8px;border:none;background:transparent;color:#6b7d6d;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s}
+.gate-tab{flex:1;padding:8px;border:none;background:transparent;color:#7a8d7f;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s}
 .gate-tab.active{background:rgba(0,229,160,0.1);color:#00e5a0;border-bottom:2px solid #00e5a0}
 .gate-err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);padding:9px 13px;font-size:12px;color:#f87171;display:none}
 .gate-err.show{display:block}
+
+/* ── KEYBOARD FOCUS & REDUCED MOTION ── */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
 
 <!-- AUTH GATE OVERLAY -->
-<div class="gate-overlay open" id="gate-overlay">
+<div class="gate-overlay open" id="gate-overlay" role="dialog" aria-modal="true" aria-label="Sign in to use this tool">
   <div class="gate-box">
     <div class="gate-head">
       <div class="gate-eyebrow">Free Tool</div>
@@ -272,7 +284,10 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 <nav>
   <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
   <span class="nav-badge">ENGINEERING TOOLS</span>
-  <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+  <div style="display:flex;align-items:center;gap:22px">
+    <a href="u-value-calculator.html" class="nav-back">U-Value Calc</a>
+    <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to App</a>
+  </div>
 </nav>
 
 <!-- PAGE HEADER -->

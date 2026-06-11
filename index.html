@@ -2,16 +2,31 @@
 <html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="googlea1ad13ddf42df316" />
 <title>CladWise UAE • Facade Cladding Selector</title>
+<meta name="description" content="Compare façade cladding materials for UAE projects — GFRC, GRC, aluminium, stone and more. Costs, fire ratings, U-values, verified suppliers and free engineering tools.">
+<meta name="theme-color" content="#0b110d">
+<link rel="canonical" href="https://cladwise.ae/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b110d'/%3E%3Cpath d='M21.5 11.5a6.5 6.5 0 1 0 0 9' stroke='%2300e5a0' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CladWise UAE">
+<meta property="og:title" content="CladWise UAE • Façade Cladding Selector">
+<meta property="og:description" content="Compare façade cladding materials for UAE projects — costs, fire ratings, U-values, verified suppliers and free engineering tools.">
+<meta property="og:url" content="https://cladwise.ae/">
+<meta property="og:image" content="https://cladwise.ae/stone-facade.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>.fa-spin{animation:fa-spin 1s linear infinite}@keyframes fa-spin{to{transform:rotate(360deg)}} i.fai,i.fai svg{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle} i.fai svg{width:1em;height:1em;fill:currentColor}</style>
+<style>.fa-spin{animation:fa-spin 1s linear infinite}@keyframes fa-spin{to{transform:rotate(360deg)}} i.fai,i.fai svg{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle} i.fai svg{width:1em;height:1em;fill:currentColor}
+/* ── KEYBOARD FOCUS & REDUCED MOTION ── */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+}
+</style>
 <!-- jsPDF loaded on demand when PDF export is clicked -->
 <style>
 :root {
@@ -25,14 +40,14 @@
   --accent2: #00b37a;
   --amber: #f59e0b;
   --text: #edf2ed;
-  --muted: #6b7d6d;
+  --muted: #7a8d7f;
   --card: #131d14;
   --green-dark: #0d1a10;
   --green-mid: #1e3322;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
@@ -1177,11 +1192,6 @@ footer{background:var(--bg2);border-top:1px solid rgba(0,229,160,0.1);padding:60
 .auth-switch{text-align:center;font-size:12px;color:var(--muted)}
 .auth-switch span{color:var(--accent);cursor:pointer;font-weight:600}
 .auth-switch span:hover{text-decoration:underline}
-.auth-divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.auth-google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;background:var(--bg3);border:1px solid rgba(255,255,255,0.12);border-radius:2px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
-.auth-google-btn:hover{border-color:rgba(0,229,160,0.4);background:var(--bg4)}
-.auth-google-btn svg{flex-shrink:0}
 
 /* ── NAV AUTH STATE ──────────────────────────────────────────────────────── */
 .nav-user{display:flex;align-items:center;gap:10px}
@@ -3507,7 +3517,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <button class="nav-logout" onclick="authLogout()">Out</button>
       </div>
       <!-- HAMBURGER (mobile only) -->
-      <button class="nav-ham" id="nav-ham" onclick="toggleMobileMenu()" aria-label="Menu">
+      <button class="nav-ham" id="nav-ham" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -3820,7 +3830,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </section>
 
 <!-- RFQ MODAL -->
-<div class="rfq-overlay" id="rfq-overlay" onclick="rfqOverlayClick(event)">
+<div class="rfq-overlay" id="rfq-overlay" role="dialog" aria-modal="true" aria-label="Request a quotation" onclick="rfqOverlayClick(event)">
   <div class="rfq-box" id="rfq-box">
     <!-- Head -->
     <div class="rfq-head">
@@ -3828,7 +3838,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3887,14 +3897,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- AUTH MODAL -->
-<div class="auth-overlay" id="auth-overlay" onclick="authOverlayClick(event)">
+<div class="auth-overlay" id="auth-overlay" role="dialog" aria-modal="true" aria-label="Login or create account" onclick="authOverlayClick(event)">
   <div class="auth-box">
     <div class="auth-hd">
       <div class="auth-hd-left">
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -3990,14 +4000,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- SUBSCRIPTION MODAL -->
-<div class="sub-modal-overlay" id="sub-modal-overlay" onclick="checkCloseSubModal(event)">
+<div class="sub-modal-overlay" id="sub-modal-overlay" role="dialog" aria-modal="true" aria-label="Plans and access" onclick="checkCloseSubModal(event)">
   <div class="sub-modal" id="sub-modal">
     <div class="sub-modal-header">
       <div>
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);margin-bottom:6px" id="sub-modal-eyebrow">FAÇADE SPECIFICATION PLATFORM</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="sub-modal-title">CladWise UAE</div>
       </div>
-      <button class="sub-modal-close" onclick="closeSubModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="sub-modal-close" onclick="closeSubModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="sub-tab-bar">
       <button class="sub-tab active" onclick="switchSubTab('access')">For Architects</button>
@@ -4266,6 +4276,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     </div>
   </div>
 </div>
+<footer>
   <div class="footer-inner">
     <div class="footer-brand">CladWise UAE</div>
     <p class="footer-sub">Façade material intelligence for architects, specifiers & developers across the UAE.</p>
@@ -4645,14 +4656,14 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </section>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="checkCloseModal(event)">
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Material details" onclick="checkCloseModal(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
       <div class="modal-title-wrap">
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -4660,8 +4671,8 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" onclick="closeLightboxOnBg(event)">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close image viewer"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
   <div class="lightbox-img-wrap">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -5706,7 +5717,7 @@ function buildDeck() {
 
     card.innerHTML = `
       <div class="mat-card-img">
-        <img src="${imgs?.hero||''}" alt="${m.name}" onerror="this.style.display='none'">
+        <img src="${imgs?.hero||''}" alt="${m.name}" loading="lazy" onerror="this.style.display='none'">
         <div class="mat-card-img-overlay"></div>
       </div>
       <div class="mat-card-content">
@@ -6538,7 +6549,7 @@ function renderGalleryTab(m) {
       ${imgs.variants.map((v, vi) => `
         <div class="variant-card ${vi===0?'active':''}" id="vcard-${vi}" onclick="switchGalleryVariant(${vi})">
           <div class="variant-card-img">
-            <img src="${v.images[0].src}&w=300&h=180" alt="${v.name}"
+            <img src="${v.images[0].src}&w=300&h=180" alt="${v.name}" loading="lazy"
                  onerror="this.parentNode.style.background='var(--bg2)';this.style.display='none'">
           </div>
           <div class="variant-card-label">
@@ -6554,7 +6565,7 @@ function renderGalleryTab(m) {
       ${imgs.variants[0].images.map((img, ii) => `
         <div style="border-radius:10px;overflow:hidden;height:110px;cursor:pointer;border:2px solid ${ii===0?'var(--accent)':'transparent'};transition:all 0.2s"
              id="gal-strip-${ii}" onclick="switchGalleryImg(${ii})">
-          <img src="${img.src}&w=400&h=200" alt="${img.caption}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
+          <img src="${img.src}&w=400&h=200" alt="${img.caption}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
                onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform=''"
                onerror="this.parentNode.style.background='var(--bg3)';this.style.display='none'">
         </div>`).join('')}
@@ -6595,7 +6606,7 @@ function switchGalleryVariant(vi) {
     strip.innerHTML = v.images.map((img, ii) => `
       <div style="border-radius:10px;overflow:hidden;height:110px;cursor:pointer;border:2px solid ${ii===0?'var(--accent)':'transparent'};transition:all 0.2s"
            id="gal-strip-${ii}" onclick="switchGalleryImg(${ii})">
-        <img src="${img.src}&w=400&h=200" alt="${img.caption}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
+        <img src="${img.src}&w=400&h=200" alt="${img.caption}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s"
              onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform=''"
              onerror="this.parentNode.style.background='var(--bg3)';this.style.display='none'">
       </div>`).join('');
@@ -7232,12 +7243,7 @@ function buildSuppliers() {
 // ─── SUBSCRIPTION MODAL ──────────────────────────────────────────────────────
 let activeSubTab = 'access';
 
-function openSubModal(tab = 'access') {
-  activeSubTab = tab;
-  switchSubTab(tab);
-  document.getElementById('sub-modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+/* openSubModal is defined in the auth-aware script block below (requires login). */
 
 function closeSubModal() {
   document.getElementById('sub-modal-overlay').classList.remove('open');
@@ -7260,9 +7266,7 @@ function switchSubTab(tab) {
 }
 
 // ─── PROJECT MODAL ──────────────────────────────────────────────────────────
-function openProjectModal() {
-  openAuthModal('signup');
-}
+/* openProjectModal is defined in the auth-aware script block below (requires login). */
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -7467,11 +7471,14 @@ function toggleMobileMenu() {
   const ham    = document.getElementById('nav-ham');
   const open   = drawer.classList.toggle('open');
   ham.classList.toggle('open', open);
+  ham.setAttribute('aria-expanded', open);
   document.body.style.overflow = open ? 'hidden' : '';
 }
 function closeMobileMenu() {
   document.getElementById('mob-drawer').classList.remove('open');
-  document.getElementById('nav-ham').classList.remove('open');
+  const ham = document.getElementById('nav-ham');
+  ham.classList.remove('open');
+  ham.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
 }
 // Close drawer on resize to desktop
@@ -7924,7 +7931,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- ══════════════ SUPPLIER TRIAL APPLICATION MODAL ══════════════════ -->
-<div id="sup-apply-overlay" onclick="supApplyOutsideClick(event)">
+<div id="sup-apply-overlay" role="dialog" aria-modal="true" aria-label="Supplier listing application" onclick="supApplyOutsideClick(event)">
   <div class="sup-apply-modal" id="sup-apply-modal">
 
     <!-- Header -->
@@ -7934,7 +7941,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="sap-title">List Your Business</div>
         <div class="sap-subtitle">Get found by architects, specifiers & developers across the UAE</div>
       </div>
-      <button class="sap-close" onclick="closeSupApply()">
+      <button class="sap-close" onclick="closeSupApply()" aria-label="Close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
       </button>
     </div>
@@ -8293,23 +8300,6 @@ async function sapSubmit() {
     showToast('Network error — check your connection and try again.');
   }
   nb.textContent = 'Submit Application →'; nb.disabled = false;
-}
-
-function openSupApply() {
-  sapStep = 1;
-  sapGoTo(1);
-  document.getElementById('sap-form-body').style.display = '';
-  document.getElementById('sap-footer').style.display = '';
-  document.getElementById('sap-success').style.display = 'none';
-  document.getElementById('sup-apply-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeSupApply() {
-  document.getElementById('sup-apply-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function supApplyOutsideClick(e) {
-  if (e.target === document.getElementById('sup-apply-overlay')) closeSupApply();
 }
 
 /* ─── PDF EXPORT ─────────────────────────────────────────────────────────── */
@@ -9893,6 +9883,9 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 .exp-lb-close {
   position: absolute;
   top: 20px; right: 24px;
+  background: none;
+  border: none;
+  padding: 4px;
   font-size: 28px;
   color: rgba(255,255,255,0.4);
   cursor: pointer;
@@ -10123,7 +10116,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 </style>
 
 <!-- Explorer overlay -->
-<div id="mat-explorer-overlay" onclick="expOverlayClick(event)">
+<div id="mat-explorer-overlay" role="dialog" aria-modal="true" aria-label="Material explorer" onclick="expOverlayClick(event)">
   <div id="mat-explorer">
     <div class="exp-header">
       <div class="exp-header-left">
@@ -10147,8 +10140,8 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 </div>
 
 <!-- Lightbox -->
-<div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+<div id="exp-lightbox" role="dialog" aria-modal="true" aria-label="Gallery image viewer" onclick="closeExpLightbox()">
+  <button class="exp-lb-close" onclick="closeExpLightbox()" aria-label="Close gallery">✕</button>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
@@ -10178,7 +10171,7 @@ function openLightbox(images, startIdx) {
   renderLightbox();
   document.getElementById('exp-lightbox').classList.add('open');
 }
-function closeLightbox() {
+function closeExpLightbox() {
   document.getElementById('exp-lightbox').classList.remove('open');
 }
 function lbNav(dir) {
@@ -10386,7 +10379,7 @@ function spTab(name, btn) {
 }
 </script>
 <!-- ── SUPPLIER PROFILE OVERLAY ─────────────────────────────────────────── -->
-<div id="sp-overlay" onclick="spOverlayClick(event)">
+<div id="sp-overlay" role="dialog" aria-modal="true" aria-label="Supplier profile" onclick="spOverlayClick(event)">
   <div id="sp-box">
     <div class="sp-hero" id="sp-hero">
       <img id="sp-hero-img" src="" alt="">
@@ -10720,5 +10713,25 @@ async function submitRFQ() {
   }
 }
 
+/* ─── GLOBAL ESCAPE KEY — closes the topmost open overlay ────────────────── */
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  // Ordered top-most first: each press dismisses one layer.
+  const layers = [
+    ['exp-lightbox',        closeExpLightbox],
+    ['mat-explorer-overlay', closeExplorer],
+    ['sp-overlay',          closeSupProfile],
+    ['rfq-overlay',         closeRFQ],
+    ['auth-overlay',        closeAuthModal],
+    ['sub-modal-overlay',   closeSubModal],
+    ['sup-apply-overlay',   closeSupApply],
+  ];
+  for (const [id, close] of layers) {
+    const el = document.getElementById(id);
+    if (el && el.classList.contains('open')) { close(); e.stopPropagation(); return; }
+  }
+});
+
 </script>
 </body>
+</html>
