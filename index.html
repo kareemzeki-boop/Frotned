@@ -34,6 +34,17 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
 
+/* Accessibility: Reset button defaults for components converted from divs */
+.mat-toggle, .wiz-opt, .exp-close, .exp-lb-close {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e3025;border-radius:3px}
 
@@ -6677,11 +6688,14 @@ let selectedMats = ['GFRC', 'Aluminum', 'ACM'];
 function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
-  controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
+  controls.innerHTML = Object.keys(MATERIALS).map(key => {
+    const active = selectedMats.includes(key);
+    return `
+    <button type="button" class="mat-toggle ${active?'active':''}" onclick="toggleMat('${key}')" aria-pressed="${active}">
       <div class="dot" style="background:${colors[key] || '#666'}"></div>
       ${key}
-    </div>`).join('');
+    </button>`;
+  }).join('');
   renderTable();
 }
 
@@ -6759,11 +6773,11 @@ function renderWizStep() {
       <div class="wizard-hint">${step.hint}</div>
       <div class="wizard-options" id="wiz-opts">
         ${step.opts.map((o, i) => `
-          <div class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})">
+          <button type="button" class="wiz-opt" id="wiz-opt-${i}" onclick="selectWizOpt(${i})" aria-pressed="false">
             <div class="wiz-icon">${o.icon}</div>
-            <span style="flex:1">${o.label}</span>
+            <span style="flex:1;text-align:left">${o.label}</span>
             <div class="wiz-opt-check">✓</div>
-          </div>`).join('')}
+          </button>`).join('')}
       </div>
       <div class="wizard-nav">
         ${wizStep > 0 ? `<button class="btn-wiz btn-wiz-back" onclick="wizBack()">← Back</button>` : '<div></div>'}
@@ -6779,8 +6793,13 @@ function renderWizStep() {
 }
 
 function selectWizOpt(i) {
-  document.querySelectorAll('.wiz-opt').forEach(el => el.classList.remove('selected'));
-  document.getElementById(`wiz-opt-${i}`).classList.add('selected');
+  document.querySelectorAll('.wiz-opt').forEach(el => {
+    el.classList.remove('selected');
+    el.setAttribute('aria-pressed', 'false');
+  });
+  const selected = document.getElementById(`wiz-opt-${i}`);
+  selected.classList.add('selected');
+  selected.setAttribute('aria-pressed', 'true');
   wizAnswers[wizStep] = i;
   const btn = document.getElementById('wiz-next');
   btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = '';
@@ -10125,7 +10144,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
         <div class="exp-title" id="exp-title"></div>
         <div class="exp-intro" id="exp-intro"></div>
       </div>
-      <div class="exp-close" onclick="closeExplorer()">✕</div>
+      <button type="button" class="exp-close" onclick="closeExplorer()" aria-label="Close">✕</button>
     </div>
     <div class="exp-hero" id="exp-hero">
       <img id="exp-hero-img" src="" alt="">
@@ -10142,7 +10161,7 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
 
 <!-- Lightbox -->
 <div id="exp-lightbox" onclick="closeLightbox()">
-  <div class="exp-lb-close" onclick="closeLightbox()">✕</div>
+  <button type="button" class="exp-lb-close" onclick="closeLightbox()" aria-label="Close">✕</button>
   <img id="exp-lb-img" src="" alt="">
   <div class="exp-lb-caption" id="exp-lb-caption"></div>
   <div class="exp-lb-nav">
