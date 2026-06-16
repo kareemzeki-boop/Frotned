@@ -1,0 +1,3 @@
+## 2026-03-05 - RFQ Modal Accessibility and Interaction
+**Learning:** High-intent modals like Request for Quotation (RFQ) should not be triggered by hover events (onmouseenter), as it leads to unintentional activations and a frustrating user experience. Accessibility in these forms is often overlooked in static sites, specifically label-input associations and character counters for length-limited textareas.
+**Action:** Always ensure high-intent modals are click-to-open. Implement semantic `<label for="...">` and `<input id="...">` pairings, and provide live feedback for character-limited fields using the `oninput` attribute and manual state resets in the open function.
