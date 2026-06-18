@@ -1,0 +1,3 @@
+## 2026-03-05 - RFQ Modal Accessibility and Character Counter
+**Learning:** A recurring accessibility pattern in this app's modal forms is the absence of 'id' and 'for' attribute pairings for labels and inputs, and missing 'aria-required' attributes for mandatory fields. Additionally, character counters for limited textareas should be associated using 'aria-describedby' and reset explicitly in the modal open function in this static environment.
+**Action:** Always verify label-input associations and add ARIA attributes for mandatory fields and descriptive elements (like counters) when touching form components. Use 'oninput' for simple reactive counter updates in this static HTML/JS setup.
