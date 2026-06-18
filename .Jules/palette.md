@@ -1,0 +1,3 @@
+## 2025-05-23 - Accessibility in Static Mono-HTML Environments
+**Learning:** In large, static HTML files (10k+ lines) with frequent script block overrides, global focus states must use `!important` to reliably override inconsistent inline or block-level `outline: none` styles. Additionally, state resets for dynamic UI elements (like character counters) must be manually hooked into the existing global toggle functions rather than relying on modern framework lifecycle hooks.
+**Action:** Use `*:focus-visible` with `!important` and locate the primary "open/close" toggle functions to inject UI state resets.
