@@ -1,0 +1,3 @@
+## 2026-03-05 - [Dynamic Context for Table Inputs]
+**Learning:** In static HTML projects where table rows are dynamically rendered via template strings, standard form labels are often omitted, leaving inputs without context. Injecting `aria-label` attributes that include the row index (e.g., "Thickness for layer 1") during the render loop provides essential context for screen reader users without requiring complex label-input ID management.
+**Action:** When generating repeated interactive elements in a loop, always include an index-based aria-label to disambiguate controls for assistive technologies.
