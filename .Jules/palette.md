@@ -1,0 +1,3 @@
+## 2025-03-24 - [Centralized Keyboard Navigation & Semantic Integrity]
+**Learning:** In a single-page application with multiple nested overlays (Modals, Lightboxes, Sidebars), fragmented keydown listeners lead to inconsistent behavior and conflicts. Explicitly resolving function naming collisions (e.g., duplicate closeLightbox definitions) is critical for predictable global state management.
+**Action:** Implement a prioritized global Escape key handler that checks for the top-most active overlay. Always convert interactive 'div' elements to 'button' tags with explicit 'type="button"' and 'aria-label' to ensure keyboard parity and screen reader support without breaking existing layouts.
