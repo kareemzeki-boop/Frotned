@@ -1,0 +1,3 @@
+## 2026-03-10 - Custom Navigation Accessibility
+**Learning:** Custom 'role="button"' elements created via JavaScript templates in this project (like the Material Deck navigation) lack native keyboard support. Explicit keydown listeners for 'Enter' and 'Space' must be added alongside 'tabindex="0"' and 'aria-label'. Focus states also need to be manually defined in CSS using ':focus-visible' because 'outline: none' is often applied globally.
+**Action:** Always verify keyboard focusability and activation when a component uses custom div/span elements for buttons. Refactor to native <button> when possible, but when templating, ensure the 'handleKeyNav' pattern is applied.
