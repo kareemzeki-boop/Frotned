@@ -1,0 +1,3 @@
+## 2026-03-05 - Global Keyboard Interactivity & Focus Visibility
+**Learning:** In static HTML/JS projects without a dedicated component library, custom interactive elements (like navigation dots or toggles) frequently lack keyboard parity and clear focus states. This creates a significant barrier for keyboard-only users.
+**Action:** Always implement a global delegated keydown listener for elements with `role="button"` and ensure they have `tabindex="0"`. Additionally, provide a strong, high-contrast `:focus-visible` outline using the project's primary accent color to make navigation predictable and accessible.
