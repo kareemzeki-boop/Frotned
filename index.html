@@ -733,7 +733,7 @@ section{padding:72px 0}
   padding-top: 48px;
 }
 
-.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.mat-toggle{display:flex;align-items:center;gap:10px;padding:9px 18px;background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;user-select:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;color:inherit;appearance:none}
 .mat-toggle.active{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.06);color:var(--accent)}
 .mat-toggle .dot{width:10px;height:10px;border-radius:50%}
 .compare-table-wrap{overflow-x:auto;border-radius:0;border:1px solid rgba(0,229,160,0.1)}
@@ -6677,11 +6677,14 @@ let selectedMats = ['GFRC', 'Aluminum', 'ACM'];
 function buildCompare() {
   const controls = document.getElementById('compare-controls');
   const colors = { GFRC: '#00e5a0', GFRP: '#60a5fa', Aluminum: '#a3a3a3', Stone: '#f59e0b', ACM: '#c084fc' };
-  controls.innerHTML = Object.keys(MATERIALS).map(key => `
-    <div class="mat-toggle ${selectedMats.includes(key)?'active':''}" onclick="toggleMat('${key}')">
-      <div class="dot" style="background:${colors[key] || '#666'}"></div>
+  controls.innerHTML = Object.keys(MATERIALS).map(key => {
+    const isActive = selectedMats.includes(key);
+    return `
+    <button type="button" class="mat-toggle ${isActive ? 'active' : ''}" onclick="toggleMat('${key}')" aria-pressed="${isActive}">
+      <div class="dot" style="background:${colors[key] || '#666'}" aria-hidden="true"></div>
       ${key}
-    </div>`).join('');
+    </button>`;
+  }).join('');
   renderTable();
 }
 
