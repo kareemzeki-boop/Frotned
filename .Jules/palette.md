@@ -1,0 +1,3 @@
+## 2025-03-05 - Custom Component Keyboard Accessibility
+**Learning:** Core interactive components in this repository (e.g., .mat-deck-dot, .mat-deck-arrow, .mat-deck-item) are frequently built using non-semantic <div> elements. These lack native keyboard support and focus states, making the main "Explore" feature inaccessible to keyboard users.
+**Action:** Always add role="button", tabindex="0", and descriptive aria-label to custom interactive <div>s. Implement a global keydown listener for role="button" to bridge the click/enter/space gap and add *:focus-visible styles with !important to override high-specificity design system defaults.
