@@ -3825,7 +3825,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3836,16 +3836,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" required aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" required aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3859,8 +3859,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <label for="rfq-message">Message (optional)</label>
+          <span id="rfq-char-counter" style="font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);">0/1000</span>
+        </div>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…" maxlength="1000" aria-describedby="rfq-char-counter" oninput="updateRFQCounter()"></textarea>
       </div>
       <label class="rfq-copy-row">
         <input type="checkbox" id="rfq-copy" checked>
@@ -10353,7 +10356,7 @@ function openSupProfile(idx) {
   // RFQ button in profile
   const rfqBtnWrap = document.getElementById('sp-rfq-wrap');
   if (rfqBtnWrap) {
-    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onmouseenter="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">Request Quote</button>`;
+    rfqBtnWrap.innerHTML = `<button class="rfq-trigger-btn" style="margin-top:16px" onclick="openRFQ(${idx},SUPPLIERS[${idx}].mats[0])">Request Quote</button>`;
   }
 
   // Reset to overview tab
@@ -10638,6 +10641,7 @@ function openRFQ(supplierIdx, materialHint) {
   document.getElementById('rfq-submit-btn').disabled = false;
   document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
   document.getElementById('rfq-message').value = '';
+  updateRFQCounter();
   document.getElementById('rfq-project').value = '';
 
   // Pre-fill user info if logged in
@@ -10663,6 +10667,14 @@ function closeRFQ() {
 
 function rfqOverlayClick(e) {
   if (e.target === document.getElementById('rfq-overlay')) closeRFQ();
+}
+
+function updateRFQCounter() {
+  const msg = document.getElementById('rfq-message');
+  const cnt = document.getElementById('rfq-char-counter');
+  if (msg && cnt) {
+    cnt.textContent = msg.value.length + '/1000';
+  }
 }
 
 async function submitRFQ() {
