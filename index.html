@@ -3825,7 +3825,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="rfq-eyebrow">Request for Quotation</div>
         <div class="rfq-title">Request Quote</div>
       </div>
-      <button class="rfq-close" onclick="closeRFQ()">✕</button>
+      <button class="rfq-close" onclick="closeRFQ()" aria-label="Close">✕</button>
     </div>
     <!-- Pre-filled chips -->
     <div class="rfq-prefill">
@@ -3836,16 +3836,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
-          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
+          <label for="rfq-name">Your Name *</label>
+          <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name" required aria-required="true">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
-          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
+          <label for="rfq-email">Your Email *</label>
+          <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email" required aria-required="true">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3859,8 +3859,11 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <label for="rfq-message">Message (optional)</label>
+          <span id="rfq-char-counter" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">0/1000</span>
+        </div>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…" maxlength="1000" oninput="updateRFQCounter()" aria-describedby="rfq-char-counter"></textarea>
       </div>
       <label class="rfq-copy-row">
         <input type="checkbox" id="rfq-copy" checked>
@@ -3891,7 +3894,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <h2 id="auth-title">Welcome Back</h2>
         <p id="auth-sub">Login to your CladWise account</p>
       </div>
-      <button class="auth-close" onclick="closeAuthModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
@@ -4649,7 +4652,7 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         <div class="modal-eyebrow" id="modal-eyebrow"></div>
         <div class="modal-title" id="modal-title"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
     </div>
     <div class="modal-tabs" id="modal-tabs"></div>
     <div class="modal-body" id="modal-body"></div>
@@ -10387,7 +10390,7 @@ function spTab(name, btn) {
       <div class="sp-hero-gradient"></div>
       <div class="sp-hero-top">
         <span class="sp-tier-pill" id="sp-tier-pill"></span>
-        <button class="sp-close" onclick="closeSupProfile()"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
+        <button class="sp-close" onclick="closeSupProfile()" aria-label="Close"><i class="fai"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></i></button>
       </div>
     </div>
 
@@ -10653,6 +10656,7 @@ function openRFQ(supplierIdx, materialHint) {
 
   document.getElementById('rfq-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  updateRFQCounter();
   setTimeout(() => document.getElementById('rfq-name').focus(), 150);
 }
 
@@ -10706,6 +10710,14 @@ async function submitRFQ() {
     showToast('Error: ' + e.message);
     btn.disabled = false;
     btn.textContent = 'Send Request →';
+  }
+}
+
+function updateRFQCounter() {
+  const msg = document.getElementById('rfq-message');
+  const cnt = document.getElementById('rfq-char-counter');
+  if (msg && cnt) {
+    cnt.textContent = msg.value.length + '/1000';
   }
 }
 
