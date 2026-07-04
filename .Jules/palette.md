@@ -1,0 +1,3 @@
+## 2026-07-04 - [Form Accessibility and Feedback Patterns]
+**Learning:** The application's modal forms (RFQ, Supplier Register, etc.) frequently lack programmatic associations between labels and inputs (missing 'for'/'id') and often omit 'aria-label' attributes on icon-only close buttons. Additionally, textareas with implicit limits benefit greatly from a live character counter paired with 'aria-describedby'.
+**Action:** When working on any form component, ensure all labels have 'for' attributes matching input 'id's, add descriptive 'aria-label' to close buttons, and implement flexbox headers for textareas to accommodate live character counters.
