@@ -3233,10 +3233,12 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 .rfq-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media(max-width:480px){ .rfq-row { grid-template-columns: 1fr; } }
 .rfq-field { display: flex; flex-direction: column; gap: 6px; }
+.rfq-field-header { display: flex; justify-content: space-between; align-items: baseline; }
 .rfq-field label {
   font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
   text-transform: uppercase; color: var(--muted);
 }
+.rfq-counter { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); opacity: 0.7; }
 .rfq-field input,
 .rfq-field select,
 .rfq-field textarea {
@@ -3836,16 +3838,16 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
     <div class="rfq-body" id="rfq-form-body">
       <div class="rfq-row">
         <div class="rfq-field">
-          <label>Your Name *</label>
+          <label for="rfq-name">Your Name *</label>
           <input type="text" id="rfq-name" placeholder="Full name" autocomplete="name">
         </div>
         <div class="rfq-field">
-          <label>Your Email *</label>
+          <label for="rfq-email">Your Email *</label>
           <input type="email" id="rfq-email" placeholder="you@firm.ae" autocomplete="email">
         </div>
       </div>
       <div class="rfq-field">
-        <label>Project Type</label>
+        <label for="rfq-project">Project Type</label>
         <select id="rfq-project">
           <option value="">— Select (optional) —</option>
           <option>Villa / Residential</option>
@@ -3859,10 +3861,13 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
         </select>
       </div>
       <div class="rfq-field">
-        <label>Message (optional)</label>
-        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…"></textarea>
+        <div class="rfq-field-header">
+          <label for="rfq-message">Message (optional)</label>
+          <span id="rfq-counter" class="rfq-counter" aria-live="polite">0/1000</span>
+        </div>
+        <textarea id="rfq-message" placeholder="Project details, quantity estimate, timeline…" maxlength="1000" oninput="updateRFQCounter()"></textarea>
       </div>
-      <label class="rfq-copy-row">
+      <label class="rfq-copy-row" for="rfq-copy">
         <input type="checkbox" id="rfq-copy" checked>
         Send me a copy of this RFQ
       </label>
@@ -10625,6 +10630,14 @@ void main(){
 /* ── RFQ SYSTEM ─────────────────────────────────────────────────────────────── */
 let _rfqSupplier = null;
 
+function updateRFQCounter() {
+  const msg = document.getElementById('rfq-message');
+  const counter = document.getElementById('rfq-counter');
+  if (msg && counter) {
+    counter.textContent = `${msg.value.length}/1000`;
+  }
+}
+
 function openRFQ(supplierIdx, materialHint) {
   const s = SUPPLIERS[supplierIdx];
   if (!s) return;
@@ -10653,6 +10666,7 @@ function openRFQ(supplierIdx, materialHint) {
 
   document.getElementById('rfq-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  updateRFQCounter();
   setTimeout(() => document.getElementById('rfq-name').focus(), 150);
 }
 
