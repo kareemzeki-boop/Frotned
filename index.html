@@ -7,7 +7,29 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="googlea1ad13ddf42df316" />
-<title>CladWise UAE • Facade Cladding Selector</title>
+<title>CladWise UAE — Façade Material Intelligence for Architects</title>
+<meta name="description" content="Specification-grade technical data on GFRC, GRP, Aluminium, Stone, ACM-FR and Fibre Cement cladding. Verified UAE suppliers, comparison tools and RFQ — built for architects and consultants in the UAE and GCC.">
+
+<!-- Open Graph -->
+<meta property="og:title"       content="CladWise UAE — Façade Material Intelligence">
+<meta property="og:description" content="Specify the right façade material for your UAE project. Technical data, DCD compliance, verified suppliers and instant RFQ — all in one platform.">
+<meta property="og:image"       content="https://cladwise.ae/og-cover.jpg">
+<meta property="og:url"         content="https://cladwise.ae/">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="CladWise UAE">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="CladWise UAE — Façade Material Intelligence">
+<meta name="twitter:description" content="Specify the right façade material for your UAE project. Technical data, verified suppliers and RFQ.">
+<meta name="twitter:image"       content="https://cladwise.ae/og-cover.jpg">
+
+<!-- Canonical + locale -->
+<link rel="canonical" href="https://cladwise.ae/">
+<meta name="robots"   content="index, follow">
+<meta name="language" content="en">
+<meta name="geo.region"   content="AE">
+<meta name="geo.placename" content="United Arab Emirates">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -3301,6 +3323,21 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
 
   gtag('config', 'G-DSYE6DT7K3');
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CladWise UAE",
+  "url": "https://cladwise.ae",
+  "description": "Specification-grade façade material intelligence platform for architects and consultants in the UAE and GCC. Technical data, compliance, supplier directory and RFQ.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AED" },
+  "creator": { "@type": "Organization", "name": "CladWise UAE", "url": "https://cladwise.ae" },
+  "areaServed": { "@type": "Country", "name": "United Arab Emirates" }
+}
+</script>
 </head>
 <body>
 
@@ -3778,7 +3815,8 @@ h2, h3, h4 { font-family: 'Barlow Condensed', sans-serif; }
           <p class="gate-desc" style="font-size:13px;line-height:1.8">Compare systems, review technical data, and connect with suppliers — all in one platform built for architects and consultants in the UAE.</p>
           <div class="gate-stats" style="margin-bottom:28px">
             <div><span class="gate-stat-num" style="font-size:32px">6</span><span class="gate-stat-label">Materials</span></div>
-            <div><span class="gate-stat-num" style="font-size:32px">18</span><span class="gate-stat-label">Suppliers</span></div>
+            <div><span class="gate-stat-num" style="font-size:32px">12</span>
+          <span class="ft-stat-key">Suppliers</span></div>
             <div><span class="gate-stat-num" style="font-size:32px">7</span><span class="gate-stat-label">Emirates</span></div>
           </div>
           <div class="gate-btns">
@@ -9099,7 +9137,6 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
       try {
         const data = await res.json();
         const raw = data.text || '';
-        console.log('[Advisory] Raw AI response for', key, ':', raw.slice(0, 200));
         if (raw && raw.includes('{')) {
           let clean = raw.trim()
             .replace(/^```json\s*/i, '').replace(/\s*```$/, '')
@@ -9119,13 +9156,10 @@ Write substantive, specific sentences using this data. Return ONLY this JSON:
               technical: { ...aiParsed.technical, fire_class: aiParsed.technical?.fire_class || ctx.fireClass.split(' ')[0], height_limit: aiParsed.technical?.height_limit || ctx.heightLimit },
               sustainability: { ...aiParsed.sustainability, voc: aiParsed.sustainability?.voc || ctx.voc.split(' ')[0], recycled_content: aiParsed.sustainability?.recycled_content || ctx.recycled }
             };
-            console.log('[Advisory] AI response used for', key);
           } else {
-            console.log('[Advisory] AI content too thin — using hardcoded fallback for', key);
           }
         }
       } catch(e) {
-        console.log('[Advisory] AI call failed — using hardcoded fallback for', key, e.message);
       }
       matDataArr.push({ key, mat, ai: parsed });
     }
@@ -10623,37 +10657,64 @@ void main(){
 })();
 
 /* ── RFQ SYSTEM ─────────────────────────────────────────────────────────────── */
-let _rfqSupplier = null;
+let _rfqSelected = [];   // array of supplier indices
+let _rfqMaterial = '';
+let _rfqFileData = null;
+let _rfqFileName = '';
+
+function rfqRenderChips() {
+  const list = document.getElementById('rfq-chip-supplier');
+  if (!list) return;
+  if (_rfqSelected.length === 0) {
+    list.textContent = 'Select Supplier';
+    list.style.opacity = '0.5';
+  } else {
+    list.textContent = _rfqSelected.map(i => SUPPLIERS[i]?.name).join(' + ');
+    list.style.opacity = '1';
+  }
+  const btn = document.getElementById('rfq-submit-btn');
+  if (btn) btn.disabled = _rfqSelected.length === 0;
+}
 
 function openRFQ(supplierIdx, materialHint) {
-  const s = SUPPLIERS[supplierIdx];
-  if (!s) return;
-  if (document.getElementById("rfq-overlay").classList.contains("open")) return;
-  _rfqSupplier = s;
+  _rfqSelected   = supplierIdx !== undefined ? [supplierIdx] : [];
+  _rfqMaterial   = materialHint || (supplierIdx !== undefined && SUPPLIERS[supplierIdx]?.mats?.[0]) || '';
+  _rfqFileData   = null;
+  _rfqFileName   = '';
 
   // Reset form
-  document.getElementById('rfq-form-body').style.display = '';
-  document.getElementById('rfq-foot').style.display = '';
-  document.getElementById('rfq-success').style.display = 'none';
-  document.getElementById('rfq-submit-btn').disabled = false;
-  document.getElementById('rfq-submit-btn').textContent = 'Send Request →';
-  document.getElementById('rfq-message').value = '';
-  document.getElementById('rfq-project').value = '';
+  ['rfq-message','rfq-name','rfq-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const proj = document.getElementById('rfq-project');
+  if (proj) proj.value = '';
+  const formBody = document.getElementById('rfq-form-body');
+  const foot     = document.getElementById('rfq-foot');
+  const succ     = document.getElementById('rfq-success');
+  const btn      = document.getElementById('rfq-submit-btn');
+  if (formBody) formBody.style.display = '';
+  if (foot)     foot.style.display = '';
+  if (succ)     succ.style.display = 'none';
+  if (btn)      { btn.disabled = false; btn.textContent = 'Send Request →'; }
 
-  // Pre-fill user info if logged in
-  if (cwSession?.user?.email) {
-    document.getElementById('rfq-email').value = cwSession.user.email;
+  // Pre-fill email
+  if (window.cwSession?.user?.email) {
+    const em = document.getElementById('rfq-email');
+    if (em) em.value = cwSession.user.email;
   }
 
   // Chips
-  document.getElementById('rfq-chip-supplier').textContent = s.name;
-  const mat = materialHint || (s.mats && s.mats[0]) || 'Façade Material';
-  document.getElementById('rfq-chip-material').textContent = mat;
-  document.getElementById('rfq-chip-material').dataset.mat = mat;
+  rfqRenderChips();
+  const matChip = document.getElementById('rfq-chip-material');
+  if (matChip) { matChip.textContent = _rfqMaterial || 'Façade Material'; matChip.dataset.mat = _rfqMaterial; }
 
   document.getElementById('rfq-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  setTimeout(() => document.getElementById('rfq-name').focus(), 150);
+  setTimeout(() => document.getElementById('rfq-name')?.focus(), 180);
+
+  // Analytics
+  if (typeof gtag === 'function') gtag('event', 'rfq_click', { supplier_idx: supplierIdx, material: _rfqMaterial });
 }
 
 function closeRFQ() {
@@ -10666,24 +10727,29 @@ function rfqOverlayClick(e) {
 }
 
 async function submitRFQ() {
-  const name  = document.getElementById('rfq-name').value.trim();
-  const email = document.getElementById('rfq-email').value.trim();
+  const name  = document.getElementById('rfq-name')?.value.trim();
+  const email = document.getElementById('rfq-email')?.value.trim();
   if (!name || !email) { showToast('Name and email are required.'); return; }
   if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) { showToast('Please enter a valid email.'); return; }
+  if (_rfqSelected.length === 0) { showToast('Please select at least one supplier.'); return; }
 
   const btn = document.getElementById('rfq-submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  const suppliers = _rfqSelected.map(idx => ({
+    name:  SUPPLIERS[idx]?.name  || '',
+    email: SUPPLIERS[idx]?.email || '',
+  }));
 
   const payload = {
-    supplierName:  _rfqSupplier?.name || '',
-    supplierEmail: _rfqSupplier?.email || '',
-    material:      document.getElementById('rfq-chip-material').dataset.mat || '',
-    projectType:   document.getElementById('rfq-project').value,
-    userName:      name,
-    userEmail:     email,
-    message:       document.getElementById('rfq-message').value.trim(),
-    sendCopy:      document.getElementById('rfq-copy').checked,
+    suppliers,
+    material:    _rfqMaterial,
+    projectType: document.getElementById('rfq-project')?.value || '',
+    userName:    name,
+    userEmail:   email,
+    message:     document.getElementById('rfq-message')?.value.trim() || '',
+    sendCopy:    document.getElementById('rfq-copy')?.checked ?? true,
+    fileName:    _rfqFileName || '',
   };
 
   try {
@@ -10696,18 +10762,22 @@ async function submitRFQ() {
     if (!r.ok) throw new Error(data.message || 'Submission failed');
 
     // Success
-    document.getElementById('rfq-form-body').style.display = 'none';
-    document.getElementById('rfq-foot').style.display = 'none';
-    document.getElementById('rfq-success').style.display = 'flex';
-    document.getElementById('rfq-success-sub').textContent =
-      `Your RFQ #${data.rfqId} has been sent to ${_rfqSupplier?.name}.` +
-      (payload.sendCopy ? ' A copy was sent to your email.' : '');
+    if (document.getElementById('rfq-form-body')) document.getElementById('rfq-form-body').style.display = 'none';
+    if (document.getElementById('rfq-foot'))      document.getElementById('rfq-foot').style.display = 'none';
+    const succ = document.getElementById('rfq-success');
+    if (succ) succ.style.display = 'flex';
+    const names = suppliers.map(s => s.name).join(', ');
+    const sub = document.getElementById('rfq-success-sub');
+    if (sub) sub.textContent = `RFQ sent to ${names}.${payload.sendCopy ? ' A copy was emailed to you.' : ''} Ref: ${(data.rfqIds||[data.rfqId]).join(', ')}`;
+
+    // Analytics
+    if (typeof gtag === 'function') gtag('event', 'rfq_submitted', { count: suppliers.length, material: _rfqMaterial });
   } catch (e) {
     showToast('Error: ' + e.message);
-    btn.disabled = false;
-    btn.textContent = 'Send Request →';
+    btn.disabled = false; btn.textContent = 'Send Request →';
   }
 }
+
 
 </script>
 </body>
