@@ -940,512 +940,526 @@ function exportReport() {
   if (!window.jspdf)  { alert('PDF library not loaded.'); return; }
 
   // ── COMPUTED VALUES ──────────────────────────────────────────────────────────
-  const layerRs = layers.map(l => ({ layer:l, r:calcLayerR(l) }));
-  const sumR    = layerRs.reduce((a,{r}) => a + (r||0), 0);
+  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
+  const sumR    = layerRs.reduce((a, { r }) => a + (r || 0), 0);
   const RT      = RSE + sumR + RSI;
   const U0      = RT > 0 ? 1 / RT : 0;
-  const A       = parseFloat(document.getElementById('ref-area')?.value || 1) || 1;
-  const dUPsi   = psis.reduce((a,p) => a + (p.psi * p.len) / A, 0);
-  const dUChi   = chis.reduce((a,c) => a + (c.chi * c.cnt) / A, 0);
+  const refArea = parseFloat(document.getElementById('ref-area')?.value || 1) || 1;
+  const dUPsi   = psis.reduce((a, p) => a + (p.psi * p.len) / refArea, 0);
+  const dUChi   = chis.reduce((a, ch) => a + (ch.chi * ch.cnt) / refArea, 0);
   const Ut      = U0 + dUPsi + dUChi;
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
 
-  const STDS = [
-    { name:"Al Sa'fat Silver",       auth:'Dubai Municipality GBRS v2.0',  note:'Mandatory — all Dubai permits',           lim:0.57, pass:Ut<=0.57 },
-    { name:"Al Sa'fat Gold/Platinum",auth:'Dubai Municipality GBRS v2.0',  note:'Voluntary enhanced — Dubai',              lim:0.42, pass:Ut<=0.42 },
-    { name:'Barjeel GBR v1.2',       auth:'RAK Municipality',              note:'Mandatory — all RAK permits',             lim:0.48, pass:Ut<=0.48 },
-    { name:'Estidama 1-Pearl',        auth:'Abu Dhabi PBRS v1.0 (UPC)',    note:'Mandatory — all Abu Dhabi buildings',      lim:0.32, pass:Ut<=0.32 },
-    { name:'Estidama 2-Pearl',        auth:'Abu Dhabi PBRS v1.0 (UPC)',    note:'Mandatory — Abu Dhabi government bldgs',  lim:0.26, pass:Ut<=0.26 },
-    { name:'ASHRAE 90.1-2019 CZ0/1', auth:'ASHRAE',                       note:'Mass wall assembly — UAE baseline',        lim:0.70, pass:Ut<=0.70 },
-  ];
+  const COMPLIANCE_STDS = [
+    { name:"Al Sa'fat Silver",        auth:'Dubai Municipality',   detail:'Mandatory — all Dubai permits · GBRS v2.0',              lim:0.57 },
+    { name:"Al Sa'fat Gold/Platinum", auth:'Dubai Municipality',   detail:'Voluntary enhanced · GBRS v2.0 2024',                    lim:0.42 },
+    { name:'Barjeel GBR v1.2',        auth:'RAK Municipality',     detail:'Mandatory — all RAK permits · 2019 / 2022',              lim:0.48 },
+    { name:'Estidama 1-Pearl',         auth:'Abu Dhabi UPC',        detail:'Mandatory — all Abu Dhabi buildings · PBRS v1.0',        lim:0.32 },
+    { name:'Estidama 2-Pearl',         auth:'Abu Dhabi UPC',        detail:'Mandatory — Abu Dhabi government buildings · PBRS v1.0', lim:0.26 },
+    { name:'ASHRAE 90.1-2019 CZ0/1',  auth:'ASHRAE',               detail:'Mass wall assembly — UAE practitioner baseline',          lim:0.70 },
+  ].map(s => ({ ...s, pass: Ut <= s.lim }));
 
-  // ── jsPDF SETUP ──────────────────────────────────────────────────────────────
-  const {jsPDF} = window.jspdf;
-  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  // ── jsPDF ────────────────────────────────────────────────────────────────────
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
+  // Page geometry
   const PW = 210, PH = 297;
-  const ML = 18, MR = 18;           // left / right margin
-  const MT = 0;                      // top (managed manually)
-  const CW = PW - ML - MR;          // 174 mm content width
-  const FOOTER_Y = PH - 12;
+  const ML = 18, MR = 18;
+  const CW = PW - ML - MR;   // 174mm
+  const HDR_H   = 28;         // page 1 header height
+  const CONT_H  = 10;         // continuation header height
+  const FOOT_H  = 10;         // footer band height
+  const SAFE_B  = PH - FOOT_H - 4; // 283mm — never draw below this
 
-  // ── COLOUR PALETTE — white page, print-safe ─────────────────────────────────
-  const WHITE   = [255, 255, 255];
-  const BLACK   = [ 20,  20,  20];  // near-black body text
-  const GREY1   = [ 60,  60,  60];  // secondary text
-  const GREY2   = [110, 110, 110];  // tertiary / labels
-  const GREY3   = [200, 200, 200];  // borders / rules
-  const LGREY   = [247, 248, 247];  // alternating row tint
-  const HBKG    = [ 22,  38,  28];  // header background (dark green)
-  const HTEXT   = [255, 255, 255];  // header text
-  const TBHDR   = [ 45,  58,  50];  // table column header bg
-  const TBTEXT  = [255, 255, 255];  // table column header text
-  const GREEN   = [  0, 140,  90];  // accent — readable on white
-  const DGREEN  = [  0, 110,  72];  // darker green for emphasis
-  const PASS_BG = [  0, 140,  90];
-  const FAIL_BG = [200,  40,  40];
-  const WARN_BG = [190, 120,   0];
-  const BLUE    = [ 30,  90, 180];
-  const PURPLE  = [100,  60, 180];
+  // ── COLOUR PALETTE ───────────────────────────────────────────────────────────
+  const W     = [255,255,255];   // white
+  const BK    = [ 22, 22, 22];   // near-black
+  const G1    = [ 60, 60, 60];   // dark grey
+  const G2    = [100,100,100];   // mid grey
+  const G3    = [180,180,180];   // light grey borders
+  const LG    = [247,248,247];   // alternating row tint
+  const HBKG  = [ 22, 38, 28];   // dark green header
+  const THBKG = [ 45, 58, 50];   // table header bg
+  const GRN   = [  0,130, 85];   // accent green (print-safe)
+  const DGRN  = [  0,100, 65];   // darker green text
+  const PASS  = [  0,130, 85];
+  const FAIL  = [185, 35, 35];
+  const WARN  = [175,110,  0];
+  const BLU   = [ 25, 80,175];
+  const PUR   = [ 90, 50,175];
 
-  // ── HELPERS ─────────────────────────────────────────────────────────────────
+  // ── SHORT HELPERS ────────────────────────────────────────────────────────────
   const sf = (r,g,b) => doc.setFillColor(r,g,b);
   const st = (r,g,b) => doc.setTextColor(r,g,b);
-  const sd = (r,g,b) => { doc.setDrawColor(r,g,b); };
+  const sd = (r,g,b) => doc.setDrawColor(r,g,b);
   const lw = w => doc.setLineWidth(w);
-  function B(sz) { doc.setFont('helvetica','bold');   doc.setFontSize(sz); }
-  function N(sz) { doc.setFont('helvetica','normal'); doc.setFontSize(sz); }
-  function BI(sz){ doc.setFont('helvetica','bolditalic'); doc.setFontSize(sz); }
-  function tw(t, sz) { doc.setFontSize(sz); return doc.getTextWidth(String(t)); }
-  function wrap(t, maxW, sz) { doc.setFontSize(sz); return doc.splitTextToSize(String(t||''), maxW); }
+  const B  = sz => { doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
+  const N  = sz => { doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
+  const tw = (t,sz) => { doc.setFontSize(sz); return doc.getTextWidth(String(t)); };
+  const wt = (t,w,sz) => { doc.setFontSize(sz); return doc.splitTextToSize(String(t||'—'), w); };
+  const hline = (y, col, weight) => { sd(...(col||G3)); lw(weight||0.25); doc.line(ML, y, ML+CW, y); };
 
-  // Page state
-  let pageNum = 0;
-  let y = 0;
+  // ── Y STATE ──────────────────────────────────────────────────────────────────
+  let y   = 0;
+  let pgN = 0;
 
-  // ── DRAW FOOTER ─────────────────────────────────────────────────────────────
-  // Called retrospectively on all pages at the very end
+  // ── FOOTER (called at end, once per page) ───────────────────────────────────
   function drawFooter(pn, total) {
-    sd(...GREY3); lw(0.3); doc.line(ML, FOOTER_Y - 1, PW - MR, FOOTER_Y - 1);
-    N(7); st(...GREY2);
-    doc.text('CladWise UAE  ·  Facade U-Value Thermal Calculation Report  ·  ISO 6946:2017 + ISO 14683:2017 + ISO 10211:2017', ML, FOOTER_Y + 4);
-    B(7); st(...GREEN);
-    doc.text(`Page ${pn} of ${total}`, PW - MR, FOOTER_Y + 4, { align:'right' });
+    const fy = PH - FOOT_H;
+    sd(...G3); lw(0.3); doc.line(ML, fy, ML+CW, fy);
+    N(6.5); st(...G2);
+    doc.text(
+      'CladWise UAE  ·  U-Value Thermal Calculation Report  ·  ISO 6946:2017  ·  ISO 14683:2017  ·  ISO 10211:2017',
+      ML, fy + 5);
+    B(6.5); st(...GRN);
+    doc.text('Page '+pn+' / '+total, PW-MR, fy+5, { align:'right' });
   }
 
   // ── NEW PAGE ─────────────────────────────────────────────────────────────────
-  function newPage(isFirst) {
-    if (!isFirst) doc.addPage();
-    pageNum++;
-    sf(...WHITE); doc.rect(0, 0, PW, PH, 'F');
-
-    if (!isFirst) {
-      // Continuation page — slim header
-      sf(...HBKG); doc.rect(0, 0, PW, 10, 'F');
-      B(7); st(...HTEXT);
-      doc.text('CLADWISE UAE  ·  U-VALUE THERMAL CALCULATION REPORT', ML, 6.8);
-      N(7); st(...[180,200,185]);
-      doc.text('CONTINUED', PW - MR, 6.8, { align:'right' });
-      y = 17;
+  function newPage(first) {
+    if (!first) doc.addPage();
+    pgN++;
+    sf(...W); doc.rect(0,0,PW,PH,'F');
+    if (first) {
+      // Full letterhead
+      sf(...HBKG); doc.rect(0, 0, PW, HDR_H, 'F');
+      // Logo box
+      sf(...GRN); doc.rect(ML, 5, 20, 18, 'F');
+      B(9); st(...HBKG); doc.text('CW', ML+10, 15.5, { align:'center' });
+      // Name
+      B(12); st([255,255,255]);
+      doc.text('CLADWISE UAE', ML+24, 12);
+      N(7); st([150,195,170]);
+      doc.text('Façade Material Intelligence  ·  cladwise.ae', ML+24, 18);
+      // Report type label
+      const rtW = 54;
+      sf([35,55,42]); doc.rect(PW-MR-rtW, 6, rtW, 16, 'F');
+      B(7); st([150,220,180]); doc.text('THERMAL CALCULATION', PW-MR-rtW/2, 12.5, { align:'center' });
+      B(8); st(...GRN); doc.text('U-VALUE REPORT', PW-MR-rtW/2, 19.5, { align:'center' });
+      // Green stripe under header
+      sf(...GRN); doc.rect(0, HDR_H, PW, 0.7, 'F');
+      y = HDR_H + 6;
+    } else {
+      // Slim continuation header
+      sf(...HBKG); doc.rect(0, 0, PW, CONT_H, 'F');
+      B(6.5); st([200,220,205]);
+      doc.text('CLADWISE UAE  ·  U-VALUE THERMAL CALCULATION REPORT', ML, 7);
+      N(6.5); st([130,160,140]);
+      doc.text('CONTINUED', PW-MR, 7, { align:'right' });
+      sf(...GRN); doc.rect(0, CONT_H, PW, 0.5, 'F');
+      y = CONT_H + 6;
     }
   }
 
-  function checkY(need) {
-    if (y + need > FOOTER_Y - 8) newPage(false);
+  // ── SAFE CHECK ───────────────────────────────────────────────────────────────
+  function need(mm) {
+    if (y + mm > SAFE_B) newPage(false);
   }
 
-  // ── HORIZONTAL RULE ─────────────────────────────────────────────────────────
-  function hrule(yy, col, weight) {
-    sd(...(col||GREY3)); lw(weight||0.3);
-    doc.line(ML, yy, PW - MR, yy);
+  // ── SECTION HEADING ──────────────────────────────────────────────────────────
+  function secHead(title) {
+    need(14);
+    sf(...GRN); doc.rect(ML, y, 3, 7, 'F');
+    B(9); st(...BK);
+    doc.text(title, ML+6, y+5.5);
+    hline(y+8, G3, 0.3);
+    y += 13;
   }
 
-  // ── SECTION HEADING ─────────────────────────────────────────────────────────
-  function sectionHead(title, yy) {
-    checkY(14);
-    // Left accent bar
-    sf(...GREEN); doc.rect(ML, yy, 2.5, 6.5, 'F');
-    B(9); st(...BLACK);
-    doc.text(title.toUpperCase(), ML + 5.5, yy + 5);
-    hrule(yy + 7, GREY3, 0.3);
-    return yy + 11;
-  }
-
-  // ── TABLE HEADER ROW ────────────────────────────────────────────────────────
-  function tableHeaderRow(cols, yy, rowH) {
-    sf(...TBHDR); doc.rect(ML, yy, CW, rowH, 'F');
-    B(7.5); st(...TBTEXT);
+  // ── TABLE COLUMN HEADER ──────────────────────────────────────────────────────
+  function tblHeader(cols, rowH) {
+    need(rowH);
+    sf(...THBKG); doc.rect(ML, y, CW, rowH, 'F');
+    // Top border
+    sd(...GRN); lw(0.4); doc.line(ML, y, ML+CW, y);
+    B(7); st(...W);
     cols.forEach(col => {
-      const x = ML + col.x;
-      const txt = String(col.label || '');
-      if (col.align === 'right') {
-        doc.text(txt, ML + col.x + col.w - 2, yy + rowH - 3, { align:'right' });
-      } else {
-        doc.text(txt, x + 2, yy + rowH - 3);
-      }
+      const cx = ML + col.x + (col.align==='right' ? col.w-2 : 2);
+      doc.text(col.label||'', cx, y + rowH/2 + 2.3,
+        { align: col.align==='right' ? 'right' : 'left' });
     });
-    return yy + rowH;
+    // Col dividers
+    sd(...[70,85,75]); lw(0.2);
+    cols.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+rowH); });
+    sd(...G3); lw(0.3);
+    doc.line(ML, y, ML, y+rowH);
+    doc.line(ML+CW, y, ML+CW, y+rowH);
+    y += rowH;
   }
 
-  // ── TABLE DATA ROW ───────────────────────────────────────────────────────────
-  function tableRow(cols, values, yy, rowH, isEven, options) {
-    const bg = options?.bg || (isEven ? WHITE : LGREY);
-    sf(...bg); doc.rect(ML, yy, CW, rowH, 'F');
-    // Bottom border
-    sd(...GREY3); lw(0.2); doc.line(ML, yy + rowH, ML + CW, yy + rowH);
+  // ── TABLE DATA ROW — dynamic height ─────────────────────────────────────────
+  function tblRow(cols, cells, rowH, isEven) {
+    need(rowH);
+    const bg = isEven ? W : LG;
+    sf(...bg); doc.rect(ML, y, CW, rowH, 'F');
+    sd(...G3); lw(0.2); doc.line(ML, y+rowH, ML+CW, y+rowH);
+    // Col dividers
+    sd(...G3); lw(0.15);
+    cols.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+rowH); });
+    sd(...G3); lw(0.3);
+    doc.line(ML, y, ML, y+rowH);
+    doc.line(ML+CW, y, ML+CW, y+rowH);
 
-    cols.forEach((col, i) => {
-      const val = values[i];
-      if (val === null || val === undefined) return;
-      const x = ML + col.x;
-      const textX = col.align === 'right' ? ML + col.x + col.w - 2 : x + 2;
-      const textY = yy + rowH / 2 + 2;
+    cells.forEach((cell, i) => {
+      if (!cell) return;
+      const col   = cols[i];
+      const ra    = col.align === 'right';
+      const sz    = cell.sz || 8;
+      const color = cell.color || BK;
+      const text  = String(cell.text !== undefined ? cell.text : cell);
+      const maxW  = col.w - 4;
 
-      if (val.bold)    { B(val.sz || 8);  }
-      else             { N(val.sz || 8);  }
-      st(...(val.color || BLACK));
-      const txt = String(val.text !== undefined ? val.text : val);
-      const lines = wrap(txt, col.w - 4, val.sz || 8);
-      if (col.align === 'right') {
-        doc.text(lines[0] || '', textX, textY, { align:'right' });
-      } else {
-        doc.text(lines[0] || '', textX, textY);
-        if (lines[1]) doc.text(lines[1], textX, textY + 3.5);
-      }
+      if (cell.bold) B(sz); else N(sz);
+      st(...color);
+
+      const lns = wt(text, maxW, sz);
+      const totalH = lns.length * (sz * 0.352 + 1.2);
+      const startY = y + (rowH - totalH) / 2 + sz * 0.352;
+      const cx = ra ? ML + col.x + col.w - 2 : ML + col.x + 2;
+
+      lns.forEach((ln, li) => {
+        doc.text(ln, cx, startY + li * (sz * 0.352 + 1.2),
+          { align: ra ? 'right' : 'left' });
+      });
     });
-    // Vertical column dividers
-    sd(...GREY3); lw(0.15);
-    cols.forEach(col => {
-      if (col.x > 0) doc.line(ML + col.x, yy, ML + col.x, yy + rowH);
-    });
-    // Outer vertical borders
-    lw(0.3); doc.line(ML, yy, ML, yy + rowH);
-    doc.line(ML + CW, yy, ML + CW, yy + rowH);
-    return yy + rowH;
+    y += rowH;
   }
 
   // ── TABLE OUTER BORDER ───────────────────────────────────────────────────────
-  function tableOuterBorder(topY, bottomY) {
-    sd(...GREY3); lw(0.4);
-    doc.rect(ML, topY, CW, bottomY - topY, 'S');
+  function tblBorder(topY) {
+    sd(...G3); lw(0.4); doc.rect(ML, topY, CW, y-topY, 'S');
+  }
+
+  // ── TOTAL / SUMMARY ROW ─────────────────────────────────────────────────────
+  function tblTotalRow(leftLabel, rightVal, bgColor, borderColor) {
+    need(9);
+    sf(...bgColor); doc.rect(ML, y, CW, 9, 'F');
+    sd(...borderColor); lw(0.4); doc.rect(ML, y, CW, 9, 'S');
+    B(8.5); st(...borderColor);
+    doc.text(leftLabel, ML+4, y+6);
+    doc.text(rightVal, PW-MR-2, y+6, { align:'right' });
+    y += 9;
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // PAGE 1 — COVER + SUMMARY
+  // BUILD THE PDF
   // ═══════════════════════════════════════════════════════════════════
   newPage(true);
 
-  // ── LETTERHEAD HEADER ────────────────────────────────────────────────────────
-  sf(...HBKG); doc.rect(0, 0, PW, 32, 'F');
-  // Logo area
-  sf(...GREEN); doc.rect(ML, 8, 28, 16, 'F');
-  B(11); st(...HBKG);
-  doc.text('CW', ML + 14, 18.5, { align:'center' });
-  // Company name + report title
-  B(14); st(...HTEXT);
-  doc.text('CLADWISE UAE', ML + 32, 13);
-  N(7.5); st(...[160, 200, 175]);
-  doc.text('Façade Material Intelligence  ·  cladwise.ae', ML + 32, 19);
-  // Report type label right side
-  sf(...[35, 60, 45]); doc.rect(PW - MR - 52, 7, 52, 18, 'F');
-  B(7); st(...[160, 220, 185]);
-  doc.text('THERMAL CALCULATION', PW - MR - 26, 14, { align:'center' });
-  B(8.5); st(...GREEN);
-  doc.text('U-VALUE REPORT', PW - MR - 26, 21, { align:'center' });
-  // Thin accent line at bottom of header
-  sf(...GREEN); doc.rect(0, 32, PW, 0.8, 'F');
-
-  y = 39;
-
-  // ── REPORT METADATA ROW ──────────────────────────────────────────────────────
-  sf(...LGREY); doc.rect(ML, y, CW, 12, 'F');
-  sd(...GREY3); lw(0.3); doc.rect(ML, y, CW, 12, 'S');
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-  const metaItems = [
-    { label:'Date',      val: dateStr },
-    { label:'Standards', val: 'ISO 6946:2017  ·  ISO 14683:2017  ·  ISO 10211:2017' },
-    { label:'Ref. Area', val: A.toFixed(2) + ' m²' },
-    { label:'Purpose',   val: 'UAE Green Building Compliance' },
+  // ── METADATA STRIP ───────────────────────────────────────────────────────────
+  sf(...LG); doc.rect(ML, y, CW, 13, 'F');
+  sd(...G3); lw(0.3); doc.rect(ML, y, CW, 13, 'S');
+  const meta = [
+    { lbl:'Date',       val: dateStr },
+    { lbl:'Standards',  val: 'ISO 6946:2017  ·  ISO 14683:2017  ·  ISO 10211:2017' },
+    { lbl:'Ref. Area',  val: refArea.toFixed(2) + ' m²' },
+    { lbl:'Purpose',    val: 'UAE Green Building Compliance' },
   ];
-  const mW = CW / metaItems.length;
-  metaItems.forEach((item, i) => {
-    const mx = ML + i * mW + 4;
-    N(7); st(...GREY2); doc.text(item.label.toUpperCase(), mx, y + 4.5);
-    B(8); st(...BLACK); doc.text(item.val, mx, y + 9.5);
+  const mw = CW / meta.length;
+  meta.forEach((m, i) => {
+    const mx = ML + i * mw + 3;
+    N(6.5); st(...G2); doc.text(m.lbl.toUpperCase(), mx, y + 4.5);
+    B(7.5); st(...BK); doc.text(m.val, mx, y + 10.5);
   });
   y += 18;
 
   // ── U-VALUE RESULT BOX ───────────────────────────────────────────────────────
-  const topLabel = Ut<=0.26?'ESTIDAMA 2-PEARL':Ut<=0.32?'ESTIDAMA 1-PEARL':Ut<=0.42?"AL SA'FAT GOLD":Ut<=0.48?'BARJEEL (RAK)':Ut<=0.57?"AL SA'FAT SILVER":Ut<=0.70?'ASHRAE 90.1 CZ0/1':'NON-COMPLIANT';
-  const statusColor = Ut<=0.57 && Ut<=0.70 ? PASS_BG : Ut<=0.70 ? WARN_BG : FAIL_BG;
-  const overallPass = Ut <= 0.57;
+  const topLbl  = Ut<=0.26?'ESTIDAMA 2-PEARL':Ut<=0.32?'ESTIDAMA 1-PEARL':Ut<=0.42?"AL SA'FAT GOLD":Ut<=0.48?'BARJEEL (RAK)':Ut<=0.57?"AL SA'FAT SILVER":Ut<=0.70?'ASHRAE 90.1 ONLY':'NON-COMPLIANT';
+  const topCol  = Ut<=0.57 ? PASS : (Ut<=0.70 ? WARN : FAIL);
+  const pass    = Ut <= 0.57;
 
-  sd(...GREY3); lw(0.4);
-  doc.rect(ML, y, CW, 40, 'S');
-  // Left panel — U value
-  sf(...(overallPass ? [240,250,245] : [252,242,242]));
-  doc.rect(ML, y, 80, 40, 'F');
-  sd(...GREY3); lw(0.3); doc.line(ML + 80, y, ML + 80, y + 40);
-  // U value number
-  B(7); st(...GREY1); doc.text('CALCULATED U-VALUE  (W/m²·K)', ML + 4, y + 8);
-  B(32); st(...(overallPass ? DGREEN : FAIL_BG));
-  doc.text(Ut.toFixed(3), ML + 4, y + 29);
-  N(9); st(...GREY1); doc.text('W/m²·K', ML + 4 + tw(Ut.toFixed(3), 32) + 2, y + 29);
+  sd(...G3); lw(0.4); doc.rect(ML, y, CW, 38, 'S');
+
+  // Left — U number
+  const lw2 = 82;
+  sf(...(pass ? [240,250,244] : [252,242,242]));
+  doc.rect(ML, y, lw2, 38, 'F');
+  sd(...G3); lw(0.3); doc.line(ML+lw2, y, ML+lw2, y+38);
+  B(7); st(...G2); doc.text('CALCULATED U-VALUE  (W/m²·K)', ML+4, y+8);
+  B(30); st(...(pass ? DGRN : FAIL));
+  doc.text(Ut.toFixed(3), ML+4, y+27);
+  N(10); st(...G1); doc.text(' W/m²·K', ML+4+tw(Ut.toFixed(3), 30), y+27);
   // Status badge
-  sf(...statusColor); doc.roundedRect(ML + 4, y + 32, 68, 6, 1.5, 1.5, 'F');
-  B(7); st(...WHITE); doc.text(topLabel, ML + 38, y + 36.2, { align:'center' });
+  sf(...topCol); doc.roundedRect(ML+4, y+30, lw2-8, 6, 1.5, 1.5, 'F');
+  B(7); st(...W); doc.text(topLbl, ML+4+(lw2-8)/2, y+34.2, { align:'center' });
 
-  // Right panel — breakdown
-  const rx = ML + 84;
-  const bItems = [
-    { lbl:'U₀  (clear-field, ISO 6946)',    val:U0.toFixed(4),      unit:'W/m²K', col:BLACK },
-    { lbl:'ΔUΨ  (linear bridges, Σ Ψk·Lk/A)', val:'+'+dUPsi.toFixed(4), unit:'W/m²K', col:BLUE   },
-    { lbl:'ΔUχ  (point bridges, Σ χj·nj/A)',  val:'+'+dUChi.toFixed(4), unit:'W/m²K', col:PURPLE },
-    { lbl:'R_T  (total thermal resistance)',  val:RT.toFixed(3),      unit:'m²K/W', col:GREEN  },
+  // Right — breakdown
+  const rCols = [
+    { lbl:'U₀  (clear-field, ISO 6946:2017)',       val:U0.toFixed(4),       unit:'W/m²K', col:BK  },
+    { lbl:'ΔUΨ  (linear bridges, Σ Ψk·Lk / A)',    val:'+'+dUPsi.toFixed(4),unit:'W/m²K', col:BLU },
+    { lbl:'ΔUχ  (point bridges, Σ χj·nj / A)',     val:'+'+dUChi.toFixed(4),unit:'W/m²K', col:PUR },
+    { lbl:'R_T  (total thermal resistance)',         val:RT.toFixed(4),       unit:'m²K/W', col:GRN },
   ];
-  bItems.forEach((item, i) => {
-    const iy = y + 5 + i * 9;
-    N(7.5); st(...GREY2); doc.text(item.lbl, rx, iy);
-    B(9);   st(...item.col); doc.text(item.val, PW - MR - 22, iy, { align:'right' });
-    N(7);   st(...GREY2);   doc.text(item.unit, PW - MR - 1,  iy, { align:'right' });
+  rCols.forEach((item, i) => {
+    const iy = y + 5 + i * 8.5;
+    N(7); st(...G2); doc.text(item.lbl, ML+lw2+4, iy);
+    B(9); st(...item.col); doc.text(item.val, PW-MR-14, iy, { align:'right' });
+    N(7); st(...G2); doc.text(item.unit, PW-MR-2, iy, { align:'right' });
   });
-  y += 47;
+  y += 44;
 
-  // ── WALL ASSEMBLY TABLE ───────────────────────────────────────────────────────
-  y = sectionHead('1.  Wall Assembly  —  Outside → Inside  (ISO 6946:2017)', y);
+  // ═══════════════════════════════════════════════════════════════════
+  // 1. WALL ASSEMBLY TABLE
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('1.  Wall Assembly  —  Outside → Inside  (ISO 6946:2017)');
 
-  // Column definitions — x = offset from ML, w = width
-  const AC = [
-    { x:0,   w:8,   label:'#'                   },
-    { x:8,   w:68,  label:'Material / Layer'     },
-    { x:76,  w:22,  label:'d  (mm)',  align:'right' },
-    { x:98,  w:26,  label:'λ  (W/m·K)', align:'right' },
-    { x:124, w:26,  label:'R  (m²K/W)', align:'right' },
-    { x:150, w:14,  label:'R  %',    align:'right' },
-    { x:164, w:10,  label:''                     },
+  // col defs: x = offset from ML, w = width, total must = CW=174
+  const WC = [
+    { x:  0, w:  7, label:'#'            },
+    { x:  7, w: 82, label:'Material / Layer' },
+    { x: 89, w: 21, label:'d (mm)',    align:'right' },
+    { x:110, w: 28, label:'λ (W/m·K)', align:'right' },
+    { x:138, w: 24, label:'R (m²K/W)', align:'right' },
+    { x:162, w: 12, label:'R %',       align:'right' },
   ];
-  const ROW_H = 8.5;
-  let tableTopY = y;
-  y = tableHeaderRow(AC, y, 8);
+  // Verify sum
+  // 7+82+21+28+24+12 = 174 ✓
 
-  // Rse row
-  y = tableRow(AC, [
-    { text:'—', color:GREY2 },
-    { text:'External surface resistance  (R_se)',  color:GREY1 },
-    { text:'—',     color:GREY2, align:'right' },
-    { text:'—',     color:GREY2, align:'right' },
-    { text:RSE.toFixed(3), bold:true, color:GREEN, align:'right' },
-    { text:(RSE/RT*100).toFixed(0)+'%', color:GREY2, align:'right' },
-    { text:'' },
-  ], y, ROW_H, true);
+  const ROW = 8.5;
+  const wallTop = y;
+  tblHeader(WC, 8);
 
-  layerRs.forEach(({layer:l, r}, i) => {
-    checkY(ROW_H + 2);
-    const rStr  = r !== null ? r.toFixed(4) : '—';
-    const rPct  = r && RT > 0 ? (r/RT*100).toFixed(0)+'%' : '—';
-    const lamStr = l.fixedR !== null ? 'fixed R='+l.fixedR : (l.lambda || '—');
-    y = tableRow(AC, [
-      { text:String(i+1), color:GREY2 },
-      { text:l.name, bold:true, color:BLACK },
-      { text:String(l.thickness)+'', color:GREY1, align:'right' },
-      { text:lamStr, color:GREY1, align:'right', sz:7 },
-      { text:rStr, bold:true, color:(r?BLACK:GREY2), align:'right' },
-      { text:rPct, color:GREY2, align:'right' },
-      { text:'' },
-    ], y, ROW_H, i%2===0);
+  // Rse
+  tblRow(WC, [
+    { text:'—', color:G2 },
+    { text:'External surface resistance  (Rse)', color:G1 },
+    { text:'—', color:G2, align:'right' },
+    { text:'—', color:G2, align:'right' },
+    { text:RSE.toFixed(3), bold:true, color:GRN },
+    { text:(RSE/RT*100).toFixed(0)+'%', color:G2 },
+  ], ROW, true);
+
+  layerRs.forEach(({ layer:l, r }, i) => {
+    const rStr   = r !== null ? r.toFixed(4) : '—';
+    const rPct   = (r && RT > 0) ? (r/RT*100).toFixed(0)+'%' : '—';
+    const lamStr = l.fixedR !== null ? '(R='+l.fixedR+')' : String(l.lambda || '—');
+    tblRow(WC, [
+      { text:String(i+1), color:G2 },
+      { text:l.name, bold:true, color:BK },
+      { text:String(l.thickness), color:G1 },
+      { text:lamStr, color:G1, sz:7.5 },
+      { text:rStr, bold:r!==null, color:r!==null?BK:G2 },
+      { text:rPct, color:G2 },
+    ], ROW, i%2===0);
   });
 
-  // Rsi row
-  y = tableRow(AC, [
-    { text:'—', color:GREY2 },
-    { text:'Internal surface resistance  (R_si)',  color:GREY1 },
-    { text:'—',     color:GREY2, align:'right' },
-    { text:'—',     color:GREY2, align:'right' },
-    { text:RSI.toFixed(3), bold:true, color:GREEN, align:'right' },
-    { text:(RSI/RT*100).toFixed(0)+'%', color:GREY2, align:'right' },
-    { text:'' },
-  ], y, ROW_H, false);
+  // Rsi
+  tblRow(WC, [
+    { text:'—', color:G2 },
+    { text:'Internal surface resistance  (Rsi)', color:G1 },
+    { text:'—', color:G2 },
+    { text:'—', color:G2 },
+    { text:RSI.toFixed(3), bold:true, color:GRN },
+    { text:(RSI/RT*100).toFixed(0)+'%', color:G2 },
+  ], ROW, layerRs.length%2===0);
 
-  // Total row
-  sf(...[235,245,240]); doc.rect(ML, y, CW, ROW_H + 1, 'F');
-  sd(...GREEN); lw(0.4); doc.rect(ML, y, CW, ROW_H + 1, 'S');
-  B(9); st(...BLACK);
-  doc.text('TOTAL  R_T', ML + 10, y + 6);
-  doc.text(RT.toFixed(4)+' m²K/W', ML + CW - 50, y + 6);
-  st(...GREEN);
-  doc.text('U₀ = '+U0.toFixed(3)+' W/m²K', PW - MR - 2, y + 6, { align:'right' });
-  tableOuterBorder(tableTopY, y + ROW_H + 1);
-  y += ROW_H + 8;
+  tblBorder(wallTop);
 
-  // ── LINEAR BRIDGES TABLE ────────────────────────────────────────────────────
-  checkY(40);
-  y = sectionHead('2.  Linear Thermal Bridges  Ψ  (ISO 14683:2017)', y);
-
-  const PC = [
-    { x:0,   w:8,   label:'#' },
-    { x:8,   w:76,  label:'Junction Type' },
-    { x:84,  w:30,  label:'Ψ  (W/m·K)',  align:'right' },
-    { x:114, w:24,  label:'L  (m)',       align:'right' },
-    { x:138, w:36,  label:'Ψ·L/A  (W/m²K)', align:'right' },
-  ];
-  let psiTableTop = y;
-  y = tableHeaderRow(PC, y, 8);
-
-  if (psis.length === 0) {
-    sf(...LGREY); doc.rect(ML, y, CW, 9, 'F');
-    sd(...GREY3); lw(0.2); doc.line(ML, y+9, ML+CW, y+9);
-    N(8); st(...GREY2); doc.text('No linear thermal bridges defined.', ML+4, y+6);
-    sd(...GREY3); lw(0.3); doc.line(ML,y,ML,y+9); doc.line(ML+CW,y,ML+CW,y+9);
-    y += 9;
-  } else {
-    psis.forEach((p, i) => {
-      checkY(9);
-      const contrib = (p.psi * p.len) / A;
-      y = tableRow(PC, [
-        { text:String(i+1), color:GREY2 },
-        { text:p.name, bold:true, color:BLACK },
-        { text:p.psi.toFixed(4), color:BLUE, align:'right' },
-        { text:p.len.toFixed(2), color:GREY1, align:'right' },
-        { text:contrib.toFixed(5), bold:true, color:BLUE, align:'right' },
-      ], y, 9, i%2===0);
-    });
-  }
-  // Ψ total row
-  sf(...[238,244,255]); doc.rect(ML, y, CW, 9, 'F');
-  sd(...[100,130,200]); lw(0.4); doc.rect(ML, y, CW, 9, 'S');
-  B(9); st(...BLUE);
-  doc.text('ΔUΨ  TOTAL  (Σ Ψk·Lk / A)', ML + 4, y + 6);
-  doc.text('+'+dUPsi.toFixed(5)+' W/m²K', PW - MR - 2, y + 6, { align:'right' });
-  tableOuterBorder(psiTableTop, y + 9);
-  y += 15;
-
-  // ── POINT BRIDGES TABLE ──────────────────────────────────────────────────────
-  checkY(40);
-  y = sectionHead('3.  Point Thermal Bridges  χ  (ISO 10211:2017)', y);
-
-  const CC = [
-    { x:0,   w:8,   label:'#' },
-    { x:8,   w:76,  label:'Fixing / Anchor Type' },
-    { x:84,  w:30,  label:'χ  (W/K)',    align:'right' },
-    { x:114, w:24,  label:'Count  n',    align:'right' },
-    { x:138, w:36,  label:'χ·n/A  (W/m²K)', align:'right' },
-  ];
-  let chiTableTop = y;
-  y = tableHeaderRow(CC, y, 8);
-
-  if (chis.length === 0) {
-    sf(...LGREY); doc.rect(ML, y, CW, 9, 'F');
-    sd(...GREY3); lw(0.2); doc.line(ML, y+9, ML+CW, y+9);
-    N(8); st(...GREY2); doc.text('No point thermal bridges defined.', ML+4, y+6);
-    sd(...GREY3); lw(0.3); doc.line(ML,y,ML,y+9); doc.line(ML+CW,y,ML+CW,y+9);
-    y += 9;
-  } else {
-    chis.forEach((ch, i) => {
-      checkY(9);
-      const contrib = (ch.chi * ch.cnt) / A;
-      y = tableRow(CC, [
-        { text:String(i+1), color:GREY2 },
-        { text:ch.name, bold:true, color:BLACK },
-        { text:ch.chi.toFixed(5), color:PURPLE, align:'right' },
-        { text:String(ch.cnt), color:GREY1, align:'right' },
-        { text:contrib.toFixed(5), bold:true, color:PURPLE, align:'right' },
-      ], y, 9, i%2===0);
-    });
-  }
-  sf(...[245,240,255]); doc.rect(ML, y, CW, 9, 'F');
-  sd(...[130,100,200]); lw(0.4); doc.rect(ML, y, CW, 9, 'S');
-  B(9); st(...PURPLE);
-  doc.text('ΔUχ  TOTAL  (Σ χj·nj / A)', ML + 4, y + 6);
-  doc.text('+'+dUChi.toFixed(5)+' W/m²K', PW - MR - 2, y + 6, { align:'right' });
-  tableOuterBorder(chiTableTop, y + 9);
-  y += 15;
-
-  // ── CORRECTED U-VALUE SUMMARY BOX ────────────────────────────────────────────
-  checkY(26);
-  sf(...[235,248,240]); doc.rect(ML, y, CW, 20, 'F');
-  sd(...GREEN); lw(0.6); doc.rect(ML, y, CW, 20, 'S');
-  sf(...GREEN); doc.rect(ML, y, 4, 20, 'F');
-  B(8); st(...GREY1);
-  doc.text('U₀  (clear-field, ISO 6946:2017)', ML + 8, y + 5.5);
-  doc.text('ΔUΨ  (linear bridges)',              ML + 8, y + 11);
-  doc.text('ΔUχ  (point bridges)',               ML + 8, y + 16.5);
-  B(8.5); st(...BLACK);
-  doc.text(U0.toFixed(4)+' W/m²K',        ML + 75, y + 5.5);
-  st(...BLUE);
-  doc.text('+ '+dUPsi.toFixed(5)+' W/m²K', ML + 75, y + 11);
-  st(...PURPLE);
-  doc.text('+ '+dUChi.toFixed(5)+' W/m²K', ML + 75, y + 16.5);
-  B(11); st(...DGREEN);
-  doc.text('U_total =', ML + 115, y + 12);
-  B(14); st(...(overallPass ? DGREEN : FAIL_BG));
-  doc.text(Ut.toFixed(3), ML + 138, y + 14);
-  N(8); st(...GREY1); doc.text('W/m²K', ML + 138 + tw(Ut.toFixed(3), 14) + 2, y + 14);
-  y += 26;
-
-  // ── UAE COMPLIANCE TABLE ──────────────────────────────────────────────────────
-  checkY(30);
-  y = sectionHead('4.  UAE & Gulf Compliance Verification', y);
-
-  const COMP_COLS = [
-    { x:0,   w:58,  label:'Regulation / Standard'  },
-    { x:58,  w:44,  label:'Authority / Reference'  },
-    { x:102, w:28,  label:'Requirement', align:'right' },
-    { x:130, w:22,  label:'Your U-Value',align:'right' },
-    { x:152, w:22,  label:'Status',      align:'right' },
-  ];
-  let compTableTop = y;
-  y = tableHeaderRow(COMP_COLS, y, 8);
-
-  STDS.forEach((s, i) => {
-    checkY(14);
-    const H = 13;
-    const bg = i%2===0 ? WHITE : LGREY;
-    sf(...bg); doc.rect(ML, y, CW, H, 'F');
-    sd(...GREY3); lw(0.2); doc.line(ML, y+H, ML+CW, y+H);
-    // Column dividers
-    COMP_COLS.forEach(col => { if (col.x>0) { sd(...GREY3); lw(0.15); doc.line(ML+col.x,y,ML+col.x,y+H); }});
-    sd(...GREY3); lw(0.3); doc.line(ML,y,ML,y+H); doc.line(ML+CW,y,ML+CW,y+H);
-    // Standard name
-    B(8.5); st(...BLACK);   doc.text(s.name,  ML + 2,  y + 5.5);
-    N(7);   st(...GREY2);   doc.text(s.note,  ML + 2,  y + 10);
-    // Authority
-    N(7.5); st(...GREY1);   doc.text(s.auth,  ML + 60, y + 5.5);
-    // Limit
-    B(8.5); st(...BLACK);   doc.text('≤ '+s.lim.toFixed(2), ML + 130 - 2, y + 5.5, { align:'right' });
-    N(7.5); st(...GREY2);   doc.text('W/m²K', ML + 130 - 2, y + 10,  { align:'right' });
-    // Your U
-    B(8.5); st(...(s.pass ? DGREEN : FAIL_BG));
-    doc.text(Ut.toFixed(3), ML + 152 - 2, y + 5.5, { align:'right' });
-    // Status badge
-    const badgeX = ML + 155, badgeW = 17, badgeH = 7;
-    sf(...(s.pass ? PASS_BG : FAIL_BG));
-    doc.roundedRect(badgeX, y + 3, badgeW, badgeH, 1.2, 1.2, 'F');
-    B(7); st(...WHITE);
-    doc.text(s.pass ? 'PASS' : 'FAIL', badgeX + badgeW/2, y + 3 + badgeH/2 + 2.2, { align:'center' });
-    y += H;
-  });
-  tableOuterBorder(compTableTop, y);
-  y += 10;
-
-  // ── METHODOLOGY & DISCLAIMER ─────────────────────────────────────────────────
-  checkY(38);
-  y = sectionHead('5.  Calculation Methodology & Standards References', y);
-
-  sd(...GREY3); lw(0.3); doc.rect(ML, y, CW, 34, 'S');
-  sf(...LGREY); doc.rect(ML, y, CW, 34, 'F');
-  sd(...GREY3); lw(0.3); doc.rect(ML, y, CW, 34, 'S');
-  sf(...DGREEN); doc.rect(ML, y, 3, 34, 'F');
-
-  const methods = [
-    { head:'ISO 6946:2017',      body:`Combined method for building components composed of thermally homogeneous layers. U₀ = 1/R_T where R_T = R_se + Σ(dᵢ/λᵢ) + R_si. Surface resistances: R_se = 0.04 m²K/W, R_si = 0.13 m²K/W (Table 1, horizontal heat flow, external wall application).` },
-    { head:'ISO 14683:2017',     body:`Linear thermal bridges: ΔUΨ = Σ(Ψk × Lk) / A. Ψ values are indicative catalogue defaults from ISO 14683:2017 Annex C. Reference area A = ${A.toFixed(2)} m². Project submission requires ISO 10211 numerical simulation.` },
-    { head:'ISO 10211:2017',     body:`Point thermal bridges: ΔUχ = Σ(χj × nj) / A. χ values from published FEM studies and EOTA TR 025. Corrected total: U_total = U₀ + ΔUΨ + ΔUχ.` },
-  ];
-
-  let my = y + 5;
-  methods.forEach(m => {
-    checkY(12);
-    B(7.5); st(...DGREEN); doc.text(m.head + ':', ML + 6, my);
-    N(7);   st(...GREY1);
-    const lines = wrap(m.body, CW - 50, 7);
-    doc.text(lines, ML + 38, my);
-    my += Math.max(lines.length * 3.8, 8) + 2;
-  });
-  y += 38;
-  y += 4;
-
-  // Disclaimer
-  checkY(12);
-  sf(...[255,250,240]); doc.rect(ML, y, CW, 10, 'F');
-  sd(...[220,180,100]); lw(0.4); doc.rect(ML, y, CW, 10, 'S');
-  sf(...WARN_BG); doc.rect(ML, y, 3, 10, 'F');
-  B(7.5); st(...WARN_BG); doc.text('IMPORTANT DISCLAIMER', ML + 6, y + 4.5);
-  N(7); st(...GREY1);
-  doc.text('This report is produced for guidance purposes only. Values must be verified by a qualified thermal engineer and UAE authority before regulatory submission.', ML + 6, y + 8.5, { maxWidth: CW - 8 });
+  // Totals row
+  need(9);
+  sf(...[235,245,238]); doc.rect(ML, y, CW, 9, 'F');
+  sd(...GRN); lw(0.5); doc.rect(ML, y, CW, 9, 'S');
+  B(8.5); st(...BK); doc.text('TOTAL  R_T', ML+4, y+6.2);
+  st(...G1); doc.text(RT.toFixed(4)+' m²K/W', ML+85, y+6.2);
+  st(...DGRN); doc.text('U₀ = '+U0.toFixed(3)+' W/m²K', PW-MR-2, y+6.2, { align:'right' });
   y += 14;
 
   // ═══════════════════════════════════════════════════════════════════
-  // DRAW FOOTERS ON ALL PAGES
+  // 2. LINEAR THERMAL BRIDGES (Ψ)
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('2.  Linear Thermal Bridges  Ψ  (ISO 14683:2017)');
+
+  const PC = [
+    { x:  0, w:  7, label:'#' },
+    { x:  7, w: 84, label:'Junction Type' },
+    { x: 91, w: 30, label:'Ψ (W/m·K)',     align:'right' },
+    { x:121, w: 24, label:'Length L (m)',  align:'right' },
+    { x:145, w: 29, label:'Ψ·L/A (W/m²K)', align:'right' },
+  ];
+  // 7+84+30+24+29 = 174 ✓
+
+  const psiTop = y;
+  tblHeader(PC, 8);
+
+  if (!psis.length) {
+    need(9);
+    sf(...LG); doc.rect(ML, y, CW, 9, 'F');
+    sd(...G3); lw(0.3); doc.rect(ML, y, CW, 9, 'S');
+    N(8); st(...G2); doc.text('No linear thermal bridges defined.', ML+4, y+6);
+    y += 9;
+  } else {
+    psis.forEach((p, i) => {
+      const contrib = (p.psi * p.len) / refArea;
+      tblRow(PC, [
+        { text:String(i+1), color:G2 },
+        { text:p.name, bold:true, color:BK },
+        { text:p.psi.toFixed(4), color:BLU, bold:true },
+        { text:p.len.toFixed(2), color:G1 },
+        { text:contrib.toFixed(5), bold:true, color:BLU },
+      ], 9, i%2===0);
+    });
+  }
+  tblBorder(psiTop);
+  tblTotalRow('ΔUΨ  TOTAL  =  Σ(Ψk × Lk) / A', '+'+dUPsi.toFixed(5)+' W/m²K', [235,241,255], [60,90,200]);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 3. POINT THERMAL BRIDGES (χ)
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('3.  Point Thermal Bridges  χ  (ISO 10211:2017)');
+
+  const CC = [
+    { x:  0, w:  7, label:'#' },
+    { x:  7, w: 84, label:'Fixing / Anchor Type' },
+    { x: 91, w: 30, label:'χ (W/K)',       align:'right' },
+    { x:121, w: 24, label:'Count n',       align:'right' },
+    { x:145, w: 29, label:'χ·n/A (W/m²K)', align:'right' },
+  ];
+  // 7+84+30+24+29 = 174 ✓
+
+  const chiTop = y;
+  tblHeader(CC, 8);
+
+  if (!chis.length) {
+    need(9);
+    sf(...LG); doc.rect(ML, y, CW, 9, 'F');
+    sd(...G3); lw(0.3); doc.rect(ML, y, CW, 9, 'S');
+    N(8); st(...G2); doc.text('No point thermal bridges defined.', ML+4, y+6);
+    y += 9;
+  } else {
+    chis.forEach((ch, i) => {
+      const contrib = (ch.chi * ch.cnt) / refArea;
+      tblRow(CC, [
+        { text:String(i+1), color:G2 },
+        { text:ch.name, bold:true, color:BK },
+        { text:ch.chi.toFixed(5), color:PUR, bold:true },
+        { text:String(ch.cnt), color:G1 },
+        { text:contrib.toFixed(5), bold:true, color:PUR },
+      ], 9, i%2===0);
+    });
+  }
+  tblBorder(chiTop);
+  tblTotalRow('ΔUχ  TOTAL  =  Σ(χj × nj) / A', '+'+dUChi.toFixed(5)+' W/m²K', [243,240,255], [90,55,190]);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 4. CORRECTED U-VALUE EQUATION BOX
+  // ═══════════════════════════════════════════════════════════════════
+  need(22);
+  sf(...[235,248,240]); doc.rect(ML, y, CW, 20, 'F');
+  sd(...GRN); lw(0.5); doc.rect(ML, y, CW, 20, 'S');
+  sf(...GRN); doc.rect(ML, y, 3.5, 20, 'F');
+  B(7.5); st(...G1);
+  doc.text('U₀ (clear-field)',            ML+7, y+5.5);
+  doc.text('+ ΔUΨ (linear bridges)',      ML+7, y+11);
+  doc.text('+ ΔUχ  (point bridges)',      ML+7, y+16.5);
+  st(...BK);
+  doc.text(U0.toFixed(4)+' W/m²K',        ML+72, y+5.5);
+  st(...BLU);
+  doc.text(dUPsi.toFixed(5)+' W/m²K',    ML+72, y+11);
+  st(...PUR);
+  doc.text(dUChi.toFixed(5)+' W/m²K',    ML+72, y+16.5);
+  // Equals + result
+  sd(...GRN); lw(0.3); doc.line(ML+120, y+3, ML+120, y+17);
+  B(8); st(...G1); doc.text('U_total', ML+124, y+9);
+  B(13); st(...(pass?DGRN:FAIL));
+  doc.text(Ut.toFixed(3), ML+144, y+14);
+  N(8); st(...G2); doc.text(' W/m²K', ML+144+tw(Ut.toFixed(3),13), y+14);
+  y += 26;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 5. UAE & GULF COMPLIANCE VERIFICATION TABLE
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('4.  UAE & Gulf Compliance Verification');
+
+  // Compliance cols — carefully sized to fit badge
+  // Badge needs ~20mm. Status col x=154, w=20 → max right = 174 ✓
+  const CompC = [
+    { x:  0, w: 55, label:'Standard'             },
+    { x: 55, w: 42, label:'Authority'            },
+    { x: 97, w: 28, label:'Limit (W/m²K)', align:'right' },
+    { x:125, w: 27, label:'Your U',        align:'right' },
+    { x:152, w: 22, label:'Result',        align:'right' },
+  ];
+  // 55+42+28+27+22 = 174 ✓
+
+  const compTop = y;
+  tblHeader(CompC, 8);
+
+  COMPLIANCE_STDS.forEach((std, i) => {
+    const H = 13;
+    need(H);
+    sf(...(i%2===0?W:LG)); doc.rect(ML, y, CW, H, 'F');
+    sd(...G3); lw(0.2); doc.line(ML, y+H, ML+CW, y+H);
+    // Col dividers
+    sd(...G3); lw(0.15);
+    CompC.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+H); });
+    sd(...G3); lw(0.3); doc.line(ML,y,ML,y+H); doc.line(ML+CW,y,ML+CW,y+H);
+
+    // Standard name + detail
+    B(8); st(...BK); doc.text(std.name, ML+2, y+5);
+    N(6.5); st(...G2); doc.text(std.detail, ML+2, y+10);
+    // Authority
+    N(7.5); st(...G1); doc.text(std.auth, ML+57, y+5);
+    // Limit
+    B(8.5); st(...BK);
+    doc.text('≤ '+std.lim.toFixed(2), ML+125-2, y+5, { align:'right' });
+    N(6.5); st(...G2); doc.text('W/m²K', ML+125-2, y+10, { align:'right' });
+    // Your U
+    B(8.5); st(...(std.pass?DGRN:FAIL));
+    doc.text(Ut.toFixed(3), ML+152-2, y+5, { align:'right' });
+    // Badge — fits inside x=152, w=22 → from ML+153 to ML+174
+    const bx = ML+153, bw=18, bh=7;
+    sf(...(std.pass?PASS:FAIL)); doc.roundedRect(bx, y+3, bw, bh, 1.2, 1.2, 'F');
+    B(7); st(...W); doc.text(std.pass?'PASS':'FAIL', bx+bw/2, y+3+bh/2+2.3, { align:'center' });
+    y += H;
+  });
+  tblBorder(compTop);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 5. METHODOLOGY & DISCLAIMER
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('5.  Calculation Methodology & Standards References');
+
+  const methodRows = [
+    { hd:'ISO 6946:2017', body:'Combined method for thermally homogeneous layers. U₀ = 1/R_T where R_T = Rse + Σ(di/λi) + Rsi. Surface resistances: Rse = 0.04 m²K/W, Rsi = 0.13 m²K/W (Table 1, horizontal heat flow, external wall). Air cavity resistances per ISO 6946:2017 Table 2.' },
+    { hd:'ISO 14683:2017', body:'Linear thermal transmittance: ΔUΨ = Σ(Ψk × Lk) / A. Ψ values are indicative catalogue defaults from ISO 14683:2017 Annex C. Reference area A = '+refArea.toFixed(2)+' m². Definitive project values require numerical calculation per ISO 10211.' },
+    { hd:'ISO 10211:2017', body:'Point thermal transmittance: ΔUχ = Σ(χj × nj) / A. χ values from published FEM studies and EOTA TR 025. Total corrected value: U_total = U₀ + ΔUΨ + ΔUχ. Indicative only — project-specific modelling required for regulatory submission.' },
+    { hd:'Standards Sources', body:"Al Sa'fat: Dubai Municipality Green Building Rating System v2.0 (2020 / 2024 update). Estidama: Abu Dhabi Urban Planning Council PBRS v1.0 (external wall U ≤ 0.32 W/m²K for 1-Pearl). Barjeel: RAK Municipality Green Building Regulations v1.2 (2019 / 2022). ASHRAE: 90.1-2019 Table 5.5-1, Climate Zone 0/1, mass wall assembly." },
+  ];
+
+  methodRows.forEach(row => {
+    const bodyLines = wt(row.body, CW-46, 7.5);
+    const rowH = Math.max(10, bodyLines.length * 3.6 + 5);
+    need(rowH);
+    sf(...LG); doc.rect(ML, y, CW, rowH, 'F');
+    sd(...G3); lw(0.25); doc.rect(ML, y, CW, rowH, 'S');
+    sf(...GRN); doc.rect(ML, y, 3, rowH, 'F');
+    B(7.5); st(...DGRN); doc.text(row.hd, ML+6, y+5.5);
+    N(7.5); st(...G1);
+    const startY = y + (rowH - bodyLines.length*3.6)/2 + 3.6*0.8;
+    bodyLines.forEach((ln, li) => doc.text(ln, ML+42, startY + li*3.6));
+    y += rowH + 2;
+  });
+
+  y += 4;
+
+  // Disclaimer box
+  need(12);
+  sf(...[255,250,238]); doc.rect(ML, y, CW, 12, 'F');
+  sd(...[200,160,50]); lw(0.5); doc.rect(ML, y, CW, 12, 'S');
+  sf(...WARN); doc.rect(ML, y, 3.5, 12, 'F');
+  B(7.5); st(...WARN); doc.text('DISCLAIMER', ML+7, y+5);
+  N(7.5); st(...G1);
+  const disc = 'This report is produced for guidance purposes only. All values must be verified by a qualified thermal engineer and the relevant UAE authority before regulatory submission or specification use.';
+  doc.text(wt(disc, CW-12, 7.5), ML+7, y+9.5);
+  y += 16;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // DRAW FOOTERS — once, after all content
   // ═══════════════════════════════════════════════════════════════════
   const totalPages = doc.internal.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
@@ -1453,9 +1467,7 @@ function exportReport() {
     drawFooter(p, totalPages);
   }
 
-  // ── SAVE ──────────────────────────────────────────────────────────
-  const fn = `CladWise_UValue_${now.toISOString().slice(0,10)}.pdf`;
-  doc.save(fn);
+  doc.save('CladWise_UValue_'+now.toISOString().slice(0,10)+'.pdf');
 }
 
 
