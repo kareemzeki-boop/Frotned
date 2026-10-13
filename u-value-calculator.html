@@ -1029,14 +1029,14 @@ function exportReport() {
       sf(...GRN); doc.rect(ML, 5, 20, 18, 'F');
       B(9); st(...HBKG); doc.text('CW', ML+10, 15.5, { align:'center' });
       // Name
-      B(12); st([255,255,255]);
+      B(12); st(...[255,255,255]);
       doc.text('CLADWISE UAE', ML+24, 12);
-      N(7); st([150,195,170]);
+      N(7); st(...[150,195,170]);
       doc.text('Façade Material Intelligence  ·  cladwise.ae', ML+24, 18);
       // Report type label
       const rtW = 54;
-      sf([35,55,42]); doc.rect(PW-MR-rtW, 6, rtW, 16, 'F');
-      B(7); st([150,220,180]); doc.text('THERMAL CALCULATION', PW-MR-rtW/2, 12.5, { align:'center' });
+      sf(...[35,55,42]); doc.rect(PW-MR-rtW, 6, rtW, 16, 'F');
+      B(7); st(...[150,220,180]); doc.text('THERMAL CALCULATION', PW-MR-rtW/2, 12.5, { align:'center' });
       B(8); st(...GRN); doc.text('U-VALUE REPORT', PW-MR-rtW/2, 19.5, { align:'center' });
       // Green stripe under header
       sf(...GRN); doc.rect(0, HDR_H, PW, 0.7, 'F');
@@ -1044,9 +1044,9 @@ function exportReport() {
     } else {
       // Slim continuation header
       sf(...HBKG); doc.rect(0, 0, PW, CONT_H, 'F');
-      B(6.5); st([200,220,205]);
+      B(6.5); st(...[200,220,205]);
       doc.text('CLADWISE UAE  ·  U-VALUE THERMAL CALCULATION REPORT', ML, 7);
-      N(6.5); st([130,160,140]);
+      N(6.5); st(...[130,160,140]);
       doc.text('CONTINUED', PW-MR, 7, { align:'right' });
       sf(...GRN); doc.rect(0, CONT_H, PW, 0.5, 'F');
       y = CONT_H + 6;
