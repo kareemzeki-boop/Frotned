@@ -2,61 +2,1482 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>U-Value Calculator · CladWise UAE</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="u-value-engine.js"></script>
 <style>
-:root{--bg:#0b110d;--bg2:#111a13;--bg3:#182318;--bg4:#1e2c1f;--border:rgba(255,255,255,.1);--acc:#00e5a0;--amber:#f59e0b;--red:#ef4444;--blue:#60a5fa;--purple:#a78bfa;--text:#edf2ed;--muted:#94a497}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 'Barlow Condensed',sans-serif}nav{height:58px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,229,160,.12);position:sticky;top:0;z-index:5;background:rgba(11,17,13,.97)}a{color:inherit}.nav-logo{font-size:20px;font-weight:900;letter-spacing:3px;text-decoration:none}.nav-logo span,.accent{color:var(--acc)}.nav-tag,.mono,.eyebrow{font:10px 'DM Mono',monospace;letter-spacing:1.5px}.nav-tag{color:var(--acc);border:1px solid rgba(0,229,160,.25);padding:4px 10px}.nav-back{color:var(--muted);text-decoration:none}.wrap{max-width:1240px;margin:auto;padding:0 32px 70px}.hero{padding:42px 0 24px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:end}.eyebrow{text-transform:uppercase;color:var(--acc);letter-spacing:3px}.hero h1{font-size:60px;line-height:.9;text-transform:uppercase;margin:10px 0 14px}.hero h1 em{color:var(--acc);font-style:normal}.desc{max-width:520px;color:var(--muted);font:11px/1.7 'DM Mono',monospace}.formula{background:var(--bg2);border:1px solid rgba(0,229,160,.15);padding:18px 20px;font:12px/2 'DM Mono',monospace}.formula small{color:var(--muted)}.setup,.panel,.result-card{background:var(--bg2);border:1px solid var(--border)}.setup{padding:18px;margin-bottom:16px}.section-title{font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}.section-sub{color:var(--muted);font:10px 'DM Mono',monospace}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field label{color:var(--muted);font:10px 'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px}.field input,.field select,.layer-card input,.layer-card select,.bridge input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:9px;font:12px 'DM Mono',monospace;outline:none}.field input:focus,.field select:focus,.layer-card input:focus,.layer-card select:focus,.bridge input:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(0,229,160,.13)}.field small,.hint{color:var(--muted);font:9px 'DM Mono',monospace}.field.invalid input,.field.invalid select,.layer-card.invalid{border-color:var(--red)}.error{color:#ff9b9b;font:10px 'DM Mono',monospace;min-height:15px}.workflow{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}.left{display:flex;flex-direction:column;gap:16px}.panel-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-head h2{font-size:17px;text-transform:uppercase;margin:0}.panel-head p{margin:3px 0 0;color:var(--muted);font:9px 'DM Mono',monospace}.layer-list{padding:12px}.layer-card{background:var(--bg3);border:1px solid var(--border);padding:12px;margin-bottom:10px}.layer-top{display:grid;grid-template-columns:36px minmax(0,1fr) 88px;gap:10px;align-items:center}.layer-no{color:var(--muted);font:11px 'DM Mono',monospace}.layer-name{min-width:0;font-weight:700}.layer-name small{display:block;color:var(--muted);font:9px 'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.layer-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0 0 36px}.layer-fields label{color:var(--muted);font:9px 'DM Mono',monospace;display:block;margin-bottom:3px}.r-value{font-size:18px;color:var(--acc);text-align:right}.layer-actions{display:flex;gap:8px;margin-left:36px;margin-top:8px}.btn{cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text);padding:9px 13px;font:11px 'DM Mono',monospace}.btn:hover,.btn:focus{border-color:var(--acc);color:var(--acc)}.btn.primary{background:var(--acc);color:#000;border-color:var(--acc);font-weight:700}.btn.danger{color:#ff9b9b}.btn:disabled{opacity:.4;cursor:not-allowed}.add-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 12px 12px}.bridge{padding:14px 18px}.bridge-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer}.bridge-head h3{margin:0;color:var(--blue);font-size:16px;text-transform:uppercase}.bridge-body{margin-top:12px}.bridge{border-top:2px solid rgba(0,229,160,.13)}.bridge-row{display:grid;grid-template-columns:minmax(0,1fr) 95px 95px 34px;gap:8px;align-items:end;padding:9px 0;border-bottom:1px solid var(--border)}.bridge-row label{display:block;color:var(--muted);font:9px 'DM Mono',monospace;margin-bottom:3px}.bridge .hint{margin:8px 0 0}.result{position:sticky;top:76px;display:flex;flex-direction:column;gap:10px}.result-card{padding:18px}.result-card h2{font:10px 'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin:0 0 5px}.big{font-size:64px;font-weight:900;color:var(--acc);line-height:1}.unit{color:var(--muted);font:11px 'DM Mono',monospace}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid var(--border);margin-top:14px;padding-top:12px}.metric b{display:block;font-size:20px}.metric span{color:var(--muted);font:9px 'DM Mono',monospace}.status{margin-top:14px;padding:10px;border:1px solid rgba(245,158,11,.35);color:var(--amber);font:10px 'DM Mono',monospace}.status.valid{border-color:rgba(0,229,160,.35);color:var(--acc)}.status.invalid{border-color:rgba(239,68,68,.35);color:#ff9b9b}.breakdown .rline{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font:10px 'DM Mono',monospace}.rline span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}.sources{color:var(--muted);font:9px/1.7 'DM Mono',monospace}.sources strong{color:var(--text)}details{border-top:1px solid var(--border);padding:11px 0}summary{cursor:pointer;color:var(--acc);font:10px 'DM Mono',monospace}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:980px){.hero,.workflow{grid-template-columns:1fr}.result{position:static}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){nav{padding:0 16px}.nav-tag{display:none}.wrap{padding:0 12px 50px}.hero{padding:28px 0 18px}.hero h1{font-size:43px}.grid{grid-template-columns:1fr}.layer-card{padding:11px}.layer-top{grid-template-columns:28px minmax(0,1fr) 62px}.layer-fields{grid-template-columns:1fr 1fr;margin-left:28px}.layer-fields>div:last-child{grid-column:1/-1}.layer-actions{margin-left:28px;flex-wrap:wrap}.bridge-row{grid-template-columns:1fr 1fr}.bridge-row>div:first-child{grid-column:1/-1}.bridge-row button{grid-column:2}.big{font-size:52px}}
+/* ── TOKENS ─────────────────────────────────────────────────────────────────── */
+:root {
+  --bg:     #0b110d;
+  --bg2:    #111a13;
+  --bg3:    #182318;
+  --bg4:    #1e2c1f;
+  --border: rgba(255,255,255,0.07);
+  --acc:    #00e5a0;
+  --amber:  #f59e0b;
+  --red:    #ef4444;
+  --blue:   #60a5fa;
+  --purple: #a78bfa;
+  --text:   #edf2ed;
+  --muted:  #6b7d6d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── NAV ── */
+nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,229,160,0.08);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:20px;font-weight:900;letter-spacing:3px;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--acc)}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;transition:color .2s}
+.nav-back:hover{color:var(--acc)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--acc);border:1px solid rgba(0,229,160,0.25);padding:4px 10px}
+
+/* ── HEADER ── */
+.ph{padding:44px 32px 28px;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:end}
+.ph-eye{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--acc);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ph-eye::before{content:'';width:20px;height:1px;background:var(--acc);display:inline-block}
+.ph-h1{font-size:64px;font-weight:900;line-height:.88;text-transform:uppercase;letter-spacing:-1px;margin-bottom:12px}
+.ph-h1 em{color:var(--acc);font-style:normal}
+.ph-desc{font-family:'DM Mono',monospace;font-size:10.5px;line-height:1.8;color:var(--muted);max-width:440px}
+.ph-formula{background:var(--bg2);border:1px solid rgba(0,229,160,0.12);padding:20px 22px;font-family:'DM Mono',monospace;font-size:11px;line-height:2.2;color:var(--muted)}
+.ph-formula .fl{color:var(--text);font-size:12px}
+.ph-formula .ft{color:var(--acc);font-size:9px;letter-spacing:2px;margin-bottom:8px;display:block}
+.ph-formula .fd{color:var(--muted);font-size:9px;margin-top:2px;padding-top:10px;border-top:1px solid rgba(0,229,160,0.08)}
+
+/* ── LAYOUT ── */
+.main{max-width:1240px;margin:0 auto;padding:0 32px 80px;display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+
+/* ── PANELS ── */
+.panel{background:var(--bg2);border:1px solid var(--border)}
+.ph2{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ph2-title{font-size:16px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.ph2-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px}
+
+/* ── SURFACE ROW ── */
+.surf-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,229,160,0.05);border-bottom:1px solid var(--border)}
+.surf-cell{background:var(--bg3);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.surf-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.surf-sub{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(107,125,109,0.6);margin-top:2px}
+.surf-val{font-size:22px;font-weight:800;color:var(--blue)}
+.surf-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+
+/* ── LAYER TABLE ── */
+.lt{width:100%;border-collapse:collapse}
+.lt thead tr{background:var(--bg3);border-bottom:2px solid rgba(0,229,160,0.1)}
+.lt th{padding:9px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:400}
+.lt th.ra{text-align:right}
+.lr{border-bottom:1px solid var(--border)}
+.lr:hover{background:rgba(255,255,255,0.02)}
+.lr td{padding:9px 12px;vertical-align:middle}
+.ln{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);width:26px}
+.ls,.li{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:11.5px;padding:7px 9px;outline:none;transition:border-color .15s;width:100%}
+.ls:focus,.li:focus{border-color:rgba(0,229,160,0.4)}
+.ls{cursor:pointer}
+.ls option{background:var(--bg2)}
+.li{text-align:right}
+.lr-lam{color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;text-align:right}
+.lr-r{font-size:17px;font-weight:700;text-align:right;color:var(--acc);min-width:68px;font-family:'Barlow Condensed',sans-serif}
+.lr-r.z{color:var(--muted)}
+.bdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:5px;transition:color .15s;opacity:.5}
+.bdel:hover{color:var(--red);opacity:1}
+
+/* ── ADD ROW ── */
+.add-row{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.badd{display:flex;align-items:center;gap:6px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--acc);padding:9px 18px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.badd:hover{background:rgba(0,229,160,0.15)}
+.bpre{background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:9px 14px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .15s}
+.bpre:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ── BRIDGE SECTIONS ── */
+.bridge-panel{border-top:2px solid rgba(0,229,160,0.12);margin-top:20px}
+.bridge-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--bg3);cursor:pointer;user-select:none}
+.bridge-head-left{display:flex;align-items:center;gap:10px}
+.bridge-icon{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.bi-psi{background:rgba(96,165,250,0.12);color:var(--blue);border:1px solid rgba(96,165,250,0.2)}
+.bi-chi{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
+.bridge-h-title{font-size:15px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.bridge-h-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px}
+.bridge-toggle{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);padding:4px 10px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.bridge-toggle:hover{color:var(--acc);border-color:rgba(0,229,160,0.3)}
+.bridge-body{padding:0 20px 16px}
+
+/* Bridge table */
+.bt{width:100%;border-collapse:collapse;margin-top:12px}
+.bt th{padding:8px 10px;text-align:left;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;background:var(--bg4);border-bottom:1px solid var(--border)}
+.bt th.ra{text-align:right}
+.br-row{border-bottom:1px solid var(--border);animation:rowIn .2s ease}
+.br-row:hover{background:rgba(255,255,255,0.02)}
+.br-row td{padding:9px 10px;vertical-align:middle}
+.br-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--text);min-width:30px}
+.psi-contrib{font-size:15px;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-align:right;min-width:80px}
+.psi-contrib.psi-c{color:var(--blue)}
+.psi-contrib.chi-c{color:var(--purple)}
+
+/* Bridge reference card */
+.bridge-ref{background:var(--bg4);border:1px solid var(--border);padding:12px 16px;margin-top:12px}
+.bridge-ref-title{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.bridge-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.bref-item{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);padding:3px 0;display:flex;justify-content:space-between;gap:8px}
+.bref-val{color:var(--text)}
+.bridge-area-row{display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.bridge-area-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);flex:1}
+.bridge-area-input{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:7px 10px;outline:none;transition:border-color .15s;width:120px;text-align:right}
+.bridge-area-input:focus{border-color:rgba(0,229,160,0.4)}
+.bridge-area-unit{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap}
+
+/* ── PRESETS ── */
+.presets{max-width:1240px;margin:0 auto 16px;padding:0 32px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.presets-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;flex-shrink:0}
+.pre-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:7px 14px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.pre-btn:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ── RESULTS PANEL ── */
+.rp{position:sticky;top:68px;display:flex;flex-direction:column;gap:3px}
+
+/* U panels */
+.u-box{background:var(--bg2);border:1px solid var(--border);padding:22px 20px;position:relative;overflow:hidden}
+.u-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent)}
+.u-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.u-num{font-size:72px;font-weight:900;line-height:1;transition:color .3s}
+.u-unit{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:3px}
+.u-delta{font-family:'DM Mono',monospace;font-size:10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.u-delta-item{}
+.u-delta-lbl{font-size:8.5px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.u-delta-val{font-size:16px;font-weight:700;font-family:'Barlow Condensed',sans-serif}
+/* chip */
+.ch-wrap{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.cp{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--acc)}
+.cw{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber)}
+.cf{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red)}
+.chip-desc{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:7px;line-height:1.6}
+
+/* R breakdown */
+.rb{background:var(--bg2);border:1px solid var(--border);padding:18px 20px}
+.r-row2{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.r-row2:last-child{border-bottom:none}
+.r-lbl2{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.r-bar-w{flex:1;margin:0 10px;height:3px;background:rgba(255,255,255,0.05)}
+.r-bar{height:3px;background:var(--acc);transition:width .4s ease}
+.r-val2{font-size:15px;font-weight:700;min-width:50px;text-align:right;font-family:'Barlow Condensed',sans-serif}
+.r-tot{background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.15);padding:11px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.r-tot-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:2px;text-transform:uppercase}
+.r-tot-val{font-size:26px;font-weight:900;color:var(--acc)}
+
+/* Standards panel */
+.sp{background:var(--bg2);border:1px solid var(--border);padding:18px 20px}
+.sp-title{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.sp-sect{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2.5px;color:rgba(0,229,160,0.35);text-transform:uppercase;padding:8px 0 4px;border-bottom:1px solid rgba(0,229,160,0.07);margin-top:6px}
+.sp-sect:first-child{margin-top:0}
+.std-row2{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.std-row2:last-child{border-bottom:none}
+.std-nm{font-size:11.5px;color:var(--text);line-height:1.3;font-weight:600}
+.std-sb{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);margin-top:1px}
+.std-lim{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text);white-space:nowrap;text-align:right}
+.sbadge{font-family:'DM Mono',monospace;font-size:7.5px;font-weight:700;letter-spacing:1px;padding:3px 7px;white-space:nowrap}
+.sb-p{background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.3);color:var(--acc)}
+.sb-f{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red)}
+.sb-n{background:rgba(107,125,109,0.1);border:1px solid rgba(107,125,109,0.2);color:var(--muted)}
+.std-ref{opacity:.55}
+
+/* Method note */
+.mn{background:var(--bg2);border:1px solid var(--border);border-left:3px solid rgba(0,229,160,0.35);padding:14px 18px;font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);line-height:1.85}
+.mn strong{color:rgba(0,229,160,0.65)}
+
+/* Buttons */
+.bexp{width:100%;background:var(--acc);color:#000;border:none;padding:13px;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:9px}
+.bexp:hover{background:#00ffb3}
+.brst{width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .15s;margin-top:2px}
+.brst:hover{border-color:var(--red);color:var(--red)}
+
+/* ── MOBILE ── */
+@media(max-width:980px){
+  .main{grid-template-columns:1fr}
+  .rp{position:static}
+  .ph{grid-template-columns:1fr;gap:20px}
+  .ph-h1{font-size:48px}
+  nav,.main,.presets,.ph{padding-left:20px;padding-right:20px}
+}
+@media(max-width:560px){
+  .ph-h1{font-size:38px}
+  .u-num{font-size:54px}
+  .surf-row{grid-template-columns:1fr}
+  .bridge-ref-grid{grid-template-columns:1fr}
+}
+@keyframes rowIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-<nav><a class="nav-logo" href="index.html">CLAD<span>WISE</span> UAE</a><span class="nav-tag">ENGINEERING TOOLS</span><a class="nav-back" href="index.html"><i class="fa fa-arrow-left"></i> Back to App</a></nav>
-<main class="wrap">
-<section class="hero"><div><div class="eyebrow">ISO 6946:2017 · Opaque wall / rainscreen phase 1</div><h1>Facade<br>U-Value<br><em>Calculator</em></h1><p class="desc">A transparent engineering aid for horizontal heat flow through opaque external wall assemblies. Values may be illustrative; verify the source, geometry, boundary conditions, and applicable authority route before relying on a result.</p></div><div class="formula"><div class="accent">VALIDATED MODEL STATE</div><div>R<sub>T</sub> = R<sub>boundary</sub> + ΣR<sub>included</sub> + R<sub>si</sub></div><div>U<sub>clear</sub> = 1 / R<sub>T</sub></div><div>U<sub>eff</sub> = U<sub>clear</sub> + Σ(ΨL/A) + Σ(χn/A)</div><small>ISO 6946:2017 §§6.7–6.9; conventional surfaces use §6.8 / Table 7. Detailed licensed-standard text is not reproduced here.</small></div></section>
-<section class="setup"><div class="section-title">Project and scope</div><div class="section-sub">SETUP · REQUIRED BEFORE REVIEW</div><div class="grid" style="margin-top:13px"><div class="field"><label for="jurisdiction">Jurisdiction</label><select id="jurisdiction"><option value="dubai">Dubai</option><option value="abu-dhabi">Abu Dhabi</option><option value="rak">Ras Al Khaimah</option><option value="other">Other / not selected</option></select><div class="error"></div></div><div class="field"><label for="buildingType">Building type</label><select id="buildingType"><option value="residential">Residential</option><option value="villa">Individual private villa</option><option value="commercial">Commercial / public</option><option value="other">Other / not selected</option></select><div class="error"></div></div><div class="field"><label for="elementType">Element / system</label><select id="elementType"><option value="opaque-external-wall">Opaque external wall / rainscreen</option><option value="window">Window / door — separate method</option><option value="curtain-wall">Curtain wall — separate method</option><option value="ground">Ground-contact element — separate method</option></select><div class="error"></div></div><div class="field"><label for="area">Representative area (m²)</label><input id="area" inputmode="decimal" value="1" aria-describedby="area-error"><div id="area-error" class="error"></div></div><div class="field"><label for="dimension">Area convention</label><select id="dimension"><option value="external">External reference area</option><option value="internal">Internal reference area</option></select><div class="error"></div></div><div class="field"><label for="route">Compliance route</label><select id="route"><option value="prescriptive">Prescriptive rule</option><option value="performance">Whole-building performance model</option><option value="none">No rule selected</option></select><div class="error"></div></div><div class="field"><label for="project">Project / revision</label><input id="project" value="Untitled project"><small>Saved locally only in this preview.</small></div><div class="field"><label for="ventilation">Cavity ventilation</label><select id="ventilation"><option value="known">I will specify it per cavity</option><option value="unknown">Unknown / not assessed</option></select><div class="error"></div></div></div><div class="hint" style="margin-top:12px">Phase 1 supports opaque external walls with horizontal heat flow. Windows, curtain walls, ground-contact elements, solar metrics, condensation, and Pearl/LEED ratings are separate methods.</div></section>
-<div class="workflow"><div class="left"><section class="panel"><div class="panel-head"><div><h2>1 · Assembly</h2><p>Outside → inside · edit values to recalculate immediately</p></div><span id="layer-count" class="mono">0 LAYERS</span></div><div id="layers" class="layer-list"></div><div class="add-row"><button class="btn primary" data-add="material">+ Add material</button><button class="btn" data-add="cavity">+ Add air cavity</button><button class="btn" data-add="wool">+ Mineral wool</button><button class="btn" data-add="concrete">+ Concrete</button><button class="btn" data-add="preset">Load GFRC example</button></div></section>
-<section class="panel bridge"><div class="bridge-head" data-toggle="psi"><div><h3>2 · Thermal bridges Ψ</h3><div class="section-sub">Qualified/source-supported linear values only · negative Ψ requires convention and source</div></div><span id="psi-toggle" class="mono">Expand ↓</span></div><div id="psi-body" class="bridge-body" hidden><div class="bridge-row"><div><label for="psi-area">Representative reference area (m²)</label><input id="psi-area" value="1" disabled><div class="hint">Uses the main setup area; shown here for traceability.</div></div><div></div><div></div><button class="btn" data-add="psi">+ Ψ</button></div><div id="psi-list"></div></div></section>
-<section class="panel bridge"><div class="bridge-head" data-toggle="chi"><div><h3 style="color:var(--purple)">3 · Thermal bridges χ</h3><div class="section-sub">Point values and counts remain distinct inputs</div></div><span id="chi-toggle" class="mono">Expand ↓</span></div><div id="chi-body" class="bridge-body" hidden><div id="chi-list"></div><button class="btn" data-add="chi">+ Fixing group</button></div></section>
-<section class="panel"><div class="panel-head"><div><h2>4 · Review and report</h2><p>Same validated result powers the UI, rule status, and PDF</p></div></div><div style="padding:14px 18px;display:flex;gap:8px;flex-wrap:wrap"><button id="export" class="btn primary" disabled>Export PDF report</button><button id="save" class="btn">Save scenario</button><button id="load" class="btn">Load scenario</button><button id="reset" class="btn danger">Reset</button></div><div class="sources" style="padding:0 18px 16px"><strong>Evidence status:</strong> generic materials and bridge presets are marked illustrative assumptions. Add a project source URL/document for authoritative use.</div></section></div>
-<aside class="result"><div class="result-card"><h2>Current assessment</h2><div id="u-total" class="big">Not calculated</div><div class="unit">W/m²·K · unrounded comparisons</div><div class="metrics"><div class="metric"><b id="u-clear">—</b><span>Uclear · W/m²K</span></div><div class="metric"><b id="r-total">—</b><span>RT · m²K/W</span></div><div class="metric"><b id="du-psi">—</b><span>ΔUΨ · W/m²K</span></div><div class="metric"><b id="du-chi">—</b><span>ΔUχ · W/m²K</span></div></div><div id="status" class="status invalid">Not calculated — add a valid assembly.</div></div><div class="result-card breakdown"><h2>R breakdown</h2><div id="breakdown"><div class="hint">No valid model yet.</div></div></div><div class="result-card"><h2>Rule assessment</h2><div id="rule" class="sources">Not assessed. Select Dubai + opaque external wall + prescriptive route to evaluate the verified Al Sa’fat 2nd edition (January 2023) wall rule. This is not a Pearl/LEED rating.</div></div><div class="result-card sources"><details><summary>Method and evidence notes</summary><p>ISO 6946:2017 official scope excludes windows, curtain walling, ground-contact components, and designed air permeation. Air cavities use explicit depth, emissivity, heat-flow direction, and ventilation class. A well-ventilated cavity excludes the cavity and layers exterior to it from clear-field resistance while retaining them visually.</p><p>Al Sa’fat January 2023, §501.01 / Table 501.01(1): external wall and exposed floor limits are Silver 0.57 and Golden/Platinum 0.42 W/m²K. This rule is only assessed for its stated scope. DMT Estidama Bulletin #8 documents prescriptive and whole-building performance routes; one wall U-value cannot award a Pearl rating.</p></details></div></aside></div>
-</main>
+
+<nav>
+  <a href="index.html" class="nav-logo">CLAD<span>WISE</span> UAE</a>
+  <span class="nav-tag">ENGINEERING TOOLS</span>
+  <a href="index.html" class="nav-back"><i class="fa fa-arrow-left"></i> Back to App</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="ph">
+  <div>
+    <div class="ph-eye">ISO 6946:2017 · ISO 14683:2017 · ISO 10211:2017</div>
+    <h1 class="ph-h1">Facade<br>U-Value<br><em>Calculator</em></h1>
+    <p class="ph-desc">
+      Layer-by-layer ISO 6946 assembly calculator with linear (Ψ) and point (χ) thermal bridge corrections per ISO 14683 / ISO 10211. Compliance checked against Al Sa'fat, Estidama Pearl, Barjeel and ASHRAE 90.1.
+    </p>
+  </div>
+  <div class="ph-formula">
+    <span class="ft">ISO 6946:2017 + ISO 14683:2017</span>
+    <div class="fl">R<sub>T</sub> = R<sub>se</sub> + ΣR<sub>i</sub> + R<sub>si</sub></div>
+    <div class="fl">U₀ = 1 / R<sub>T</sub></div>
+    <div style="height:6px"></div>
+    <div class="fl" style="color:var(--blue)">ΔU<sub>Ψ</sub> = Σ(Ψ<sub>k</sub> × L<sub>k</sub>) / A</div>
+    <div class="fl" style="color:var(--purple)">ΔU<sub>χ</sub> = Σ(χ<sub>j</sub> × n<sub>j</sub>) / A</div>
+    <div style="height:6px"></div>
+    <div class="fl" style="color:var(--acc)">U<sub>total</sub> = U₀ + ΔU<sub>Ψ</sub> + ΔU<sub>χ</sub></div>
+    <div class="fd">
+      R<sub>se</sub>=0.04 · R<sub>si</sub>=0.13 m²K/W (ISO 6946:2017 Table 1)<br>
+      A = reference facade panel area (m²)
+    </div>
+  </div>
+</div>
+
+<!-- PRESETS -->
+<div class="presets">
+  <span class="presets-lbl">Load preset:</span>
+  <button class="pre-btn" onclick="loadPreset('gfrc')"><i class="fa fa-layer-group"></i> GFRC Rainscreen</button>
+  <button class="pre-btn" onclick="loadPreset('acm')"><i class="fa fa-layer-group"></i> ACM-FR Curtain Wall</button>
+  <button class="pre-btn" onclick="loadPreset('stone')"><i class="fa fa-layer-group"></i> Stone Cladding</button>
+  <button class="pre-btn" onclick="loadPreset('aluminum')"><i class="fa fa-layer-group"></i> Aluminium Rainscreen</button>
+  <button class="pre-btn" onclick="loadPreset('insulated')"><i class="fa fa-layer-group"></i> Insulated Blockwork</button>
+  <button class="pre-btn" onclick="loadPreset('estidama1p')"><i class="fa fa-star"></i> Estidama 1-Pearl (min)</button>
+  <button class="pre-btn" onclick="loadPreset('alsafat_silver')"><i class="fa fa-star"></i> Al Sa'fat Silver (min)</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- LEFT -->
+  <div style="display:flex;flex-direction:column;gap:20px">
+
+    <!-- WALL ASSEMBLY -->
+    <div class="panel">
+      <div class="ph2">
+        <div>
+          <div class="ph2-title">Wall Assembly</div>
+          <div class="ph2-sub">Outside → Inside · ISO 6946:2017</div>
+        </div>
+        <div id="layer-count" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">0 LAYERS</div>
+      </div>
+      <div class="surf-row">
+        <div class="surf-cell">
+          <div>
+            <div class="surf-lbl">External Surface R<sub>se</sub></div>
+            <div class="surf-sub">ISO 6946:2017 Table 1 · Horizontal heat flow</div>
+          </div>
+          <div style="text-align:right">
+            <div class="surf-val">0.04</div>
+            <div class="surf-unit">m²K/W</div>
+          </div>
+        </div>
+        <div class="surf-cell">
+          <div>
+            <div class="surf-lbl">Internal Surface R<sub>si</sub></div>
+            <div class="surf-sub">ISO 6946:2017 Table 1 · Horizontal heat flow</div>
+          </div>
+          <div style="text-align:right">
+            <div class="surf-val">0.13</div>
+            <div class="surf-unit">m²K/W</div>
+          </div>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="lt">
+          <thead>
+            <tr>
+              <th style="width:28px">#</th>
+              <th>Material / Layer</th>
+              <th style="width:105px">Thickness (mm)</th>
+              <th style="width:135px" class="ra">λ (W/m·K)</th>
+              <th style="width:88px" class="ra">R (m²K/W)</th>
+              <th style="width:32px"></th>
+            </tr>
+          </thead>
+          <tbody id="layers-tbody"></tbody>
+        </table>
+      </div>
+      <div class="add-row">
+        <button class="badd" onclick="addLayer()"><i class="fa fa-plus"></i> Add Layer</button>
+        <button class="bpre" onclick="addLayer('aircavity',25)">+ Air Cavity</button>
+        <button class="bpre" onclick="addLayer('rockwool',80)">+ Mineral Wool</button>
+        <button class="bpre" onclick="addLayer('pir',60)">+ PIR</button>
+        <button class="bpre" onclick="addLayer('concrete',200)">+ Concrete</button>
+      </div>
+    </div>
+
+    <!-- LINEAR THERMAL BRIDGES (Ψ) -->
+    <div class="panel bridge-panel">
+      <div class="bridge-head" onclick="toggleBridge('psi-body')">
+        <div class="bridge-head-left">
+          <div class="bridge-icon bi-psi"><i class="fa fa-wave-square"></i></div>
+          <div>
+            <div class="bridge-h-title" style="color:var(--blue)">Linear Thermal Bridges (Ψ)</div>
+            <div class="bridge-h-sub">Wall-floor · Window perimeter · Column · Parapet · ISO 14683:2017</div>
+          </div>
+        </div>
+        <span class="bridge-toggle" id="psi-toggle">Expand ↓</span>
+      </div>
+      <div id="psi-body" style="display:none">
+        <div class="bridge-body">
+          <div class="bridge-area-row">
+            <div class="bridge-area-lbl">
+              Reference facade area A<br>
+              <span style="font-size:8px;opacity:.7">Panel or zone area to which bridges are distributed</span>
+            </div>
+            <input class="bridge-area-input" type="number" id="ref-area" value="1.00" min="0.01" step="0.1" onchange="calculate()">
+            <span class="bridge-area-unit">m²</span>
+          </div>
+
+          <!-- Ψ table -->
+          <table class="bt" style="margin-top:14px">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Junction Type</th>
+                <th style="width:110px" class="ra">Ψ (W/m·K)</th>
+                <th style="width:95px" class="ra">Length L (m)</th>
+                <th style="width:95px" class="ra">ΔU contrib.</th>
+                <th style="width:28px"></th>
+              </tr>
+            </thead>
+            <tbody id="psi-tbody"></tbody>
+          </table>
+
+          <div class="add-row" style="padding:10px 0 4px">
+            <button class="badd" onclick="addPsi()"><i class="fa fa-plus"></i> Add Junction</button>
+            <button class="bpre" onclick="addPsiPreset('window_perimeter')">+ Window perimeter</button>
+            <button class="bpre" onclick="addPsiPreset('floor_wall')">+ Floor/wall junction</button>
+            <button class="bpre" onclick="addPsiPreset('column')">+ Column wrap</button>
+            <button class="bpre" onclick="addPsiPreset('parapet')">+ Parapet</button>
+          </div>
+
+          <!-- Reference values -->
+          <div class="bridge-ref">
+            <div class="bridge-ref-title">ISO 14683:2017 Indicative Ψ Values (W/m·K) — Insulated assemblies</div>
+            <div class="bridge-ref-grid">
+              <div class="bref-item"><span>Window perimeter (sill/jamb/head)</span><span class="bref-val">0.04 – 0.08</span></div>
+              <div class="bref-item"><span>Floor / wall junction (intermediate)</span><span class="bref-val">0.05 – 0.10</span></div>
+              <div class="bref-item"><span>Ground floor slab edge</span><span class="bref-val">0.10 – 0.30</span></div>
+              <div class="bref-item"><span>Balcony slab (unbroken)</span><span class="bref-val">0.40 – 0.80</span></div>
+              <div class="bref-item"><span>Parapet / roof–wall junction</span><span class="bref-val">0.08 – 0.20</span></div>
+              <div class="bref-item"><span>Structural column (wrapped)</span><span class="bref-val">0.15 – 0.35</span></div>
+              <div class="bref-item"><span>External corner (convex)</span><span class="bref-val">0.05 – 0.10</span></div>
+              <div class="bref-item"><span>Internal corner (concave)</span><span class="bref-val">−0.10 – −0.05</span></div>
+            </div>
+            <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+              Source: ISO 14683:2017 Annex C. Values are indicative catalogue defaults — project-specific values require ISO 10211:2017 numerical calculation.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POINT THERMAL BRIDGES (χ) -->
+    <div class="panel bridge-panel">
+      <div class="bridge-head" onclick="toggleBridge('chi-body')">
+        <div class="bridge-head-left">
+          <div class="bridge-icon bi-chi"><i class="fa fa-circle-dot"></i></div>
+          <div>
+            <div class="bridge-h-title" style="color:var(--purple)">Point Thermal Bridges (χ)</div>
+            <div class="bridge-h-sub">Mechanical anchors · Brackets · Fixings · ISO 10211:2017</div>
+          </div>
+        </div>
+        <span class="bridge-toggle" id="chi-toggle">Expand ↓</span>
+      </div>
+      <div id="chi-body" style="display:none">
+        <div class="bridge-body">
+          <table class="bt" style="margin-top:12px">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Fixing / Anchor Type</th>
+                <th style="width:100px" class="ra">χ (W/K)</th>
+                <th style="width:80px" class="ra">Count n</th>
+                <th style="width:95px" class="ra">ΔU contrib.</th>
+                <th style="width:28px"></th>
+              </tr>
+            </thead>
+            <tbody id="chi-tbody"></tbody>
+          </table>
+
+          <div class="add-row" style="padding:10px 0 4px">
+            <button class="badd" onclick="addChi()"><i class="fa fa-plus"></i> Add Fixing</button>
+            <button class="bpre" onclick="addChiPreset('ss_anchor')">+ SS anchor</button>
+            <button class="bpre" onclick="addChiPreset('bracket')">+ Steel bracket</button>
+            <button class="bpre" onclick="addChiPreset('rail_clip')">+ Rail clip</button>
+            <button class="bpre" onclick="addChiPreset('wall_tie')">+ Cavity wall tie</button>
+          </div>
+
+          <div class="bridge-ref">
+            <div class="bridge-ref-title">ISO 10211:2017 Indicative χ Values (W/K per fixing)</div>
+            <div class="bridge-ref-grid">
+              <div class="bref-item"><span>Stainless steel anchor (M10–M12, SS bracket)</span><span class="bref-val">0.008 – 0.020</span></div>
+              <div class="bref-item"><span>Steel bracket through 80–120 mm insulation</span><span class="bref-val">0.020 – 0.060</span></div>
+              <div class="bref-item"><span>Aluminium T-clip / rail clip</span><span class="bref-val">0.030 – 0.090</span></div>
+              <div class="bref-item"><span>SS screws through strapping + insulation</span><span class="bref-val">0.002 – 0.006</span></div>
+              <div class="bref-item"><span>Stainless steel cavity wall tie</span><span class="bref-val">0.006 – 0.010</span></div>
+              <div class="bref-item"><span>Basalt-fibre composite tie</span><span class="bref-val">0.003 – 0.006</span></div>
+              <div class="bref-item"><span>Glass / spider fitting (GFRC/GFRP)</span><span class="bref-val">0.005 – 0.015</span></div>
+              <div class="bref-item"><span>ETICS plastic anchor (ETA approved)</span><span class="bref-val">0.000 – 0.004</span></div>
+            </div>
+            <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+              Source: ISO 10211:2017; published FEM studies (Marchetti et al., 2022); EOTA TR 025. Values vary with insulation thickness, substrate and fixing geometry. Project-specific modelling recommended for regulatory submission.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="rp">
+
+    <!-- U-Value display -->
+    <div class="u-box">
+      <div class="u-lbl">Total U-Value (corrected)</div>
+      <div class="u-num" id="u-total-disp">—</div>
+      <div class="u-unit">W/m²·K</div>
+      <div class="u-delta">
+        <div class="u-delta-item">
+          <div class="u-delta-lbl">U₀ (clear-field)</div>
+          <div class="u-delta-val" id="u0-disp" style="color:var(--acc)">—</div>
+        </div>
+        <div class="u-delta-item">
+          <div class="u-delta-lbl">ΔU<sub>Ψ</sub> (linear bridges)</div>
+          <div class="u-delta-val" id="du-psi-disp" style="color:var(--blue)">—</div>
+        </div>
+        <div class="u-delta-item">
+          <div class="u-delta-lbl">ΔU<sub>χ</sub> (point bridges)</div>
+          <div class="u-delta-val" id="du-chi-disp" style="color:var(--purple)">—</div>
+        </div>
+        <div class="u-delta-item">
+          <div class="u-delta-lbl">R<sub>T</sub> (total)</div>
+          <div class="u-delta-val" id="rt-disp" style="color:var(--text)">—</div>
+        </div>
+      </div>
+      <div class="ch-wrap">
+        <div class="chip cw" id="chip"><i class="fa fa-circle-half-stroke"></i><span id="chip-text">ADD LAYERS</span></div>
+        <div class="chip-desc" id="chip-desc">Add wall layers to begin thermal analysis.</div>
+      </div>
+    </div>
+
+    <!-- R breakdown -->
+    <div class="rb">
+      <div class="ph2" style="padding:0 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px">
+        <div class="ph2-title" style="font-size:14px">R-Value Breakdown</div>
+      </div>
+      <div id="r-rows">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);padding:8px 0">No layers yet.</div>
+      </div>
+      <div class="r-tot" id="r-tot" style="display:none">
+        <div class="r-tot-lbl">Total R<sub>T</sub></div>
+        <div><span class="r-tot-val" id="r-tot-val">—</span> <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">m²K/W</span></div>
+      </div>
+    </div>
+
+    <!-- Standards -->
+    <div class="sp">
+      <div class="sp-title">UAE & Gulf Compliance — External Walls</div>
+
+      <div class="sp-sect">Dubai · Al Sa'fat (Mandatory)</div>
+      <div class="std-row2">
+        <div><div class="std-nm">Al Sa'fat Silver ★</div><div class="std-sb">Mandatory min · All Dubai permits · GBRS v2.0 2020</div></div>
+        <div class="std-lim">≤ 0.57</div>
+        <div class="sbadge sb-n" id="s-alsafat-s">—</div>
+      </div>
+      <div class="std-row2">
+        <div><div class="std-nm">Al Sa'fat Gold/Platinum ★★</div><div class="std-sb">Voluntary enhanced · Dubai · Al Sa'fat v2.0 2024</div></div>
+        <div class="std-lim">≤ 0.42</div>
+        <div class="sbadge sb-n" id="s-alsafat-g">—</div>
+      </div>
+
+      <div class="sp-sect">Abu Dhabi · Estidama Pearl (Mandatory)</div>
+      <div class="std-row2">
+        <div><div class="std-nm">Estidama 1-Pearl ✦</div><div class="std-sb">Mandatory · All Abu Dhabi buildings · PBRS v1.0</div></div>
+        <div class="std-lim">≤ 0.32</div>
+        <div class="sbadge sb-n" id="s-estid-1">—</div>
+      </div>
+      <div class="std-row2">
+        <div><div class="std-nm">Estidama 2-Pearl ✦✦</div><div class="std-sb">Mandatory · Abu Dhabi government buildings</div></div>
+        <div class="std-lim">≤ 0.26</div>
+        <div class="sbadge sb-n" id="s-estid-2">—</div>
+      </div>
+
+      <div class="sp-sect">Ras Al Khaimah · Barjeel (Mandatory)</div>
+      <div class="std-row2">
+        <div><div class="std-nm">Barjeel GBR v1.2 ✦</div><div class="std-sb">Mandatory · RAK Municipality · 2019/2022</div></div>
+        <div class="std-lim">≤ 0.48</div>
+        <div class="sbadge sb-n" id="s-barjeel">—</div>
+      </div>
+
+      <div class="sp-sect">ASHRAE 90.1 Baseline</div>
+      <div class="std-row2">
+        <div><div class="std-nm">ASHRAE 90.1-2019 CZ 0/1</div><div class="std-sb">Mass wall · UAE practitioner baseline</div></div>
+        <div class="std-lim">≤ 0.70</div>
+        <div class="sbadge sb-n" id="s-ashrae">—</div>
+      </div>
+
+      <div class="sp-sect" style="margin-top:4px">Reference Only</div>
+      <div class="std-row2 std-ref">
+        <div><div class="std-nm">LEED v4 / v4.1</div><div class="std-sb">Uses ASHRAE 90.1 as baseline — no separate wall limit</div></div>
+        <div class="std-lim" style="color:var(--muted)">per 90.1</div>
+        <div class="sbadge sb-n">REF</div>
+      </div>
+      <div class="std-row2 std-ref">
+        <div><div class="std-nm">Passive House (PHPP)</div><div class="std-sb">Not a UAE regulation — international design target</div></div>
+        <div class="std-lim" style="color:var(--muted)">≤ 0.15</div>
+        <div class="sbadge sb-n">REF</div>
+      </div>
+    </div>
+
+    <!-- Method note -->
+    <div class="mn">
+      <strong>ISO 6946:2017</strong> — Combined method, plane homogeneous layers.<br>
+      R<sub>se</sub>=0.04, R<sub>si</sub>=0.13 m²K/W (Table 1, horizontal heat flow).<br>
+      <strong>ISO 14683:2017</strong> — Linear bridges: ΔU<sub>Ψ</sub>=Σ(Ψ<sub>k</sub>·L<sub>k</sub>)/A<br>
+      <strong>ISO 10211:2017</strong> — Point bridges: ΔU<sub>χ</sub>=Σ(χ<sub>j</sub>·n<sub>j</sub>)/A<br>
+      Bridge Ψ/χ values are indicative. Project submission requires ISO 10211 numerical calculation.
+    </div>
+
+    <button class="bexp" onclick="exportReport()"><i class="fa fa-file-pdf"></i> Export PDF Report</button>
+    <button class="brst" onclick="resetAll()"><i class="fa fa-rotate-left"></i> Reset All</button>
+  </div>
+</div>
+
 <script>
-(() => {
-  const E = window.CladWiseEngine;
-  const SOURCE = {label:'User/project source or illustrative assumption', url:'about:blank'};
-  const MAT = [
-    {id:'gfrc',name:'GFRC panel',lambda:.75,note:'Illustrative λ; source required',source:{label:'Illustrative assumption — replace with product/design value',url:'about:blank'}},
-    {id:'wool',name:'Mineral wool',lambda:.036,note:'Illustrative λ; source required',source:{label:'Illustrative assumption — replace with design λ',url:'about:blank'}},
-    {id:'concrete',name:'Concrete',lambda:1.7,note:'Illustrative λ; source required',source:{label:'Illustrative fixture assumption',url:'about:blank'}},
-    {id:'block',name:'Block equivalent',lambda:.84,note:'Sourced assembly/equivalent required',source:{label:'Illustrative fixture assumption',url:'about:blank'}},
-    {id:'gypsum',name:'Gypsum board',lambda:.25,note:'Illustrative λ; source required',source:{label:'Illustrative assumption — replace with design λ',url:'about:blank'}},
-    {id:'pir',name:'PIR board',lambda:.022,note:'Aged/design λ requires source',source:{label:'Illustrative assumption — replace with design λ',url:'about:blank'}}
+// ═══════════════════════════════════════════════════════════════════
+// MATERIAL DATABASE — λ values from ISO 10456:2007 / BS EN 12524
+// ═══════════════════════════════════════════════════════════════════
+const MAT = [
+  // Facade cladding
+  { id:'gfrc',      name:'GFRC Panel',                 lambda:0.75,  note:'1,900–2,100 kg/m³ · GRCA Spec 2021' },
+  { id:'gfrp',      name:'GFRP Panel',                  lambda:0.30,  note:'E-glass/polyester laminate · ASTM C177' },
+  { id:'aluminum',  name:'Aluminium Solid Sheet',       lambda:160,   note:'AA 3003/5005 · BS EN 485 · 2,700 kg/m³' },
+  { id:'acm_skin',  name:'ACM — Aluminium Skin (0.5mm)',lambda:160,   note:'Model as separate layer per skin' },
+  { id:'acm_core',  name:'ACM — Mineral Core (A2 FR)',  lambda:0.20,  note:'≥70% inorganic fill · FR-grade' },
+  { id:'fibrec',    name:'Fibre Cement Board',           lambda:0.35,  note:'Autoclaved · EN 12467 Type NT' },
+  { id:'stone',     name:'Natural Stone — Limestone',   lambda:2.30,  note:'BS EN 1936 · 2,200–2,600 kg/m³' },
+  { id:'granite',   name:'Natural Stone — Granite',     lambda:2.80,  note:'BS EN 1936 · 2,600–2,800 kg/m³' },
+  // Structural
+  { id:'concrete',  name:'Dense Concrete (2300 kg/m³)', lambda:1.70,  note:'ISO 10456:2007 · Normal weight' },
+  { id:'lwconc',    name:'Lightweight Concrete (1200)',  lambda:0.70,  note:'ISO 10456:2007 · Aerated/LW' },
+  { id:'aac',       name:'AAC Block (Ytong / Hebel)',   lambda:0.11,  note:'400–500 kg/m³ · EN 771-4' },
+  { id:'blockwork', name:'Hollow Concrete Block (CMU)',  lambda:0.84,  note:'Equiv. λ · ISO 10456' },
+  { id:'brick',     name:'Clay Brick (fired)',           lambda:0.77,  note:'ISO 10456:2007 · 1,800 kg/m³' },
+  // Insulation
+  { id:'rockwool',  name:'Rockwool / Mineral Wool',     lambda:0.036, note:'ISO 10456 · 40–80 kg/m³' },
+  { id:'glasswool', name:'Glass Wool',                   lambda:0.038, note:'ISO 10456 · 16–32 kg/m³' },
+  { id:'pir',       name:'PIR Board (Polyisocyanurate)', lambda:0.022, note:'Aged λ · BS EN 13165 · foil-faced' },
+  { id:'eps',       name:'EPS (Expanded Polystyrene)',   lambda:0.038, note:'BS EN 13163 · 15–25 kg/m³' },
+  { id:'xps',       name:'XPS (Extruded Polystyrene)',   lambda:0.032, note:'BS EN 13164 · Closed-cell' },
+  { id:'phenolic',  name:'Phenolic Foam Board',          lambda:0.018, note:'Aged λ · BS EN 13166' },
+  // Air gaps — fixed R per ISO 6946:2017 Table 2
+  { id:'aircavity', name:'Unventilated Air Cavity',     lambda:null, r:0.18, note:'ISO 6946:2017 Table 2 · ≥25 mm' },
+  { id:'aircavv',   name:'Ventilated Air Cavity',        lambda:null, r:0.13, note:'ISO 6946:2017 §6.9.2 · Drained' },
+  // Finishes
+  { id:'gypsum',    name:'Gypsum Board (Plasterboard)',  lambda:0.25,  note:'BS EN 520 · 900 kg/m³' },
+  { id:'plaster',   name:'Cement / Sand Plaster',        lambda:0.80,  note:'ISO 10456 · 1,600 kg/m³' },
+  { id:'ceramic',   name:'Ceramic / Porcelain Tile',     lambda:1.30,  note:'Fired ceramic' },
+  { id:'timber',    name:'Timber (softwood, dry)',        lambda:0.14,  note:'ISO 10456 · Parallel to grain' },
+  { id:'custom',    name:'— Custom / Enter λ manually —',lambda:null,  note:'Enter λ in the field' },
+];
+
+// Surface resistances — ISO 6946:2017 Table 1 (horizontal heat flow)
+const RSI = 0.13, RSE = 0.04;
+
+// State
+let layers = [], psis = [], chis = [];
+let layId = 0, psiId = 0, chiId = 0;
+
+// ── PSI preset library (ISO 14683:2017 indicative defaults)
+const PSI_PRESETS = {
+  window_perimeter: { name:'Window perimeter (head/sill/jamb)', psi:0.06 },
+  floor_wall:       { name:'Intermediate floor–wall junction',   psi:0.07 },
+  ground_floor:     { name:'Ground floor slab edge',             psi:0.16 },
+  balcony:          { name:'Balcony slab (unbroken concrete)',   psi:0.50 },
+  parapet:          { name:'Parapet / roof–wall junction',       psi:0.14 },
+  column:           { name:'Structural column wrap',             psi:0.25 },
+  ext_corner:       { name:'External corner (convex)',           psi:0.08 },
+  int_corner:       { name:'Internal corner (concave)',          psi:-0.07 },
+};
+
+// ── CHI preset library (ISO 10211 / published FEM studies)
+const CHI_PRESETS = {
+  ss_anchor:  { name:'Stainless steel anchor (M10–M12)',    chi:0.012 },
+  bracket:    { name:'Steel bracket through insulation',    chi:0.035 },
+  rail_clip:  { name:'Aluminium T-clip / rail clip',        chi:0.055 },
+  wall_tie:   { name:'Stainless steel cavity wall tie',     chi:0.008 },
+  spider:     { name:'Glass/spider fixing (GRC/GRP)',       chi:0.010 },
+  plastic_anc:{ name:'ETICS plastic anchor (ETA-approved)', chi:0.002 },
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════════════════════════════
+const PRESETS = {
+  gfrc: {
+    layers:[
+      { m:'gfrc',     t:25,   l:0.75  },
+      { m:'aircavv',  t:50,   l:null  },
+      { m:'rockwool', t:80,   l:0.036 },
+      { m:'blockwork',t:200,  l:0.84  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Window perimeter',        psi:0.06, len:1.2 },
+           { n:'Intermediate floor junction', psi:0.07, len:1.0 } ],
+    chis:[ { n:'SS anchor (M12 bracket)', chi:0.012, cnt:4 } ],
+    area:1.0
+  },
+  acm: {
+    layers:[
+      { m:'acm_skin', t:0.5,  l:160   },
+      { m:'acm_core', t:3,    l:0.20  },
+      { m:'acm_skin', t:0.5,  l:160   },
+      { m:'aircavv',  t:50,   l:null  },
+      { m:'pir',      t:80,   l:0.022 },
+      { m:'concrete', t:200,  l:1.70  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Window perimeter', psi:0.06, len:1.2 } ],
+    chis:[ { n:'Rail clip (Al T-clip)', chi:0.055, cnt:6 } ],
+    area:1.0
+  },
+  stone: {
+    layers:[
+      { m:'stone',    t:30,   l:2.30  },
+      { m:'aircavity',t:40,   l:null  },
+      { m:'rockwool', t:80,   l:0.036 },
+      { m:'blockwork',t:200,  l:0.84  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Parapet junction', psi:0.14, len:0.5 } ],
+    chis:[ { n:'SS anchor (stone fixing)', chi:0.012, cnt:6 } ],
+    area:1.0
+  },
+  aluminum: {
+    layers:[
+      { m:'aluminum', t:3,    l:160   },
+      { m:'aircavv',  t:50,   l:null  },
+      { m:'pir',      t:80,   l:0.022 },
+      { m:'blockwork',t:200,  l:0.84  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Window perimeter', psi:0.06, len:1.2 } ],
+    chis:[ { n:'Rail clip (Al T-clip)', chi:0.055, cnt:5 } ],
+    area:1.0
+  },
+  insulated: {
+    layers:[
+      { m:'concrete', t:200,  l:1.70  },
+      { m:'pir',      t:60,   l:0.022 },
+      { m:'aircavity',t:25,   l:null  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Intermediate floor junction', psi:0.07, len:1.0 } ],
+    chis:[],
+    area:1.0
+  },
+  estidama1p: {
+    layers:[
+      { m:'concrete', t:200,  l:1.70  },
+      { m:'pir',      t:90,   l:0.022 },
+      { m:'aircavity',t:20,   l:null  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Intermediate floor junction', psi:0.07, len:1.0 } ],
+    chis:[ { n:'SS anchor', chi:0.012, cnt:2 } ],
+    area:1.0
+  },
+  alsafat_silver: {
+    layers:[
+      { m:'concrete', t:200,  l:1.70  },
+      { m:'xps',      t:40,   l:0.032 },
+      { m:'aircavity',t:20,   l:null  },
+      { m:'gypsum',   t:12,   l:0.25  },
+    ],
+    psis:[ { n:'Intermediate floor junction', psi:0.07, len:1.0 } ],
+    chis:[],
+    area:1.0
+  },
+};
+
+function loadPreset(key) {
+  const p = PRESETS[key]; if (!p) return;
+  layers=[]; psis=[]; chis=[]; layId=0; psiId=0; chiId=0;
+  p.layers.forEach(({ m, t, l }) => {
+    const mat = MAT.find(x=>x.id===m)||MAT[0];
+    layers.push({ id:++layId, matId:m, name:mat.name, thickness:t,
+                  lambda: l!==null ? l : (mat.lambda||''), fixedR:mat.r||null });
+  });
+  (p.psis||[]).forEach(({ n, psi, len }) => psis.push({ id:++psiId, name:n, psi, len }));
+  (p.chis||[]).forEach(({ n, chi, cnt }) => chis.push({ id:++chiId, name:n, chi, cnt }));
+  const aEl = document.getElementById('ref-area');
+  if (aEl) aEl.value = p.area||1;
+  renderAll(); calculate();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ADD / REMOVE
+// ═══════════════════════════════════════════════════════════════════
+function addLayer(matId='concrete', t=100) {
+  const m = MAT.find(x=>x.id===matId)||MAT[8];
+  layers.push({ id:++layId, matId:m.id, name:m.name, thickness:t, lambda:m.lambda||'', fixedR:m.r||null });
+  renderLayers(); calculate();
+}
+function removeLayer(id) { layers=layers.filter(l=>l.id!==id); renderLayers(); calculate(); }
+
+function addPsi() { psis.push({ id:++psiId, name:'Junction', psi:0.06, len:1.0 }); renderPsi(); calculate(); }
+function addPsiPreset(key) {
+  const p=PSI_PRESETS[key]; if(!p) return;
+  psis.push({ id:++psiId, name:p.name, psi:p.psi, len:1.0 }); renderPsi(); calculate();
+}
+function removePsi(id) { psis=psis.filter(p=>p.id!==id); renderPsi(); calculate(); }
+
+function addChi() { chis.push({ id:++chiId, name:'Mechanical fixing', chi:0.012, cnt:1 }); renderChi(); calculate(); }
+function addChiPreset(key) {
+  const c=CHI_PRESETS[key]; if(!c) return;
+  chis.push({ id:++chiId, name:c.name, chi:c.chi, cnt:1 }); renderChi(); calculate();
+}
+function removeChi(id) { chis=chis.filter(c=>c.id!==id); renderChi(); calculate(); }
+
+function toggleBridge(bodyId) {
+  const el = document.getElementById(bodyId);
+  const togId = bodyId==='psi-body' ? 'psi-toggle' : 'chi-toggle';
+  const tog = document.getElementById(togId);
+  const open = el.style.display === 'block';
+  el.style.display = open ? 'none' : 'block';
+  tog.textContent  = open ? 'Expand ↓' : 'Collapse ↑';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════
+function renderAll() { renderLayers(); renderPsi(); renderChi(); }
+
+function renderLayers() {
+  const tb = document.getElementById('layers-tbody');
+  document.getElementById('layer-count').textContent = `${layers.length} LAYER${layers.length!==1?'S':''}`;
+  if (!layers.length) {
+    tb.innerHTML=`<tr><td colspan="6" style="padding:28px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">No layers — add a layer or load a preset above</td></tr>`;
+    return;
+  }
+  tb.innerHTML = layers.map((l,i) => {
+    const r = calcLayerR(l);
+    const rStr = r!==null ? r.toFixed(3) : '—';
+    const fixed = l.fixedR !== null;
+    const lField = fixed
+      ? `<span style="color:var(--blue);font-family:'DM Mono',monospace;font-size:11px">R=${l.fixedR} fixed</span>`
+      : `<input class="li" type="number" min="0.001" step="0.001" value="${l.lambda}" onchange="onLambda(${l.id},this.value)" placeholder="λ" style="max-width:110px">`;
+    return `<tr class="lr" id="lr-${l.id}">
+      <td class="ln">${i+1}</td>
+      <td><select class="ls" onchange="onMat(${l.id},this.value)">
+        ${MAT.map(m=>`<option value="${m.id}"${m.id===l.matId?' selected':''}>${m.name} — ${m.note}</option>`).join('')}
+      </select></td>
+      <td><input class="li" type="number" min="0.1" step="0.5" value="${l.thickness}" onchange="onThick(${l.id},this.value)" ${fixed?'disabled style="opacity:.4"':''} placeholder="mm"></td>
+      <td class="lr-lam" style="padding:9px 12px;text-align:right">${lField}</td>
+      <td class="lr-r ${!r?'z':''}">${rStr}</td>
+      <td><button class="bdel" onclick="removeLayer(${l.id})"><i class="fa fa-xmark"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPsi() {
+  const tb = document.getElementById('psi-tbody');
+  if (!psis.length) { tb.innerHTML=`<tr><td colspan="6" style="padding:16px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">No linear bridges — click "Add Junction" or use preset buttons</td></tr>`; return; }
+  const A = parseFloat(document.getElementById('ref-area')?.value||1) || 1;
+  tb.innerHTML = psis.map((p,i) => {
+    const contrib = (p.psi * p.len) / A;
+    return `<tr class="br-row">
+      <td class="br-lbl">${i+1}</td>
+      <td><input class="li" style="text-align:left;width:100%" type="text" value="${p.name}" onchange="onPsiName(${p.id},this.value)"></td>
+      <td><input class="li" type="number" min="0" step="0.001" value="${p.psi}" onchange="onPsiVal(${p.id},this.value)" style="max-width:100px"></td>
+      <td><input class="li" type="number" min="0" step="0.1" value="${p.len}" onchange="onPsiLen(${p.id},this.value)" style="max-width:90px"></td>
+      <td class="psi-contrib psi-c">+${contrib.toFixed(4)}</td>
+      <td><button class="bdel" onclick="removePsi(${p.id})"><i class="fa fa-xmark"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderChi() {
+  const tb = document.getElementById('chi-tbody');
+  if (!chis.length) { tb.innerHTML=`<tr><td colspan="6" style="padding:16px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">No point bridges — click "Add Fixing" or use preset buttons</td></tr>`; return; }
+  const A = parseFloat(document.getElementById('ref-area')?.value||1) || 1;
+  tb.innerHTML = chis.map((c,i) => {
+    const contrib = (c.chi * c.cnt) / A;
+    return `<tr class="br-row">
+      <td class="br-lbl">${i+1}</td>
+      <td><input class="li" style="text-align:left;width:100%" type="text" value="${c.name}" onchange="onChiName(${c.id},this.value)"></td>
+      <td><input class="li" type="number" min="0" step="0.001" value="${c.chi}" onchange="onChiVal(${c.id},this.value)" style="max-width:90px"></td>
+      <td><input class="li" type="number" min="0" step="1" value="${c.cnt}" onchange="onChiCnt(${c.id},this.value)" style="max-width:75px"></td>
+      <td class="psi-contrib chi-c">+${contrib.toFixed(4)}</td>
+      <td><button class="bdel" onclick="removeChi(${c.id})"><i class="fa fa-xmark"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Change handlers
+function onMat(id, matId) {
+  const m=MAT.find(x=>x.id===matId); const l=layers.find(x=>x.id===id); if(!m||!l) return;
+  l.matId=m.id; l.name=m.name; l.fixedR=m.r||null;
+  if (m.lambda!==null&&m.lambda!==undefined) l.lambda=m.lambda; else if(!m.r) l.lambda='';
+  renderLayers(); calculate();
+}
+function onThick(id,v){ const l=layers.find(x=>x.id===id); if(l){l.thickness=parseFloat(v)||0; calculate();} }
+function onLambda(id,v){ const l=layers.find(x=>x.id===id); if(l){l.lambda=parseFloat(v)||0; calculate();} }
+function onPsiName(id,v){ const p=psis.find(x=>x.id===id); if(p){p.name=v;} }
+function onPsiVal(id,v){ const p=psis.find(x=>x.id===id); if(p){p.psi=parseFloat(v)||0; calculate();} }
+function onPsiLen(id,v){ const p=psis.find(x=>x.id===id); if(p){p.len=parseFloat(v)||0; calculate();} }
+function onChiName(id,v){ const c=chis.find(x=>x.id===id); if(c){c.name=v;} }
+function onChiVal(id,v){ const c=chis.find(x=>x.id===id); if(c){c.chi=parseFloat(v)||0; calculate();} }
+function onChiCnt(id,v){ const c=chis.find(x=>x.id===id); if(c){c.cnt=parseInt(v)||0; calculate();} }
+
+// ═══════════════════════════════════════════════════════════════════
+// CALCULATE
+// ═══════════════════════════════════════════════════════════════════
+function calcLayerR(l) {
+  if (l.fixedR!==null) return l.fixedR;
+  const d=(l.thickness||0)/1000, λ=parseFloat(l.lambda)||0;
+  return (!d||!λ) ? null : d/λ;
+}
+
+function calculate() {
+  // Layer R-values
+  const layerRs = layers.map(l=>({ layer:l, r:calcLayerR(l) }));
+  const sumR = layerRs.reduce((a,{r})=>a+(r||0), 0);
+  const RT = RSE + sumR + RSI;
+  const U0 = RT > 0 ? 1/RT : null;
+
+  // Thermal bridge corrections
+  const A = parseFloat(document.getElementById('ref-area')?.value||1) || 1;
+  const dUPsi = psis.reduce((a,p)=>a+(p.psi*p.len)/A, 0);
+  const dUChi = chis.reduce((a,c)=>a+(c.chi*c.cnt)/A, 0);
+  const Utotal = U0 !== null ? U0 + dUPsi + dUChi : null;
+
+  // Re-render Ψ and χ tables (to update contributions)
+  renderPsi(); renderChi();
+
+  // ── Update displays
+  const u0El  = document.getElementById('u0-disp');
+  const duPEl = document.getElementById('du-psi-disp');
+  const duCEl = document.getElementById('du-chi-disp');
+  const rtEl  = document.getElementById('rt-disp');
+  const uTEl  = document.getElementById('u-total-disp');
+  const chip  = document.getElementById('chip');
+  const chipT = document.getElementById('chip-text');
+  const chipD = document.getElementById('chip-desc');
+
+  if (u0El)  u0El.textContent  = U0!==null ? U0.toFixed(3) : '—';
+  if (duPEl) duPEl.textContent = '+'+dUPsi.toFixed(4);
+  if (duCEl) duCEl.textContent = '+'+dUChi.toFixed(4);
+  if (rtEl)  rtEl.textContent  = RT.toFixed(3);
+
+  if (Utotal===null||layers.length===0) {
+    uTEl.textContent='—'; uTEl.style.color='var(--muted)';
+    chip.className='chip cw'; chipT.textContent='ADD LAYERS';
+    chipD.textContent='Add wall layers to begin thermal analysis.';
+  } else {
+    uTEl.textContent = Utotal.toFixed(3);
+    // Compliance check from most stringent
+    if (Utotal<=0.26)      { uTEl.style.color='var(--acc)'; chip.className='chip cp'; chipT.textContent='ESTIDAMA 2-PEARL ✓'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — meets all UAE standards incl. Estidama 2-Pearl (≤0.26). Exceptional thermal performance for Gulf climate.`; }
+    else if (Utotal<=0.32) { uTEl.style.color='var(--acc)'; chip.className='chip cp'; chipT.textContent='ESTIDAMA 1-PEARL ✓'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — meets Estidama 1-Pearl mandatory requirement (≤0.32 W/m²K). Add insulation to reach 2-Pearl (≤0.26).`; }
+    else if (Utotal<=0.42) { uTEl.style.color='var(--acc)'; chip.className='chip cp'; chipT.textContent='AL SA\'FAT GOLD ✓'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — meets Al Sa'fat Gold/Platinum (≤0.42). Fails Estidama 1-Pearl (≤0.32) for Abu Dhabi projects.`; }
+    else if (Utotal<=0.48) { uTEl.style.color='var(--acc)'; chip.className='chip cp'; chipT.textContent='BARJEEL (RAK) ✓'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — meets Barjeel RAK (≤0.48) and Al Sa'fat Silver (≤0.57). Fails Al Sa'fat Gold (≤0.42) and Estidama (≤0.32).`; }
+    else if (Utotal<=0.57) { uTEl.style.color='var(--amber)'; chip.className='chip cw'; chipT.textContent='AL SA\'FAT SILVER ⚠'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — meets Dubai mandatory minimum only (Al Sa'fat Silver ≤0.57). Fails Barjeel, Al Sa'fat Gold and Estidama. Increase insulation.`; }
+    else if (Utotal<=0.70) { uTEl.style.color='var(--amber)'; chip.className='chip cw'; chipT.textContent='ASHRAE CZ0/1 ONLY ⚠'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — fails all UAE green building thresholds. Only meets ASHRAE 90.1 CZ0/1 baseline. Substantial additional insulation required.`; }
+    else                   { uTEl.style.color='var(--red)'; chip.className='chip cf'; chipT.textContent='NON-COMPLIANT ✗'; chipD.textContent=`U=${Utotal.toFixed(3)} W/m²K — exceeds all UAE and Gulf thermal standards. Major redesign of insulation strategy required.`; }
+  }
+
+  // Standards badges
+  const S = [
+    { id:'s-alsafat-s', lim:0.57 }, { id:'s-alsafat-g', lim:0.42 },
+    { id:'s-estid-1',   lim:0.32 }, { id:'s-estid-2',   lim:0.26 },
+    { id:'s-barjeel',   lim:0.48 }, { id:'s-ashrae',     lim:0.70 },
   ];
-  const state = {layers:[],psi:[],chi:[],result:null,layerId:0,psiId:0,chiId:0};
-  const $ = id => document.getElementById(id);
-  const sourceFor = (label) => ({label,url:'about:blank'});
-  const makeLayer = (matId,t) => { const m=MAT.find(x=>x.id===matId)||MAT[2]; return {id:++state.layerId,kind:'material',matId:m.id,name:m.name,thicknessMm:t,lambda:m.lambda,draftThickness:String(t),draftLambda:String(m.lambda),source:m.source}; };
-  const makeCavity = (depth=50,vent='well') => ({id:++state.layerId,kind:'cavity',matId:'cavity',name:'Air cavity',thicknessMm:depth,draftThickness:String(depth),lambda:null,source:sourceFor('ISO 6946:2017 cavity model — licensed values/verification required'),cavity:{depthMm:depth,ventilation:vent,openingAreaMm2PerM:vent==='well'?1500:0,emissivity1:.9,emissivity2:.9}});
-  function preset(){state.layers=[makeLayer('gfrc',25),makeCavity(50,'well'),makeLayer('wool',80),makeLayer('block',200),makeLayer('gypsum',12)];state.psi=[{id:++state.psiId,name:'Illustrative window perimeter',value:.06,lengthM:1.2,draftValue:'.06',draftLength:'1.2',source:sourceFor('Illustrative assumption — source geometry required'),dimensionConvention:'external'},{id:++state.psiId,name:'Illustrative intermediate floor junction',value:.07,lengthM:1,draftValue:'.07',draftLength:'1',source:sourceFor('Illustrative assumption — source geometry required'),dimensionConvention:'external'}];state.chi=[{id:++state.chiId,name:'Illustrative fixing group',value:.012,count:4,draftValue:'.012',draftCount:'4',source:sourceFor('Illustrative assumption — source geometry required')}];render();}
-  function model(){const layers=state.layers.map(l=>({...l,draftThickness:l.draftThickness,draftLambda:l.draftLambda})); return {layers,psi:state.psi,chi:state.chi,referenceArea:$('area').value,dimensionConvention:$('dimension').value,ventilationUnknown:$('ventilation').value==='unknown',indicative:true,rule:ruleModel()};}
-  function ruleModel(){const applicable=$('jurisdiction').value==='dubai'&&$('elementType').value==='opaque-external-wall'&&$('route').value==='prescriptive';return {id:'al-safat-silver-2023',name:'Al Sa’fat Silver — external wall',edition:'Al Sa’fat – Dubai Green Building System, 2nd edition, January 2023',clause:'§501.01 / Table 501.01(1)',limit:.57,verified:applicable,element:'opaque-external-wall',route:'prescriptive',scope:applicable?'Dubai, new air-conditioned buildings, external wall / exposed floor scope':'Not applicable until scope is selected'};}
-  function errorsByPath(result){const m={};(result?.errors||[]).forEach(e=>{m[e.path]=e.message});return m;}
-  function render(){renderBridges();calculate();renderLayers();}
-  function renderLayers(){const root=$('layers');$('layer-count').textContent=`${state.layers.length} LAYER${state.layers.length===1?'':'S'}`; if(!state.layers.length){root.innerHTML='<div class="hint" style="padding:20px">No layers — add a layer or load the GFRC example.</div>';return;} root.innerHTML=state.layers.map((l,i)=>{const mat=MAT.find(m=>m.id===l.matId);const isC=l.kind==='cavity';const r=l._r;const err=l._error||'';return `<article class="layer-card ${err?'invalid':''}" data-id="${l.id}"><div class="layer-top"><div class="layer-no">${i+1}</div><div class="layer-name">${isC?'Air cavity':(mat?.name||l.name)}<small>${isC?'ISO 6946:2017 §§6.8–6.9 · explicit ventilation model':(mat?.note||'Material source required')}</small></div><div class="r-value">${r==null?'—':r.toFixed(4)}</div></div><div class="layer-fields"><div><label>Material</label>${isC?`<select data-field="vent"><option value="unventilated" ${l.cavity.ventilation==='unventilated'?'selected':''}>Unventilated</option><option value="slightly" ${l.cavity.ventilation==='slightly'?'selected':''}>Slightly ventilated</option><option value="well" ${l.cavity.ventilation==='well'?'selected':''}>Well ventilated</option></select>`:`<select data-field="mat">${MAT.map(m=>`<option value="${m.id}" ${m.id===l.matId?'selected':''}>${m.name}</option>`).join('')}</select>`}</div><div><label>${isC?'Depth (mm)':'Thickness (mm)'}</label><input data-field="thickness" value="${escapeHtml(l.draftThickness??'')}" inputmode="decimal"></div><div><label>${isC?'Opening area (mm²/m)':'λ (W/m·K)'}</label><input data-field="lambda" value="${escapeHtml(isC?l.cavity.openingAreaMm2PerM:(l.draftLambda??''))}" inputmode="decimal" ${isC?'':'aria-label="Conductivity"'}></div></div>${isC?`<div class="layer-fields"><div><label>Emissivity 1</label><input data-field="e1" value="${l.cavity.emissivity1}"></div><div><label>Emissivity 2</label><input data-field="e2" value="${l.cavity.emissivity2}"></div><div><label>Source</label><input data-field="source" value="${escapeHtml(l.source.label)}"></div></div>`:''}<div class="error">${err}</div><div class="layer-actions"><button class="btn" data-action="up">Move up</button><button class="btn" data-action="down">Move down</button><button class="btn danger" data-action="delete">Delete</button></div></article>`}).join('');}
-  function renderBridges(){const p=$('psi-list');p.innerHTML=state.psi.length?state.psi.map(b=>bridgeHtml(b,'psi')).join(''):'<div class="hint">No linear bridges — this is a clear-field result only.</div>';const c=$('chi-list');c.innerHTML=state.chi.length?state.chi.map(b=>bridgeHtml(b,'chi')).join(''):'<div class="hint">No point bridges.</div>';}
-  function bridgeHtml(b,type){return `<div class="bridge-row" data-type="${type}" data-id="${b.id}"><div><label>Description</label><input data-field="name" value="${escapeHtml(b.name)}"><div class="hint">${type==='psi'?'Source and dimension convention required for negative Ψ.':'Count is a whole number; no truncation.'}</div></div><div><label>${type==='psi'?'Ψ (W/m·K)':'χ (W/K)'}</label><input data-field="value" value="${escapeHtml(b.draftValue??'')}></div><div><label>${type==='psi'?'Length (m)':'Count n'}</label><input data-field="count" value="${escapeHtml(type==='psi'?(b.draftLength??''):(b.draftCount??''))}></div><button class="btn danger" data-action="delete">×</button></div>`;}
-  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function calculate(){const r=E.calculateModel(model());state.result=r;const by=errorsByPath(r);state.layers.forEach((l,i)=>{l._r=r.valid?r.rows[i]?.r:null;l._error=Object.keys(by).filter(k=>k.startsWith(`layers.${i}`)).map(k=>by[k]).join(' ');const card=document.querySelector(`.layer-card[data-id="${l.id}"]`);if(card){card.classList.toggle('invalid',!!l._error);const rv=card.querySelector('.r-value');if(rv)rv.textContent=l._r==null?'—':l._r.toFixed(4);const er=card.querySelector('.error');if(er)er.textContent=l._error;}});$('u-total').textContent=r.valid?r.effectiveU.toFixed(4):'Not calculated';$('u-clear').textContent=r.valid?r.clearU.toFixed(4):'—';$('r-total').textContent=r.valid?r.totalR.toFixed(4):'—';$('du-psi').textContent=r.valid?'+'+r.psiDelta.toFixed(4):'—';$('du-chi').textContent=r.valid?'+'+r.chiDelta.toFixed(4):'—';const s=$('status');s.className='status '+(r.valid?'valid':'invalid');s.textContent=r.valid?(r.status==='indicative'?'Indicative model — verify sources and scope before relying on it.':'Valid model — review evidence and applicability.'):(r.errors[0]?.message||'Not calculated.');$('rule').textContent=r.valid&&r.compliance?.status!=='not-assessed'?`${r.compliance.rule.name}: ${r.compliance.status.toUpperCase()} · limit ${r.compliance.limit.toFixed(2)} W/m²K · margin ${r.compliance.margin.toFixed(4)} W/m²K. Rule source: ${r.compliance.rule.edition}, ${r.compliance.rule.clause}. This is a scoped rule check, not a rating.`:'Not assessed — missing valid inputs or the selected rule is outside this model scope.';$('export').disabled=!r.valid;const bd=$('breakdown');bd.innerHTML=r.valid?`<div class="rline"><span>${r.cavity?.excluded?'Cavity-facing boundary R':'External surface Rse'}</span><b>${r.rBoundary.toFixed(4)}</b></div>`+r.rows.map(x=>`<div class="rline"><span>${escapeHtml(x.name)} ${x.exclusionReason?'(excluded)':''}</span><b>${x.r.toFixed(4)}</b></div>`).join('')+`<div class="rline"><span>Internal surface Rsi</span><b>0.1300</b></div><div class="rline"><span><strong>Total RT</strong></span><b>${r.totalR.toFixed(4)}</b></div>`:'<div class="hint">No valid model yet.</div>';}
-  function syncFromInput(el){const card=el.closest('.layer-card');if(card){const l=state.layers.find(x=>x.id===Number(card.dataset.id));if(!l)return;const f=el.dataset.field;if(f==='thickness')l.draftThickness=el.value;if(f==='lambda'&&!l.cavity)l.draftLambda=el.value;if(f==='lambda'&&l.cavity)l.cavity.openingAreaMm2PerM=el.value;if(f==='e1')l.cavity.emissivity1=el.value;if(f==='e2')l.cavity.emissivity2=el.value;if(f==='vent')l.cavity.ventilation=el.value;if(f==='source')l.source={label:el.value,url:'about:blank'};calculate();return;}const br=el.closest('.bridge-row');if(br){const list=br.dataset.type==='psi'?state.psi:state.chi;const b=list.find(x=>x.id===Number(br.dataset.id));const f=el.dataset.field;if(f==='name')b.name=el.value;if(f==='value')b.draftValue=el.value,b.value=Number(el.value);if(f==='count'){if(br.dataset.type==='psi')b.draftLength=el.value,b.lengthM=Number(el.value);else b.draftCount=el.value,b.count=Number(el.value)}calculate();}}
-  function add(kind){if(kind==='material')state.layers.push(makeLayer('concrete',100));if(kind==='wool')state.layers.push(makeLayer('wool',80));if(kind==='concrete')state.layers.push(makeLayer('concrete',200));if(kind==='cavity')state.layers.push(makeCavity(50,'unknown'));if(kind==='psi')state.psi.push({id:++state.psiId,name:'Junction',value:.06,lengthM:1,draftValue:'.06',draftLength:'1',source:sourceFor('Illustrative assumption — source geometry required'),dimensionConvention:'external'});if(kind==='chi')state.chi.push({id:++state.chiId,name:'Fixing group',value:.012,count:1,draftValue:'.012',draftCount:'1',source:sourceFor('Illustrative assumption — source geometry required')});render();}
-  document.addEventListener('input',e=>{if(e.target.matches('input')){syncFromInput(e.target);if(e.target.id==='area'||e.target.id==='dimension'||e.target.id==='route'||e.target.id==='jurisdiction'||e.target.id==='elementType'||e.target.id==='ventilation')render();}});document.addEventListener('change',e=>{if(e.target.matches('select')){syncFromInput(e.target);if(e.target.id==='dimension'||e.target.id==='route'||e.target.id==='jurisdiction'||e.target.id==='elementType'||e.target.id==='ventilation')render();}});document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.add){if(b.dataset.add==='preset'){if(state.layers.length&&!confirm('Replace the current assembly with the GFRC example?'))return;preset();}else add(b.dataset.add);return;}if(b.dataset.action){const row=b.closest('[data-id]');const id=Number(row.dataset.id);if(row.classList.contains('layer-card')&&(b.dataset.action==='up'||b.dataset.action==='down')){const from=state.layers.findIndex(x=>x.id===id),to=b.dataset.action==='up'?from-1:from+1;if(to>=0&&to<state.layers.length){[state.layers[from],state.layers[to]]=[state.layers[to],state.layers[from]];render();}return;}if(b.dataset.action==='delete'){if(row.classList.contains('layer-card'))state.layers=state.layers.filter(x=>x.id!==id);else if(row.closest('[data-type]').dataset.type==='psi')state.psi=state.psi.filter(x=>x.id!==id);else state.chi=state.chi.filter(x=>x.id!==id);render();}return;}if(b.id==='reset'){if(confirm('Reset the calculator?')){state.layers=[];state.psi=[];state.chi=[];render();}}if(b.id==='save'){localStorage.setItem('cladwise-u-value-scenario',JSON.stringify({state,area:$('area').value,dimension:$('dimension').value}));b.textContent='Saved';setTimeout(()=>b.textContent='Save scenario',1000)}if(b.id==='load'){const x=localStorage.getItem('cladwise-u-value-scenario');if(x){const saved=JSON.parse(x);Object.assign(state,saved.state);$('area').value=saved.area;$('dimension').value=saved.dimension;render();}}if(b.dataset.toggle){const body=$(b.dataset.toggle+'-body');body.hidden=!body.hidden;$(b.dataset.toggle+'-toggle').textContent=body.hidden?'Expand ↓':'Collapse ↑';}});
-  $('export').addEventListener('click',()=>{if(!state.result?.valid)return;const {jsPDF}=window.jspdf;const r=state.result;const doc=new jsPDF();let y=18;const line=(t,size=10)=>{doc.setFontSize(size);doc.text(String(t),15,y);y+=6;if(y>280){doc.addPage();y=18}};doc.setFont('helvetica','bold');line('CLADWISE UAE — U-VALUE REPORT',16);doc.setFont('helvetica','normal');line(`Project: ${$('project').value}`);line(`Date: ${new Date().toISOString().slice(0,10)} · Revision: preview`);line('Method: ISO 6946:2017 opaque external wall / horizontal heat flow');line(`Area convention: ${$('dimension').value} · Reference area: ${r.area} m²`);line(`Status: ${r.status.toUpperCase()} — sources and applicability require engineering review`);line('');line(`Uclear = ${r.clearU.toFixed(6)} W/m²K`);line(`ΔUΨ = ${r.psiDelta.toFixed(6)} W/m²K`);line(`ΔUχ = ${r.chiDelta.toFixed(6)} W/m²K`);line(`Ueffective = ${r.effectiveU.toFixed(6)} W/m²K`);line(`RT = ${r.totalR.toFixed(6)} m²K/W`);line('');line('ASSEMBLY',12);r.rows.forEach((x,i)=>line(`${i+1}. ${x.name} · ${x.thicknessMm} mm · ${x.lambda??'cavity'} · R=${x.r.toFixed(6)}${x.exclusionReason?' · '+x.exclusionReason:''}`));line('');line('RULE ASSESSMENT',12);line($('rule').textContent);line('');line('ASSUMPTIONS / LIMITATIONS',12);line('Generic values and bridge presets are illustrative assumptions. This report is preliminary and not certified or submission-ready. Verify licensed standards, product data, geometry, boundary conditions, and the authority route.');doc.save('CladWise_UValue_'+new Date().toISOString().slice(0,10)+'.pdf');});
-  function runTests(){const out=[];const base={layers:[{kind:'material',name:'Concrete',thicknessMm:200,lambda:1.7,source:{label:'fixture',url:'fixture'}},{kind:'material',name:'Wool',thicknessMm:80,lambda:.036,source:{label:'fixture',url:'fixture'}}],psi:[],chi:[],referenceArea:1,dimensionConvention:'external',ventilationUnknown:false};const r=E.calculateModel(base);out.push(['A homogeneous wall',Math.abs(r.totalR-2.5098692810457517)<1e-12&&Math.abs(r.clearU-.3984271242936382)<1e-12]);const b=E.calculateModel({...base,psi:[{value:.06,lengthM:1,source:{label:'fixture',url:'fixture'},dimensionConvention:'external'}]});out.push(['B area 1 bridge',Math.abs(b.effectiveU-.4584271242936382)<1e-12]);const c=E.calculateModel({...base,referenceArea:2,psi:[{value:.06,lengthM:1,source:{label:'fixture',url:'fixture'},dimensionConvention:'external'}]});out.push(['B area 2 bridge',Math.abs(c.effectiveU-.4284271242936382)<1e-12]);const invalid=E.calculateModel({...base,referenceArea:0});out.push(['invalid area blocks',!invalid.valid]);$('layers').innerHTML='<pre class="mono">'+out.map(x=>(x[1]?'PASS':'FAIL')+' — '+x[0]).join('\n')+'</pre>';}
-  preset();if(new URLSearchParams(location.search).get('test')==='1')runTests();
-})();
+  S.forEach(s=>{
+    const el=document.getElementById(s.id); if(!el) return;
+    if (Utotal===null) { el.className='sbadge sb-n'; el.textContent='—'; return; }
+    el.className = Utotal<=s.lim ? 'sbadge sb-p' : 'sbadge sb-f';
+    el.textContent = Utotal<=s.lim ? 'PASS' : 'FAIL';
+  });
+
+  // R breakdown
+  const rRowsEl = document.getElementById('r-rows');
+  const rTotEl  = document.getElementById('r-tot');
+  const rTotValEl = document.getElementById('r-tot-val');
+  const allRows = [
+    { lbl:'Rse (external surface)', r:RSE, col:'var(--blue)' },
+    ...layerRs.map(({layer,r})=>({ lbl:`${layer.name} (${layer.thickness}mm)`, r:r||0, col:null })),
+    { lbl:'Rsi (internal surface)', r:RSI, col:'var(--blue)' },
+  ];
+  const maxR = Math.max(...allRows.map(x=>x.r), 0.001);
+  rRowsEl.innerHTML = allRows.map(row=>`
+    <div class="r-row2">
+      <div class="r-lbl2" title="${row.lbl}">${row.lbl}</div>
+      <div class="r-bar-w"><div class="r-bar" style="width:${(row.r/maxR*100).toFixed(1)}%;${row.col?'background:'+row.col:''}"></div></div>
+      <div class="r-val2" style="${row.col?'color:'+row.col:''}">${row.r.toFixed(3)}</div>
+    </div>`).join('');
+  if (layers.length>0) { rTotEl.style.display='flex'; rTotValEl.textContent=RT.toFixed(3); }
+  else rTotEl.style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PDF EXPORT
+// ═══════════════════════════════════════════════════════════════════
+function exportReport() {
+  if (!layers.length) { alert('Add at least one layer first.'); return; }
+  if (!window.jspdf)  { alert('PDF library not loaded.'); return; }
+
+  // ── COMPUTED VALUES ──────────────────────────────────────────────────────────
+  const layerRs = layers.map(l => ({ layer: l, r: calcLayerR(l) }));
+  const sumR    = layerRs.reduce((a, { r }) => a + (r || 0), 0);
+  const RT      = RSE + sumR + RSI;
+  const U0      = RT > 0 ? 1 / RT : 0;
+  const refArea = parseFloat(document.getElementById('ref-area')?.value || 1) || 1;
+  const dUPsi   = psis.reduce((a, p) => a + (p.psi * p.len) / refArea, 0);
+  const dUChi   = chis.reduce((a, ch) => a + (ch.chi * ch.cnt) / refArea, 0);
+  const Ut      = U0 + dUPsi + dUChi;
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' });
+
+  const COMPLIANCE_STDS = [
+    { name:"Al Sa'fat Silver",        auth:'Dubai Municipality',   detail:'Mandatory — all Dubai permits · GBRS v2.0',              lim:0.57 },
+    { name:"Al Sa'fat Gold/Platinum", auth:'Dubai Municipality',   detail:'Voluntary enhanced · GBRS v2.0 2024',                    lim:0.42 },
+    { name:'Barjeel GBR v1.2',        auth:'RAK Municipality',     detail:'Mandatory — all RAK permits · 2019 / 2022',              lim:0.48 },
+    { name:'Estidama 1-Pearl',         auth:'Abu Dhabi UPC',        detail:'Mandatory — all Abu Dhabi buildings · PBRS v1.0',        lim:0.32 },
+    { name:'Estidama 2-Pearl',         auth:'Abu Dhabi UPC',        detail:'Mandatory — Abu Dhabi government buildings · PBRS v1.0', lim:0.26 },
+    { name:'ASHRAE 90.1-2019 CZ0/1',  auth:'ASHRAE',               detail:'Mass wall assembly — UAE practitioner baseline',          lim:0.70 },
+  ].map(s => ({ ...s, pass: Ut <= s.lim }));
+
+  // ── jsPDF ────────────────────────────────────────────────────────────────────
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  // Page geometry
+  const PW = 210, PH = 297;
+  const ML = 18, MR = 18;
+  const CW = PW - ML - MR;   // 174mm
+  const HDR_H   = 28;         // page 1 header height
+  const CONT_H  = 10;         // continuation header height
+  const FOOT_H  = 10;         // footer band height
+  const SAFE_B  = PH - FOOT_H - 4; // 283mm — never draw below this
+
+  // ── COLOUR PALETTE ───────────────────────────────────────────────────────────
+  const W     = [255,255,255];   // white
+  const BK    = [ 22, 22, 22];   // near-black
+  const G1    = [ 60, 60, 60];   // dark grey
+  const G2    = [100,100,100];   // mid grey
+  const G3    = [180,180,180];   // light grey borders
+  const LG    = [247,248,247];   // alternating row tint
+  const HBKG  = [ 22, 38, 28];   // dark green header
+  const THBKG = [ 45, 58, 50];   // table header bg
+  const GRN   = [  0,130, 85];   // accent green (print-safe)
+  const DGRN  = [  0,100, 65];   // darker green text
+  const PASS  = [  0,130, 85];
+  const FAIL  = [185, 35, 35];
+  const WARN  = [175,110,  0];
+  const BLU   = [ 25, 80,175];
+  const PUR   = [ 90, 50,175];
+
+  // ── SHORT HELPERS ────────────────────────────────────────────────────────────
+  const sf = (r,g,b) => doc.setFillColor(r,g,b);
+  const st = (r,g,b) => doc.setTextColor(r,g,b);
+  const sd = (r,g,b) => doc.setDrawColor(r,g,b);
+  const lw = w => doc.setLineWidth(w);
+  const B  = sz => { doc.setFont('helvetica','bold');   doc.setFontSize(sz); };
+  const N  = sz => { doc.setFont('helvetica','normal'); doc.setFontSize(sz); };
+  const tw = (t,sz) => { doc.setFontSize(sz); return doc.getTextWidth(String(t)); };
+  const wt = (t,w,sz) => { doc.setFontSize(sz); return doc.splitTextToSize(String(t||'—'), w); };
+  const hline = (y, col, weight) => { sd(...(col||G3)); lw(weight||0.25); doc.line(ML, y, ML+CW, y); };
+
+  // ── Y STATE ──────────────────────────────────────────────────────────────────
+  let y   = 0;
+  let pgN = 0;
+
+  // ── FOOTER (called at end, once per page) ───────────────────────────────────
+  function drawFooter(pn, total) {
+    const fy = PH - FOOT_H;
+    sd(...G3); lw(0.3); doc.line(ML, fy, ML+CW, fy);
+    N(6.5); st(...G2);
+    doc.text(
+      'CladWise UAE  ·  U-Value Thermal Calculation Report  ·  ISO 6946:2017  ·  ISO 14683:2017  ·  ISO 10211:2017',
+      ML, fy + 5);
+    B(6.5); st(...GRN);
+    doc.text('Page '+pn+' / '+total, PW-MR, fy+5, { align:'right' });
+  }
+
+  // ── NEW PAGE ─────────────────────────────────────────────────────────────────
+  function newPage(first) {
+    if (!first) doc.addPage();
+    pgN++;
+    sf(...W); doc.rect(0,0,PW,PH,'F');
+    if (first) {
+      // Full letterhead
+      sf(...HBKG); doc.rect(0, 0, PW, HDR_H, 'F');
+      // Logo box
+      sf(...GRN); doc.rect(ML, 5, 20, 18, 'F');
+      B(9); st(...HBKG); doc.text('CW', ML+10, 15.5, { align:'center' });
+      // Name
+      B(12); st([255,255,255]);
+      doc.text('CLADWISE UAE', ML+24, 12);
+      N(7); st([150,195,170]);
+      doc.text('Façade Material Intelligence  ·  cladwise.ae', ML+24, 18);
+      // Report type label
+      const rtW = 54;
+      sf([35,55,42]); doc.rect(PW-MR-rtW, 6, rtW, 16, 'F');
+      B(7); st([150,220,180]); doc.text('THERMAL CALCULATION', PW-MR-rtW/2, 12.5, { align:'center' });
+      B(8); st(...GRN); doc.text('U-VALUE REPORT', PW-MR-rtW/2, 19.5, { align:'center' });
+      // Green stripe under header
+      sf(...GRN); doc.rect(0, HDR_H, PW, 0.7, 'F');
+      y = HDR_H + 6;
+    } else {
+      // Slim continuation header
+      sf(...HBKG); doc.rect(0, 0, PW, CONT_H, 'F');
+      B(6.5); st([200,220,205]);
+      doc.text('CLADWISE UAE  ·  U-VALUE THERMAL CALCULATION REPORT', ML, 7);
+      N(6.5); st([130,160,140]);
+      doc.text('CONTINUED', PW-MR, 7, { align:'right' });
+      sf(...GRN); doc.rect(0, CONT_H, PW, 0.5, 'F');
+      y = CONT_H + 6;
+    }
+  }
+
+  // ── SAFE CHECK ───────────────────────────────────────────────────────────────
+  function need(mm) {
+    if (y + mm > SAFE_B) newPage(false);
+  }
+
+  // ── SECTION HEADING ──────────────────────────────────────────────────────────
+  function secHead(title) {
+    need(14);
+    sf(...GRN); doc.rect(ML, y, 3, 7, 'F');
+    B(9); st(...BK);
+    doc.text(title, ML+6, y+5.5);
+    hline(y+8, G3, 0.3);
+    y += 13;
+  }
+
+  // ── TABLE COLUMN HEADER ──────────────────────────────────────────────────────
+  function tblHeader(cols, rowH) {
+    need(rowH);
+    sf(...THBKG); doc.rect(ML, y, CW, rowH, 'F');
+    // Top border
+    sd(...GRN); lw(0.4); doc.line(ML, y, ML+CW, y);
+    B(7); st(...W);
+    cols.forEach(col => {
+      const cx = ML + col.x + (col.align==='right' ? col.w-2 : 2);
+      doc.text(col.label||'', cx, y + rowH/2 + 2.3,
+        { align: col.align==='right' ? 'right' : 'left' });
+    });
+    // Col dividers
+    sd(...[70,85,75]); lw(0.2);
+    cols.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+rowH); });
+    sd(...G3); lw(0.3);
+    doc.line(ML, y, ML, y+rowH);
+    doc.line(ML+CW, y, ML+CW, y+rowH);
+    y += rowH;
+  }
+
+  // ── TABLE DATA ROW — dynamic height ─────────────────────────────────────────
+  function tblRow(cols, cells, rowH, isEven) {
+    need(rowH);
+    const bg = isEven ? W : LG;
+    sf(...bg); doc.rect(ML, y, CW, rowH, 'F');
+    sd(...G3); lw(0.2); doc.line(ML, y+rowH, ML+CW, y+rowH);
+    // Col dividers
+    sd(...G3); lw(0.15);
+    cols.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+rowH); });
+    sd(...G3); lw(0.3);
+    doc.line(ML, y, ML, y+rowH);
+    doc.line(ML+CW, y, ML+CW, y+rowH);
+
+    cells.forEach((cell, i) => {
+      if (!cell) return;
+      const col   = cols[i];
+      const ra    = col.align === 'right';
+      const sz    = cell.sz || 8;
+      const color = cell.color || BK;
+      const text  = String(cell.text !== undefined ? cell.text : cell);
+      const maxW  = col.w - 4;
+
+      if (cell.bold) B(sz); else N(sz);
+      st(...color);
+
+      const lns = wt(text, maxW, sz);
+      const totalH = lns.length * (sz * 0.352 + 1.2);
+      const startY = y + (rowH - totalH) / 2 + sz * 0.352;
+      const cx = ra ? ML + col.x + col.w - 2 : ML + col.x + 2;
+
+      lns.forEach((ln, li) => {
+        doc.text(ln, cx, startY + li * (sz * 0.352 + 1.2),
+          { align: ra ? 'right' : 'left' });
+      });
+    });
+    y += rowH;
+  }
+
+  // ── TABLE OUTER BORDER ───────────────────────────────────────────────────────
+  function tblBorder(topY) {
+    sd(...G3); lw(0.4); doc.rect(ML, topY, CW, y-topY, 'S');
+  }
+
+  // ── TOTAL / SUMMARY ROW ─────────────────────────────────────────────────────
+  function tblTotalRow(leftLabel, rightVal, bgColor, borderColor) {
+    need(9);
+    sf(...bgColor); doc.rect(ML, y, CW, 9, 'F');
+    sd(...borderColor); lw(0.4); doc.rect(ML, y, CW, 9, 'S');
+    B(8.5); st(...borderColor);
+    doc.text(leftLabel, ML+4, y+6);
+    doc.text(rightVal, PW-MR-2, y+6, { align:'right' });
+    y += 9;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // BUILD THE PDF
+  // ═══════════════════════════════════════════════════════════════════
+  newPage(true);
+
+  // ── METADATA STRIP ───────────────────────────────────────────────────────────
+  sf(...LG); doc.rect(ML, y, CW, 13, 'F');
+  sd(...G3); lw(0.3); doc.rect(ML, y, CW, 13, 'S');
+  const meta = [
+    { lbl:'Date',       val: dateStr },
+    { lbl:'Standards',  val: 'ISO 6946:2017  ·  ISO 14683:2017  ·  ISO 10211:2017' },
+    { lbl:'Ref. Area',  val: refArea.toFixed(2) + ' m²' },
+    { lbl:'Purpose',    val: 'UAE Green Building Compliance' },
+  ];
+  const mw = CW / meta.length;
+  meta.forEach((m, i) => {
+    const mx = ML + i * mw + 3;
+    N(6.5); st(...G2); doc.text(m.lbl.toUpperCase(), mx, y + 4.5);
+    B(7.5); st(...BK); doc.text(m.val, mx, y + 10.5);
+  });
+  y += 18;
+
+  // ── U-VALUE RESULT BOX ───────────────────────────────────────────────────────
+  const topLbl  = Ut<=0.26?'ESTIDAMA 2-PEARL':Ut<=0.32?'ESTIDAMA 1-PEARL':Ut<=0.42?"AL SA'FAT GOLD":Ut<=0.48?'BARJEEL (RAK)':Ut<=0.57?"AL SA'FAT SILVER":Ut<=0.70?'ASHRAE 90.1 ONLY':'NON-COMPLIANT';
+  const topCol  = Ut<=0.57 ? PASS : (Ut<=0.70 ? WARN : FAIL);
+  const pass    = Ut <= 0.57;
+
+  sd(...G3); lw(0.4); doc.rect(ML, y, CW, 38, 'S');
+
+  // Left — U number
+  const lw2 = 82;
+  sf(...(pass ? [240,250,244] : [252,242,242]));
+  doc.rect(ML, y, lw2, 38, 'F');
+  sd(...G3); lw(0.3); doc.line(ML+lw2, y, ML+lw2, y+38);
+  B(7); st(...G2); doc.text('CALCULATED U-VALUE  (W/m²·K)', ML+4, y+8);
+  B(30); st(...(pass ? DGRN : FAIL));
+  doc.text(Ut.toFixed(3), ML+4, y+27);
+  N(10); st(...G1); doc.text(' W/m²·K', ML+4+tw(Ut.toFixed(3), 30), y+27);
+  // Status badge
+  sf(...topCol); doc.roundedRect(ML+4, y+30, lw2-8, 6, 1.5, 1.5, 'F');
+  B(7); st(...W); doc.text(topLbl, ML+4+(lw2-8)/2, y+34.2, { align:'center' });
+
+  // Right — breakdown
+  const rCols = [
+    { lbl:'U₀  (clear-field, ISO 6946:2017)',       val:U0.toFixed(4),       unit:'W/m²K', col:BK  },
+    { lbl:'ΔUΨ  (linear bridges, Σ Ψk·Lk / A)',    val:'+'+dUPsi.toFixed(4),unit:'W/m²K', col:BLU },
+    { lbl:'ΔUχ  (point bridges, Σ χj·nj / A)',     val:'+'+dUChi.toFixed(4),unit:'W/m²K', col:PUR },
+    { lbl:'R_T  (total thermal resistance)',         val:RT.toFixed(4),       unit:'m²K/W', col:GRN },
+  ];
+  rCols.forEach((item, i) => {
+    const iy = y + 5 + i * 8.5;
+    N(7); st(...G2); doc.text(item.lbl, ML+lw2+4, iy);
+    B(9); st(...item.col); doc.text(item.val, PW-MR-14, iy, { align:'right' });
+    N(7); st(...G2); doc.text(item.unit, PW-MR-2, iy, { align:'right' });
+  });
+  y += 44;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 1. WALL ASSEMBLY TABLE
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('1.  Wall Assembly  —  Outside → Inside  (ISO 6946:2017)');
+
+  // col defs: x = offset from ML, w = width, total must = CW=174
+  const WC = [
+    { x:  0, w:  7, label:'#'            },
+    { x:  7, w: 82, label:'Material / Layer' },
+    { x: 89, w: 21, label:'d (mm)',    align:'right' },
+    { x:110, w: 28, label:'λ (W/m·K)', align:'right' },
+    { x:138, w: 24, label:'R (m²K/W)', align:'right' },
+    { x:162, w: 12, label:'R %',       align:'right' },
+  ];
+  // Verify sum
+  // 7+82+21+28+24+12 = 174 ✓
+
+  const ROW = 8.5;
+  const wallTop = y;
+  tblHeader(WC, 8);
+
+  // Rse
+  tblRow(WC, [
+    { text:'—', color:G2 },
+    { text:'External surface resistance  (Rse)', color:G1 },
+    { text:'—', color:G2, align:'right' },
+    { text:'—', color:G2, align:'right' },
+    { text:RSE.toFixed(3), bold:true, color:GRN },
+    { text:(RSE/RT*100).toFixed(0)+'%', color:G2 },
+  ], ROW, true);
+
+  layerRs.forEach(({ layer:l, r }, i) => {
+    const rStr   = r !== null ? r.toFixed(4) : '—';
+    const rPct   = (r && RT > 0) ? (r/RT*100).toFixed(0)+'%' : '—';
+    const lamStr = l.fixedR !== null ? '(R='+l.fixedR+')' : String(l.lambda || '—');
+    tblRow(WC, [
+      { text:String(i+1), color:G2 },
+      { text:l.name, bold:true, color:BK },
+      { text:String(l.thickness), color:G1 },
+      { text:lamStr, color:G1, sz:7.5 },
+      { text:rStr, bold:r!==null, color:r!==null?BK:G2 },
+      { text:rPct, color:G2 },
+    ], ROW, i%2===0);
+  });
+
+  // Rsi
+  tblRow(WC, [
+    { text:'—', color:G2 },
+    { text:'Internal surface resistance  (Rsi)', color:G1 },
+    { text:'—', color:G2 },
+    { text:'—', color:G2 },
+    { text:RSI.toFixed(3), bold:true, color:GRN },
+    { text:(RSI/RT*100).toFixed(0)+'%', color:G2 },
+  ], ROW, layerRs.length%2===0);
+
+  tblBorder(wallTop);
+
+  // Totals row
+  need(9);
+  sf(...[235,245,238]); doc.rect(ML, y, CW, 9, 'F');
+  sd(...GRN); lw(0.5); doc.rect(ML, y, CW, 9, 'S');
+  B(8.5); st(...BK); doc.text('TOTAL  R_T', ML+4, y+6.2);
+  st(...G1); doc.text(RT.toFixed(4)+' m²K/W', ML+85, y+6.2);
+  st(...DGRN); doc.text('U₀ = '+U0.toFixed(3)+' W/m²K', PW-MR-2, y+6.2, { align:'right' });
+  y += 14;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 2. LINEAR THERMAL BRIDGES (Ψ)
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('2.  Linear Thermal Bridges  Ψ  (ISO 14683:2017)');
+
+  const PC = [
+    { x:  0, w:  7, label:'#' },
+    { x:  7, w: 84, label:'Junction Type' },
+    { x: 91, w: 30, label:'Ψ (W/m·K)',     align:'right' },
+    { x:121, w: 24, label:'Length L (m)',  align:'right' },
+    { x:145, w: 29, label:'Ψ·L/A (W/m²K)', align:'right' },
+  ];
+  // 7+84+30+24+29 = 174 ✓
+
+  const psiTop = y;
+  tblHeader(PC, 8);
+
+  if (!psis.length) {
+    need(9);
+    sf(...LG); doc.rect(ML, y, CW, 9, 'F');
+    sd(...G3); lw(0.3); doc.rect(ML, y, CW, 9, 'S');
+    N(8); st(...G2); doc.text('No linear thermal bridges defined.', ML+4, y+6);
+    y += 9;
+  } else {
+    psis.forEach((p, i) => {
+      const contrib = (p.psi * p.len) / refArea;
+      tblRow(PC, [
+        { text:String(i+1), color:G2 },
+        { text:p.name, bold:true, color:BK },
+        { text:p.psi.toFixed(4), color:BLU, bold:true },
+        { text:p.len.toFixed(2), color:G1 },
+        { text:contrib.toFixed(5), bold:true, color:BLU },
+      ], 9, i%2===0);
+    });
+  }
+  tblBorder(psiTop);
+  tblTotalRow('ΔUΨ  TOTAL  =  Σ(Ψk × Lk) / A', '+'+dUPsi.toFixed(5)+' W/m²K', [235,241,255], [60,90,200]);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 3. POINT THERMAL BRIDGES (χ)
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('3.  Point Thermal Bridges  χ  (ISO 10211:2017)');
+
+  const CC = [
+    { x:  0, w:  7, label:'#' },
+    { x:  7, w: 84, label:'Fixing / Anchor Type' },
+    { x: 91, w: 30, label:'χ (W/K)',       align:'right' },
+    { x:121, w: 24, label:'Count n',       align:'right' },
+    { x:145, w: 29, label:'χ·n/A (W/m²K)', align:'right' },
+  ];
+  // 7+84+30+24+29 = 174 ✓
+
+  const chiTop = y;
+  tblHeader(CC, 8);
+
+  if (!chis.length) {
+    need(9);
+    sf(...LG); doc.rect(ML, y, CW, 9, 'F');
+    sd(...G3); lw(0.3); doc.rect(ML, y, CW, 9, 'S');
+    N(8); st(...G2); doc.text('No point thermal bridges defined.', ML+4, y+6);
+    y += 9;
+  } else {
+    chis.forEach((ch, i) => {
+      const contrib = (ch.chi * ch.cnt) / refArea;
+      tblRow(CC, [
+        { text:String(i+1), color:G2 },
+        { text:ch.name, bold:true, color:BK },
+        { text:ch.chi.toFixed(5), color:PUR, bold:true },
+        { text:String(ch.cnt), color:G1 },
+        { text:contrib.toFixed(5), bold:true, color:PUR },
+      ], 9, i%2===0);
+    });
+  }
+  tblBorder(chiTop);
+  tblTotalRow('ΔUχ  TOTAL  =  Σ(χj × nj) / A', '+'+dUChi.toFixed(5)+' W/m²K', [243,240,255], [90,55,190]);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 4. CORRECTED U-VALUE EQUATION BOX
+  // ═══════════════════════════════════════════════════════════════════
+  need(22);
+  sf(...[235,248,240]); doc.rect(ML, y, CW, 20, 'F');
+  sd(...GRN); lw(0.5); doc.rect(ML, y, CW, 20, 'S');
+  sf(...GRN); doc.rect(ML, y, 3.5, 20, 'F');
+  B(7.5); st(...G1);
+  doc.text('U₀ (clear-field)',            ML+7, y+5.5);
+  doc.text('+ ΔUΨ (linear bridges)',      ML+7, y+11);
+  doc.text('+ ΔUχ  (point bridges)',      ML+7, y+16.5);
+  st(...BK);
+  doc.text(U0.toFixed(4)+' W/m²K',        ML+72, y+5.5);
+  st(...BLU);
+  doc.text(dUPsi.toFixed(5)+' W/m²K',    ML+72, y+11);
+  st(...PUR);
+  doc.text(dUChi.toFixed(5)+' W/m²K',    ML+72, y+16.5);
+  // Equals + result
+  sd(...GRN); lw(0.3); doc.line(ML+120, y+3, ML+120, y+17);
+  B(8); st(...G1); doc.text('U_total', ML+124, y+9);
+  B(13); st(...(pass?DGRN:FAIL));
+  doc.text(Ut.toFixed(3), ML+144, y+14);
+  N(8); st(...G2); doc.text(' W/m²K', ML+144+tw(Ut.toFixed(3),13), y+14);
+  y += 26;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 5. UAE & GULF COMPLIANCE VERIFICATION TABLE
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('4.  UAE & Gulf Compliance Verification');
+
+  // Compliance cols — carefully sized to fit badge
+  // Badge needs ~20mm. Status col x=154, w=20 → max right = 174 ✓
+  const CompC = [
+    { x:  0, w: 55, label:'Standard'             },
+    { x: 55, w: 42, label:'Authority'            },
+    { x: 97, w: 28, label:'Limit (W/m²K)', align:'right' },
+    { x:125, w: 27, label:'Your U',        align:'right' },
+    { x:152, w: 22, label:'Result',        align:'right' },
+  ];
+  // 55+42+28+27+22 = 174 ✓
+
+  const compTop = y;
+  tblHeader(CompC, 8);
+
+  COMPLIANCE_STDS.forEach((std, i) => {
+    const H = 13;
+    need(H);
+    sf(...(i%2===0?W:LG)); doc.rect(ML, y, CW, H, 'F');
+    sd(...G3); lw(0.2); doc.line(ML, y+H, ML+CW, y+H);
+    // Col dividers
+    sd(...G3); lw(0.15);
+    CompC.forEach(col => { if (col.x>0) doc.line(ML+col.x, y, ML+col.x, y+H); });
+    sd(...G3); lw(0.3); doc.line(ML,y,ML,y+H); doc.line(ML+CW,y,ML+CW,y+H);
+
+    // Standard name + detail
+    B(8); st(...BK); doc.text(std.name, ML+2, y+5);
+    N(6.5); st(...G2); doc.text(std.detail, ML+2, y+10);
+    // Authority
+    N(7.5); st(...G1); doc.text(std.auth, ML+57, y+5);
+    // Limit
+    B(8.5); st(...BK);
+    doc.text('≤ '+std.lim.toFixed(2), ML+125-2, y+5, { align:'right' });
+    N(6.5); st(...G2); doc.text('W/m²K', ML+125-2, y+10, { align:'right' });
+    // Your U
+    B(8.5); st(...(std.pass?DGRN:FAIL));
+    doc.text(Ut.toFixed(3), ML+152-2, y+5, { align:'right' });
+    // Badge — fits inside x=152, w=22 → from ML+153 to ML+174
+    const bx = ML+153, bw=18, bh=7;
+    sf(...(std.pass?PASS:FAIL)); doc.roundedRect(bx, y+3, bw, bh, 1.2, 1.2, 'F');
+    B(7); st(...W); doc.text(std.pass?'PASS':'FAIL', bx+bw/2, y+3+bh/2+2.3, { align:'center' });
+    y += H;
+  });
+  tblBorder(compTop);
+  y += 8;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // 5. METHODOLOGY & DISCLAIMER
+  // ═══════════════════════════════════════════════════════════════════
+  secHead('5.  Calculation Methodology & Standards References');
+
+  const methodRows = [
+    { hd:'ISO 6946:2017', body:'Combined method for thermally homogeneous layers. U₀ = 1/R_T where R_T = Rse + Σ(di/λi) + Rsi. Surface resistances: Rse = 0.04 m²K/W, Rsi = 0.13 m²K/W (Table 1, horizontal heat flow, external wall). Air cavity resistances per ISO 6946:2017 Table 2.' },
+    { hd:'ISO 14683:2017', body:'Linear thermal transmittance: ΔUΨ = Σ(Ψk × Lk) / A. Ψ values are indicative catalogue defaults from ISO 14683:2017 Annex C. Reference area A = '+refArea.toFixed(2)+' m². Definitive project values require numerical calculation per ISO 10211.' },
+    { hd:'ISO 10211:2017', body:'Point thermal transmittance: ΔUχ = Σ(χj × nj) / A. χ values from published FEM studies and EOTA TR 025. Total corrected value: U_total = U₀ + ΔUΨ + ΔUχ. Indicative only — project-specific modelling required for regulatory submission.' },
+    { hd:'Standards Sources', body:"Al Sa'fat: Dubai Municipality Green Building Rating System v2.0 (2020 / 2024 update). Estidama: Abu Dhabi Urban Planning Council PBRS v1.0 (external wall U ≤ 0.32 W/m²K for 1-Pearl). Barjeel: RAK Municipality Green Building Regulations v1.2 (2019 / 2022). ASHRAE: 90.1-2019 Table 5.5-1, Climate Zone 0/1, mass wall assembly." },
+  ];
+
+  methodRows.forEach(row => {
+    const bodyLines = wt(row.body, CW-46, 7.5);
+    const rowH = Math.max(10, bodyLines.length * 3.6 + 5);
+    need(rowH);
+    sf(...LG); doc.rect(ML, y, CW, rowH, 'F');
+    sd(...G3); lw(0.25); doc.rect(ML, y, CW, rowH, 'S');
+    sf(...GRN); doc.rect(ML, y, 3, rowH, 'F');
+    B(7.5); st(...DGRN); doc.text(row.hd, ML+6, y+5.5);
+    N(7.5); st(...G1);
+    const startY = y + (rowH - bodyLines.length*3.6)/2 + 3.6*0.8;
+    bodyLines.forEach((ln, li) => doc.text(ln, ML+42, startY + li*3.6));
+    y += rowH + 2;
+  });
+
+  y += 4;
+
+  // Disclaimer box
+  need(12);
+  sf(...[255,250,238]); doc.rect(ML, y, CW, 12, 'F');
+  sd(...[200,160,50]); lw(0.5); doc.rect(ML, y, CW, 12, 'S');
+  sf(...WARN); doc.rect(ML, y, 3.5, 12, 'F');
+  B(7.5); st(...WARN); doc.text('DISCLAIMER', ML+7, y+5);
+  N(7.5); st(...G1);
+  const disc = 'This report is produced for guidance purposes only. All values must be verified by a qualified thermal engineer and the relevant UAE authority before regulatory submission or specification use.';
+  doc.text(wt(disc, CW-12, 7.5), ML+7, y+9.5);
+  y += 16;
+
+  // ═══════════════════════════════════════════════════════════════════
+  // DRAW FOOTERS — once, after all content
+  // ═══════════════════════════════════════════════════════════════════
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    drawFooter(p, totalPages);
+  }
+
+  doc.save('CladWise_UValue_'+now.toISOString().slice(0,10)+'.pdf');
+}
+
+
+function resetAll() {
+  layers=[]; psis=[]; chis=[]; layId=0; psiId=0; chiId=0;
+  renderAll(); calculate();
+}
+
+// INIT
+loadPreset('gfrc');
 </script>
 </body>
 </html>
