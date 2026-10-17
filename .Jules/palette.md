@@ -1,0 +1,3 @@
+## 2026-03-05 - Global Overlay Management & Semantic Escapes
+**Learning:** In large single-page applications with multiple overlapping UI layers (modals, lightboxes, drawers), inconsistent 'Escape' key behavior and function naming collisions (e.g., duplicate `closeLightbox` definitions) create fragile UX and broken keyboard navigation.
+**Action:** Always implement a centralized, priority-based keyboard listener that respects the visual stack. Use unique naming for component-specific close handlers and ensure all icon-only triggers are semantic `<button>` elements with explicit `aria-label="Close"`.
