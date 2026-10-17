@@ -1,0 +1,3 @@
+## 2025-05-15 - [A11y & Micro-UX] Semantic Buttons and Interactive Feedback
+**Learning:** The application frequently uses non-semantic `div` elements for critical interactive components like modal close buttons and toggles, which breaks keyboard accessibility and screen reader expectations. Additionally, multi-step forms with character-limited fields lack real-time feedback, potentially frustrating users who exceed limits.
+**Action:** Always audit modal and overlay close buttons for semantic `<button>` usage and `aria-label`. For character-limited inputs, implement a lightweight live counter to provide immediate feedback.
