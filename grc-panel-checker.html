@@ -251,8 +251,8 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
 
     <!-- Panel Type -->
     <div class="type-tabs no-print">
-      <button class="type-tab active" id="tab-standard" onclick="selectType('standard',this)">Standard Panel</button>
-      <button class="type-tab" id="tab-corner" onclick="selectType('corner',this)">⌞ Corner Panel</button>
+      <button class="type-tab active" id="tab-standard" onclick="selectType('standard',this)" aria-pressed="true">Standard Panel</button>
+      <button class="type-tab" id="tab-corner" onclick="selectType('corner',this)" aria-pressed="false">⌞ Corner Panel</button>
     </div>
 
     <!-- Location -->
@@ -264,7 +264,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c3">
         <div class="field">
-          <label>Emirate</label>
+          <label for="emirate">Emirate</label>
           <select id="emirate" onchange="onEmirate()">
             <option value="dxb">Dubai / Sharjah</option>
             <option value="auh">Abu Dhabi</option>
@@ -278,7 +278,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">m/s · 10-min · 50yr</div>
         </div>
         <div class="field">
-          <label>Height above grade z</label>
+          <label for="zH">Height above grade z</label>
           <input type="number" id="zH" value="10" min="1" max="300" step="1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
@@ -294,22 +294,22 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c2">
         <div class="field">
-          <label>Width W</label>
+          <label for="W">Width W</label>
           <input type="number" id="W" value="1.2" min="0.1" max="10" step="0.1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
         <div class="field">
-          <label>Height H</label>
+          <label for="H">Height H</label>
           <input type="number" id="H" value="3.0" min="0.1" max="20" step="0.1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
         <div class="field">
-          <label>Skin thickness t_s</label>
+          <label for="ts">Skin thickness t_s</label>
           <input type="number" id="ts" value="13" min="8" max="100" step="1" oninput="autoCalc()">
           <div class="field-unit">mm · GRCA min 13 mm</div>
         </div>
         <div class="field">
-          <label>Rib web thickness t_r</label>
+          <label for="tr">Rib web thickness t_r</label>
           <input type="number" id="tr" value="25" min="10" max="150" step="5" oninput="autoCalc()">
           <div class="field-unit">mm · GRCA min 25 mm</div>
         </div>
@@ -324,7 +324,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c2">
         <div class="field">
-          <label>Corner angle</label>
+          <label for="cornerAngle">Corner angle</label>
           <select id="cornerAngle" onchange="autoCalc()">
             <option value="90">90°</option>
             <option value="135">135°</option>
@@ -333,7 +333,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">interior angle</div>
         </div>
         <div class="field">
-          <label>Leg width (each side)</label>
+          <label for="legW">Leg width (each side)</label>
           <input type="number" id="legW" value="0.5" min="0.1" max="5" step="0.1" oninput="autoCalc()">
           <div class="field-unit">metres</div>
         </div>
@@ -349,29 +349,29 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c4">
         <div class="field">
-          <label>Horizontal ribs n_H</label>
+          <label for="nrH">Horizontal ribs n_H</label>
           <input type="number" id="nrH" value="2" min="0" max="20" step="1" oninput="autoCalc()">
           <div class="field-unit">count (between edges)</div>
         </div>
         <div class="field">
-          <label>H-rib depth d_H</label>
+          <label for="hrH">H-rib depth d_H</label>
           <input type="number" id="hrH" value="75" min="10" max="500" step="5" oninput="autoCalc()">
           <div class="field-unit">mm excl. skin</div>
         </div>
         <div class="field">
-          <label>Vertical ribs n_V</label>
+          <label for="nrV">Vertical ribs n_V</label>
           <input type="number" id="nrV" value="1" min="0" max="20" step="1" oninput="autoCalc()">
           <div class="field-unit">count (between edges)</div>
         </div>
         <div class="field">
-          <label>V-rib depth d_V</label>
+          <label for="hrV">V-rib depth d_V</label>
           <input type="number" id="hrV" value="50" min="10" max="500" step="5" oninput="autoCalc()">
           <div class="field-unit">mm excl. skin</div>
         </div>
       </div>
       <div class="igrid c2">
         <div class="field">
-          <label>Perimeter rib</label>
+          <label for="perimRib">Perimeter rib</label>
           <select id="perimRib" onchange="autoCalc()">
             <option value="no">None</option>
             <option value="yes">Yes — all four edges</option>
@@ -379,7 +379,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">edge reinforcement</div>
         </div>
         <div class="field">
-          <label>Perimeter rib depth d_P</label>
+          <label for="hrP">Perimeter rib depth d_P</label>
           <input type="number" id="hrP" value="50" min="10" max="500" step="5" oninput="autoCalc()">
           <div class="field-unit">mm excl. skin</div>
         </div>
@@ -395,12 +395,12 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c2">
         <div class="field">
-          <label>No. of fixings n_f</label>
+          <label for="nf">No. of fixings n_f</label>
           <input type="number" id="nf" value="4" min="2" max="50" step="1" oninput="autoCalc()">
           <div class="field-unit">per panel</div>
         </div>
         <div class="field">
-          <label>Fixing type</label>
+          <label for="fixingType">Fixing type</label>
           <select id="fixingType" onchange="updateFixing()">
             <option value="face">Face Fixing (direct)</option>
             <option value="bracket">Structural Bracket</option>
@@ -411,12 +411,12 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">accessory type</div>
         </div>
         <div class="field" id="ancDiaField">
-          <label>Anchor diameter ø</label>
+          <label for="ancDia">Anchor diameter ø</label>
           <input type="number" id="ancDia" value="12" min="6" max="30" step="2" oninput="autoCalc()">
           <div class="field-unit">mm</div>
         </div>
         <div class="field" id="bktThkField" style="display:none">
-          <label>Bracket plate thickness</label>
+          <label for="bktThk">Bracket plate thickness</label>
           <input type="number" id="bktThk" value="8" min="3" max="25" step="1" oninput="autoCalc()">
           <div class="field-unit">mm</div>
         </div>
@@ -431,7 +431,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       </div>
       <div class="igrid c3">
         <div class="field">
-          <label>Thermal expansion</label>
+          <label for="thermal">Thermal expansion</label>
           <select id="thermal" onchange="autoCalc()">
             <option value="no">Not included</option>
             <option value="yes">Include (±50°C UAE)</option>
@@ -439,7 +439,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">α = 12 × 10⁻⁶ /°C</div>
         </div>
         <div class="field">
-          <label>Seismic zone</label>
+          <label for="seismic">Seismic zone</label>
           <select id="seismic" onchange="autoCalc()">
             <option value="none">None</option>
             <option value="low">Low — Zone 1 (0.08g)</option>
@@ -448,7 +448,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
           <div class="field-unit">Iran proximity</div>
         </div>
         <div class="field">
-          <label>Section analysis</label>
+          <label for="analysis">Section analysis</label>
           <select id="analysis" onchange="autoCalc()">
             <option value="skin">Skin-strip (conservative)</option>
             <option value="composite">Full composite T-section</option>
@@ -468,8 +468,8 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
     </div>
 
     <div class="btn-row no-print">
-      <button class="check-btn" onclick="check()"><i class="fa-solid fa-circle-check"></i> CHECK COMPLIANCE</button>
-      <button class="export-btn" onclick="exportPDF()"><i class="fa-solid fa-file-arrow-down"></i> PDF</button>
+      <button class="check-btn" onclick="check()"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> CHECK COMPLIANCE</button>
+      <button class="export-btn" onclick="exportPDF()"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> PDF</button>
     </div>
 
     <!-- Detail checks (shown below inputs on mobile after calc) -->
@@ -565,7 +565,7 @@ nav{background:rgba(11,17,13,0.96);backdrop-filter:blur(24px);border-bottom:1px 
       <div id="sideStruct"></div>
     </div>
 
-    <button class="btn-reset" onclick="resetAll()"><i class="fa-solid fa-rotate-left"></i> &nbsp;Reset to Defaults</button>
+    <button class="btn-reset" onclick="resetAll()"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> &nbsp;Reset to Defaults</button>
 
   </div>
 </div>
@@ -644,8 +644,12 @@ function ce(z){
 
 function selectType(type, btn){
   panelType = type;
-  document.querySelectorAll('.type-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.type-tab').forEach(function(b){
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
   btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
   document.getElementById('cornerPanel').style.display = type==='corner' ? '' : 'none';
   autoCalc();
 }
