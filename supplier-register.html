@@ -323,6 +323,9 @@ input::placeholder {
   text-align: center;
   font-size: 13px;
   font-weight: 600;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
 }
 .emirate-option:hover {
   border-color: var(--accent);
@@ -450,13 +453,13 @@ input::placeholder {
       <div class="form-group">
         <label>Emirate</label>
         <div class="emirates-grid">
-          <div class="emirate-option" data-emirate="DU">🏙️ Dubai</div>
-          <div class="emirate-option" data-emirate="AZ">🏛️ Abu Dhabi</div>
-          <div class="emirate-option" data-emirate="SJ">🏢 Sharjah</div>
-          <div class="emirate-option" data-emirate="AJ">🏗️ Ajman</div>
-          <div class="emirate-option" data-emirate="UM">🌴 Umm Al Quwain</div>
-          <div class="emirate-option" data-emirate="RK">⛰️ Ras Al Khaimah</div>
-          <div class="emirate-option" data-emirate="FJ">🌊 Fujairah</div>
+          <button type="button" class="emirate-option" data-emirate="DU" aria-pressed="false">🏙️ Dubai</button>
+          <button type="button" class="emirate-option" data-emirate="AZ" aria-pressed="false">🏛️ Abu Dhabi</button>
+          <button type="button" class="emirate-option" data-emirate="SJ" aria-pressed="false">🏢 Sharjah</button>
+          <button type="button" class="emirate-option" data-emirate="AJ" aria-pressed="false">🏗️ Ajman</button>
+          <button type="button" class="emirate-option" data-emirate="UM" aria-pressed="false">🌴 Umm Al Quwain</button>
+          <button type="button" class="emirate-option" data-emirate="RK" aria-pressed="false">⛰️ Ras Al Khaimah</button>
+          <button type="button" class="emirate-option" data-emirate="FJ" aria-pressed="false">🌊 Fujairah</button>
         </div>
         <input type="hidden" id="tradeLicenceEmirate">
       </div>
@@ -536,8 +539,12 @@ let uploadedDocuments = []
 // ─── EMIRATE SELECTION ─────────────────────────────────────────────────────
 emirateOptions.forEach(option => {
   option.addEventListener('click', () => {
-    emirateOptions.forEach(o => o.classList.remove('selected'))
+    emirateOptions.forEach(o => {
+      o.classList.remove('selected')
+      o.setAttribute('aria-pressed', 'false')
+    })
     option.classList.add('selected')
+    option.setAttribute('aria-pressed', 'true')
     selectedEmirate = option.dataset.emirate
     document.getElementById('tradeLicenceEmirate').value = selectedEmirate
   })
