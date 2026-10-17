@@ -1,0 +1,3 @@
+## 2025-05-14 - Semantic Button Conversion and CSS Resets
+**Learning:** In this static HTML/JS project, interactive components are frequently built using `div` elements with `onclick` handlers. Converting these to semantic `<button>` elements is essential for accessibility but requires a specific CSS reset (font: inherit, color: inherit, background: none, border: none, padding: 0) to maintain visual parity with the original designs, as the global stylesheet often lacks generic button resets.
+**Action:** When refactoring `div` elements to `button` in this repo, always apply a reset class or inline styles to ensure the component's appearance remains unchanged while gaining keyboard and screen reader support.
