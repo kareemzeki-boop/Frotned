@@ -1,0 +1,3 @@
+## 2026-06-19 - Semantic Button Conversion for Toggles
+**Learning:** Using non-semantic `div` elements for interactive toggles prevents keyboard navigation and lacks state communication (on/off) for assistive technologies. Converting these to `<button type="button">` with `aria-pressed` provides native accessibility.
+**Action:** When encountering `div` or `span` elements with `onclick` handlers acting as buttons, convert them to semantic `<button>` elements and use `aria-pressed` for toggle states, ensuring CSS resets like `appearance: none` and `color: inherit` are applied to maintain design consistency.
